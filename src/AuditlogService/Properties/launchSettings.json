@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AuditlogService": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "PITSTOP_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+﻿@model Pitstop.ViewModels.CustomerManagementViewModel
+@{
+    ViewData["Title"] = "Customers Overview";
+}
+<h3>Customer Management - overview</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>Emailaddress</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model.Customers)
+        {
+            <tr class="clickable" onclick="location.href = '@(Url.Action("Details", "CustomerManagement", new { id = customer.CustomerId }))'">
+                <td>@customer.Name</td>
+                <td>@customer.Address</td>
+                <td>@customer.City</td>
+                <td>@customer.EmailAddress</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-action="New" asp-controller="CustomerManagement" class="btn btn-default">Register customer</a>
+
+

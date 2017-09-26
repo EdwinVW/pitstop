@@ -1,0 +1,41 @@
+﻿@model Pitstop.ViewModels.WorkshopManagementNewViewModel
+@{
+    ViewData["Title"] = "Schedule Maintenance";
+}
+<h3>Workshop Management - schedule maintenance</h3>
+
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <div class="well-sm alert-danger">
+        <label>Unable to register: @Model.Error</label>
+    </div>
+}
+
+
+<form asp-controller="WorkshopManagement" asp-action="RegisterMaintenanceJob" method="post">
+    <div class="form-group">
+        <label asp-for="MaintenanceJob.StartTime"></label>
+        <input asp-for="MaintenanceJob.StartTime" type="text" class="form-control" />
+        <span asp-validation-for="MaintenanceJob.StartTime" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MaintenanceJob.EndTime"></label>
+        <input asp-for="MaintenanceJob.EndTime" type="text" class="form-control" />
+        <span asp-validation-for="MaintenanceJob.EndTime" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MaintenanceJob.Description"></label>
+        <input asp-for="MaintenanceJob.Description" type="text" class="form-control" />
+        <span asp-validation-for="MaintenanceJob.Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MaintenanceJob.Vehicle"></label>
+        <select asp-for="SelectedVehicleLicenseNumber" asp-items="Model.Vehicles" class="form-control"></select>
+        <span asp-validation-for="SelectedVehicleLicenseNumber" class="text-danger"></span>
+    </div>
+    <input asp-for="Date" type="hidden" />
+    <span><button type="submit" class="btn btn-default">Register</button></span>
+    <span><a asp-action="Index" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" asp-controller="WorkshopManagement" class="btn btn-default">Cancel</a></span>
+</form>
+
+

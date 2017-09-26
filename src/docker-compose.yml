@@ -1,0 +1,144 @@
+version: '3'
+services:
+
+  sqlserver:
+    image: microsoft/mssql-server-linux:latest
+    volumes:
+      - sqlserverdata:/var/opt/mssql 
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y 
+      - MSSQL_PID=Developer
+      - SA_PASSWORD=8jkGh47hnDw89Haq8LN2
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    volumes:
+      - rabbitmqdata:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmquser
+      - RABBITMQ_DEFAULT_PASS=DEBmbwkSrzy9D1T9cJfa
+
+  mailserver:
+    image: djfarrelly/maildev
+    ports:
+      - "25:25"
+      - "4000:80"
+
+  vehiclemanagementapi:
+    image: pitstop/vehiclemanagementapi:latest
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    links:
+      - rabbitmq
+      - sqlserver
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  customermanagementapi:
+    image: pitstop/customermanagementapi:latest
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    links:
+      - rabbitmq
+      - sqlserver
+    ports:
+      - "5100:5100"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  workshopmanagementapi:
+    image: pitstop/workshopmanagementapi:latest
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    links:
+      - rabbitmq
+      - sqlserver
+    ports:
+      - "5200:5200"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  auditlogservice:
+    image: pitstop/auditlogservice:latest
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    links:
+      - rabbitmq
+    environment:
+      - PITSTOP_ENVIRONMENT=Production
+
+  invoiceservice:
+    image: pitstop/invoiceservice:latest
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    links:
+      - rabbitmq
+      - sqlserver
+    environment:
+      - PITSTOP_ENVIRONMENT=Production
+
+  notificationservice:
+    image: pitstop/notificationservice:latest
+    depends_on:
+      - rabbitmq
+      - sqlserver
+      - mailserver
+    links:
+      - rabbitmq
+      - sqlserver
+      - mailserver
+    environment:
+      - PITSTOP_ENVIRONMENT=Production
+
+  timeservice:
+    image: pitstop/timeservice:latest
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    environment:
+      - PITSTOP_ENVIRONMENT=Production
+
+  workshopmanagementeventhandler:
+    image: pitstop/workshopmanagementeventhandler:latest
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    links:
+      - rabbitmq
+      - sqlserver
+    environment:
+      - PITSTOP_ENVIRONMENT=Production
+
+  webapp:
+    image: pitstop/webapp:latest
+    depends_on:
+      - vehiclemanagementapi
+      - customermanagementapi
+      - workshopmanagementapi
+    links:
+      - vehiclemanagementapi
+      - customermanagementapi
+      - workshopmanagementapi
+    ports:
+      - "6000:6000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+volumes:
+  sqlserverdata:
+    external: true    
+  rabbitmqdata:
+    external: true

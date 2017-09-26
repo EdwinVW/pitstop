@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WorkshopManagementEventHandler": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "PITSTOP_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

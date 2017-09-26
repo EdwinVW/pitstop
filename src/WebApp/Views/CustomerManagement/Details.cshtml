@@ -1,0 +1,36 @@
+﻿@model Pitstop.ViewModels.CustomerManagementDetailsViewModel
+@{
+    ViewData["Title"] = "Customer Details";
+}
+<h3>Customer Management - details</h3>
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td width="150">Name :</td>
+            <td><b>@Model.Customer.Name</b></td>
+        </tr>
+        <tr>
+            <td width="150">Address :</td>
+            <td><b>@Model.Customer.Address</b></td>
+        </tr>
+        <tr>
+            <td width="150">City :</td>
+            <td><b>@Model.Customer.City</b></td>
+        </tr>
+        <tr>
+            <td width="150">Postalcode :</td>
+            <td><b>@Model.Customer.PostalCode</b></td>
+        </tr>
+        <tr>
+            <td width="150">Telephonenumber :</td>
+            <td><b>@Model.Customer.TelephoneNumber</b></td>
+        </tr>
+        <tr>
+            <td width="150">Emailaddress :</td>
+            <td><b>@Model.Customer.EmailAddress</b></td>
+        </tr>
+    </tbody>
+</table>
+<span><a asp-action="Index" asp-controller="CustomerManagement" class="btn btn-default">Back</a></span>
+

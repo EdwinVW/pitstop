@@ -1,0 +1,59 @@
+﻿@model Pitstop.ViewModels.WorkshopManagementDetailsViewModel
+@{
+    ViewData["Title"] = "Planning Details";
+}
+
+<h3>Workshop Management - details</h3>
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td width="150">Date :</td>
+            <td><b>@Model.Date.ToString("dd-MM-yyyy")</b></td>
+        </tr>
+        <tr>
+            <td width="150">Status :</td>
+            <td><b>@Model.MaintenanceJob.Status</b></td>
+        </tr>
+        <tr>
+            <td width="150">Start time :</td>
+            <td><b>@Model.MaintenanceJob.StartTime.ToString("HH:mm")</b></td>
+        </tr>
+        <tr>
+            <td width="150">End time :</td>
+            <td><b>@Model.MaintenanceJob.EndTime.ToString("HH:mm")</b></td>
+        </tr>
+        <tr>
+            <td width="150">Description :</td>
+            <td><b>@Model.MaintenanceJob.Description</b></td>
+        </tr>
+        <tr>
+            <td width="150">Vehicle :</td>
+            <td><b><a href='@(Url.Action("Details", "VehicleManagement", new { licenseNumber = Model.MaintenanceJob.Vehicle.LicenseNumber }))'>@Model.MaintenanceJob.Vehicle.Brand @Model.MaintenanceJob.Vehicle.Type [@Model.MaintenanceJob.Vehicle.LicenseNumber]</a></b></td>
+        </tr>
+        <tr>
+            <td width="150">Owner :</td>
+            <td><b><a href='@(Url.Action("Details", "CustomerManagement", new { id = Model.MaintenanceJob.Customer.CustomerId }))'>@Model.MaintenanceJob.Customer.Name</a></b></td>
+        </tr>
+        @if (Model.MaintenanceJob.Status != "Planned")
+        {
+            <tr>
+                <td width="150">Actual Start time :</td>
+                <td><b>@Model.MaintenanceJob.ActualStartTime</b></td>
+            </tr>
+            <tr>
+                <td width="150">Actual End time :</td>
+                <td><b>@Model.MaintenanceJob.ActualEndTime</b></td>
+            </tr>
+            <tr>
+                <td width="150">Mechanic notes :</td>
+                <td><b>@Model.MaintenanceJob.Notes</b></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<span><a asp-action="Index" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-default">Back</a></span>
+<span><a asp-action="Finish" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" asp-route-jobId="@Model.MaintenanceJob.Id" class="btn btn-default">Complete</a></span>
+
+
+

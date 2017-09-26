@@ -1,0 +1,39 @@
+﻿@model Pitstop.ViewModels.WorkshopManagementViewModel
+@{
+    ViewData["Title"] = "Workshop Management";
+}
+<h3>Workshop Management - overview</h3>
+
+<div style="margin-top: 10px; margin-bottom: 10px;">
+    <a asp-action="Index" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.AddDays(-1).ToString("yyy-MM-dd")" class="btn btn-default"><</a>
+    <span class="text-primary"><b>@Model.Date.ToString("dd-MM-yyyy")</b></span>
+    <a asp-action="Index" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.AddDays(1).ToString("yyy-MM-dd")" class="btn btn-default">></a>
+    <a asp-action="Index" asp-controller="WorkshopManagement" asp-route-date="@DateTime.Now.ToString("yyy-MM-dd")" class="btn btn-default">Today</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Status</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Vehicle</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var job in Model.MaintenanceJobs)
+        {
+            <tr class="clickable @(job.Status == "Completed" ? "completedjob" : "")" onclick="location.href = '@(Url.Action("Details", "WorkshopManagement", new { date = Model.Date, jobId = job.Id }))'">
+                <td>@job.Status</td>
+                <td>@job.StartTime.ToString("HH:mm")</td>
+                <td>@job.EndTime.ToString("HH:mm")</td>
+                <td>@job.Vehicle.Brand @job.Vehicle.Type [@job.Vehicle.LicenseNumber]</td>
+                <td>@job.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-action="New" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-default">Schedule Maintenance</a>
+
+
