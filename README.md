@@ -9,7 +9,7 @@ This repo contains a sample application based on a Garage Management System for 
 - Invoicing
 - Notifications of customers 
 
->The primary goal of this sample is to demonstrate several Web-Scale Architecture concepts like: Microservices, CQRS, Event Sourcing, Domain Driven Design (DDD), NoSQL.
+>The primary goal of this sample is to demonstrate several Web-Scale Architecture concepts like: Microservices, CQRS, Event Sourcing, Domain Driven Design (DDD), Eventual Consistency.
 
 ### Context Map
 I've created a context map (DDD) that describes the bounded contexts (domains) within the system and the relationships between them:
