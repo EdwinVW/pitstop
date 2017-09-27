@@ -1,28 +1,28 @@
 # Pitstop - Garage Management System
 This repo contains a sample application based on a Garage Management System for PitStop - a fictitious garage. The application targets the employees of PitStop and supports their daily tasks. It should offer the following functionality:
 
-- Vehicle management
-- Customer management
-- Workshop management
-- Inventory management
-- Sales
-- Invoicing
-- Notifications of customers 
+- Manage customers
+- Manage vehicles
+- Manage the workshop (planning)
+- Manage inventory (products and parts)
+- Sales (direct sales of products and parts)
+- Sending invoices to customers
+- Sending notifications to customers 
 
->The primary goal of this sample is to demonstrate several Web-Scale Architecture concepts like: Microservices, CQRS, Event Sourcing, Domain Driven Design (DDD), Eventual Consistency.
+>The primary goal of this sample is to demonstrate several Web-Scale Architecture concepts like: Microservices, CQRS, Event Sourcing, Domain Driven Design (DDD) and Eventual Consistency.
 
-### Context Map
-I've created a context map (DDD) that describes the bounded contexts (domains) within the system and the relationships between them:
+### Context-map
+I've created a context-map that describes the bounded contexts (DDD) within the system and the relationships between them:
 
-![Context map](img/contextmap.png)
+![Context-map](img/contextmap.png)
 
-As you can see in the context map, Workshop Management is the primary domain. This is where PitStop Garage makes its money. That's why I chose to use a DDD approach (with Aggregates) and event-sourcing for this domain. Customer Management and Vehicle Management are supporting domains for which I've used a standard CRUD approach.
+If you look at the context-map, you can figure out that Workshop Management is the primary bounded-context. This is where PitStop Garage makes its money. That's why I chose to use a DDD approach (with Aggregates) and event-sourcing for this one. Customer Management and Vehicle Management are supporting bounded-contexts for which I've used a standard CRUD approach.
 
-I've decided to leave support for Inventory Management (Products) and Sales out of the sample because this doesn't add enough value. The main goal of the sample is to demonstrate different architectural concepts and not be a full fledged application.
+I've decided to leave support for Inventory Management (Products) and Sales out of the sample because this doesn't add enough value. As stated, the primary goal of this sample is to demonstrate different architectural concepts and not to be a full fledged application.
 
-With every relationship I've specified which side of the relationship is Upstream (U) and which side is Downstream (D). Using these indications you can figure out which domain in the system is the system of record (source of truth) for a certain piece of information. We call that side the upstream side. This side dictates the schema of the data. The downstream side has to follow and use some approach to make sure it can use the data from the upstream system. 
+With every relationship I've specified which side of the relationship is Upstream (U) and which side is Downstream (D). Using these indications you can figure out which bounded-context in the system is the system of record (source of truth) for a certain piece of information. We call that side the upstream side. This side dictates the schema of the data and always holds the latest version of the data (the "truth"). The downstream side has to follow and use some approach to make sure it can use (and optionally cache) the data from the upstream system. 
 
-So for instance: Vehicles are registered and maintained in the Vehicle Management domain. But within the Workshop Management domain, we need to have some vehicle information to be able to operate - even when the Vehicle service is offline (autonomy is very important in a Microservices architecture). So Vehicle information is cached within the Workshop Management domain. This cache is kept up-to-date by handling events that are being published by the Vehicle Management domain. 
+So for instance: vehicles are registered and maintained in the Vehicle Management bounded-context. But within the Workshop Management bounded-context, we need to have some vehicle information to be able to operate - even when the Vehicle service is offline (autonomy is very important in a Microservices architecture). So Vehicle information is cached within the Workshop Management bounded-context. This cache is kept up-to-date by handling events that are being published by the Vehicle Management bounded-context. 
 
 #### Domain objects
 The application uses the following domain-objects:
@@ -30,15 +30,15 @@ The application uses the following domain-objects:
 | Name             | Description                                                                                                   |
 |------------------|---------------------------------------------------------------------------------------------------------------|
 | Vehicle          | Represents a vehicle.                                                                                         |
-| Customer         | Represents a customer that own one or more vehicles.                                                          |
+| Customer         | Represents a customer that owns one or more vehicles.                                                          |
 | WorkshopPlanning | Represents the planning for the workshop during a single day. A planning contains 0 or more maintenance jobs. |
-| MaintenanceJob   | Represents a job to executed for a single vehicle.                                                            |
+| MaintenanceJob   | Represents a job to executed on a single vehicle.                                                            |
 | Product          | Represents a product (or part) that is used when executing a maintenance job or sold directly to a customer.  |
-| Sale             | Represents a direct sale of a product to a customer (not related to a maintenance job.                        |
+| Sale             | Represents a direct sale of a product to a customer (not related to a maintenance job).                        |
 | Invoice          | Represents an invoice sent to a customer for 1 or more finished maintenance-jobs.                             |
 
 ### Solution Architecture
-I've created a solution architecture diagram which shows all the moving parts in the application. You will probably recognize how the different bounded contexts in the Context Map are represented by services in this architecture.
+I've created a solution architecture diagram which shows all the moving parts in the application. You will probably recognize how the different bounded contexts in the context-map are represented by services in this architecture:
 
 ![Solution Architecture](img/solution-architecture.png)
 
@@ -84,7 +84,7 @@ This service publishes the following events:
 - MaintenanceJobPlanned
 - MaintenanceJobFinished
 
-Within this domain I've used a DDD approach. The Workshop Planning aggregate handles all commands and yields events that will then be published using the message-broker.
+Within this bounded-context I've used a DDD approach. The Workshop Planning aggregate handles all commands and yields events that will then be published using the message-broker.
 
 Because this aggregate uses event-sourcing for persisting its state, every command that comes in is first transformed into an event that is handled by the aggregate. This will actually change the internal state of the aggregate. The state is persisted by storing the list of all events that occurred for 1 aggregate instance. When another command comes in for an aggregate instance (identified by its unique Id), all events are replayed and handled by the aggregate to return it to its former state. The aggregate offers a specific constructor that takes a list of events and replays them internally.
 
@@ -182,7 +182,7 @@ The Visual Studio solution contains several folders. Below you find a descriptio
 - **VehicleManagementAPI** - the Web-API for managing vehicle data.
 - **WebApp** - the front-end web-application used by the end-users of the system (employees of PitStop garage).
 - **WorkshopManagementAPI** - the Web-API for managing workshop data.
-- **WorkshopManagementEventHandler** - the event-handler picking up events and creating the read-model for the WorkshopManagement domain.
+- **WorkshopManagementEventHandler** - the event-handler picking up events and creating the read-model for the WorkshopManagement bounded-context.
 
 ## Getting started
 In order to run the application you need to take several steps. This description assumes you're developing on a Windows machine using Visual Studio 2017 and already forked and pulled the latest version of the source-code from the repo.
