@@ -38,7 +38,7 @@ The application uses the following domain-objects:
 | Invoice          | Represents an invoice sent to a customer for 1 or more finished maintenance-jobs.                             |
 
 ### Solution Architecture
-I've created a solution architecture diagram which shows all the moving parts in the application. You will probably recognize how the different bounded contexts in the context-map are represented by services in this architecture:
+I've created a solution architecture diagram which shows all the moving parts in the application. You will probably recognize how the different bounded-contexts in the context-map are represented by the services in this architecture:
 
 ![Solution Architecture](img/solution-architecture.png)
 
@@ -71,7 +71,7 @@ This service publishes the following events:
 This service contains 2 parts: an API for managing the workshop planning and an event-handler that handles events and builds a read-model that is used by the API. 
 
 ##### API
-This is an API that is used to manage Maintenance Jobs in the system. For now, only CREATE, UPDATE and READ functionality is implemented. Because we want to be able to keep Workshop Management up and running even when other services are down, the API also offers functionality to retrieve vehicle and customer information from the read-model. This read-model is filled by the event-handler (described below).
+This is an API that is used to manage Maintenance Jobs in the system.Because we want to be able to keep Workshop Management up and running even when other services are down, the API also offers functionality to retrieve vehicle and customer information from the read-model. This read-model is filled by the event-handler (described below).
 
 This service handles the following commands:
 
@@ -109,7 +109,7 @@ This service handles the following events:
 - MaintenanceJobFinished
 
 #### Invoice Service
-The invoice service creates an invoice for all maintenance jobs that have been finished (and are not yet invoiced). It only handles events from the message-broker and offers no API. The invoice is created as an HTML email message which is emailed to a printer. This company will print the invoice and send it to the customer by snail-mail (this last part is out of scope of course). 
+The invoice service creates an invoice for all maintenance jobs that have been finished (and are not yet invoiced). It only handles events from the message-broker and offers no API. The invoice is created as an HTML email message which is emailed to PrestoPrint, a fictitious printing company.
 
 This service handles the following events:
 
@@ -137,7 +137,7 @@ This chapter describes the technology and libraries used to build this applicati
 The application is build completely using .NET Core and ASP.NET Core. See [https://dot.net](https://dot.net ".NET web-site") for more info.
 
 **Docker**
-Every service within the system and all infrastructural components (database, message-broker, mailserver) are run in a Docker container. Docker Compose is used to compose the application and connect all the components. See [https://www.docker.com/](https://www.docker.com/ "Docker web-site") for more info.
+Every service within the system and all infrastructural components (database, message-broker, mail-server) are run in a Docker container. In this solution, only Linux based containers are used. Docker Compose is used to compose the application and connect all the components. See [https://www.docker.com/](https://www.docker.com/ "Docker web-site") for more info.
 
 **RabbitMQ**
 RabbitMQ is used as message-broker. I use a default RabbitMQ Docker image (including management) from Docker Hub (`rabbitmq:3-management`). See [https://www.rabbitmq.com/](https://www.rabbitmq.com/ "RabbitMQ web-site") for more info.
@@ -149,7 +149,7 @@ The database server used to host all databases is MS SQL Server running on Linux
 To simulate sending emails, I use MailDev. This test-server acts as both an SMTP Server as a POP3 server and offers a website to see the mails that were sent. No emails are actually sent when using this test-server. I use the default MailDev Docker image from Docker Hub (`djfarrelly/maildev`). See [https://github.com/djfarrelly/MailDev](https://github.com/djfarrelly/MailDev "MailDev Github repo") for more info.
 
 **AutoMapper**
-AutoMapper is used (only where it adds value) to map certain POCOs to other POCOs. This is primarily handy when mapping commands to events, events to events or events to models. See [http://automapper.org/](http://automapper.org/ "Automapper web-site") for more info.
+AutoMapper is used (only where it adds value) to map between POCOs. This is primarily handy when mapping commands to events, events to events or events to models. See [http://automapper.org/](http://automapper.org/ "Automapper web-site") for more info.
 
 **Polly**
 Polly is used to make sure the services are resilient to outages of other services. It offers automatic retry or circuit-breaker logic that is used at every interaction with resources that could be down (database, message-broker, other services). See [https://github.com/App-vNext/Polly](https://github.com/App-vNext/Polly "Polly Github repo") for more info.
@@ -158,30 +158,30 @@ Polly is used to make sure the services are resilient to outages of other servic
 Refit is used to simplify calling REST APis. See [https://github.com/paulcbetts/refit](https://github.com/paulcbetts/refit "Refit Github repo") for more info. 
 
 **SwashBuckle**
-Swashbuckle is used for auto-generating Swagger documentation and a test ui for the ASP.NET Web APIs. See [https://github.com/domaindrivendev/Swashbuckle](https://github.com/domaindrivendev/Swashbuckle "Swashbuckle Github repo") for more info.
+Swashbuckle is used for auto-generating Swagger documentation and a test-ui for the ASP.NET Web APIs. See [https://github.com/domaindrivendev/Swashbuckle](https://github.com/domaindrivendev/Swashbuckle "Swashbuckle Github repo") for more info.
 
 **Dapper**
 Dapper is used in several services as lightweight ORM layer. See [https://github.com/StackExchange/Dapper](https://github.com/StackExchange/Dapper "Dapper Github repo") for more info.
 
 ## Solution Folder structure
-The Visual Studio solution contains several folders. Below you find a description of every folder. Most folders correspond to a component in the solution architecture. Look there for an in-depth description of the functionality of a component.
+The Visual Studio solution contains several files and folders. Most folders correspond to a component in the solution architecture. Look there for an in-depth description of the functionality of a component.
 
 - **Solution items**
 	- **ClearDatabases.sql** : a sql script to empty all the SQL databases of the solution.
-	- **CopyNuGetFiles.ps1** : copy NuGet packages from the private NuGet folder.
+	- **CopyNuGetFiles.ps1** : copy NuGet packages from the private NuGet folder (used for Docker build).
 	- **docker-compose.yml** : the docker-compose file for the application.
 	- **RebuildAllDockerImages.ps1** : do a docker build of all the projects in the solution.
-	- **RemoveUnusedImages.ps1** : removes "dangling" docker images (without a name). They are created during the docker build process and can be safely removed.
+	- **RemoveUnusedImages.ps1** : removes "dangling" docker images (without a name).
 	- **StopAndRemoveAllContainers.ps1** : stops and removes all containers.
 - **AuditlogService** : the AuditLog service.
-- **CustomerManagementAPI** : the Web-API for managing customer data ("CRM").
-- **Infrastructure** - an infrastructural component with reusable stuff. This is the only project that other projects have a project-reference to. In a real-world situation, you would build this project and publish it as a NuGet package to a NuGet feed and reference it from there!
+- **CustomerManagementAPI** : the Web API for managing customer data ("CRM").
+- **Infrastructure** - an infrastructural component with reusable stuff. 
 - **InvoiceService** - the service that sends invoices for executed maintenance.
 - **NotificationService** - the service that sends customers a notification when they have an appointment.
 - **TimeService** - the service that lets "the world" know a certain period of time has passed. The current implementation only supports days. 
-- **VehicleManagementAPI** - the Web-API for managing vehicle data.
+- **VehicleManagementAPI** - the Web API for managing vehicle data.
 - **WebApp** - the front-end web-application used by the end-users of the system (employees of PitStop garage).
-- **WorkshopManagementAPI** - the Web-API for managing workshop data.
+- **WorkshopManagementAPI** - the Web API for managing workshop data.
 - **WorkshopManagementEventHandler** - the event-handler picking up events and creating the read-model for the WorkshopManagement bounded-context.
 
 ## Getting started
@@ -192,7 +192,7 @@ In order to run the application you need to take several steps. This description
 > Rabbit MQ login: rabbitmquser / DEBmbwkSrzy9D1T9cJfa
 
 - Satisfy prerequisites
-   Make sure you have Docker for Windows installed and running smoothly. Also make sure everything is configured correctly in order to pull Docker images from the public Docker hub.
+   Make sure you have Docker for Windows installed and running smoothly. This sample only uses Linux based containers. Also make sure everything is configured correctly in order to pull Docker images from the public Docker hub.
 
 - Create private NuGet source
    To prevent project-references between projects in the solution, I've used a folder on my local file-system as a private NuGet feed. 
@@ -204,16 +204,16 @@ In order to run the application you need to take several steps. This description
 - Open the PitStop solution in Visual Studio.  
 
 - Configure the private NuGet feed
-   You only need to do this if you configured a different folder as private feed than `d:\NuGet\PitStop`. Open the Infrastructure project and edit the file *Infrastructure\Properties\PublishProfiles\Local NuGet Folder.pubxml*. Change the *PublishDir* setting to the folder you created. Open the file *CopyNuGetFiles.ps1* in the solution folder and change the folder in the last line of the script to the folder you created.
+   You only need to do this if you configured a different folder as private feed than `d:\NuGet\PitStop`. Open the Infrastructure project and edit the file *Infrastructure\Properties\PublishProfiles\Local NuGet Folder.pubxml*. Change the *PublishDir* setting to the folder you created. Open the file solution item *CopyNuGetFiles.ps1* and change the folder in the last line of the script to the folder you created.
 
 - Publish Infrastructure package
-   In order to reference the Infrastructure package from other projects, we need to publish it. Right click on the Infrastructure project and select the option *Publish*. In the dialog that is shown, click the *Publish* button. Now a PitStop.Infrastructure NuGet package file should appear in your private NuGet feed folder.
+   In order to reference the Infrastructure package from other projects, we need to publish it. Right click on the Infrastructure project and select the option *Publish*. In the dialog that is shown, click the *Publish* button. A PitStop.Infrastructure NuGet package file should appear in your private NuGet feed folder.
 
 - Rebuild solution
    To make sure everything is setup correctly, do a Rebuild All of the solution. This will also restore all the NuGet packages used throughout the solution. If no errors occur, you're good to go.
 
 - Build docker images
-   Open up a Powershell window and go to the `Pitstop/src` folder. Make sure you Docker for Windows is started. Then execute the `RebuildAllDockerImages.ps1` script. This will rebuild all the Docker images for all the projects. Watch the output for any errors. After the images are built, you could check whether they are all there using the `docker images` command. This should yield something like this: 
+   Open up a Powershell window and go to the `Pitstop/src` folder. Then execute the `RebuildAllDockerImages.ps1` script. This will rebuild all the Docker images for all the projects. Watch the output for any errors. After the images are built, you could check whether they are all there using the `docker images` command. This should yield something like this: 
 
    ![](img/docker-images.png)
 
@@ -222,7 +222,7 @@ In order to run the application you need to take several steps. This description
 
    Because this will start everything in the foreground, you will see all the logging being emitted from the different components. You will probably see a couple of *Unable to connect to bla, retrying in 5 sec.* messages in there. This is expected and not a problem. This is Polly doing its work to make sure that failures that occur when calling a component that is still starting up are handled gracefully. 
 
-   The first time the service are started, the necessary databases are automatically created by the different services. You could check this by connecting to the SQL Server using SSMS (server *localhost*) and looking at the different databases:
+   The first time the services are started, the necessary databases are automatically created. You could check this by connecting to the SQL Server using SSMS (server *localhost*) and looking at the different databases:
 
    ![](img/ssms-databases.png)
 
@@ -248,7 +248,7 @@ Now you can follow the following scenario (make sure you fill all the fields in 
 Now you've used the basic functionality of the application. We'll test the functionality of the *Notification service* next. 
 
 ### Testing notifications
-To test the *Notification Service*, make sure you have scheduled a Maintenance Job for today. The *Notification service* reacts to the *DayHasPassed* event that is normally published by the *Time service*. But in order to speed this up, we'll publish such an event using the RabbitMQ Management Dashboard. Open the browser window (or tab) that shows the RabbitMQ Management Dashboard. Go to the *Exchanges* tab and click the *PitStop* exchange. Now expand the *Publish message* part of the screen. To send the correct event, we need to add a header to the message. You do this by adding a header named *MessageType* and value *DayHasPassed*. The body (payload) of the message should contain an empty object (defined in JSON):
+To test the *Notification Service*, make sure you have scheduled a Maintenance Job for today. The *Notification service* reacts to the *DayHasPassed* event that is normally published by the *Time service*. But in stead of waiting until midnight, we'll publish such an event using the RabbitMQ Management Dashboard. Open the browser window (or tab) that shows the RabbitMQ Management Dashboard. Go to the *Exchanges* tab and click the *PitStop* exchange. Now expand the *Publish message* part of the screen. To send the correct event, we need to add a header to the message. You do this by adding a header named *MessageType* and value *DayHasPassed*. The body (payload) of the message should contain an empty object (defined in JSON):
 
 ![](img/day-has-passed-event.png)
 
@@ -257,7 +257,7 @@ Now you can push the *Publish message* button to send the message. If all goes a
 ![](img/notification-email.png)
 
 ### Testing invoicing
-To test the *Notification Service*, make sure you have scheduled a Maintenance Job for today. Now first complete this Maintenance Job on the *Workshop Management* screen.
+To test the *Invoice Service*, make sure you have scheduled a Maintenance Job for today. Now first complete this Maintenance Job on the *Workshop Management* screen.
 
 The *Invoice service* reacts to the *DayHasPassed* event that is normally published by the *Time service*. But in order to speed this up, we'll publish such an event using the RabbitMQ Management Dashboard. See the description of how to do this under *Testing Notifications* above.
 
