@@ -187,9 +187,7 @@ The Visual Studio solution contains several files and folders. Most folders corr
 ## Getting started
 In order to run the application you need to take several steps. This description assumes you're developing on a Windows machine using Visual Studio 2017 and already forked and pulled the latest version of the source-code from the repo.
 
-> In the `docker-commpose.yml` file in the root of the solution folder there are some credentials specified for components that need them. These are also used by the different services that use these components (specified in config files):
-> SQL Server login: sa / 8jkGh47hnDw89Haq8LN2
-> Rabbit MQ login: rabbitmquser / DEBmbwkSrzy9D1T9cJfa
+> In the `docker-commpose.yml` file in the root of the solution folder there are some credentials specified for components that need them. These are also used by the different services that use these components (specified in config files): SQL Server login: sa / 8jkGh47hnDw89Haq8LN2, Rabbit MQ login: rabbitmquser / DEBmbwkSrzy9D1T9cJfa
 
 - Satisfy prerequisites
    Make sure you have Docker for Windows installed and running smoothly. This sample only uses Linux based containers. Also make sure everything is configured correctly in order to pull Docker images from the public Docker hub.
