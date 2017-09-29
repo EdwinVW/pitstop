@@ -66,7 +66,7 @@ namespace Pitstop.WorkshopManagementAPI.Domain
             if (Jobs.Count(j => j.StartTime >= command.StartTime && j.StartTime <= command.EndTime || 
                                 j.EndTime >= command.StartTime && j.EndTime <= command.EndTime) > MAX_PARALLEL_JOBS)
             {
-                throw new BusinessRuleViolationException($"Maintenancejob overlaps with more than {MAX_PARALLEL_JOBS} other job.");
+                throw new BusinessRuleViolationException($"Maintenancejob overlaps with more than {MAX_PARALLEL_JOBS} other jobs.");
             }
 
             // only 1 maintenance job can be executed on a vehicle during a certain time-slot

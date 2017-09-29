@@ -12,6 +12,7 @@ using WebApp.Commands;
 using WebApp.RESTClients;
 using Refit;
 using System.Net;
+using WebApp.Models;
 
 namespace PitStop.Controllers
 {
@@ -116,8 +117,8 @@ namespace PitStop.Controllers
                     if (ex.StatusCode == HttpStatusCode.Conflict)
                     {
                         // add errormessage from API exception to model
-                        var content = ex.GetContentAs<Exception>();
-                        inputModel.Error = content.Message;
+                        var content = ex.GetContentAs<BusinessRuleViolation>();
+                        inputModel.Error = content.ErrorMessage;
 
                         // repopulate list of available vehicles in the model
                         inputModel.Vehicles = await GetAvailableVehiclesList();

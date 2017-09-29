@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
+using Pitstop.WorkshopManagementAPI.Models;
 
 namespace Pitstop.WorkshopManagementAPI.Controllers
 {
@@ -117,7 +118,7 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
                     }
                     catch (BusinessRuleViolationException ex)
                     {
-                        return StatusCode(StatusCodes.Status409Conflict, ex);
+                        return StatusCode(StatusCodes.Status409Conflict, new BusinessRuleViolation { ErrorMessage = ex.Message });
                     }
                 }
                 return BadRequest();
