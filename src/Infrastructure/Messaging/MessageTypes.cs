@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Pitstop.Infrastructure.Messaging
+﻿namespace Pitstop.Infrastructure.Messaging
 {
     /// <summary>
     /// Complete list of message types in the system.
