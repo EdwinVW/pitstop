@@ -66,6 +66,7 @@ namespace Pitstop.WorkshopManagementAPI
             loggerFactory.AddDebug();
 
             app.UseMvc();
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             SetupAutoMapper();
