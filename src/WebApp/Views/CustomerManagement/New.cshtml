@@ -2,6 +2,11 @@
 @{
     ViewData["Title"] = "Register Customer";
 }
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
 <h3>Customer Management - register customer</h3>
 
 <form asp-controller="CustomerManagement" asp-action="Register" method="post">

@@ -2,6 +2,11 @@
 @{
     ViewData["Title"] = "Schedule Maintenance";
 }
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
 <h3>Workshop Management - schedule maintenance</h3>
 
 @if (!string.IsNullOrEmpty(Model.Error))

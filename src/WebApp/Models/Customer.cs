@@ -32,6 +32,7 @@ namespace Pitstop.Models
 
         [Required]
         [Display(Name = "Email address")]
+        [EmailAddress()]
         public string EmailAddress { get; set; }
     }
 }
