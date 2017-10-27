@@ -19,22 +19,22 @@
 
 <form asp-controller="WorkshopManagement" asp-action="RegisterMaintenanceJob" method="post">
     <div class="form-group">
-        <label asp-for="MaintenanceJob.StartTime"></label>
-        <input asp-for="MaintenanceJob.StartTime" type="text" class="form-control" />
-        <span asp-validation-for="MaintenanceJob.StartTime" class="text-danger"></span>
+        <label asp-for="StartTime"></label>
+        <input asp-for="StartTime" type="text" class="form-control" />
+        <span asp-validation-for="StartTime" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="MaintenanceJob.EndTime"></label>
-        <input asp-for="MaintenanceJob.EndTime" type="text" class="form-control" />
-        <span asp-validation-for="MaintenanceJob.EndTime" class="text-danger"></span>
+        <label asp-for="EndTime"></label>
+        <input asp-for="EndTime" type="text" class="form-control" />
+        <span asp-validation-for="EndTime" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="MaintenanceJob.Description"></label>
-        <input asp-for="MaintenanceJob.Description" type="text" class="form-control" />
-        <span asp-validation-for="MaintenanceJob.Description" class="text-danger"></span>
+        <label asp-for="Description"></label>
+        <input asp-for="Description" type="text" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="MaintenanceJob.Vehicle"></label>
+        <label asp-for="SelectedVehicleLicenseNumber"></label>
         <select asp-for="SelectedVehicleLicenseNumber" asp-items="Model.Vehicles" class="form-control"></select>
         <span asp-validation-for="SelectedVehicleLicenseNumber" class="text-danger"></span>
     </div>

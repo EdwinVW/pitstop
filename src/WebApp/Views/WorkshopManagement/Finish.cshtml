@@ -1,29 +1,34 @@
-﻿@model Pitstop.ViewModels.WorkshopManagementDetailsViewModel
+﻿@model Pitstop.ViewModels.WorkshopManagementFinishViewModel
 @{
     ViewData["Title"] = "Finish Maintenance job";
 }
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
 <h3>Workshop Management - finish maintenance job</h3>
 
 <form asp-controller="WorkshopManagement" asp-action="FinishMaintenanceJob" method="post">
     <div class="form-group">
-        <label asp-for="MaintenanceJob.ActualStartTime"></label>
-        <input asp-for="MaintenanceJob.ActualStartTime" type="text" class="form-control" />
-        <span asp-validation-for="MaintenanceJob.ActualStartTime" class="text-danger"></span>
+        <label asp-for="ActualStartTime"></label>
+        <input asp-for="ActualStartTime" type="text" class="form-control" />
+        <span asp-validation-for="ActualStartTime" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="MaintenanceJob.ActualEndTime"></label>
-        <input asp-for="MaintenanceJob.ActualEndTime" type="text" class="form-control" />
-        <span asp-validation-for="MaintenanceJob.ActualEndTime" class="text-danger"></span>
+        <label asp-for="ActualEndTime"></label>
+        <input asp-for="ActualEndTime" type="text" class="form-control" />
+        <span asp-validation-for="ActualEndTime" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="MaintenanceJob.Notes"></label>
-        <input asp-for="MaintenanceJob.Notes" type="text" class="form-control" />
-        <span asp-validation-for="MaintenanceJob.Notes" class="text-danger"></span>
+        <label asp-for="Notes"></label>
+        <input asp-for="Notes" type="text" class="form-control" />
+        <span asp-validation-for="Notes" class="text-danger"></span>
     </div>
     <input asp-for="Date" type="hidden" />
-    <input asp-for="MaintenanceJob.Id" type="hidden" />
+    <input asp-for="Id" type="hidden" />
     <span><button type="submit" class="btn btn-default">Complete</button></span>
-    <span><a asp-action="Details" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" asp-route-jobId="@Model.MaintenanceJob.Id" class="btn btn-default">Cancel</a></span>
+    <span><a asp-action="Details" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" asp-route-jobId="@Model.Id" class="btn btn-default">Cancel</a></span>
 </form>
 
 

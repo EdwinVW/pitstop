@@ -27,6 +27,7 @@ namespace PitStop.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return await ExecuteWithFallback(async () =>
@@ -39,6 +40,7 @@ namespace PitStop.Controllers
             });
         }
 
+        [HttpGet]
         public async Task<IActionResult> Details(string licenseNumber)
         {
             return await ExecuteWithFallback(async () =>
@@ -55,16 +57,7 @@ namespace PitStop.Controllers
             });
         }
 
-        public async Task<IActionResult> Register([FromForm] VehicleManagementNewViewModel inputModel)
-        {
-            return await ExecuteWithFallback(async () =>
-            {
-                RegisterVehicle cmd = Mapper.Map<RegisterVehicle>(inputModel);
-                await _vehicleManagementAPI.RegisterVehicle(cmd);
-                return RedirectToAction("Index");
-            });
-        }
-
+        [HttpGet]
         public async Task<IActionResult> New()
         {
             return await ExecuteWithFallback(async () =>
@@ -81,6 +74,25 @@ namespace PitStop.Controllers
             });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Register([FromForm] VehicleManagementNewViewModel inputModel)
+        {
+            if (ModelState.IsValid)
+            {
+                return await ExecuteWithFallback(async () =>
+                {
+                    RegisterVehicle cmd = Mapper.Map<RegisterVehicle>(inputModel);
+                    await _vehicleManagementAPI.RegisterVehicle(cmd);
+                    return RedirectToAction("Index");
+                });
+            }
+            else
+            {
+                return View("New", inputModel);
+            }
+        }
+
+        [HttpGet]
         public IActionResult Error()
         {
             return View();

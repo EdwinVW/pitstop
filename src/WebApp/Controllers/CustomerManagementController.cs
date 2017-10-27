@@ -16,12 +16,13 @@ namespace WebApp.Controllers
         private readonly ICustomerManagementAPI _customerManagementAPI;
         private readonly ILogger _logger;
 
-        public CustomerManagementController(ICustomerManagementAPI customerManagementAPI,  ILogger<CustomerManagementController> logger)
+        public CustomerManagementController(ICustomerManagementAPI customerManagementAPI, ILogger<CustomerManagementController> logger)
         {
             _customerManagementAPI = customerManagementAPI;
             _logger = logger;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return await ExecuteWithFallback(async () =>
@@ -34,6 +35,7 @@ namespace WebApp.Controllers
             });
         }
 
+        [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
             return await ExecuteWithFallback(async () =>
@@ -46,6 +48,7 @@ namespace WebApp.Controllers
             });
         }
 
+        [HttpGet]
         public IActionResult New()
         {
             var model = new CustomerManagementNewViewModel
@@ -55,14 +58,22 @@ namespace WebApp.Controllers
             return View(model);
         }
 
+        [HttpPost]
         public async Task<IActionResult> Register([FromForm] CustomerManagementNewViewModel inputModel)
         {
-            return await ExecuteWithFallback(async () =>
+            if (ModelState.IsValid)
             {
-                RegisterCustomer cmd = Mapper.Map<RegisterCustomer>(inputModel.Customer);
-                await _customerManagementAPI.RegisterCustomer(cmd);
-                return RedirectToAction("Index");
-            });
+                return await ExecuteWithFallback(async () =>
+                {
+                    RegisterCustomer cmd = Mapper.Map<RegisterCustomer>(inputModel.Customer);
+                    await _customerManagementAPI.RegisterCustomer(cmd);
+                    return RedirectToAction("Index");
+                });
+            }
+            else
+            {
+                return View("New", inputModel);
+            }
         }
 
         private async Task<IActionResult> ExecuteWithFallback(Func<Task<IActionResult>> action)
