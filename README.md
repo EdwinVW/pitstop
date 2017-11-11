@@ -190,7 +190,8 @@ In order to run the application you need to take several steps. This description
 > In the `docker-commpose.yml` file in the root of the solution folder there are some credentials specified for components that need them. These are also used by the different services that use these components (specified in config files): SQL Server login: sa / 8jkGh47hnDw89Haq8LN2, Rabbit MQ login: rabbitmquser / DEBmbwkSrzy9D1T9cJfa
 
 - Satisfy prerequisites
-   Make sure you have Docker for Windows installed and running smoothly. This sample only uses Linux based containers. Also make sure everything is configured correctly in order to pull Docker images from the public Docker hub.
+    - Make sure you have Docker for Windows installed and running smoothly. This sample only uses Linux based containers. Also make sure everything is configured correctly in order to pull Docker images from the public Docker hub.
+    - Install Gulp. The Web project needs this to build.
 
 - Create private NuGet source
    To prevent project-references between projects in the solution, I've used a folder on my local file-system as a private NuGet feed. 
@@ -235,7 +236,7 @@ To test the application you need to open the following web-pages:
 
 - The MailDev inbox: [http://localhost:4000](http://localhost:4000).
 
-- The PitStop web-application: [http://localhost:6000](http://localhost:6000).
+- The PitStop web-application: [http://localhost:7000](http://localhost:7000).
 
 Now you can follow the following scenario (make sure you fill all the fields in the entry-forms):
 
