@@ -15,8 +15,8 @@ FROM microsoft/aspnetcore:2.0
 COPY --from=build-env /app/out .
 
 # Expose ports
-EXPOSE 6000/tcp
-ENV ASPNETCORE_URLS http://*:6000
+EXPOSE 7000/tcp
+ENV ASPNETCORE_URLS http://*:7000
 
 # Start
 ENTRYPOINT ["dotnet", "WebApp.dll"]

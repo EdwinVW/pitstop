@@ -133,7 +133,7 @@ services:
       - customermanagementapi
       - workshopmanagementapi
     ports:
-      - "6000:6000"
+      - "7000:7000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
 

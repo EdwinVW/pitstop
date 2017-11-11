@@ -236,7 +236,7 @@ To test the application you need to open the following web-pages:
 
 - The MailDev inbox: [http://localhost:4000](http://localhost:4000).
 
-- The PitStop web-application: [http://localhost:6000](http://localhost:6000).
+- The PitStop web-application: [http://localhost:7000](http://localhost:7000).
 
 Now you can follow the following scenario (make sure you fill all the fields in the entry-forms):
 
