@@ -203,7 +203,7 @@ In order to run the application you need to take several steps. This description
 - Open the PitStop solution in Visual Studio.  
 
 - Configure the private NuGet feed
-   You only need to do this if you configured a different folder as private feed than `d:\NuGet\PitStop`. Open the Infrastructure project and edit the file *Infrastructure\Properties\PublishProfiles\Local NuGet Folder.pubxml*. Change the *PublishDir* setting to the folder you created. Open the file solution item *CopyNuGetFiles.ps1* and change the folder in the last line of the script to the folder you created.
+   You only need to do this if you configured a different folder as private feed than `d:\NuGet\PitStop`. Open the Infrastructure project and edit the file *Infrastructure\Properties\PublishProfiles\Infrastructure.FolderProfile.pubxml*. Change the *PublishDir* setting to the folder you created. Open the file solution item *CopyNuGetFiles.ps1* and change the folder in the last line of the script to the folder you created.
 
 - Publish Infrastructure package
    In order to reference the Infrastructure package from other projects, we need to publish it. Right click on the Infrastructure project and select the option *Publish*. In the dialog that is shown, click the *Publish* button. A PitStop.Infrastructure NuGet package file should appear in your private NuGet feed folder.
