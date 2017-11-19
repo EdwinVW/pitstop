@@ -191,15 +191,11 @@ In order to run the application you need to take several steps. This description
 
 - Satisfy prerequisites
     - Make sure you have Docker for Windows installed and running smoothly. This sample only uses Linux based containers. Also make sure everything is configured correctly in order to pull Docker images from the public Docker hub.
-<<<<<<< HEAD
-    - Install Gulp. The Web project needs this to build.
-=======
     - Increase the amount of memory dedicated to Docker to at least 4 GB. You can do this on the *Advanced* tab of the Docker settings dialog:
 
 	![](img/docker-resources.png) 
 
     - Install Gulp. The Web project uses this during the build.
->>>>>>> upstream/master
 
 - Create private NuGet source
    To prevent project-references between projects in the solution, I've used a folder on my local file-system as a private NuGet feed. 
