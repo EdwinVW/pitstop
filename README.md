@@ -191,7 +191,15 @@ In order to run the application you need to take several steps. This description
 
 - Satisfy prerequisites
     - Make sure you have Docker for Windows installed and running smoothly. This sample only uses Linux based containers. Also make sure everything is configured correctly in order to pull Docker images from the public Docker hub.
+<<<<<<< HEAD
     - Install Gulp. The Web project needs this to build.
+=======
+    - Increase the amount of memory dedicated to Docker to at least 4 GB. You can do this on the *Advanced* tab of the Docker settings dialog:
+
+	![](img/docker-resources.png) 
+
+    - Install Gulp. The Web project uses this during the build.
+>>>>>>> upstream/master
 
 - Create private NuGet source
    To prevent project-references between projects in the solution, I've used a folder on my local file-system as a private NuGet feed. 
@@ -203,7 +211,7 @@ In order to run the application you need to take several steps. This description
 - Open the PitStop solution in Visual Studio.  
 
 - Configure the private NuGet feed
-   You only need to do this if you configured a different folder as private feed than `d:\NuGet\PitStop`. Open the Infrastructure project and edit the file *Infrastructure\Properties\PublishProfiles\Local NuGet Folder.pubxml*. Change the *PublishDir* setting to the folder you created. Open the file solution item *CopyNuGetFiles.ps1* and change the folder in the last line of the script to the folder you created.
+   You only need to do this if you configured a different folder as private feed than `d:\NuGet\PitStop`. Open the Infrastructure project and edit the file *Infrastructure\Properties\PublishProfiles\Infrastructure.FolderProfile.pubxml*. Change the *PublishDir* setting to the folder you created. Open the file solution item *CopyNuGetFiles.ps1* and change the folder in the last line of the script to the folder you created.
 
 - Publish Infrastructure package
    In order to reference the Infrastructure package from other projects, we need to publish it. Right click on the Infrastructure project and select the option *Publish*. In the dialog that is shown, click the *Publish* button. A PitStop.Infrastructure NuGet package file should appear in your private NuGet feed folder.
@@ -218,6 +226,10 @@ In order to run the application you need to take several steps. This description
 
 - Start the application
    This is it, you're now ready to spin up the system! Open up a Powershell window and go to the `Pitstop/src` folder. Then issue the following command: `docker-compose up`. 
+
+	> A strange issue that I sometimes encounter with Docker CE on Windows 10 is that the containers are not started the first time after starting the Docker engine. I haven't found a cause for this behavior yet, but the solution that works for me is to restart the docker enigne and try again. You do this by opening the Docker settings through the icon in the system-tray, going to the *Reset* tab and clicking on the *Restart Docker...* link:  
+	>
+	> ![](img/restart-docker.png)
 
    Because this will start everything in the foreground, you will see all the logging being emitted from the different components. You will probably see a couple of *Unable to connect to bla, retrying in 5 sec.* messages in there. This is expected and not a problem. This is Polly doing its work to make sure that failures that occur when calling a component that is still starting up are handled gracefully. 
 
