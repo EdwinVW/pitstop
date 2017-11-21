@@ -35,7 +35,7 @@ namespace Pitstop.WorkshopManagementEventHandler.DataAccess
         //    // TODO: make CN configurable
         //    if (!optionsBuilder.IsConfigured)
         //    {
-        //        optionsBuilder.UseSqlServer("server=localhost;user id=sa;password=8jkGh47hnDw89Haq8LN2;database=WorkshopManagement;");
+        //        optionsBuilder.UseSqlServer("server=localhost:1434;user id=sa;password=8jkGh47hnDw89Haq8LN2;database=WorkshopManagement;");
         //    }
         //    base.OnConfiguring(optionsBuilder);
         //}
