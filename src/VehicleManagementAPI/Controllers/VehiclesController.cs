@@ -64,7 +64,6 @@ namespace Pitstop.Application.VehicleManagement.Controllers
             }
             catch (DbUpdateException)
             {
-                //Log the error (uncomment ex variable name and write a log.
                 ModelState.AddModelError("", "Unable to save changes. " +
                     "Try again, and if the problem persists " +
                     "see your system administrator.");

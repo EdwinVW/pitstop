@@ -53,7 +53,6 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
             }
             catch (ConcurrencyException)
             {
-                //Log the error (uncomment ex variable name and write a log.
                 ModelState.AddModelError("", "Unable to save changes. " +
                     "Try again, and if the problem persists " +
                     "see your system administrator.");
@@ -166,7 +165,6 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
             }
             catch (ConcurrencyException)
             {
-                //Log the error (uncomment ex variable name and write a log.
                 ModelState.AddModelError("", "Unable to save changes. " +
                     "Try again, and if the problem persists " +
                     "see your system administrator.");
