@@ -2,8 +2,12 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/WebApp",
+      "sslPort": 0
+    },
     "iisExpress": {
-      "applicationUrl": "http://localhost:6000",
+      "applicationUrl": "http://localhost:7000",
       "sslPort": 0
     }
   },
@@ -16,12 +20,12 @@
       }
     },
     "PitStop": {
-      "commandName": "Project",
+      "commandName": "Executable",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:6000"
+      "applicationUrl": "http://localhost:7000"
     }
   }
 }
