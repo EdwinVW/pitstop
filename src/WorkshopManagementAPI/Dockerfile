@@ -3,8 +3,7 @@ WORKDIR /app
 
 # Copy necessary files and restore as distinct layer
 COPY *.csproj ./
-COPY nuget /nuget
-RUN dotnet restore -s https://nuget.org/api/v2/ -s /nuget
+RUN dotnet restore -s https://api.nuget.org/v3/index.json -s https://www.myget.org/F/pitstop/api/v3/index.json
 
 # Copy everything else and build
 COPY . ./
