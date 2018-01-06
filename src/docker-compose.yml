@@ -3,6 +3,7 @@ services:
 
   sqlserver:
     image: microsoft/mssql-server-linux:latest
+    container_name: sqlserver
     volumes:
       - sqlserverdata:/var/opt/mssql 
     ports:
@@ -14,6 +15,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: rabbitmq
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq
     ports:
@@ -25,12 +27,14 @@ services:
 
   mailserver:
     image: djfarrelly/maildev
+    container_name: mailserver
     ports:
       - "25:25"
       - "4000:80"
 
   vehiclemanagementapi:
-    image: pitstop/vehiclemanagementapi:latest
+    build: VehicleManagementAPI
+    container_name: vehiclemanagementapi
     depends_on:
       - rabbitmq
       - sqlserver
@@ -43,7 +47,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
 
   customermanagementapi:
-    image: pitstop/customermanagementapi:latest
+    build: CustomerManagementAPI
+    container_name: customermanagementapi
     depends_on:
       - rabbitmq
       - sqlserver
@@ -56,7 +61,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
 
   workshopmanagementapi:
-    image: pitstop/workshopmanagementapi:latest
+    build: WorkshopManagementAPI
+    container_name: workshopmanagementapi
     depends_on:
       - rabbitmq
       - sqlserver
@@ -69,7 +75,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
 
   auditlogservice:
-    image: pitstop/auditlogservice:latest
+    build: AuditlogService
+    container_name: auditlogservice
     depends_on:
       - rabbitmq
       - sqlserver
@@ -79,7 +86,8 @@ services:
       - PITSTOP_ENVIRONMENT=Production
 
   invoiceservice:
-    image: pitstop/invoiceservice:latest
+    build: InvoiceService
+    container_name: invoiceservice
     depends_on:
       - rabbitmq
       - sqlserver
@@ -90,7 +98,8 @@ services:
       - PITSTOP_ENVIRONMENT=Production
 
   notificationservice:
-    image: pitstop/notificationservice:latest
+    build: NotificationService
+    container_name: notificationservice
     depends_on:
       - rabbitmq
       - sqlserver
@@ -103,7 +112,8 @@ services:
       - PITSTOP_ENVIRONMENT=Production
 
   timeservice:
-    image: pitstop/timeservice:latest
+    build: TimeService
+    container_name: timeservice
     depends_on:
       - rabbitmq
     links:
@@ -112,7 +122,8 @@ services:
       - PITSTOP_ENVIRONMENT=Production
 
   workshopmanagementeventhandler:
-    image: pitstop/workshopmanagementeventhandler:latest
+    build: WorkshopManagementEventHandler
+    container_name: workshopmanagementeventhandler
     depends_on:
       - rabbitmq
       - sqlserver
@@ -123,7 +134,8 @@ services:
       - PITSTOP_ENVIRONMENT=Production
 
   webapp:
-    image: pitstop/webapp:latest
+    build: WebApp
+    container_name: webapp
     depends_on:
       - vehiclemanagementapi
       - customermanagementapi
