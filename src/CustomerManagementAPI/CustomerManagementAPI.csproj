@@ -17,5 +17,7 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
   </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1Development_1json__JSONSchema="http://json.schemastore.org/bowerrc" /></VisualStudio></ProjectExtensions>
-
+  <PropertyGroup>
+    <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+  </PropertyGroup>
 </Project>

@@ -8,12 +8,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0E6C719C-89BB-4C83-BA00-AFECD9EA4671}"
 	ProjectSection(SolutionItems) = preProject
 		ClearDatabases.sql = ClearDatabases.sql
-		CopyNuGetFiles.ps1 = CopyNuGetFiles.ps1
 		docker-compose.yml = docker-compose.yml
 		nuget.config = nuget.config
 		RebuildAllDockerImages.ps1 = RebuildAllDockerImages.ps1
+		RebuildAllDockerImages.sh = RebuildAllDockerImages.sh
 		RemoveUnusedImages.ps1 = RemoveUnusedImages.ps1
+		RemoveUnusedImages.sh = RemoveUnusedImages.sh
 		StopAndRemoveAllContainers.ps1 = StopAndRemoveAllContainers.ps1
+		StopAndRemoveAllContainers.sh = StopAndRemoveAllContainers.sh
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{2E6B2542-F16F-40B8-93DC-2253EC90971A}"

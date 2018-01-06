@@ -168,11 +168,11 @@ The Visual Studio solution contains several files and folders. Most folders corr
 
 - **Solution items**
 	- **ClearDatabases.sql** : a sql script to empty all the SQL databases of the solution.
-	- **CopyNuGetFiles.ps1** : copy NuGet packages from the private NuGet folder (used for Docker build).
 	- **docker-compose.yml** : the docker-compose file for the application.
-	- **RebuildAllDockerImages.ps1** : do a docker build of all the projects in the solution.
-	- **RemoveUnusedImages.ps1** : removes "dangling" docker images (without a name).
-	- **StopAndRemoveAllContainers.ps1** : stops and removes all containers.
+	- **RebuildAllDockerImages.ps1** / **RebuildAllDockerImages.sh** : do a docker build of all the projects in the solution.
+	- **RemoveUnusedImages.ps1** / **RemoveUnusedImages.sh** : removes "dangling" docker images (without a name).
+	- **StopAndRemoveAllContainers.ps1** / **StopAndRemoveAllContainers.sh** : stops and removes all containers.
+	- **nuget.config** : config file for NuGet containing the NuGet feeds used by the solution.
 - **AuditlogService** : the AuditLog service.
 - **CustomerManagementAPI** : the Web API for managing customer data ("CRM").
 - **Infrastructure** - an infrastructural component with reusable stuff. 
@@ -184,39 +184,33 @@ The Visual Studio solution contains several files and folders. Most folders corr
 - **WorkshopManagementAPI** - the Web API for managing workshop data.
 - **WorkshopManagementEventHandler** - the event-handler picking up events and creating the read-model for the WorkshopManagement bounded-context.
 
+> Each project (with the exception of *Infrastructure*) contains a *Dockerfile* and a *BuildDockerImage * script. The script only contains the Docker Build command for building the image. By starting this script (or by manually executing a Docker Build command) inside a certain project folder, the Docker image will be created. 
+
 ## Getting started
 In order to run the application you need to take several steps. This description assumes you're developing on a Windows machine using Visual Studio 2017 and already forked and pulled the latest version of the source-code from the repo.
 
 > In the `docker-commpose.yml` file in the root of the solution folder there are some credentials specified for components that need them. These are also used by the different services that use these components (specified in config files): SQL Server login: sa / 8jkGh47hnDw89Haq8LN2, Rabbit MQ login: rabbitmquser / DEBmbwkSrzy9D1T9cJfa
 
 - Satisfy prerequisites
-    - Make sure you have Docker for Windows installed and running smoothly. This sample only uses Linux based containers. Also make sure everything is configured correctly in order to pull Docker images from the public Docker hub.
+    - Make sure you have Docker installed and running smoothly on your machine. This sample only uses Linux based containers. Also make sure everything is configured correctly in order to pull Docker images from the public Docker hub.
     - Increase the amount of memory dedicated to Docker to at least 4 GB. You can do this on the *Advanced* tab of the Docker settings dialog:
 
 	![](img/docker-resources.png) 
 
-    - Install Gulp. The Web project uses this during the build.
+- Open the PitStop solution in Visual Studio.  
 
-- Create private NuGet source
-   To prevent project-references between projects in the solution, I've used a folder on my local file-system as a private NuGet feed. 
-
-   Create a folder somewhere on your local file-system to act as your private NuGet feed (my default is `d:\NuGet\PitStop`). Open Visual Studio and configure the NuGet sources and add the local feed using the folder you just created: 
+- Add NuGet source
+   To prevent project-references between projects in the solution, I've used a public MyGet feed for shared components. The URI for this feed is: `https://www.myget.org/F/pitstop/api/v3/index.json`. This feed contains only the Infrastructure package. Open Visual Studio and configure the NuGet sources and add the MyGet feed: 
 
    ![Add private NuGet feed](img/add-private-nuget-feed.png).
 
-- Open the PitStop solution in Visual Studio.  
-
-- Configure the private NuGet feed
-   You only need to do this if you configured a different folder as private feed than `d:\NuGet\PitStop`. Open the Infrastructure project and edit the file *Infrastructure\Properties\PublishProfiles\Infrastructure.FolderProfile.pubxml*. Change the *PublishDir* setting to the folder you created. Open the file solution item *CopyNuGetFiles.ps1* and change the folder in the last line of the script to the folder you created.
-
-- Publish Infrastructure package
-   In order to reference the Infrastructure package from other projects, we need to publish it. Right click on the Infrastructure project and select the option *Publish*. In the dialog that is shown, click the *Publish* button. A PitStop.Infrastructure NuGet package file should appear in your private NuGet feed folder.
+   > The MyGet feed is read-only. So if you want to make changes to the InfraStructure package, create a pull request with the necessary changes (don't forget to update the version of the package). I will then push the latest version of the package to the MyGet feed.
 
 - Rebuild solution
    To make sure everything is setup correctly, do a Rebuild All of the solution. This will also restore all the NuGet packages used throughout the solution. If no errors occur, you're good to go.
 
 - Build docker images
-   Open up a Powershell window and go to the `Pitstop/src` folder. Then execute the `RebuildAllDockerImages.ps1` script. This will rebuild all the Docker images for all the projects. Watch the output for any errors. After the images are built, you could check whether they are all there using the `docker images` command. This should yield something like this: 
+   Open up a Powershell window and go to the `Pitstop/src` folder. Then execute the `RebuildAllDockerImages` script. This will rebuild all the Docker images for all the projects. Watch the output for any errors. After the images are built, you could check whether they are all there using the `docker images` command. This should yield something like this: 
 
    ![](img/docker-images.png)
 
@@ -227,7 +221,7 @@ In order to run the application you need to take several steps. This description
 	>
 	> ![](img/restart-docker.png)
 
-   Because this will start everything in the foreground, you will see all the logging being emitted from the different components. You will probably see a couple of *Unable to connect to bla, retrying in 5 sec.* messages in there. This is expected and not a problem. This is Polly doing its work to make sure that failures that occur when calling a component that is still starting up are handled gracefully. 
+   Because this will start everything in the foreground, you will see all the logging being emitted from the different components. You will probably see a couple of *Unable to connect to RabbitMQ/SQL Server, retrying in 5 sec.* messages in there. This is expected and not a problem. This is Polly doing its work to make sure that failures that occur when calling a component that is still starting up are handled gracefully. 
 
    The first time the services are started, the necessary databases are automatically created. You could check this by connecting to the SQL Server using SSMS (server *localhost*, port 1434; separate the server and port with a comma in SSMS: `localhost,1434`) and looking at the different databases:
 

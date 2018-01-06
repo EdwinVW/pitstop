@@ -7,6 +7,8 @@ RUN dotnet restore -s https://api.nuget.org/v3/index.json -s https://www.myget.o
 
 # Copy everything else and build
 COPY . ./
+RUN npm install
+RUN gulp default
 RUN dotnet publish -c Release -o out
 
 # Build runtime image

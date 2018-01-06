@@ -115,17 +115,12 @@ namespace Pitstop.NotificationService
                 body.AppendLine($"Greetings,\n");
                 body.AppendLine($"The PitStop crew");
 
-                using (TransactionScope tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-                {
-                    // sent notification
-                    await _emailNotifier.SendEmailAsync(
-                        customer.EmailAddress, "noreply@pitstop.nl", "Vehicle maintenance reminder", body.ToString());
+                // sent notification
+                await _emailNotifier.SendEmailAsync(
+                    customer.EmailAddress, "noreply@pitstop.nl", "Vehicle maintenance reminder", body.ToString());
 
-                    // remove jobs for which a notification was sent
-                    await _repo.RemoveMaintenanceJobsAsync(jobsPerCustomer.Select(job => job.JobId));
-
-                    tx.Complete();
-                }
+                // remove jobs for which a notification was sent
+                await _repo.RemoveMaintenanceJobsAsync(jobsPerCustomer.Select(job => job.JobId));
             }
         }
     }
