@@ -33,6 +33,7 @@ services:
       - "4000:80"
 
   vehiclemanagementapi:
+    image: pitstop/vehiclemanagementapi
     build: VehicleManagementAPI
     container_name: vehiclemanagementapi
     depends_on:
@@ -47,6 +48,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
 
   customermanagementapi:
+    image: pitstop/customermanagementapi
     build: CustomerManagementAPI
     container_name: customermanagementapi
     depends_on:
@@ -61,6 +63,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
 
   workshopmanagementapi:
+    image: pitstop/workshopmanagementapi
     build: WorkshopManagementAPI
     container_name: workshopmanagementapi
     depends_on:
@@ -75,6 +78,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
 
   auditlogservice:
+    image: pitstop/auditlogservice
     build: AuditlogService
     container_name: auditlogservice
     depends_on:
@@ -86,6 +90,7 @@ services:
       - PITSTOP_ENVIRONMENT=Production
 
   invoiceservice:
+    image: pitstop/invoiceservice
     build: InvoiceService
     container_name: invoiceservice
     depends_on:
@@ -98,6 +103,7 @@ services:
       - PITSTOP_ENVIRONMENT=Production
 
   notificationservice:
+    image: pitstop/notificationservice
     build: NotificationService
     container_name: notificationservice
     depends_on:
@@ -112,6 +118,7 @@ services:
       - PITSTOP_ENVIRONMENT=Production
 
   timeservice:
+    image: pitstop/timeservice
     build: TimeService
     container_name: timeservice
     depends_on:
@@ -122,6 +129,7 @@ services:
       - PITSTOP_ENVIRONMENT=Production
 
   workshopmanagementeventhandler:
+    image: pitstop/workshopmanagementeventhandler
     build: WorkshopManagementEventHandler
     container_name: workshopmanagementeventhandler
     depends_on:
@@ -134,6 +142,7 @@ services:
       - PITSTOP_ENVIRONMENT=Production
 
   webapp:
+    image: pitstop/webapp
     build: WebApp
     container_name: webapp
     depends_on:
