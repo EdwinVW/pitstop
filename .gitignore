@@ -257,3 +257,6 @@ out/
 
 # local nuget folder
 nuget/
+
+# Visual Studio Core
+.vscode/

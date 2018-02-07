@@ -171,6 +171,7 @@ The Visual Studio solution contains several files and folders. Most folders corr
 	- **docker-compose.yml** : the docker-compose file for the application.
 	- **RebuildAllDockerImages.ps1** / **RebuildAllDockerImages.sh** : do a docker build of all the projects in the solution.
 	- **RemoveUnusedImages.ps1** / **RemoveUnusedImages.sh** : removes "dangling" docker images (without a name).
+    - **RunAllDockerImages.ps1** / **RunAllDockerImages.sh** : run the project in the background, and start tailing the logs for all the containers. You can crtl-c from viewing the logs, and the the containers keep running.
 	- **StopAndRemoveAllContainers.ps1** / **StopAndRemoveAllContainers.sh** : stops and removes all containers.
 	- **nuget.config** : config file for NuGet containing the NuGet feeds used by the solution.
 - **AuditlogService** : the AuditLog service.
