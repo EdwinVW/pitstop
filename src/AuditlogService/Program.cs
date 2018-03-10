@@ -13,7 +13,7 @@ namespace AuditlogService
 
         static Program()
         {
-            _env = Environment.GetEnvironmentVariable("PITSTOP_ENVIRONMENT");
+            _env = Environment.GetEnvironmentVariable("PITSTOP_ENVIRONMENT") ?? "Production"'";
 
             Console.WriteLine($"Environment: {_env}");
 
