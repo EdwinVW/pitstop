@@ -198,6 +198,10 @@ In order to run the application you need to take several steps. This description
 
 	![](img/docker-resources.png) 
 
+- Create necessary Docker volumes. 
+   - `docker volume create sqlserverdata`
+   - `docker volume create rabbitmqdata`
+
 - Open the PitStop solution in Visual Studio.  
 
 - Add NuGet source
