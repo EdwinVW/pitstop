@@ -185,8 +185,6 @@ The Visual Studio solution contains several files and folders. Most folders corr
 - **WorkshopManagementAPI** - the Web API for managing workshop data.
 - **WorkshopManagementEventHandler** - the event-handler picking up events and creating the read-model for the WorkshopManagement bounded-context.
 
-> Each project (with the exception of *Infrastructure*) contains a *Dockerfile* and a *BuildDockerImage * script. The script only contains the Docker Build command for building the image. By starting this script (or by manually executing a Docker Build command) inside a certain project folder, the Docker image will be created. 
-
 ## Getting started
 In order to run the application you need to take several steps. This description assumes you're developing on a Windows machine using Visual Studio 2017 and already forked and pulled the latest version of the source-code from the repo.
 
@@ -197,7 +195,6 @@ In order to run the application you need to take several steps. This description
     - Increase the amount of memory dedicated to Docker to at least 4 GB. You can do this on the *Advanced* tab of the Docker settings dialog:
 
 	![](img/docker-resources.png) 
-    - The application will default to 'Production' when no explicit environment is set.
 
 - Create necessary Docker volumes. 
    - `docker volume create sqlserverdata`
