@@ -197,6 +197,7 @@ In order to run the application you need to take several steps. This description
     - Increase the amount of memory dedicated to Docker to at least 4 GB. You can do this on the *Advanced* tab of the Docker settings dialog:
 
 	![](img/docker-resources.png) 
+    - The application will default to 'Production' when no explicit environment is set.
 
 - Create necessary Docker volumes. 
    - `docker volume create sqlserverdata`
