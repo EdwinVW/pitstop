@@ -196,9 +196,14 @@ In order to run the application you need to take several steps. This description
 
 	![](img/docker-resources.png) 
 
-- Create necessary Docker volumes. 
+- Create necessary Docker volumes: 
    - `docker volume create sqlserverdata`
-   - `docker volume create rabbitmqdata`
+   - `docker volume create rabbitmqdata` 
+  
+
+- Configure monitoring (optional):
+   - The WebAPIs and Web-Application use Application Insights (AI) for monitoring. If you want to use this, create an AI resource in Azure. Make sure you copy the *instrumentation key* from your AI resource. The key is read at run-time from the environment-variable *PitStopAIKey*, so set a system-wide environment-variable with that name and the key as value.
+
 
 - Open the PitStop solution in Visual Studio.  
 
