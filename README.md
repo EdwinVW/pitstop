@@ -201,7 +201,7 @@ In order to run the application you need to take several steps. This description
    - `docker volume create rabbitmqdata` 
   
 
-- Configure monitoring (optional). 
+- Configure monitoring (optional).   
    The WebAPIs and Web-Application use Application Insights (AI) for monitoring. When using AI, you can monitor all kinds of characteristics of your application. AI also can automatically build a map of your application:
 
    ![AI](img/monitoring.png)
