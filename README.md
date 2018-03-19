@@ -202,7 +202,9 @@ In order to run the application you need to take several steps. This description
   
 
 - Configure monitoring (optional):
-   - The WebAPIs and Web-Application use Application Insights (AI) for monitoring. If you want to use this, create an AI resource in Azure. Make sure you copy the *instrumentation key* from your AI resource. The key is read at run-time from the environment-variable *PitStopAIKey*, so set a system-wide environment-variable with that name and the key as value.
+   - The WebAPIs and Web-Application use Application Insights (AI) for monitoring. If you want to use this, create an AI resource in Azure. Make sure you copy the *instrumentation key* from your AI resource. The key is read at run-time from the environment-variable *PitStopAIKey*, so set a system-wide environment-variable with that name and the key as value. When using AI, you can monitor all kinds of characteristics of your application. AI also can automatically build an map of your application:
+
+   ![AI](img/monitoring.png)
 
 
 - Open the PitStop solution in Visual Studio.  
