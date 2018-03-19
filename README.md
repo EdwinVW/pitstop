@@ -201,11 +201,16 @@ In order to run the application you need to take several steps. This description
    - `docker volume create rabbitmqdata` 
   
 
-- Configure monitoring (optional):
-   - The WebAPIs and Web-Application use Application Insights (AI) for monitoring. If you want to use this, create an AI resource in Azure. Make sure you copy the *instrumentation key* from your AI resource. The key is read at run-time from the environment-variable *PitStopAIKey*, so set a system-wide environment-variable with that name and the key as value. When using AI, you can monitor all kinds of characteristics of your application. AI also can automatically build an map of your application:
+- Configure monitoring (optional). 
+   The WebAPIs and Web-Application use Application Insights (AI) for monitoring. When using AI, you can monitor all kinds of characteristics of your application. AI also can automatically build a map of your application:
 
    ![AI](img/monitoring.png)
 
+   If you want to use this:
+   - Create an AI resource in Azure. 
+   - Copy the *instrumentation key* from your AI resource. 
+   - Create a system-wide environment-variable with the name *PitStopAIKey* and the key as value. The key is read at run-time from the environment-variable.  
+   
 
 - Open the PitStop solution in Visual Studio.  
 
