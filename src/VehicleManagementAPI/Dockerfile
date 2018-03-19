@@ -17,5 +17,8 @@ COPY --from=build-env /app/out .
 EXPOSE 5000/tcp
 ENV ASPNETCORE_URLS http://*:5000
 
+# Configure environment variables
+ENV WEBSITE_SITE_NAME VehicleManagementAPI
+
 # Start
 ENTRYPOINT ["dotnet", "Pitstop.VehicleManagement.dll"]

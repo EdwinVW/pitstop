@@ -17,5 +17,8 @@ COPY --from=build-env /app/out .
 EXPOSE 5100/tcp
 ENV ASPNETCORE_URLS http://*:5100
 
+# Configure environment variables
+ENV WEBSITE_SITE_NAME CustomerManagementAPI
+
 # Start
 ENTRYPOINT ["dotnet", "Pitstop.CustomerManagementAPI.dll"]
