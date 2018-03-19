@@ -19,5 +19,8 @@ COPY --from=build-env /app/out .
 EXPOSE 7000/tcp
 ENV ASPNETCORE_URLS http://*:7000
 
+# Configure environment variables
+ENV WEBSITE_SITE_NAME WebApp
+
 # Start
 ENTRYPOINT ["dotnet", "WebApp.dll"]

@@ -17,5 +17,8 @@ COPY --from=build-env /app/out .
 EXPOSE 5200/tcp
 ENV ASPNETCORE_URLS http://*:5200
 
+# Configure environment variables
+ENV WEBSITE_SITE_NAME WorkshopManagementAPI
+
 # Start
 ENTRYPOINT ["dotnet", "Pitstop.WorkshopManagementAPI.dll"]

@@ -45,7 +45,7 @@ namespace Pitstop.CustomerManagementAPI
 
             // Add framework services.
             services.AddMvc();
-
+            
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
