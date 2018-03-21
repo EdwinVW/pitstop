@@ -206,7 +206,9 @@ In order to run the application you need to take several steps. This description
 
    ![AI](img/monitoring.png)
 
-   If you want to use this:
+   The name of the nodes is determined by a field called *cloud role name* in the telemetry. This property can be set in several ways. In this case I've chosen to specify the name by setting the environment-variable named *WEBSITE_SITE_NAME*. I set the variable in the Docker file of the WebAPI's and Web-Application using the *ENV* statement.
+
+   If you want to use AI monitoring take the following steps:
    - Create an AI resource in Azure. 
    - Copy the *instrumentation key* from your AI resource. 
    - Create a system-wide environment-variable with the name *PitStopAIKey* and the key as value. The key is read at run-time from the environment-variable.  
