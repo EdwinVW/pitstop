@@ -1,4 +1,4 @@
-FROM microsoft/dotnet AS build-env
+FROM microsoft/dotnet:2.0-sdk AS build-env
 WORKDIR /app
 
 # Copy necessary files and restore as distinct layer
@@ -10,7 +10,7 @@ COPY . ./
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM microsoft/dotnet
+FROM microsoft/dotnet:2.0-runtime
 COPY --from=build-env /app/out .
 
 # Start
