@@ -10,6 +10,7 @@ using AutoMapper;
 using Pitstop.WorkshopManagementAPI.Repositories;
 using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Events;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Pitstop.WorkshopManagementAPI
 {
@@ -50,7 +51,8 @@ namespace Pitstop.WorkshopManagementAPI
             services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
 
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>

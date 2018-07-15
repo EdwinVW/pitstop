@@ -12,6 +12,7 @@ using Pitstop.Infrastructure.Messaging;
 using System;
 using Pitstop.CustomerManagementAPI.Events;
 using Pitstop.CustomerManagementAPI.Commands;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Pitstop.CustomerManagementAPI
 {
@@ -44,8 +45,9 @@ namespace Pitstop.CustomerManagementAPI
             services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
 
             // Add framework services.
-            services.AddMvc();
-            
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {

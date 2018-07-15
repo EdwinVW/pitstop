@@ -12,6 +12,7 @@ using Pitstop.Application.VehicleManagement.Model;
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.Application.VehicleManagement.Commands;
 using Pitstop.Application.VehicleManagement.Events;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Pitstop.Application.VehicleManagement
 {
@@ -44,7 +45,8 @@ namespace Pitstop.Application.VehicleManagement
             services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
 
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>

@@ -9,6 +9,7 @@ using Pitstop.ViewModels;
 using System;
 using WebApp.Commands;
 using WebApp.RESTClients;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PitStop
 {
@@ -30,7 +31,8 @@ namespace PitStop
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services
-            services.AddMvc();
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // add custom services
             services.AddTransient<ICustomerManagementAPI, CustomerManagementAPI>();
@@ -51,6 +53,7 @@ namespace PitStop
             }
             else
             {
+                app.UseHsts();
                 app.UseExceptionHandler("/Home/Error");
             }
 
