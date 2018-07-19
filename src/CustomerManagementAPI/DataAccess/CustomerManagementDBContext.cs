@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Pitstop.CustomerManagementAPI.Model;
+using Polly;
+using System;
 
 namespace Pitstop.CustomerManagementAPI.DataAccess
 {
@@ -7,7 +10,10 @@ namespace Pitstop.CustomerManagementAPI.DataAccess
     {
         public CustomerManagementDBContext(DbContextOptions<CustomerManagementDBContext> options) : base(options)
         {
-            Database.Migrate();
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(5, r => TimeSpan.FromSeconds(5))
+                .Execute(() => Database.Migrate());
         }
 
         public DbSet<Customer> Customers { get; set; }

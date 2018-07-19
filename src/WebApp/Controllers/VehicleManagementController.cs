@@ -18,6 +18,7 @@ namespace PitStop.Controllers
         private IVehicleManagementAPI _vehicleManagementAPI;
         private ICustomerManagementAPI _customerManagementAPI;
         private readonly ILogger _logger;
+        private ResiliencyHelper _resiliencyHelper;
 
         public VehicleManagementController(IVehicleManagementAPI vehicleManagementAPI, 
             ICustomerManagementAPI customerManagementAPI, ILogger<VehicleManagementController> logger)
@@ -25,25 +26,26 @@ namespace PitStop.Controllers
             _vehicleManagementAPI = vehicleManagementAPI;
             _customerManagementAPI = customerManagementAPI;
             _logger = logger;
+            _resiliencyHelper = new ResiliencyHelper(_logger);
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return await ExecuteWithFallback(async () =>
+            return await _resiliencyHelper.ExecuteResilient(async () =>
             {
                 var model = new VehicleManagementViewModel
                 {
                     Vehicles = await _vehicleManagementAPI.GetVehicles()
                 };
                 return View(model);
-            });
+            }, View("Offline", new VehicleManagementOfflineViewModel()));
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(string licenseNumber)
         {
-            return await ExecuteWithFallback(async () =>
+            return await _resiliencyHelper.ExecuteResilient(async () =>
             {
                 Vehicle vehicle = await _vehicleManagementAPI.GetVehicleByLicenseNumber(licenseNumber);
                 Customer customer = await _customerManagementAPI.GetCustomerById(vehicle.OwnerId);
@@ -54,13 +56,13 @@ namespace PitStop.Controllers
                     Owner = customer.Name
                 };
                 return View(model);
-            });
+            }, View("Offline", new VehicleManagementOfflineViewModel()));
         }
 
         [HttpGet]
         public async Task<IActionResult> New()
         {
-            return await ExecuteWithFallback(async () =>
+            return await _resiliencyHelper.ExecuteResilient(async () =>
             {
                 // get customerlist
                 var customers = await _customerManagementAPI.GetCustomers();
@@ -71,7 +73,7 @@ namespace PitStop.Controllers
                     Customers = customers.Select(c => new SelectListItem { Value = c.CustomerId, Text = c.Name })
                 };
                 return View(model);
-            });
+            }, View("Offline", new VehicleManagementOfflineViewModel()));
         }
 
         [HttpPost]
@@ -79,12 +81,12 @@ namespace PitStop.Controllers
         {
             if (ModelState.IsValid)
             {
-                return await ExecuteWithFallback(async () =>
+                return await _resiliencyHelper.ExecuteResilient(async () =>
                 {
                     RegisterVehicle cmd = Mapper.Map<RegisterVehicle>(inputModel);
                     await _vehicleManagementAPI.RegisterVehicle(cmd);
                     return RedirectToAction("Index");
-                });
+                }, View("Offline", new VehicleManagementOfflineViewModel()));
             }
             else
             {
@@ -96,16 +98,6 @@ namespace PitStop.Controllers
         public IActionResult Error()
         {
             return View();
-        }
-
-        private async Task<IActionResult> ExecuteWithFallback(Func<Task<IActionResult>> action)
-        {
-            return await Policy<IActionResult>
-                .Handle<Exception>()
-                .FallbackAsync(
-                    View("Offline", new VehicleManagementOfflineViewModel()), 
-                    (e, c) => Task.Run(() => _logger.LogError(e.Exception.ToString())))
-                .ExecuteAsync(action);
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Pitstop.Models;
 using Pitstop.ViewModels;
-using Polly;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,17 +19,19 @@ namespace PitStop.Controllers
     {
         private IWorkshopManagementAPI _workshopManagementAPI;
         private readonly ILogger _logger;
+        private ResiliencyHelper _resiliencyHelper;
 
         public WorkshopManagementController(IWorkshopManagementAPI workshopManagamentAPI, ILogger<WorkshopManagementController> logger)
         {
             _workshopManagementAPI = workshopManagamentAPI;
             _logger = logger;
+            _resiliencyHelper = new ResiliencyHelper(_logger);
         }
 
         [HttpGet]
         public async Task<IActionResult> Index(DateTime? date)
         {
-            return await ExecuteWithFallback(async () =>
+            return await _resiliencyHelper.ExecuteResilient(async () =>
             {
                 if (date == null)
                 {
@@ -52,13 +53,13 @@ namespace PitStop.Controllers
                 }
 
                 return View(model);
-            });
+            }, View("Offline", new WorkshopManagementOfflineViewModel()));
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(DateTime date, string jobId)
         {
-            return await ExecuteWithFallback(async () =>
+            return await _resiliencyHelper.ExecuteResilient(async () =>
             {
                 string dateStr = date.ToString("yyyy-MM-dd");
                 var model = new WorkshopManagementDetailsViewModel
@@ -67,13 +68,13 @@ namespace PitStop.Controllers
                     MaintenanceJob = await _workshopManagementAPI.GetMaintenanceJob(dateStr, jobId)
                 };
                 return View(model);
-            });
+            }, View("Offline", new WorkshopManagementOfflineViewModel()));
         }
 
         [HttpGet]
         public async Task<IActionResult> New(DateTime date)
         {
-            return await ExecuteWithFallback(async () =>
+            return await _resiliencyHelper.ExecuteResilient(async () =>
             {
                 DateTime startTime = date.Date.AddHours(8);
 
@@ -86,13 +87,13 @@ namespace PitStop.Controllers
                     Vehicles = await GetAvailableVehiclesList()
                 };
                 return View(model);
-            });
+            }, View("Offline", new WorkshopManagementOfflineViewModel()));
         }
 
         [HttpGet]
         public async Task<IActionResult> Finish(DateTime date, string jobId)
         {
-            return await ExecuteWithFallback(async () =>
+            return await _resiliencyHelper.ExecuteResilient(async () =>
             {
                 string dateStr = date.ToString("yyyy-MM-dd");
                 MaintenanceJob job = await _workshopManagementAPI.GetMaintenanceJob(dateStr, jobId);
@@ -104,7 +105,7 @@ namespace PitStop.Controllers
                     ActualEndTime = job.EndTime
                 };
                 return View(model);
-            });
+            }, View("Offline", new WorkshopManagementOfflineViewModel()));
         }
 
         [HttpPost]
@@ -112,7 +113,7 @@ namespace PitStop.Controllers
         {
             if (ModelState.IsValid)
             {
-                return await ExecuteWithFallback(async () =>
+                return await _resiliencyHelper.ExecuteResilient(async () =>
                 {
                     try
                     {
@@ -154,7 +155,7 @@ namespace PitStop.Controllers
                     }
 
                     return RedirectToAction("Index", new { date = inputModel.Date });
-                });
+                }, View("Offline", new WorkshopManagementOfflineViewModel()));
             }
             else
             {
@@ -168,7 +169,7 @@ namespace PitStop.Controllers
         {
             if (ModelState.IsValid)
             {
-                return await ExecuteWithFallback(async () =>
+                return await _resiliencyHelper.ExecuteResilient(async () =>
                 {
                     string dateStr = inputModel.Date.ToString("yyyy-MM-dd");
                     DateTime actualStartTime = inputModel.Date.Add(inputModel.ActualStartTime.Value.TimeOfDay);
@@ -179,8 +180,8 @@ namespace PitStop.Controllers
 
                     await _workshopManagementAPI.FinishMaintenanceJob(dateStr, inputModel.Id.ToString("D"), cmd);
 
-                    return RedirectToAction("Details", new { date = date, jobId = inputModel.Id });
-                });
+                    return RedirectToAction("Details", new { date, jobId = inputModel.Id });
+                }, View("Offline", new WorkshopManagementOfflineViewModel()));
             }
             else
             {
@@ -202,17 +203,6 @@ namespace PitStop.Controllers
                     Value = v.LicenseNumber,
                     Text = $"{v.Brand} {v.Type} [{v.LicenseNumber}]"
                 });
-        }
-
-        private async Task<IActionResult> ExecuteWithFallback(Func<Task<IActionResult>> action)
-        {
-            IActionResult fallbackResult = View("Offline", new WorkshopManagementOfflineViewModel());
-            return await Policy<IActionResult>
-                .Handle<Exception>()
-                .FallbackAsync(
-                    fallbackResult,
-                    (e, c) => Task.Run(() => _logger.LogError(e.Exception.ToString())))
-                .ExecuteAsync(action);
         }
     }
 }

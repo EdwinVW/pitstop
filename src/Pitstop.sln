@@ -38,6 +38,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkshopManagementAPI", "Wo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceService", "InvoiceService\InvoiceService.csproj", "{C7375EEC-FE83-4B7C-B754-BD7B93A78475}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGateway", "APIGateway\APIGateway.csproj", "{B2E3A0EC-C402-4B48-81E9-FC6859D18313}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -168,6 +170,18 @@ Global
 		{C7375EEC-FE83-4B7C-B754-BD7B93A78475}.Release|x64.Build.0 = Release|Any CPU
 		{C7375EEC-FE83-4B7C-B754-BD7B93A78475}.Release|x86.ActiveCfg = Release|Any CPU
 		{C7375EEC-FE83-4B7C-B754-BD7B93A78475}.Release|x86.Build.0 = Release|Any CPU
+		{B2E3A0EC-C402-4B48-81E9-FC6859D18313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2E3A0EC-C402-4B48-81E9-FC6859D18313}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2E3A0EC-C402-4B48-81E9-FC6859D18313}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B2E3A0EC-C402-4B48-81E9-FC6859D18313}.Debug|x64.Build.0 = Debug|Any CPU
+		{B2E3A0EC-C402-4B48-81E9-FC6859D18313}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B2E3A0EC-C402-4B48-81E9-FC6859D18313}.Debug|x86.Build.0 = Debug|Any CPU
+		{B2E3A0EC-C402-4B48-81E9-FC6859D18313}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2E3A0EC-C402-4B48-81E9-FC6859D18313}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2E3A0EC-C402-4B48-81E9-FC6859D18313}.Release|x64.ActiveCfg = Release|Any CPU
+		{B2E3A0EC-C402-4B48-81E9-FC6859D18313}.Release|x64.Build.0 = Release|Any CPU
+		{B2E3A0EC-C402-4B48-81E9-FC6859D18313}.Release|x86.ActiveCfg = Release|Any CPU
+		{B2E3A0EC-C402-4B48-81E9-FC6859D18313}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

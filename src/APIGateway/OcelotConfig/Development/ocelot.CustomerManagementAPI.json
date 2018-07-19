@@ -1,0 +1,28 @@
+﻿{
+  "ReRoutes": [
+    {
+      "ServiceName": "CustomerManagementAPI",
+      "UpstreamPathTemplate": "/api/customers/",
+      "DownstreamPathTemplate": "/api/customers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5100
+        }
+      ]
+    },
+    {
+      "ServiceName": "CustomerManagementAPI",
+      "UpstreamPathTemplate": "/api/customers/{query}",
+      "DownstreamPathTemplate": "/api/customers/{query}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5100
+        }
+      ]
+    }
+  ]
+}

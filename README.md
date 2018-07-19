@@ -9,7 +9,7 @@ This repo contains a sample application based on a Garage Management System for 
 - Sending invoices to customers
 - Sending notifications to customers 
 
->The primary goal of this sample is to demonstrate several Web-Scale Architecture concepts like: Microservices, CQRS, Event Sourcing, Domain Driven Design (DDD) and Eventual Consistency.
+>The primary goal of this sample is to demonstrate several Web-Scale Architecture concepts like: Microservices, CQRS, Event Sourcing, Domain Driven Design (DDD), Eventual Consistency and API Gateway.
 
 ### Context-map
 I've created a context-map that describes the bounded contexts (DDD) within the system and the relationships between them:
@@ -43,7 +43,10 @@ I've created a solution architecture diagram which shows all the moving parts in
 ![Solution Architecture](img/solution-architecture.png)
 
 #### PitStop Web App
-The web application is the front-end for the system. Users can manage customers, vehicles and the planning for the workshop from this front-end. The front-end will only communicate with the different APIs in the system and has no knowledge of the message-broker or any other services.
+The web application is the front-end for the system. Users can manage customers, vehicles and the planning for the workshop from this front-end. The front-end will only communicate with the different APIs in the system (throug the API Gateway) hand has no knowledge of the message-broker or any other services.
+
+#### API Gateway
+The API Gateway abstracts all the APIs in the solution. The PitStop web application calls all APIs through the API Gateway. The API Gateway also offers load-balancing of APIs.
 
 #### Customer Management Service
 This service offers an API that is used to manage Customers in the system. For now, only CREATE and READ functionality (list and single by unique Id) is implemented. 
@@ -71,7 +74,7 @@ This service publishes the following events:
 This service contains 2 parts: an API for managing the workshop planning and an event-handler that handles events and builds a read-model that is used by the API. 
 
 ##### API
-This is an API that is used to manage Maintenance Jobs in the system.Because we want to be able to keep Workshop Management up and running even when other services are down, the API also offers functionality to retrieve vehicle and customer information from the read-model. This read-model is filled by the event-handler (described below).
+This is an API that is used to manage Maintenance Jobs in the system.Because we want to be able to keep Workshop Management up and running even when other services are down, the API also offers functionality to retrieve vehicle and customer information from the read-model. This read-model is filled by the event-handler (described below). To ensure the availability of this API, 2 instances of this API are started and load-balanced by the API Gateway.
 
 This service handles the following commands:
 
@@ -148,11 +151,14 @@ The database server used to host all databases is MS SQL Server running on Linux
 **MailDev**
 To simulate sending emails, I use MailDev. This test-server acts as both an SMTP Server as a POP3 server and offers a website to see the mails that were sent. No emails are actually sent when using this test-server. I use the default MailDev Docker image from Docker Hub (`djfarrelly/maildev`). See [https://github.com/djfarrelly/MailDev](https://github.com/djfarrelly/MailDev "MailDev Github repo") for more info.
 
+**Ocelot**
+Ocelot is an open-source API Gateway built on .NET Core. It is used to implement the API Gateway in the PitStop solution. See [https://github.com/ThreeMammals/Ocelot](https://github.com/ThreeMammals/Ocelot) for more info.
+
 **AutoMapper**
 AutoMapper is used (only where it adds value) to map between POCOs. This is primarily handy when mapping commands to events, events to events or events to models. See [http://automapper.org/](http://automapper.org/ "Automapper web-site") for more info.
 
 **Polly**
-Polly is used to make sure the services are resilient to outages of other services. It offers automatic retry or circuit-breaker logic that is used at every interaction with resources that could be down (database, message-broker, other services). See [https://github.com/App-vNext/Polly](https://github.com/App-vNext/Polly "Polly Github repo") for more info.
+Polly is used to make sure the services are resilient to outages of other services. It offers automatic retry or circuit-breaker logic that is used at every interaction with resources that could be down (database, message-broker, other services). It is used in the web application for retrying calls to the Web APIs and falling back to an off-line page when a call fails after a certain amount of retries. See [https://github.com/App-vNext/Polly](https://github.com/App-vNext/Polly "Polly Github repo") for more info.
 
 **Refit**
 Refit is used to simplify calling REST APis. See [https://github.com/paulcbetts/refit](https://github.com/paulcbetts/refit "Refit Github repo") for more info. 
@@ -174,6 +180,7 @@ The Visual Studio solution contains several files and folders. Most folders corr
     - **RunAllDockerImages.ps1** / **RunAllDockerImages.sh** : run the project in the background, and start tailing the logs for all the containers. You can crtl-c from viewing the logs, and the the containers keep running.
 	- **StopAndRemoveAllContainers.ps1** / **StopAndRemoveAllContainers.sh** : stops and removes all containers.
 	- **nuget.config** : config file for NuGet containing the NuGet feeds used by the solution.
+- **APIGateway** : the API Gateway.
 - **AuditlogService** : the AuditLog service.
 - **CustomerManagementAPI** : the Web API for managing customer data ("CRM").
 - **Infrastructure** - an infrastructural component with reusable stuff. 
@@ -188,7 +195,7 @@ The Visual Studio solution contains several files and folders. Most folders corr
 ## Getting started
 In order to run the application you need to take several steps. This description assumes you're developing on a Windows machine using Visual Studio 2017 and already forked and pulled the latest version of the source-code from the repo.
 
-> In the `docker-commpose.yml` file in the root of the solution folder there are some credentials specified for components that need them. These are also used by the different services that use these components (specified in config files): SQL Server login: sa / 8jkGh47hnDw89Haq8LN2, Rabbit MQ login: rabbitmquser / DEBmbwkSrzy9D1T9cJfa
+> In the `docker-compose.yml` file in the root of the solution folder there are some credentials specified for components that need them. These are also used by the different services that use these components (specified in config files): SQL Server login: sa / 8jkGh47hnDw89Haq8LN2, Rabbit MQ login: rabbitmquser / DEBmbwkSrzy9D1T9cJfa
 
 - Satisfy prerequisites
     - Make sure you have Docker installed and running smoothly on your machine. This sample only uses Linux based containers. Also make sure everything is configured correctly in order to pull Docker images from the public Docker hub.
@@ -292,6 +299,23 @@ If you want to test the individual APIs in the system, you can use the test UIs 
 | VehicleManagement  | [http://localhost:5000/swagger](http://localhost:5000/swagger) |
 | WorkshopManagement | [http://localhost:5200/swagger](http://localhost:5200/swagger) |
 
+### The API Gateway
+All APIs can also be called through the API Gateway. The gateway runs on port 10000 and it serves the following end-points:
+
+| Resource           | URL                                                                                        |
+|--------------------|--------------------------------------------------------------------------------------------|
+| Customers          | [http://localhost:10000/api/customers](http://localhost:10000/api/customers)               |
+| Vehicles           | [http://localhost:10000/api/vehicles](http://localhost:10000/api/vehicles)                 |
+| Workshop planning  | [http://localhost:10000/api/workshopplanning](http://localhost:10000/api/workshopplanning) |
+| Workshop Refdata   | [http://localhost:10000/api/refdata](http://localhost:10000/api/refdata)                   |
+
+These end-points only serve the different REST resources and no Swagger. 
+
+The configuration of the API Gateway is situated in the *APIGateway* project in the *OcelotConfig* folder. There is a separate folder for the *Development* and *Production* environment. For every API a separate config file exists. See the [Ocelot documentation](https://ocelot.readthedocs.io/en/latest/) for more info about the configuration-format.
+
+#### Load balancing
+When running in Docker containers (*Production* environment), 2 instances of the the *WorkshopManagementAPI* are started (see the docker-compose file). In the *Production* configuration of the API Gateway, you can see two *DownStream* hosts are specified. Also a *RoundRobin* load-balancer is configured. This ensures that the API Gateway will use both hosts in a round-robin fashion. 
+ 
 ## Contributing
 This sample is a personal R&D project for me to learn. I've tried to document it as thoroughly as possible for people wanting to learn from it. If you have any improvements you want to contribute (to the code or the documentation) or find any bugs that need solving, just create a pull-request!
 

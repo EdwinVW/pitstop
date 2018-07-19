@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Pitstop.Application.VehicleManagement.Model;
+using Polly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,10 @@ namespace Pitstop.Application.VehicleManagement.DataAccess
     {
         public VehicleManagementDBContext(DbContextOptions<VehicleManagementDBContext> options) : base(options)
         {
-            Database.Migrate();
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(5, r => TimeSpan.FromSeconds(5))
+                .Execute(() => Database.Migrate());
         }
 
         public DbSet<Vehicle> Vehicles { get; set; }

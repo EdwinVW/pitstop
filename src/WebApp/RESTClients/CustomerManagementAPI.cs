@@ -14,8 +14,8 @@ namespace WebApp.RESTClients
 
         public  CustomerManagementAPI(IHostingEnvironment env)
         {
-            string apiHost = env.IsDevelopment() ? "localhost" : "customermanagementapi";
-            int apiPort = 5100;
+            string apiHost = env.IsDevelopment() ? "localhost" : "apigateway";
+            int apiPort = 10000;
             string baseUri = $"http://{apiHost}:{apiPort}/api";
             _client = RestService.For<ICustomerManagementAPI>(baseUri);
         }

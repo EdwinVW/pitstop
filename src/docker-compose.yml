@@ -58,15 +58,43 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
 
-  workshopmanagementapi:
+  workshopmanagementapi_1:
     image: pitstop/workshopmanagementapi:latest
     build: WorkshopManagementAPI
-    container_name: workshopmanagementapi
+    container_name: workshopmanagementapi_1
     depends_on:
       - rabbitmq
       - sqlserver
     ports:
       - "5200:5200"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
+
+  workshopmanagementapi_2:
+    image: pitstop/workshopmanagementapi:latest
+    build: WorkshopManagementAPI
+    container_name: workshopmanagementapi_2
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    ports:
+      - "5201:5200"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ApplicationInsights:InstrumentationKey=${PitStopAIKey}      
+
+  apigateway:
+    image: pitstop/apigateway:latest
+    build: APIGateway
+    container_name: apigateway
+    depends_on:
+      - vehiclemanagementapi
+      - customermanagementapi
+      - workshopmanagementapi_1
+      - workshopmanagementapi_2
+    ports:
+      - "10000:10000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
@@ -125,9 +153,7 @@ services:
     build: WebApp
     container_name: webapp
     depends_on:
-      - vehiclemanagementapi
-      - customermanagementapi
-      - workshopmanagementapi
+      - apigateway
     ports:
       - "7000:7000"
     environment:

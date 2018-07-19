@@ -1,0 +1,5 @@
+﻿{
+  "GlobalConfiguration": {
+    "BaseUrl": "http://apigateway:10000"
+  }
+}

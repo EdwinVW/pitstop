@@ -15,8 +15,8 @@ namespace WebApp.RESTClients
 
         public WorkshopManagementAPI(IHostingEnvironment env)
         {
-            string apiHost = env.IsDevelopment() ? "localhost" : "workshopmanagementapi";
-            int apiPort = 5200;
+            string apiHost = env.IsDevelopment() ? "localhost" : "apigateway";
+            int apiPort = 10000;
             string baseUri = $"http://{apiHost}:{apiPort}/api";
             _client = RestService.For<IWorkshopManagementAPI>(baseUri);
         }

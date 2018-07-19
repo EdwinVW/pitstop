@@ -14,8 +14,8 @@ namespace WebApp.RESTClients
 
         public  VehicleManagementAPI(IHostingEnvironment env)
         {
-            string apiHost = env.IsDevelopment() ? "localhost" : "vehiclemanagementapi";
-            int apiPort = 5000;
+            string apiHost = env.IsDevelopment() ? "localhost" : "apigateway";
+            int apiPort = 10000;
             string baseUri = $"http://{apiHost}:{apiPort}/api";
             _client = RestService.For<IVehicleManagementAPI>(baseUri);
         }

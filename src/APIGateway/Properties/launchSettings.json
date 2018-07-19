@@ -1,29 +1,27 @@
-{
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
-    "iis": {
-      "applicationUrl": "http://localhost/WebApp",
-      "sslPort": 0
-    },
     "iisExpress": {
-      "applicationUrl": "http://localhost:7000",
+      "applicationUrl": "http://localhost:10000",
       "sslPort": 0
     }
   },
   "profiles": {
-    "PitStop": {
+    "APIGateway": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:7000",
+      "launchUrl": "api/",
+      "applicationUrl": "http://localhost:10000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:7000"
+      }
     },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
+      "launchUrl": "api/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

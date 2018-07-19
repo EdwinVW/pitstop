@@ -3,49 +3,52 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Pitstop.Models;
 using Pitstop.ViewModels;
+using PitStop.Controllers;
 using Polly;
 using System;
 using System.Threading.Tasks;
 using WebApp.Commands;
 using WebApp.RESTClients;
 
-namespace WebApp.Controllers
+namespace PitStop.Controllers
 {
     public class CustomerManagementController : Controller
     {
         private readonly ICustomerManagementAPI _customerManagementAPI;
         private readonly ILogger _logger;
+        private ResiliencyHelper _resiliencyHelper;
 
         public CustomerManagementController(ICustomerManagementAPI customerManagementAPI, ILogger<CustomerManagementController> logger)
         {
             _customerManagementAPI = customerManagementAPI;
             _logger = logger;
+            _resiliencyHelper = new ResiliencyHelper(_logger);
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return await ExecuteWithFallback(async () =>
+            return await _resiliencyHelper.ExecuteResilient(async () =>
             {
                 var model = new CustomerManagementViewModel
                 {
                     Customers = await _customerManagementAPI.GetCustomers()
                 };
                 return View(model);
-            });
+            }, View("Offline", new CustomerManagementOfflineViewModel()));
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
-            return await ExecuteWithFallback(async () =>
+            return await _resiliencyHelper.ExecuteResilient(async () =>
             {
                 var model = new CustomerManagementDetailsViewModel
                 {
                     Customer = await _customerManagementAPI.GetCustomerById(id)
                 };
                 return View(model);
-            });
+            }, View("Offline", new CustomerManagementOfflineViewModel()));
         }
 
         [HttpGet]
@@ -63,27 +66,17 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                return await ExecuteWithFallback(async () =>
+                return await _resiliencyHelper.ExecuteResilient(async () =>
                 {
                     RegisterCustomer cmd = Mapper.Map<RegisterCustomer>(inputModel.Customer);
                     await _customerManagementAPI.RegisterCustomer(cmd);
                     return RedirectToAction("Index");
-                });
+                }, View("Offline", new CustomerManagementOfflineViewModel()));
             }
             else
             {
                 return View("New", inputModel);
             }
-        }
-
-        private async Task<IActionResult> ExecuteWithFallback(Func<Task<IActionResult>> action)
-        {
-            return await Policy<IActionResult>
-                .Handle<Exception>()
-                .FallbackAsync(
-                    View("Offline", new CustomerManagementOfflineViewModel()),
-                    (e, c) => Task.Run(() => _logger.LogError(e.Exception.ToString())))
-                .ExecuteAsync(action);
         }
     }
 }
