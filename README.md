@@ -300,16 +300,16 @@ If you want to test the individual APIs in the system, you can use the test UIs 
 | WorkshopManagement | [http://localhost:5200/swagger](http://localhost:5200/swagger) |
 
 ### The API Gateway
-All APIs can also be called through the API Gateway. The gateway runs on port 10000 and it serves the following end-points:
+All APIs are aggregated by the API Gateway. Swagger is not served through the gateway. 
 
-| Resource           | URL                                                                                        |
-|--------------------|--------------------------------------------------------------------------------------------|
-| Customers          | [http://localhost:10000/api/customers](http://localhost:10000/api/customers)               |
-| Vehicles           | [http://localhost:10000/api/vehicles](http://localhost:10000/api/vehicles)                 |
-| Workshop planning  | [http://localhost:10000/api/workshopplanning](http://localhost:10000/api/workshopplanning) |
-| Workshop Refdata   | [http://localhost:10000/api/refdata](http://localhost:10000/api/refdata)                   |
+The gateway runs on port 10000 and it serves the following end-points:
 
-These end-points only serve the different REST resources and no Swagger. 
+| Resource           | Gateway URL           | API URL                                         |
+|--------------------|-----------------------|-------------------------------------------------|
+| Customers          | /api/customers        | customermanagementapi:5100/api/customers        |
+| Vehicles           | /api/vehicles         | vehiclemanagementapi:5000/api/vehicles          |
+| Workshop planning  | /api/workshopplanning | workshopmanagementapi:5200/api/workshopplanning |
+| Workshop Refdata   | /api/refdata          | workshopmanagmeentapi:5200/api/refdata          |
 
 The configuration of the API Gateway is situated in the *APIGateway* project in the *OcelotConfig* folder. There is a separate folder for the *Development* and *Production* environment. For every API a separate config file exists. See the [Ocelot documentation](https://ocelot.readthedocs.io/en/latest/) for more info about the configuration-format.
 
