@@ -14,8 +14,8 @@
     },
     {
       "ServiceName": "VehicleManagementAPI",
-      "UpstreamPathTemplate": "/api/vehicles/{query}",
-      "DownstreamPathTemplate": "/api/vehicles/{query}",
+      "UpstreamPathTemplate": "/api/vehicles/{trailingSegments}",
+      "DownstreamPathTemplate": "/api/vehicles/{trailingSegments}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

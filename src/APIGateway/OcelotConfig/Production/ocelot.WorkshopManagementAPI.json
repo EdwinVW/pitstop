@@ -2,27 +2,8 @@
   "ReRoutes": [
     {
       "ServiceName": "WorkshopPlanningAPI",
-      "UpstreamPathTemplate": "/api/workshopplanning/",
-      "DownstreamPathTemplate": "/api/workshopplanning",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "workshopmanagementapi_1",
-          "Port": 5200
-        },
-        {
-          "Host": "workshopmanagementapi_2",
-          "Port": 5200
-        }
-      ],
-      "LoadBalancerOptions": {
-        "Type": "RoundRobin"
-      }
-    },
-    {
-      "ServiceName": "WorkshopPlanningAPI",
-      "UpstreamPathTemplate": "/api/workshopplanning/{query}",
-      "DownstreamPathTemplate": "/api/workshopplanning/{query}",
+      "UpstreamPathTemplate": "/api/workshopplanning/{trailingSegments}",
+      "DownstreamPathTemplate": "/api/workshopplanning/{trailingSegments}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -40,27 +21,8 @@
     },
     {
       "ServiceName": "WorkshopRefDataAPI",
-      "UpstreamPathTemplate": "/api/refdata/",
-      "DownstreamPathTemplate": "/api/refdata",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "workshopmanagementapi_1",
-          "Port": 5200
-        },
-        {
-          "Host": "workshopmanagementapi_2",
-          "Port": 5200
-        }
-      ],
-      "LoadBalancerOptions": {
-        "Type": "RoundRobin"
-      }
-    },
-    {
-      "ServiceName": "WorkshopRefDataAPI",
-      "UpstreamPathTemplate": "/api/refdata/{query}",
-      "DownstreamPathTemplate": "/api/refdata/{query}",
+      "UpstreamPathTemplate": "/api/refdata/{trailingSegments}",
+      "DownstreamPathTemplate": "/api/refdata/{trailingSegments}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

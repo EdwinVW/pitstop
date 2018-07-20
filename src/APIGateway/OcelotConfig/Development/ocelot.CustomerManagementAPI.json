@@ -14,8 +14,8 @@
     },
     {
       "ServiceName": "CustomerManagementAPI",
-      "UpstreamPathTemplate": "/api/customers/{query}",
-      "DownstreamPathTemplate": "/api/customers/{query}",
+      "UpstreamPathTemplate": "/api/customers/{trailingSegments}",
+      "DownstreamPathTemplate": "/api/customers/{trailingSegments}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

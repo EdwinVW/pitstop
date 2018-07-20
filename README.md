@@ -313,8 +313,53 @@ The gateway runs on port 10000 and it serves the following end-points:
 
 The configuration of the API Gateway is situated in the *APIGateway* project in the *OcelotConfig* folder. There is a separate folder for the *Development* and *Production* environment. For every API a separate config file exists. See the [Ocelot documentation](https://ocelot.readthedocs.io/en/latest/) for more info about the configuration-format.
 
+> When you change the configuration, make sure to rebuild the API Gateway Docker container! The config file is stored inside the container. If you want to be able to change the configuration "on the fly", define and mount a Docker volume and put the config file there.
+
+The configuration for an API (in this case the *CustomerManagement API*) looks something like this:
+
+```
+{
+  "ReRoutes": [
+    {
+      "ServiceName": "CustomerManagementAPI",
+      "UpstreamPathTemplate": "/api/customers/",
+      "DownstreamPathTemplate": "/api/customers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "customermanagementapi",
+          "Port": 5100
+        }
+      ]
+    },
+    {
+      "ServiceName": "CustomerManagementAPI",
+      "UpstreamPathTemplate": "/api/customers/{trailingSegments}",
+      "DownstreamPathTemplate": "/api/customers/{trailingSegments}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "customermanagementapi",
+          "Port": 5100
+        }
+      ]
+    }
+  ]
+}
+```
+
+The first routing-rule matches `http://<host>/api/customers` for getting all the customers. The second rule matches `http://<host>/api/customers/<whatever>`. Because everything that is specified as `<whatever>` after `/api/customers/` is forwarded to the downstream API, I only need to specify routing-rules for each individual API controller. ASP.NET Core MVC routing in the downstream API that is called will take care of the rest. 
+
+This approach saves me from having to write lots of configuration. Especially for the WorkshopManagement API which serves up several resources:
+
+- /api/workshopplanning/{date}
+- /api/workshopplanning/{date}/jobs
+- /api/workshopplanning/{date}/jobs/{jobId}
+- /api/refdata/customers
+- /api/refdata/vehicles
+
 #### Load balancing
-When running in Docker containers (*Production* environment), 2 instances of the the *WorkshopManagementAPI* are started (see the docker-compose file). In the *Production* configuration of the API Gateway, you can see two *DownStream* hosts are specified. Also a *RoundRobin* load-balancer is configured. This ensures that the API Gateway will use both hosts in a round-robin fashion. 
+When running in Docker containers (*Production* environment), 2 instances of the the *WorkshopManagementAPI* are started (see the docker-compose file). In the *Production* configuration of the API Gateway, you can see two *DownStream* hosts are specified. Also a *RoundRobin* load-balancer is configured. This ensures that the API Gateway will use both hosts in a round-robin fashion.
  
 ## Contributing
 This sample is a personal R&D project for me to learn. I've tried to document it as thoroughly as possible for people wanting to learn from it. If you have any improvements you want to contribute (to the code or the documentation) or find any bugs that need solving, just create a pull-request!
