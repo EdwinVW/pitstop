@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
-    <PackageReference Include="Pitstop.Infrastructure" Version="3.5.0" />
+    <PackageReference Include="Pitstop.Infrastructure" Version="3.5.1" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="AutoMapper" Version="7.0.1" />
