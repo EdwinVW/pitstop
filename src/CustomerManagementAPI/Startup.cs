@@ -13,6 +13,7 @@ using System;
 using Pitstop.CustomerManagementAPI.Events;
 using Pitstop.CustomerManagementAPI.Commands;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Pitstop.CustomerManagementAPI
 {
@@ -57,10 +58,11 @@ namespace Pitstop.CustomerManagementAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, CustomerManagementDBContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, CustomerManagementDBContext dbContext)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration)
+                .CreateLogger();
 
             app.UseMvc();
             app.UseDefaultFiles();

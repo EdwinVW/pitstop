@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Pitstop.Infrastructure.Messaging;
+using Serilog;
 using System;
 using System.IO;
 using System.Threading;
@@ -15,13 +16,18 @@ namespace Pitstop.TimeService
         {
             _env = Environment.GetEnvironmentVariable("PITSTOP_ENVIRONMENT");
 
-            Console.WriteLine($"Environment: {_env}");
-
             Config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{_env}.json", optional: false)
                 .Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Config)
+                .CreateLogger();
+
+            Log.Information($"Environment: {_env}");
+
         }
 
         static void Main(string[] args)
@@ -39,13 +45,13 @@ namespace Pitstop.TimeService
 
             if (_env == "Development")
             {
-                Console.WriteLine("Time service started. Press any key to stop...");
+                Log.Information("Time service started. Press any key to stop...");
                 Console.ReadKey(true);
                 manager.Stop();
             }
             else
             {
-                Console.WriteLine("Time service started.");
+                Log.Information("Time service started.");
                 while (true)
                 {
                     Thread.Sleep(10000);

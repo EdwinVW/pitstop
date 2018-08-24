@@ -32,6 +32,14 @@ services:
       - "25:25"
       - "4000:80"
 
+  logserver:
+    image: datalust/seq:latest
+    container_name: loggingserver
+    ports:
+      - "5341:80"
+    environment:
+      - ACCEPT_EULA=Y 
+
   vehiclemanagementapi:
     image: pitstop/vehiclemanagementapi:latest
     build: VehicleManagementAPI

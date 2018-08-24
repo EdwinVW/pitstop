@@ -4,14 +4,18 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Ocelot.Middleware;
 using Ocelot.DependencyInjection;
+using Serilog;
 
 namespace Pitstop.APIGateway
 {
     public class Program
     {
+        private static IConfiguration Configuration;
+
         public static void Main(string[] args)
         {
             WebHost.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .ConfigureAppConfiguration((hostingContext, config) =>
@@ -27,6 +31,8 @@ namespace Pitstop.APIGateway
                     config.AddOcelot(ocelotConfigPath);
 
                     config.AddEnvironmentVariables();
+
+                    Configuration = config.Build();
                 })
                 .ConfigureServices(s =>
                 {
@@ -34,7 +40,9 @@ namespace Pitstop.APIGateway
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
-                    //add your logging
+                    Log.Logger = new LoggerConfiguration()
+                        .ReadFrom.Configuration(Configuration)
+                        .CreateLogger();
                 })
                 .UseIISIntegration()
                 .Configure(app =>
