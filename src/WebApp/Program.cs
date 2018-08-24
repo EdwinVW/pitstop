@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Serilog;
 
 namespace PitStop
 {
@@ -13,9 +14,10 @@ namespace PitStop
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseApplicationInsights()
                 .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseSerilog()
                 .UseStartup<Startup>()
-                .UseApplicationInsights();
+                .UseContentRoot(Directory.GetCurrentDirectory());
     }
 }

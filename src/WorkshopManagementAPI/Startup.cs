@@ -11,6 +11,7 @@ using Pitstop.WorkshopManagementAPI.Repositories;
 using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Events;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Pitstop.WorkshopManagementAPI
 {
@@ -62,10 +63,11 @@ namespace Pitstop.WorkshopManagementAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration)
+                .CreateLogger();
 
             app.UseMvc();
             app.UseDefaultFiles();

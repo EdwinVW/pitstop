@@ -4,6 +4,7 @@ using Pitstop.Infrastructure.Messaging;
 using Pitstop.WorkshopManagementEventHandler.DataAccess;
 using Pitstop.WorkshopManagementEventHandler.Events;
 using Pitstop.WorkshopManagementEventHandler.Model;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -55,7 +56,7 @@ namespace Pitstop.WorkshopManagementEventHandler
             catch(Exception ex)
             {
                 string messageId = messageObject.Property("MessageId") != null ? messageObject.Property("MessageId").Value<string>() : "[unknown]";
-                Console.WriteLine($"Error while handling {messageType} message with id {messageId}.\n{ex.ToString()}");
+                Log.Error(ex, "Error while handling {MessageType} message with id {MessageId}.", messageType, messageId);
             }
 
             // always akcnowledge message - any errors need to be dealt with locally.
@@ -64,7 +65,8 @@ namespace Pitstop.WorkshopManagementEventHandler
 
         private async Task<bool> HandleAsync(VehicleRegistered e)
         {
-            Console.WriteLine($"Vehicle registered: License = {e.LicenseNumber}, Brand = {e.Brand}, Type = {e.Type}, Owner Id: {e.OwnerId}");
+            Log.Information("Vehicle registered: {LicenseNumber}, {Brand}, {Type}, Owner Id: {OwnerId}", 
+                e.LicenseNumber, e.Brand, e.Type, e.OwnerId);
 
             try
             {
@@ -87,7 +89,8 @@ namespace Pitstop.WorkshopManagementEventHandler
 
         private async Task<bool> HandleAsync(CustomerRegistered e)
         {
-            Console.WriteLine($"Customer registered: Customer Id = {e.CustomerId}, Name = {e.Name}, Telephone Number = {e.TelephoneNumber}");
+            Log.Information("Customer registered: {CustomerId}, {Name}, {TelephoneNumber}", 
+                e.CustomerId, e.Name, e.TelephoneNumber);
 
             try
             {
@@ -101,7 +104,7 @@ namespace Pitstop.WorkshopManagementEventHandler
             }
             catch (DbUpdateException)
             {
-                Console.WriteLine($"Skipped adding customer with customer id {e.CustomerId}.");
+                Log.Warning("Skipped adding customer with customer id {CustomerId}.", e.CustomerId);
             }
 
             return true; 
@@ -109,7 +112,8 @@ namespace Pitstop.WorkshopManagementEventHandler
 
         private async Task<bool> HandleAsync(MaintenanceJobPlanned e)
         {
-            Console.WriteLine($"Maintenance job planned: JobId = {e.JobId}, StartTime = {e.StartTime}, EndTime = {e.EndTime}, Customer = {e.CustomerInfo.Name}, Vehicle = {e.VehicleInfo.LicenseNumber}");
+            Log.Information("Maintenance job planned: {JobId}, {StartTime}, {EndTime}, {CustomerName}, {LicenseNumber}", 
+                e.JobId, e.StartTime, e.EndTime, e.CustomerInfo.Name, e.VehicleInfo.LicenseNumber);
 
             try
             {
@@ -153,7 +157,7 @@ namespace Pitstop.WorkshopManagementEventHandler
             }
             catch (DbUpdateException)
             {
-                Console.WriteLine($"Skipped adding maintenance job with id {e.JobId}.");
+                Log.Warning("Skipped adding maintenance job with id {JobId}.", e.JobId);
             }
 
             return true;
@@ -161,7 +165,8 @@ namespace Pitstop.WorkshopManagementEventHandler
 
         private async Task<bool> HandleAsync(MaintenanceJobFinished e)
         {
-            Console.WriteLine($"Maintenance job finished: JobId = {e.JobId}, ActualStartTime = {e.StartTime}, EndTime = {e.EndTime}");
+            Log.Information("Maintenance job finished: {JobId}, {ActualStartTime}, {EndTime}",
+                e.JobId, e.StartTime, e.EndTime);
 
             try
             {
@@ -174,7 +179,7 @@ namespace Pitstop.WorkshopManagementEventHandler
             }
             catch (DbUpdateException)
             {
-                Console.WriteLine($"Skipped adding maintenance job with id {e.JobId}.");
+                Log.Warning("Skipped adding maintenance job with id {JobId}.", e.JobId);
             }
 
             return true;

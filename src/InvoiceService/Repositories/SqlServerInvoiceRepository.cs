@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Transactions;
 using System.Linq;
+using Serilog;
 
 namespace Pitstop.InvoiceService.Repositories
 {
@@ -21,7 +22,7 @@ namespace Pitstop.InvoiceService.Repositories
             // init db
             Policy
             .Handle<Exception>()
-            .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) => { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
+            .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) => { Log.Error("Error connecting to DB. Retrying in 5 sec."); })
             .Execute(() => InitializeDB());
         }
 

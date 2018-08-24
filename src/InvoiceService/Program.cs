@@ -2,6 +2,7 @@
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.InvoiceService.CommunicationChannels;
 using Pitstop.InvoiceService.Repositories;
+using Serilog;
 using System;
 using System.IO;
 using System.Threading;
@@ -17,13 +18,17 @@ namespace Pitstop.InvoiceService
         {
             _env = Environment.GetEnvironmentVariable("PITSTOP_ENVIRONMENT") ?? "Production";
 
-            Console.WriteLine($"Environment: {_env}");
-
             Config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{_env}.json", optional: false)
                 .Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Config)
+                .CreateLogger();
+
+            Log.Information($"Environment: {_env}");
         }
 
         static void Main(string[] args)
@@ -51,13 +56,14 @@ namespace Pitstop.InvoiceService
 
             if (_env == "Development")
             {
-                Console.WriteLine("Invoicing service started. Press any key to stop...");
+                Log.Information("Invoice service started.");
+                Console.WriteLine("Press any key to stop...");
                 Console.ReadKey(true);
                 manager.Stop();
             }
             else
             {
-                Console.WriteLine("Invoicing service started.");
+                Log.Information("Invoice service started.");
                 while (true)
                 {
                     Thread.Sleep(10000);

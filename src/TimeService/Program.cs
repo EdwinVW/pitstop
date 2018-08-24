@@ -27,7 +27,6 @@ namespace Pitstop.TimeService
                 .CreateLogger();
 
             Log.Information($"Environment: {_env}");
-
         }
 
         static void Main(string[] args)
@@ -45,7 +44,8 @@ namespace Pitstop.TimeService
 
             if (_env == "Development")
             {
-                Log.Information("Time service started. Press any key to stop...");
+                Log.Information("TimeService service started.");
+                Console.WriteLine("Press any key to stop...");
                 Console.ReadKey(true);
                 manager.Stop();
             }
