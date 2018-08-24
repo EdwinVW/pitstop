@@ -1,5 +1,6 @@
 ﻿using Pitstop.Infrastructure.Messaging;
 using Pitstop.TimeService.Events;
+using Serilog;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,7 +38,7 @@ namespace Pitstop.TimeService
             {
                 if (DateTime.Now.Subtract(_lastCheck).Days > 0)
                 {
-                    Console.WriteLine($"Day has passed!");
+                    Log.Information($"Day has passed!");
                     _lastCheck = DateTime.Now;
                     DateTime passedDay = _lastCheck.AddDays(-1);
                     DayHasPassed e = new DayHasPassed(Guid.NewGuid());

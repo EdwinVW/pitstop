@@ -1,4 +1,5 @@
 ﻿using Polly;
+using Serilog;
 using System;
 using System.Net;
 using System.Net.Mail;
@@ -37,9 +38,9 @@ namespace Pitstop.NotificationService.NotificationChannels
 
                 await Policy
                     .Handle<Exception>()
-                    .WaitAndRetry(3, r => TimeSpan.FromSeconds(2), (ex, ts) => { Console.WriteLine("Error sending mail. Retrying in 2 sec."); })
+                    .WaitAndRetry(3, r => TimeSpan.FromSeconds(2), (ex, ts) => { Log.Error("Error sending mail. Retrying in 2 sec."); })
                     .Execute(() => client.SendMailAsync(mailMessage))
-                    .ContinueWith(_ => Console.WriteLine($"Notification mail sent to '{to}'."));
+                    .ContinueWith(_ => Log.Information("Notification mail sent to {Recipient}.", to));
             }
         }
     }

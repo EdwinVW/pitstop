@@ -154,6 +154,12 @@ To simulate sending emails, I use MailDev. This test-server acts as both an SMTP
 **Ocelot**
 Ocelot is an open-source API Gateway built on .NET Core. It is used to implement the API Gateway in the PitStop solution. See [https://github.com/ThreeMammals/Ocelot](https://github.com/ThreeMammals/Ocelot) for more info.
 
+**Serilog**
+Serilog an open-source logging framework for .NET (Core). It supports semantic/structured logging. All components within the solution use Serilog for logging information and errors. Log information is sent to the Console and to a Seq server (described below). See [https://serilog.net/](https://serilog.net/) for more info.
+
+**Seq**
+Seq is a central log server that can aggregate logging from several different logging-frameworks (including Serilog). It supports structured logging and offers rich searching and filtering capabilities. All logging within the PitStop solution is sent to Seq. See [https://getseq.net/](https://getseq.net/) for more info.
+
 **AutoMapper**
 AutoMapper is used (only where it adds value) to map between POCOs. This is primarily handy when mapping commands to events, events to events or events to models. See [http://automapper.org/](http://automapper.org/ "Automapper web-site") for more info.
 
@@ -360,7 +366,14 @@ This approach saves me from having to write lots of configuration. Especially fo
 
 #### Load balancing
 When running in Docker containers (*Production* environment), 2 instances of the the *WorkshopManagementAPI* are started (see the docker-compose file). In the *Production* configuration of the API Gateway, you can see two *DownStream* hosts are specified. Also a *RoundRobin* load-balancer is configured. This ensures that the API Gateway will use both hosts in a round-robin fashion.
- 
+
+## Logging
+To make sure you can see what's going on with the application, a lot of informational, warning- and error-logging is emitted. This logging can be seen in on the console (output of docker-compose). But a better way to look at this logging is using the Seq server that is part of the solution. If you start and use the application for some time, point your browser to [http://localhost:5341](http://localhost:5341) and you will see the Seq console with all the logging information emitted by the:
+
+![](img/seq.png)
+
+See [https://docs.getseq.net/docs/query-syntax](https://docs.getseq.net/docs/query-syntax) for more information on how to use the Seq console to search and filter the logging information.
+
 ## Contributing
 This sample is a personal R&D project for me to learn. I've tried to document it as thoroughly as possible for people wanting to learn from it. If you have any improvements you want to contribute (to the code or the documentation) or find any bugs that need solving, just create a pull-request!
 

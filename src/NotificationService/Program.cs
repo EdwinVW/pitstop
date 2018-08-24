@@ -2,6 +2,7 @@
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.NotificationService.NotificationChannels;
 using Pitstop.NotificationService.Repositories;
+using Serilog;
 using System;
 using System.IO;
 using System.Threading;
@@ -17,13 +18,17 @@ namespace Pitstop.NotificationService
         {
             _env = Environment.GetEnvironmentVariable("PITSTOP_ENVIRONMENT");
 
-            Console.WriteLine($"Environment: {_env}");
-
             Config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{_env}.json", optional: false)
                 .Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Config)
+                .CreateLogger();
+
+            Log.Information($"Environment: {_env}");
         }
 
         static void Main(string[] args)
@@ -52,13 +57,14 @@ namespace Pitstop.NotificationService
 
             if (_env == "Development")
             {
-                Console.WriteLine("Notification service started. Press any key to stop...");
+                Log.Information("Notification service started.");
+                Console.WriteLine("Press any key to stop...");
                 Console.ReadKey(true);
                 manager.Stop();
             }
             else
             {
-                Console.WriteLine("Notification service started.");
+                Log.Information("Notification service started.");
                 while (true)
                 {
                     Thread.Sleep(10000);

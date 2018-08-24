@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore;
+using Serilog;
 
 namespace Pitstop.WorkshopManagementAPI
 {
@@ -8,12 +9,12 @@ namespace Pitstop.WorkshopManagementAPI
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
-        }
-
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseApplicationInsights()
+                .UseSerilog()
                 .UseStartup<Startup>()
-                .UseApplicationInsights();
+                .Build()
+                .Run();
+        }
     }
 }

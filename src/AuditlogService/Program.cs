@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Pitstop.Infrastructure.Messaging;
+using Serilog;
 using System;
 using System.IO;
 using System.Threading;
@@ -13,15 +14,19 @@ namespace AuditlogService
 
         static Program()
         {
-            _env = Environment.GetEnvironmentVariable("PITSTOP_ENVIRONMENT") ?? "Production";
-
-            Console.WriteLine($"Environment: {_env}");
+            _env = Environment.GetEnvironmentVariable("PITSTOP_ENVIRONMENT");
 
             Config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{_env}.json", optional: false)
                 .Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Config)
+                .CreateLogger();
+
+            Log.Information($"Environment: {_env}");
         }
 
         static void Main(string[] args)
@@ -48,7 +53,7 @@ namespace AuditlogService
             }
             else
             {
-                Console.WriteLine("AuditLog service started.");
+                Log.Information("AuditLog service started.");
 
                 while (true)
                 {

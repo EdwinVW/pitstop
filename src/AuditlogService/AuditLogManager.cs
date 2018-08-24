@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using Serilog;
 
 namespace AuditlogService
 {
@@ -39,7 +40,7 @@ namespace AuditlogService
             string logMessage = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:ffffff")} - {message}{Environment.NewLine}";
             string logFile = Path.Combine(_logPath, $"{DateTime.Now.ToString("yyyy-MM-dd")}-auditlog.txt");
             await File.AppendAllTextAsync(logFile, logMessage);
-            Console.WriteLine(logMessage);
+            Log.Information("{MessageType} - {Body}", messageType, message);
             return true;
         }
     }
