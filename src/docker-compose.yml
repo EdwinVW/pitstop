@@ -34,7 +34,7 @@ services:
 
   logserver:
     image: datalust/seq:latest
-    container_name: loggingserver
+    container_name: logserver
     ports:
       - "5341:80"
     environment:
