@@ -368,7 +368,7 @@ This approach saves me from having to write lots of configuration. Especially fo
 When running in Docker containers (*Production* environment), 2 instances of the the *WorkshopManagementAPI* are started (see the docker-compose file). In the *Production* configuration of the API Gateway, you can see two *DownStream* hosts are specified. Also a *RoundRobin* load-balancer is configured. This ensures that the API Gateway will use both hosts in a round-robin fashion.
 
 ## Logging
-To make sure you can see what's going on with the application, a lot of informational, warning- and error-logging is emitted. This logging can be seen in on the console (output of docker-compose). But a better way to look at this logging is using the Seq server that is part of the solution. If you start and use the application for some time, point your browser to [http://localhost:5341](http://localhost:5341) and you will see the Seq console with all the logging information emitted by the:
+To make sure you can see what's going on with the application, a lot of informational, warning- and error-logging is emitted. This logging can be seen in on the console (output of docker-compose). But a better way to look at this logging is using the Seq server that is part of the solution. If you start the application and it for some time, point your browser to [http://localhost:5341](http://localhost:5341) and you will see the Seq console with all the logging information:
 
 ![](img/seq.png)
 
