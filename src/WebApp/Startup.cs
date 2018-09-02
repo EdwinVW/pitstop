@@ -18,6 +18,8 @@ namespace PitStop
 {
     public class Startup
     {
+        private IHostingEnvironment CurrentEnvironment { get; set; }
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -26,6 +28,8 @@ namespace PitStop
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            CurrentEnvironment = env;
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -45,7 +49,12 @@ namespace PitStop
             services.AddHealthChecks(checks =>
             {
                 checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(1));
-                checks.AddValueTaskCheck("HTTP Endpoint", () => new ValueTask<IHealthCheckResult>(HealthCheckResult.Healthy("Ok")));
+                
+                string apiHost = CurrentEnvironment.IsDevelopment() ? "localhost" : "apigateway";
+                checks.AddUrlCheck($"http://{apiHost}:10000/api/customers");
+                checks.AddUrlCheck($"http://{apiHost}:10000/api/vehicles");
+                checks.AddUrlCheck($"http://{apiHost}:10000/api/refdata/customers");
+                checks.AddUrlCheck($"http://{apiHost}:10000/api/refdata/vehicles");
             });
         }
 

@@ -9,6 +9,8 @@ RUN curl -SL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-lin
     && tar -xzf "nodejs.tar.gz" -C /usr/local --strip-components=1 \
     && rm nodejs.tar.gz \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
+RUN npm i npm@latest -g
+RUN npm install gulp -g
 
 # Copy necessary files and restore as distinct layer
 COPY *.csproj ./
@@ -16,9 +18,7 @@ RUN dotnet restore -s https://api.nuget.org/v3/index.json -s https://www.myget.o
 
 # Copy everything else and build
 COPY . ./
-RUN npm i npm@latest -g
 RUN npm install
-RUN npm install gulp -g
 RUN gulp default
 RUN dotnet publish -c Release -o out
 
