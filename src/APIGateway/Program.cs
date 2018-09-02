@@ -5,6 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Ocelot.Middleware;
 using Ocelot.DependencyInjection;
 using Serilog;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using Microsoft.Extensions.HealthChecks;
 
 namespace Pitstop.APIGateway
 {
@@ -16,6 +19,7 @@ namespace Pitstop.APIGateway
         {
             WebHost.CreateDefaultBuilder(args)
                 .UseSerilog()
+                .UseHealthChecks("/hc")
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .ConfigureAppConfiguration((hostingContext, config) =>
@@ -37,6 +41,13 @@ namespace Pitstop.APIGateway
                 .ConfigureServices(s =>
                 {
                     s.AddOcelot();
+                    s.AddHealthChecks(checks =>
+                    {
+                        checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(5));
+                        checks.AddUrlCheck("http://localhost:10000/api/customers");
+                        checks.AddUrlCheck("http://localhost:10000/api/refdata/customers");
+                        checks.AddUrlCheck("http://localhost:10000/api/vehicles");
+                    });
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {

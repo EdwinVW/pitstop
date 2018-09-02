@@ -122,3 +122,5 @@ bower_components
 output
 
 .vs
+
+Dockerfile
