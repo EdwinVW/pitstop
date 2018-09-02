@@ -74,7 +74,7 @@ This service publishes the following events:
 This service contains 2 parts: an API for managing the workshop planning and an event-handler that handles events and builds a read-model that is used by the API. 
 
 ##### API
-This is an API that is used to manage Maintenance Jobs in the system.Because we want to be able to keep Workshop Management up and running even when other services are down, the API also offers functionality to retrieve vehicle and customer information from the read-model. This read-model is filled by the event-handler (described below). To ensure the availability of this API, 2 instances of this API are started and load-balanced by the API Gateway.
+This is an API that is used to manage Maintenance Jobs in the system. Because we want to be able to keep Workshop Management up and running even when other services are down, the API also offers functionality to retrieve vehicle and customer information from the read-model. This read-model is filled by the event-handler (described below). To ensure the availability of this API, 2 instances of this API are started and load-balanced by the API Gateway.
 
 This service handles the following commands:
 
@@ -137,7 +137,7 @@ The AuditLog service picks up all events from the message-broker and stores them
 This chapter describes the technology and libraries used to build this application. I'm not going to describe in detail how the different components work. For that I refer you to the documentation of each component on the Internet.
 
 **.NET Core & ASP.NET Core**
-The application is build completely using .NET Core and ASP.NET Core. See [https://dot.net](https://dot.net ".NET web-site") for more info.
+The application is built completely using .NET Core and ASP.NET Core. See [https://dot.net](https://dot.net ".NET web-site") for more info.
 
 **Docker**
 Every service within the system and all infrastructural components (database, message-broker, mail-server) are run in a Docker container. In this solution, only Linux based containers are used. Docker Compose is used to compose the application and connect all the components. See [https://www.docker.com/](https://www.docker.com/ "Docker web-site") for more info.
