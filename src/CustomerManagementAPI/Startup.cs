@@ -14,6 +14,7 @@ using Pitstop.CustomerManagementAPI.Events;
 using Pitstop.CustomerManagementAPI.Commands;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Microsoft.Extensions.HealthChecks;
 
 namespace Pitstop.CustomerManagementAPI
 {
@@ -54,7 +55,12 @@ namespace Pitstop.CustomerManagementAPI
             {
                 c.SwaggerDoc("v1", new Info { Title = "CustomerManagement API", Version = "v1" });
             });
-
+            
+            services.AddHealthChecks(checks =>
+            {
+                checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(1));
+                checks.AddSqlCheck("CustomerManagementCN", Configuration.GetConnectionString("CustomerManagementCN"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

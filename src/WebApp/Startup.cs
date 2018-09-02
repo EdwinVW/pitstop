@@ -11,6 +11,8 @@ using WebApp.Commands;
 using WebApp.RESTClients;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Microsoft.Extensions.HealthChecks;
+using System.Threading.Tasks;
 
 namespace PitStop
 {
@@ -39,6 +41,12 @@ namespace PitStop
             services.AddTransient<ICustomerManagementAPI, CustomerManagementAPI>();
             services.AddTransient<IVehicleManagementAPI, VehicleManagementAPI>();
             services.AddTransient<IWorkshopManagementAPI, WorkshopManagementAPI>();
+
+            services.AddHealthChecks(checks =>
+            {
+                checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(1));
+                checks.AddValueTaskCheck("HTTP Endpoint", () => new ValueTask<IHealthCheckResult>(HealthCheckResult.Healthy("Ok")));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
