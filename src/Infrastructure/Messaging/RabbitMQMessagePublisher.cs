@@ -1,5 +1,6 @@
 ﻿using Polly;
 using RabbitMQ.Client;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,10 +14,10 @@ namespace Pitstop.Infrastructure.Messaging
     /// </summary>
     public class RabbitMQMessagePublisher : IMessagePublisher
     {
-        private string _host;
-        private string _username;
-        private string _password;
-        private string _exchange;
+        private readonly string _host;
+        private readonly string _username;
+        private readonly string _password;
+        private readonly string _exchange;
 
         public RabbitMQMessagePublisher(string host, string username, string password, string exchange)
         {
@@ -38,7 +39,7 @@ namespace Pitstop.Infrastructure.Messaging
             return Task.Run(() =>
                 Policy
                     .Handle<Exception>()
-                    .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Console.WriteLine("Error connecting to RabbitMQ. Retrying in 5 sec."); })
+                    .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Log.Error("Error connecting to RabbitMQ. Retrying in 5 sec."); })
                     .Execute(() =>
                     {
                         var factory = new ConnectionFactory() { HostName = _host, UserName = _username, Password = _password };

@@ -6,17 +6,18 @@ using Newtonsoft.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Polly;
+using Serilog;
 
 namespace Pitstop.Infrastructure.Messaging
 {
     public class RabbitMQMessageHandler : IMessageHandler
     {
-        private string _host;
-        private string _username;
-        private string _password;
-        private string _exchange;
-        private string _queuename;
-        private string _routingKey;
+        private readonly string _host;
+        private readonly string _username;
+        private readonly string _password;
+        private readonly string _exchange;
+        private readonly string _queuename;
+        private readonly string _routingKey;
         private IConnection _connection;
         private IModel _model;
         private EventingBasicConsumer _consumer;
@@ -39,7 +40,7 @@ namespace Pitstop.Infrastructure.Messaging
 
             Policy
                 .Handle<Exception>()
-                .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Console.WriteLine("Error connecting to RabbitMQ. Retrying in 5 sec."); })
+                .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Log.Error("Error connecting to RabbitMQ. Retrying in 5 sec."); })
                 .Execute(() =>
                 {
                     var factory = new ConnectionFactory() { HostName = _host, UserName = _username, Password = _password };
