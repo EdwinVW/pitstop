@@ -12,6 +12,7 @@ namespace Pitstop.WorkshopManagementAPI
             WebHost.CreateDefaultBuilder(args)
                 .UseApplicationInsights()
                 .UseSerilog()
+                .UseHealthChecks("/hc")
                 .UseStartup<Startup>()
                 .Build()
                 .Run();

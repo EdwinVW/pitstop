@@ -11,11 +11,15 @@ using WebApp.Commands;
 using WebApp.RESTClients;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Microsoft.Extensions.HealthChecks;
+using System.Threading.Tasks;
 
 namespace PitStop
 {
     public class Startup
     {
+        private IHostingEnvironment CurrentEnvironment { get; set; }
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -24,6 +28,8 @@ namespace PitStop
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            CurrentEnvironment = env;
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -39,6 +45,11 @@ namespace PitStop
             services.AddTransient<ICustomerManagementAPI, CustomerManagementAPI>();
             services.AddTransient<IVehicleManagementAPI, VehicleManagementAPI>();
             services.AddTransient<IWorkshopManagementAPI, WorkshopManagementAPI>();
+
+            services.AddHealthChecks(checks =>
+            {
+                checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(1));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

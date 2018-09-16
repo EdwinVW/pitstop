@@ -14,6 +14,7 @@ using Pitstop.Application.VehicleManagement.Commands;
 using Pitstop.Application.VehicleManagement.Events;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Microsoft.Extensions.HealthChecks;
 
 namespace Pitstop.Application.VehicleManagement
 {
@@ -53,6 +54,12 @@ namespace Pitstop.Application.VehicleManagement
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "VehicleManagement API", Version = "v1" });
+            });
+
+            services.AddHealthChecks(checks =>
+            {
+                checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(1));
+                checks.AddSqlCheck("VehicleManagementCN", Configuration.GetConnectionString("VehicleManagementCN"));
             });
         }
 

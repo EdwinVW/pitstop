@@ -17,6 +17,7 @@ namespace PitStop
                 .UseApplicationInsights()
                 .UseKestrel()
                 .UseSerilog()
+                .UseHealthChecks("/hc")
                 .UseStartup<Startup>()
                 .UseContentRoot(Directory.GetCurrentDirectory());
     }

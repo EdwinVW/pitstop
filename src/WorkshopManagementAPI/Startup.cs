@@ -12,6 +12,7 @@ using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Events;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Microsoft.Extensions.HealthChecks;
 
 namespace Pitstop.WorkshopManagementAPI
 {
@@ -59,6 +60,13 @@ namespace Pitstop.WorkshopManagementAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "WorkshopManagement API", Version = "v1" });
+            });
+
+            services.AddHealthChecks(checks =>
+            {
+                checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(1));
+                checks.AddSqlCheck("EventStoreCN", Configuration.GetConnectionString("EventStoreCN"));
+                checks.AddSqlCheck("WorkshopManagementCN", Configuration.GetConnectionString("WorkshopManagementCN"));
             });
         }
 

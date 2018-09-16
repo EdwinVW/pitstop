@@ -7,6 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleManagementAPI", "Veh
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0E6C719C-89BB-4C83-BA00-AFECD9EA4671}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
 		ClearDatabases.sql = ClearDatabases.sql
 		docker-compose.yml = docker-compose.yml
 		nuget.config = nuget.config
@@ -38,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkshopManagementAPI", "Wo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceService", "InvoiceService\InvoiceService.csproj", "{C7375EEC-FE83-4B7C-B754-BD7B93A78475}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGateway", "APIGateway\APIGateway.csproj", "{B2E3A0EC-C402-4B48-81E9-FC6859D18313}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway", "APIGateway\APIGateway.csproj", "{B2E3A0EC-C402-4B48-81E9-FC6859D18313}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
