@@ -49,6 +49,8 @@ namespace PitStop
             services.AddHealthChecks(checks =>
             {
                 checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(1));
+                checks.AddValueTaskCheck("HTTP Endpoint", () => new
+                    ValueTask<IHealthCheckResult>(HealthCheckResult.Healthy("Ok")));
             });
         }
 

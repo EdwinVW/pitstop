@@ -8,6 +8,7 @@ using Serilog;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Microsoft.Extensions.HealthChecks;
+using System.Threading.Tasks;
 
 namespace Pitstop.APIGateway
 {
@@ -44,6 +45,8 @@ namespace Pitstop.APIGateway
                     s.AddHealthChecks(checks =>
                     {
                         checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(5));
+                        checks.AddValueTaskCheck("HTTP Endpoint", () => new
+                            ValueTask<IHealthCheckResult>(HealthCheckResult.Healthy("Ok")));
                     });
                 })
                 .ConfigureLogging((hostingContext, logging) =>

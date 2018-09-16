@@ -374,6 +374,19 @@ To make sure you can see what's going on with the application, a lot of informat
 
 See [https://docs.getseq.net/docs/query-syntax](https://docs.getseq.net/docs/query-syntax) for more information on how to use the Seq console to search and filter the logging information.
 
+## Health-monitoring
+Every API service and the web-application are equipped with a health-monitoring end-point. You can check the health of the service by doing an HTTP request to the health-check URL (`/hc`):
+
+![](img/health-check-browser.png) 
+
+The health-checks are implemented using the Microsoft health-monitoring libraries (*Microsoft.AspNetCore.HealthChecks*). See [the docs](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/implement-resilient-applications/monitor-app-health) for more info. The services that use a SQL Server will also do a check on whether they can connect to the server configured in the connection-string.
+
+In the `Dockerfile` of the services, a `HEALTHCHECK` statement is added. This check will periodically (every 30 seconds) check the health of the service by calling the health-check URL of the service:
+
+```
+HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:5100/hc || exit 1
+```
+
 ## Contributing
 This sample is a personal R&D project for me to learn. I've tried to document it as thoroughly as possible for people wanting to learn from it. If you have any improvements you want to contribute (to the code or the documentation) or find any bugs that need solving, just create a pull-request!
 
