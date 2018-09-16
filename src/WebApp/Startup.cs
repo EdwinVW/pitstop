@@ -49,12 +49,6 @@ namespace PitStop
             services.AddHealthChecks(checks =>
             {
                 checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(1));
-                
-                string apiHost = CurrentEnvironment.IsDevelopment() ? "localhost" : "apigateway";
-                checks.AddUrlCheck($"http://{apiHost}:10000/api/customers");
-                checks.AddUrlCheck($"http://{apiHost}:10000/api/vehicles");
-                checks.AddUrlCheck($"http://{apiHost}:10000/api/refdata/customers");
-                checks.AddUrlCheck($"http://{apiHost}:10000/api/refdata/vehicles");
             });
         }
 

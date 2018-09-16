@@ -16,7 +16,7 @@ COPY --from=build-env /app/out .
 # Expose ports
 EXPOSE 5100/tcp
 ENV ASPNETCORE_URLS http://*:5100
-HEALTHCHECK --interval=5s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:5100/hc || exit 1
+HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:5100/hc || exit 1
 
 # Configure environment variables
 ENV WEBSITE_SITE_NAME CustomerManagementAPI

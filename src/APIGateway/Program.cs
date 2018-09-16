@@ -44,9 +44,6 @@ namespace Pitstop.APIGateway
                     s.AddHealthChecks(checks =>
                     {
                         checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(5));
-                        checks.AddUrlCheck("http://localhost:10000/api/customers");
-                        checks.AddUrlCheck("http://localhost:10000/api/refdata/customers");
-                        checks.AddUrlCheck("http://localhost:10000/api/vehicles");
                     });
                 })
                 .ConfigureLogging((hostingContext, logging) =>
