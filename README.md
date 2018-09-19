@@ -247,7 +247,7 @@ In order to run the application you need to take several steps. This description
 - Start the application
    This is it, you're now ready to spin up the system! Open up a Powershell window and go to the `Pitstop/src` folder. Then issue the following command: `docker-compose up`. 
 
-	> A strange issue that I sometimes encounter with Docker CE on Windows 10 is that the containers are not started the first time after starting the Docker engine. I haven't found a cause for this behavior yet, but the solution that works for me is to restart the docker enigne and try again. You do this by opening the Docker settings through the icon in the system-tray, going to the *Reset* tab and clicking on the *Restart Docker...* link:  
+	> A strange issue that I sometimes encounter with Docker CE on Windows 10 is that the containers are not started the first time after starting the Docker engine. I haven't found a cause for this behavior yet, but the solution that works for me is to restart the docker engine and try again. You do this by opening the Docker settings through the icon in the system-tray, going to the *Reset* tab and clicking on the *Restart Docker...* link:  
 	>
 	> ![](img/restart-docker.png)
 
