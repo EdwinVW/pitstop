@@ -17,7 +17,7 @@ Install the following software (if not already installed) on your laptop:
 #### Docker CE
 Download link: <a href="https://docs.docker.com/install" target="_blank">Docker Community Edition (CE)</a>. 
 
-On Windows, you need Hyper-V to be enabled on your machine in order to install Docker for Windows CE. If you have not enabled Hyper-V, do so now. <a href="https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v">Here</a> you find a description of how to enable Hyper-V on Windows. Make sure to double-check the prerequisites.
+On Windows, you need Hyper-V to be enabled on your machine in order to install Docker for Windows CE. If you have not enabled Hyper-V, do so now. <a href="https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v" target="_blank">Here</a> you find a description of how to enable Hyper-V on Windows. Make sure to double-check the prerequisites.
 
 For downloading Docker CE, you need to login with your Docker Id. Create one if you don't already have a Docker Id. 
 
@@ -35,7 +35,7 @@ Install the .NET Core SDK 2.1.
 
 Download link: <a href="https://www.microsoft.com/net/download" target="_blank">.NET Core SDK</a>
 
-#### Git client
+#### Git client (optional)
 Optionally you can install the Git client for your OS to interact with the PitStop repo on Github. This is optional because you can also download the code from Github in a zip file. 
 
 Download link: <a href="https://git-scm.com/downloads" target="_blank">Git</a> 
@@ -54,30 +54,30 @@ In this lab we'll make sure you can run PitStop on your machine. This will invol
 - [Get to know the solution](#step-1.4:-get-to-know-the-solution)
 
 ### Step 1.1: Get the sources
-There are 2 ways of getting the sources from Github onto your machine: download a zip file from Github or fork and clone the repo. 
-
-First open your browser and navigate to the PitStop repo on Github: [https://github.com/edwinvw/pitstop](https://github.com/edwinvw/pitstop). 
+There are 2 ways of getting the sources from Github onto your machine: download a zip file from Github or fork and clone the repo. Both are described below, choose the one that works best for you.
 
 **Download a zip file**
-1. Click the green *Clone or download* button. A dialog is shown. 
-2. Click the *Download ZIP* button and store the zip file on your machine. 
-3. Extract the zip file into an arbitrary folder.
-4. Open Visual Studio Code on your machine.
-5. Open the folder into which you extracted the zip file. Now you can start working with the code.
+1. Open your browser and navigate to the PitStop repo on Github: <a href="https://github.com/edwinvw/pitstop" target="_blank">https://github.com/edwinvw/pitstop</a>. 
+2. Click the green *Clone or download* button. A dialog is shown. 
+3. Click the *Download ZIP* button and store the zip file on your machine. 
+4. Extract the zip file into an arbitrary folder (e.g. `c:\dev`).
+5. Open Visual Studio Code on your machine.
+6. Open the `pitstop/src` folder in the folder into which you extracted the zip file. Now you can start working with the code.
 
 **Fork and clone the repo**
 For this to work, you must have installed the Git client (see [Step 0.1](#step-0.1:-install-prerequisites)). 
-1. Click the *Fork* button.
-2. The repo is forked to your Github account. If you have multiple accounts, Github will ask which account to fork to.
-3. Click the green *Clone or download* button on the forked repo. A dialog is shown.
-4. Copy the repo URL to the clipboard. 
-5. Open Visual Studio Code on your machine.
-6. Give the clone repo command by presing `CTRL-Shift-P`, typing `Git Clone` and pressing `enter` to confirm. You will be asked to specify a repo URL.
-7. Paste the copied repo URL in the text-box and press `enter` to confirm.
-8. You will be asked to specify a folder for cloning the repo into. Select a folder and confirm. The repo will be cloned in this folder.
-9. When VS Code asks you to open the cloned repo, do that. Now you can start working with the repo.
+1. Open your browser and navigate to the PitStop repo on Github: <a href="https://github.com/edwinvw/pitstop" target="_blank">https://github.com/edwinvw/pitstop</a>. 
+2. Click the *Fork* button.
+3. The repo is forked to your Github account. If you have multiple accounts, Github will ask which account to fork to.
+4. Click the green *Clone or download* button on the forked repo. A dialog is shown.
+5. Copy the repo URL to the clipboard. 
+6. Open Visual Studio Code on your machine.
+7. Give the clone repo command by pressing `CTRL-Shift-P`, typing `Git Clone` and pressing `enter` to confirm. You will be asked to specify a repo URL.
+8. Paste the copied repo URL in the text-box and press `enter` to confirm.
+9. You will be asked to specify a folder for cloning the repo into. Select a folder and confirm. The repo will be cloned in this folder.
+10. When VS Code asks you to open the cloned repo, do that. Now you can start working with the repo.
 
-This would be a good time to walk through the solution and see what's in there. In the repo [README file](https://github.com/edwinvw/pitstop), you will find information about the solution structure. Read this until yout get to the *Getting Started* section.
+This would be a good time to walk through the solution and see what's in there. In the <a href="https://github.com/edwinvw/pitstop" target="_blank">README file</a> in the repo, you will find information about the solution structure. Read this until yout get to the *Getting Started* section.
 
 ### Step 1.2: Build the Docker images
 In order to build the Docker images, follow the instructions in the <a href="https://github.com/edwinvw/pitstop#building-the-docker-images" target="_blank">'Building the Docker images' section</a> in the repo's README file.
@@ -140,13 +140,13 @@ Let's open Visual Studio Code to start coding:
 
 1. Start Visual Studio Code.
 2. Select *File*, *Open Folder* and select the *CustomerEventHandler* folder you created in step 2.1. 
-   >Visual Studio Code might show you some dialogs about plugins that you can install. For now, just install all plugins that it suggests. It will also asks you to add some 'assets' it needs for building and debugging the project. Acknowledge this with 'Yes'. This will create a '.vscode' folder. You can ignore that for now.
+   >Visual Studio Code might show you some dialogs about plugins that you can install. For now, just install all plugins that it suggests. It will also asks you to add some 'assets' it needs for building and debugging the project. Acknowledge this with 'Yes'. This will create a '.vscode' folder. You can ignore that folder for now.
    
 3. Open the file *CustomerEventHandler.csproj* by double-clicking on it. This is the file that describes the project. It is pretty straightforward and clean.
-4. Start the application by pressing F5. The project will be built and started. You can see the output in the 'DEBUG CONSOLE' window that was automatically opened.
+4. Start the application by pressing `F5`. The project will be built and started. You can see the output in the 'DEBUG CONSOLE' window that was automatically opened.
 
 **Add reference to the infrastructure package**
-The CustomerEventHandler service will need to receive messages from the message-broker. I have created a nuget package (*PitStop.Infrastructure*) that contains a library that will make it easy to implement this without any specific knowledge about Rabbit MQ (the broker that is used in the solution). 
+The CustomerEventHandler service will need to receive messages from the message-broker. I have created a nuget package (*PitStop.Infrastructure*) that contains a library that will make it easy to implement this without any specific knowledge about RabbitMQ (the broker that is used in the solution). 
 
 You need to add a reference to the *PitStop.Infrastructure* nuget package. The package is hosted in a private MyGet feed on the Internet. The location of the feed is specified in the nuget.config file in the solution, so it will automatically be resolved.
 
@@ -183,7 +183,7 @@ You need to define a C# class to hold this information. We will only use the *na
 
 The infrastructure package you referenced in the previous step contains an *Event* base-class for events. This base-class contains the *messageId* and *messageType* properties. For convenience, the infrastructure package also contains an *MessageTypes* enum with all the available message-types in the solution. 
 
-Follow the following steps to add the *CustomerCreated* event-definition to your service:
+Follow the following steps to add the *CustomerRegistered* event-definition to your service:
 
 1. Add a new file to the project named *CustomerRegistered.cs*.
 2. Paste the following code into the new file:
@@ -211,7 +211,7 @@ Follow the following steps to add the *CustomerCreated* event-definition to your
 **Add a *CustomerManager* class that handles events**
 Now that you have a definition of the event, you will add a *CustomerManager* class that will get the events from the message-broker and handles them. The polling for messages and the handling of a message when it's available are abstracted in two separate interfaces: *IMessageHandler* and *IMessageHandlerCallback*. They are both defined in the infrastructure package.  
 
-The *IMessageHandler* interface abstracts the polling for messages on a message-broker. An implementation of this interface will be passed into your *CustomerManager*'s constructor. The infrastructure also offers an implementation of this interface that works with Rabbit MQ. 
+The *IMessageHandler* interface abstracts the polling for messages on a message-broker. An implementation of this interface will be passed into your *CustomerManager*'s constructor. The infrastructure package also contains an implementation of this interface that works with RabbitMQ. 
 
 When you want to start listening for messages, you have to call the *Start()* method on this interface and pass in an implementation of the *IMessageHhandlerCallback* interface. The *HandleMessageAync()* method is called on the callback implementation when a message is available on the message-broker. The *CustomerManager* will implement this interface and handle the events.
 
@@ -275,10 +275,10 @@ Execute the following steps to add the *CustomerManager* to your project:
 > Please take some time to go over the code now. It is fairly simple, but make sure you exactly understand what's going on here before continuing to the next step.
 > 
 > Details to notice:
-> - *this* is passed to the call to *IMessageHandler.Start()*. This makes the *CustomerManager* the IMessageHandlerCallback implementation that is being called when a message is available.
+> - *this* is passed to the call to *IMessageHandler.Start()*. This makes the *CustomerManager* the *IMessageHandlerCallback* implementation that is being called when a message is available.
 > - Only messages with message-type *CustomerRegistered* are handled. All other messages are ignored.
 > - We return true from the *HandleMessageAsync()* method to signal that the message was successfully processed.
-> - Deserialization of the message if done using the *.ToObject()* extension-method that has been defined in the infrastructure package. 
+> - Deserialization of the message is done using the *.ToObject()* extension-method that has been defined in the infrastructure package. 
 
 **Start the customermanager**
 Now that you created a *CustomerManager* that can handle *CustomerRegistered* events, you need to start this manager form the main program. You will use the *RabbitMQMessageHandler* class from the infrastructure package to pass into the *CustomerManager*. 
@@ -405,12 +405,14 @@ Now you are going to build a Docker image using the Dockerfile.
 2. Build a Docker image by entering the following command: 
 
 	`docker build --rm -t pitstop/customereventhandler .`
+
+   > You specify the name of the image using the *Tag* option (`-t`).
 3. Check whether the image is created by entering the following command: `docker images`:
 
    ![](img/docker-images.png)
 
 ### Step 2.5: Run the service in a Docker container
-Now the you have the Docker image, you can start a container based on this image. 
+Now that you have the Docker image, you can start a container based on this image. 
 
 1. Run a Docker container based on the image by entering the following command:
 
