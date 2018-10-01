@@ -455,7 +455,7 @@ Watch the docker-compose logging in the console. You should see that message aga
 
 ![](img/docker-compose-output.png)
 
-This is the end of this lab. I hope you have enjoyed working with this sample solution and learned some new things along the way. If have more time to spend, look at the advanced labs below. If you have your own ideas for cool labs, please let me know or write one yourself and do a pull request.
+This is the end of this lab. I hope you have enjoyed working with this sample solution and learned some new things along the way. If you have some more time to spend, look at the advanced labs below. If you have your own ideas for cool labs, please let me know or write one yourself and do a pull request.
 
 Thanks!
 
