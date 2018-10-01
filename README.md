@@ -198,8 +198,8 @@ The Visual Studio solution contains several files and folders. Most folders corr
 - **WorkshopManagementAPI** - the Web API for managing workshop data.
 - **WorkshopManagementEventHandler** - the event-handler picking up events and creating the read-model for the WorkshopManagement bounded-context.
 
-## Getting started
-In order to run the application you need to take several steps. This description assumes you're developing on a Windows machine using Visual Studio 2017 and already forked and pulled the latest version of the source-code from the repo.
+## Building the Docker images
+In order to run the application you need to take several steps. This description assumes you're developing on a Windows machine using Visual Studio 2017 or Visual Studio Code and already downloaded or forked and pulled the latest version of the source-code from the repo.
 
 > In the `docker-compose.yml` file in the root of the solution folder there are some credentials specified for components that need them. These are also used by the different services that use these components (specified in config files): SQL Server login: sa / 8jkGh47hnDw89Haq8LN2, Rabbit MQ login: rabbitmquser / DEBmbwkSrzy9D1T9cJfa
 
@@ -208,11 +208,6 @@ In order to run the application you need to take several steps. This description
     - Increase the amount of memory dedicated to Docker to at least 4 GB. You can do this on the *Advanced* tab of the Docker settings dialog:
 
 	![](img/docker-resources.png) 
-
-- Create necessary Docker volumes: 
-   - `docker volume create sqlserverdata`
-   - `docker volume create rabbitmqdata` 
-  
 
 - Configure monitoring (optional).   
    The WebAPIs and Web-Application use Application Insights (AI) for monitoring. When using AI, you can monitor all kinds of characteristics of your application. AI also can automatically build a map of your application:
@@ -227,9 +222,9 @@ In order to run the application you need to take several steps. This description
    - Create a system-wide environment-variable with the name *PitStopAIKey* and the key as value. The key is read at run-time from the environment-variable.  
    
 
-- Open the PitStop solution in Visual Studio.  
+- Open the PitStop solution in Visual Studio or in Visual Studio Code.  
 
-- Add NuGet source
+- When using Visual Studio, add a NuGet source
    To prevent project-references between projects in the solution, I've used a public MyGet feed for shared components. The URI for this feed is: `https://www.myget.org/F/pitstop/api/v3/index.json`. This feed contains only the Infrastructure package. Open Visual Studio and configure the NuGet sources and add the MyGet feed: 
 
    ![Add private NuGet feed](img/add-private-nuget-feed.png).
@@ -244,22 +239,27 @@ In order to run the application you need to take several steps. This description
 
    ![](img/docker-images.png)
 
-- Start the application
-   This is it, you're now ready to spin up the system! Open up a Powershell window and go to the `Pitstop/src` folder. Then issue the following command: `docker-compose up`. 
+   As part of the `RebuildAllDockerImages` script, two Docker volumes are created. One for the SQL Server data and one for the RabbitMQ data. This ensures that data for these infrastructural components survives restarts of the Containers. If you don't use the `RebuildAllDockerImages` script, you can create the volumes by hand:
+
+   - `docker volume create sqlserverdata`
+   - `docker volume create rabbitmqdata` 
+
+## Starting the application
+This is it, you're now ready to spin up the system! Open up a Powershell window and go to the `Pitstop/src` folder. Then issue the following command: `docker-compose up`. 
 
 	> A strange issue that I sometimes encounter with Docker CE on Windows 10 is that the containers are not started the first time after starting the Docker engine. I haven't found a cause for this behavior yet, but the solution that works for me is to restart the docker engine and try again. You do this by opening the Docker settings through the icon in the system-tray, going to the *Reset* tab and clicking on the *Restart Docker...* link:  
 	>
 	> ![](img/restart-docker.png)
 
-   Because this will start everything in the foreground, you will see all the logging being emitted from the different components. You will probably see a couple of *Unable to connect to RabbitMQ/SQL Server, retrying in 5 sec.* messages in there. This is expected and not a problem. This is Polly doing its work to make sure that failures that occur when calling a component that is still starting up are handled gracefully. 
+Because this will start everything in the foreground, you will see all the logging being emitted from the different components. You will probably see a couple of *Unable to connect to RabbitMQ/SQL Server, retrying in 5 sec.* messages in there. This is expected and not a problem. This is Polly doing its work to make sure that failures that occur when calling a component that is still starting up are handled gracefully. 
 
-   The first time the services are started, the necessary databases are automatically created. You could check this by connecting to the SQL Server using SSMS (server *localhost*, port 1434; separate the server and port with a comma in SSMS: `localhost,1434`) and looking at the different databases:
+The first time the services are started, the necessary databases are automatically created. You could check this by connecting to the SQL Server using SSMS (server *localhost*, port 1434; separate the server and port with a comma in SSMS: `localhost,1434`) and looking at the different databases:
 
-   ![](img/ssms-databases.png)
+![](img/ssms-databases.png)
 
-   Upon the registration of the first Maintenance Job, the event-store database *WorkshopManagementEventStore* will be created automatically.
+Upon the registration of the first Maintenance Job, the event-store database *WorkshopManagementEventStore* will be created automatically.
 
-## Testing the app
+## Testing the application
 To test the application you need to open the following web-pages:
 
 - The RabbitMQ management dashboard: [http://localhost:15672](http://localhost:15672). 
@@ -269,6 +269,8 @@ To test the application you need to open the following web-pages:
 - The MailDev inbox: [http://localhost:4000](http://localhost:4000).
 
 - The PitStop web-application: [http://localhost:7000](http://localhost:7000).
+
+- The Seq logging console: [http://localhost:5341](http://localhost:5341).
 
 Now you can follow the following scenario (make sure you fill all the fields in the entry-forms):
 
