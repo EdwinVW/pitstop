@@ -259,6 +259,8 @@ The first time the services are started, the necessary databases are automatical
 
 Upon the registration of the first Maintenance Job, the event-store database *WorkshopManagementEventStore* will be created automatically.
 
+> In places where the services access external resources (e.g. RabbitMQ or SQL Server), I have added retry logic to cope with stuff not being up & running when accessing it. But sometimes when you run the application for the first time, starting and initializing SQL Server takes a lot longer. So you could run into the situation that starting and initializing the SQL Server takes longer than the configured timeout and the services are unable to access the database. You will see errors in the logging and the application will not run correctly. In that case, just stop the containers (`Ctrl-C`) and try again using `docker-compose up`.   
+
 ## Testing the application
 To test the application you need to open the following web-pages:
 
