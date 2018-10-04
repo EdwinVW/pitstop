@@ -24,7 +24,6 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
         static SqlServerWorkshopPlanningRepository()
         {
             _serializerSettings = new JsonSerializerSettings();
-            //_serializerSettings.TypeNameHandling = TypeNameHandling.All;
             _serializerSettings.Formatting = Formatting.Indented;
             _serializerSettings.Converters.Add(new StringEnumConverter { CamelCaseText = true });
         }
