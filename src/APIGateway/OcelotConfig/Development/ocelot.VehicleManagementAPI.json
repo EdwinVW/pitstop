@@ -1,7 +1,7 @@
 ﻿{
   "ReRoutes": [
     {
-      "ServiceName": "VehicleManagementAPI",
+      "Key": "VehicleManagementAPI",
       "UpstreamPathTemplate": "/api/vehicles/",
       "DownstreamPathTemplate": "/api/vehicles",
       "DownstreamScheme": "http",
@@ -13,7 +13,7 @@
       ]
     },
     {
-      "ServiceName": "VehicleManagementAPI",
+      "Key": "VehicleManagementAPI",
       "UpstreamPathTemplate": "/api/vehicles/{trailingSegments}",
       "DownstreamPathTemplate": "/api/vehicles/{trailingSegments}",
       "DownstreamScheme": "http",
