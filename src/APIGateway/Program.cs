@@ -33,7 +33,7 @@ namespace Pitstop.APIGateway
                     // add ocelot configuration
                     string ocelotConfigPath = Path.Combine(hostingContext.HostingEnvironment.ContentRootPath, "OcelotConfig");
                     ocelotConfigPath = Path.Combine(ocelotConfigPath, hostingContext.HostingEnvironment.EnvironmentName);
-                    config.AddOcelot(ocelotConfigPath);
+                    config.AddOcelot(ocelotConfigPath, hostingContext.HostingEnvironment);
 
                     config.AddEnvironmentVariables();
 
