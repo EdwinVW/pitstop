@@ -1,7 +1,7 @@
 ﻿{
   "ReRoutes": [
     {
-      "ServiceName": "WorkshopPlanningAPI",
+      "Key": "WorkshopPlanningAPI",
       "UpstreamPathTemplate": "/api/workshopplanning/{trailingSegments}",
       "DownstreamPathTemplate": "/api/workshopplanning/{trailingSegments}",
       "DownstreamScheme": "http",
@@ -13,7 +13,7 @@
       ]
     },
     {
-      "ServiceName": "WorkshopRefDataAPI",
+      "Key": "WorkshopRefDataAPI",
       "UpstreamPathTemplate": "/api/refdata/{trailingSegments}",
       "DownstreamPathTemplate": "/api/refdata/{trailingSegments}",
       "DownstreamScheme": "http",
