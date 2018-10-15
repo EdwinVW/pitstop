@@ -379,10 +379,10 @@ This approach saves me from having to write lots of configuration. Especially fo
 When running in Docker containers (the *Production* environment), multiple instances of the the *WorkshopManagementAPI* can be started. Work will be load-balanced over these instances. To start multiple instances, specify this on the command-line when using docker-compose:
 
 ```
-docker-compose up --scale workshopmanagementapi=<number of instances>`
+docker-compose up --scale workshopmanagementapi=3`
 ```
 
-This will start <number of instances> separate instances of this service. Each service will register itself with the *DiscoveryService* (the Consul service) upon start-up. 
+This will start 3 instances of this service. Each service will register itself with the *DiscoveryService* (the Consul service) upon start-up. 
 
 In the *Production* configuration of the API Gateway, you can see a *Round Robin* style load-balancer is configured in the `ocelot.WorkshopManagementAPI.json` config-file:
 
@@ -428,7 +428,7 @@ As you can see, no *DownStreamHostsAndPorts* section exists in this configuratio
 }
 ```
 
-If you want to see whether or not multiple instances of the service is registered with the discovery service, point your browser to [http://localhost:8500](http://localhost:8500) where the Consul UI is running. You will see multiple instances of the workshopmanagementapi service (in the example below, I started 4 instances):
+If you want to see whether or not multiple instances of the service are registered with the discovery service, point your browser to [http://localhost:8500](http://localhost:8500) where the Consul UI is running. You will see multiple instances of the workshopmanagementapi service (in the example below, I started 4 instances):
 
 ![](img/consul-ui.png)
 
