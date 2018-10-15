@@ -5,24 +5,20 @@
       "UpstreamPathTemplate": "/api/vehicles/",
       "DownstreamPathTemplate": "/api/vehicles",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "vehiclemanagementapi",
-          "Port": 5000
-        }
-      ]
+      "ServiceName": "vehiclemanagementapi",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
     },
     {
       "Key": "VehicleManagementAPI",
       "UpstreamPathTemplate": "/api/vehicles/{trailingSegments}",
       "DownstreamPathTemplate": "/api/vehicles/{trailingSegments}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "vehiclemanagementapi",
-          "Port": 5000
-        }
-      ]
+      "ServiceName": "vehiclemanagementapi",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
     }
   ]
 }

@@ -18,6 +18,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using System.Linq;
+using Pitstop.Infrastructure.ServiceDiscovery;
 
 namespace Pitstop.WorkshopManagementAPI
 {
@@ -59,11 +60,11 @@ namespace Pitstop.WorkshopManagementAPI
 
             // add consul
             services.Configure<ConsulConfig>(Configuration.GetSection("consulConfig"));
-                services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
-                {
-                    var address = Configuration["consulConfig:address"];
-                    consulConfig.Address = new Uri(address);
-                }));          
+            services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+            {
+                var address = Configuration["consulConfig:address"];
+                consulConfig.Address = new Uri(address);
+            }));          
 
             // Add framework services.
             services.AddMvc()

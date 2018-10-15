@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Pitstop.WorkshopManagementAPI
+namespace Pitstop.Infrastructure.ServiceDiscovery
 {
     public static class ApplicationBuilderExtensions
     {

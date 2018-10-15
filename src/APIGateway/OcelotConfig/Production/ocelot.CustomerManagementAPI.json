@@ -5,24 +5,20 @@
       "UpstreamPathTemplate": "/api/customers/",
       "DownstreamPathTemplate": "/api/customers",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "customermanagementapi",
-          "Port": 5100
-        }
-      ]
+      "ServiceName": "customermanagementapi",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
     },
     {
       "Key": "CustomerManagementAPI",
       "UpstreamPathTemplate": "/api/customers/{trailingSegments}",
       "DownstreamPathTemplate": "/api/customers/{trailingSegments}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "customermanagementapi",
-          "Port": 5100
-        }
-      ]
+      "ServiceName": "customermanagementapi",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
     }
   ]
 }

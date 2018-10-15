@@ -15,6 +15,8 @@ using Pitstop.CustomerManagementAPI.Commands;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Microsoft.Extensions.HealthChecks;
+using Pitstop.Infrastructure.ServiceDiscovery;
+using Consul;
 
 namespace Pitstop.CustomerManagementAPI
 {
@@ -46,6 +48,14 @@ namespace Pitstop.CustomerManagementAPI
             string password = configSection["Password"];
             services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
 
+            // add consul
+            services.Configure<ConsulConfig>(Configuration.GetSection("consulConfig"));
+            services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+            {
+                var address = Configuration["consulConfig:address"];
+                consulConfig.Address = new Uri(address);
+            }));  
+
             // Add framework services.
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -64,7 +74,7 @@ namespace Pitstop.CustomerManagementAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, CustomerManagementDBContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime, CustomerManagementDBContext dbContext)
         {
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(Configuration)
@@ -84,6 +94,9 @@ namespace Pitstop.CustomerManagementAPI
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "CustomerManagement API - v1");
             });
+
+            // register service in Consul
+            app.RegisterWithConsul(lifetime);
         }
 
         private void SetupAutoMapper()

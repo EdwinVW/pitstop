@@ -1,4 +1,4 @@
-namespace Pitstop.WorkshopManagementAPI
+namespace Pitstop.Infrastructure.ServiceDiscovery
 {
     public class ConsulConfig
     {

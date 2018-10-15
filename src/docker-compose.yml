@@ -50,13 +50,12 @@ services:
   vehiclemanagementapi:
     image: pitstop/vehiclemanagementapi:latest
     build: VehicleManagementAPI
-    container_name: vehiclemanagementapi
     depends_on:
       - discoveryservice
       - rabbitmq
       - sqlserver
     ports:
-      - "5000:5000"
+      - "5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
@@ -64,13 +63,12 @@ services:
   customermanagementapi:
     image: pitstop/customermanagementapi:latest
     build: CustomerManagementAPI
-    container_name: customermanagementapi
     depends_on:
       - discoveryservice
       - rabbitmq
       - sqlserver
     ports:
-      - "5100:5100"
+      - "5100"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ApplicationInsights:InstrumentationKey=${PitStopAIKey}

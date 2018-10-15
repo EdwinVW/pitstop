@@ -49,7 +49,7 @@ The web application is the front-end for the system. Users can manage customers,
 The API Gateway abstracts all the APIs in the solution. The PitStop web application calls all APIs through the API Gateway. The API Gateway also offers location-transparency and load-balancing of APIs. It uses the *DiscoveryService* to determine the available instances of the services it load-balances.
 
 #### Discovery Service
-The Discovery service is a service that administers the available running instances of the WorkshopManagementAPI service. This is the only service in the solution that is load-balanced. When a WorkshopManagementAPI service is started, it registers itself with the Discovery Service. When the service stops, it de-registers itself. The API gateway load-balances the workload over the available instances of the WorkshopManagement API that are registered with the Discovery Service.
+The Discovery service is a service that administers the available running instances of the API services. When an API service is started, it registers itself with the Discovery Service. When the service stops, it de-registers itself. The API gateway load-balances the workload over the available instances of the services that are registered with the Discovery Service.
 
 #### Customer Management Service
 This service offers an API that is used to manage Customers in the system. For now, only CREATE and READ functionality (list and single by unique Id) is implemented. 
@@ -332,7 +332,8 @@ The configuration of the API Gateway is situated in the *APIGateway* project in 
 
 > When you change the configuration, make sure to rebuild the API Gateway Docker container! The config file is stored inside the container. If you want to be able to change the configuration "on the fly", define and mount a Docker volume and put the config file there.
 
-The configuration for an API (in this case the *CustomerManagement API*) looks something like this:
+**Development environment**
+The configuration for an API (in this case the *CustomerManagement API*) looks something like this for the development environment:
 
 ```
 {
@@ -365,7 +366,7 @@ The configuration for an API (in this case the *CustomerManagement API*) looks s
 }
 ```
 
-The first routing-rule matches `http://<host>/api/customers` for getting all the customers. The second rule matches `http://<host>/api/customers/<whatever>`. Because everything that is specified as `<whatever>` after `/api/customers/` is forwarded to the downstream API, I only need to specify routing-rules for each individual API controller. ASP.NET Core MVC routing in the downstream API that is called will take care of the rest. 
+For this environment, the downstream hosts and ports are statically configured in the Ocelot configuration-file. The first routing-rule matches `http://<host>/api/customers` for getting all the customers. The second rule matches `http://<host>/api/customers/<whatever>`. Because everything that is specified as `<whatever>` after `/api/customers/` is forwarded to the downstream API, I only need to specify routing-rules for each individual API controller. ASP.NET Core MVC routing in the downstream API that is called will take care of the rest. 
 
 This approach saves me from having to write lots of configuration. Especially for the WorkshopManagement API which serves up several resources:
 
@@ -375,16 +376,16 @@ This approach saves me from having to write lots of configuration. Especially fo
 - /api/refdata/customers
 - /api/refdata/vehicles
 
-#### Load balancing
-When running in Docker containers (the *Production* environment), multiple instances of the the *WorkshopManagementAPI* can be started. Work will be load-balanced over these instances. To start multiple instances, specify this on the command-line when using docker-compose:
+**Production Environment**
+When running in Docker containers - the *Production* environment - multiple instances of the the API services can be started. Work will be load-balanced over these instances. To start multiple instances, specify this on the command-line when using docker-compose:
 
 ```
-docker-compose up --scale workshopmanagementapi=3
+docker-compose up --scale customermanagementapi=2 --scale vehiclemanagementapi=3 --scale workshopmanagementapi=3
 ```
 
-This will start 3 instances of this service. Each service will register itself with the *DiscoveryService* (the Consul service) upon start-up. 
+This will start 2 instances of the CustomerManagementAPI, 2 instances of the VehicleManagementAPI and 3 instances of this service. Each service will register itself with the *DiscoveryService* (the Consul service) upon start-up. 
 
-In the *Production* configuration of the API Gateway, you can see a *Round Robin* style load-balancer is configured in the `ocelot.WorkshopManagementAPI.json` config-file:
+In the *Production* configuration of the API Gateway, you can see a *Round Robin* style load-balancer is configured in the Ocelot config-files:
 
 ```
 {
@@ -428,9 +429,13 @@ As you can see, no *DownStreamHostsAndPorts* section exists in this configuratio
 }
 ```
 
-If you want to see whether or not multiple instances of the service are registered with the discovery service, point your browser to [http://localhost:8500](http://localhost:8500) where the Consul UI is running. You will see multiple instances of the workshopmanagementapi service (in the example below, I started 4 instances):
+If you want to see whether or not multiple instances of the service are registered with the discovery service, point your browser to [http://localhost:8500](http://localhost:8500) where the Consul UI is running. You will see multiple instances of the API services:
 
 ![](img/consul-ui.png)
+
+If you click a particular service, you can see the instances (nodes) that are registered for this service. Each *node* is a separate container. For instance, the VehicleManagementAPI service:
+
+![](img/consul-ui-detail.png)
 
 ## Logging
 To make sure you can see what's going on with the application, a lot of informational, warning- and error-logging is emitted. This logging can be seen in on the console (output of docker-compose). But a better way to look at this logging is using the Seq server that is part of the solution. If you start the application and it for some time, point your browser to [http://localhost:5341](http://localhost:5341) and you will see the Seq console with all the logging information:
