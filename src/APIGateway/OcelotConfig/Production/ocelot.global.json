@@ -1,5 +1,10 @@
 ﻿{
   "GlobalConfiguration": {
-    "BaseUrl": "http://apigateway:10000"
+    "BaseUrl": "http://apigateway:10000",
+    "ServiceDiscoveryProvider": {
+      "Host": "discoveryservice",
+      "Port": 8500,
+      "Type": "Consul"
+    }  
   }
 }

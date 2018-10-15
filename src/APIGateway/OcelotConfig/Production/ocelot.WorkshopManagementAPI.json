@@ -5,16 +5,7 @@
       "UpstreamPathTemplate": "/api/workshopplanning/{trailingSegments}",
       "DownstreamPathTemplate": "/api/workshopplanning/{trailingSegments}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "workshopmanagementapi_1",
-          "Port": 5200
-        },
-        {
-          "Host": "workshopmanagementapi_2",
-          "Port": 5200
-        }
-      ],
+      "ServiceName": "workshopmanagementapi",
       "LoadBalancerOptions": {
         "Type": "RoundRobin"
       }
@@ -24,16 +15,7 @@
       "UpstreamPathTemplate": "/api/refdata/{trailingSegments}",
       "DownstreamPathTemplate": "/api/refdata/{trailingSegments}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "workshopmanagementapi_1",
-          "Port": 5200
-        },
-        {
-          "Host": "workshopmanagementapi_2",
-          "Port": 5200
-        }
-      ],
+      "ServiceName": "workshopmanagementapi",
       "LoadBalancerOptions": {
         "Type": "RoundRobin"
       }

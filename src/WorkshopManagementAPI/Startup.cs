@@ -13,6 +13,11 @@ using Pitstop.WorkshopManagementAPI.Events;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Microsoft.Extensions.HealthChecks;
+using Consul;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using System.Linq;
 
 namespace Pitstop.WorkshopManagementAPI
 {
@@ -52,6 +57,14 @@ namespace Pitstop.WorkshopManagementAPI
             string password = configSection["Password"];
             services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
 
+            // add consul
+            services.Configure<ConsulConfig>(Configuration.GetSection("consulConfig"));
+                services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+                {
+                    var address = Configuration["consulConfig:address"];
+                    consulConfig.Address = new Uri(address);
+                }));          
+
             // Add framework services.
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -71,7 +84,7 @@ namespace Pitstop.WorkshopManagementAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
         {
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(Configuration)
@@ -91,6 +104,9 @@ namespace Pitstop.WorkshopManagementAPI
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WorkshopManagement API - v1");
             });
+
+            // register service in Consul
+            app.RegisterWithConsul(lifetime);
         }
 
         private void SetupAutoMapper()
@@ -103,6 +119,6 @@ namespace Pitstop.WorkshopManagementAPI
                 cfg.CreateMap<FinishMaintenanceJob, MaintenanceJobFinished>()
                     .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
             });
-        }
+        }      
     }
 }

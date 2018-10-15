@@ -1,6 +1,13 @@
 version: '3'
 services:
 
+  discoveryservice:
+    image: consul:latest
+    container_name: discoveryservice
+    ports:
+      - "8500:8500"
+    command: ["agent", "-dev", "-client", "0.0.0.0", "-bind", "0.0.0.0"]  
+
   sqlserver:
     image: microsoft/mssql-server-linux:latest
     container_name: sqlserver
@@ -45,6 +52,7 @@ services:
     build: VehicleManagementAPI
     container_name: vehiclemanagementapi
     depends_on:
+      - discoveryservice
       - rabbitmq
       - sqlserver
     ports:
@@ -58,6 +66,7 @@ services:
     build: CustomerManagementAPI
     container_name: customermanagementapi
     depends_on:
+      - discoveryservice
       - rabbitmq
       - sqlserver
     ports:
@@ -66,41 +75,28 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
 
-  workshopmanagementapi_1:
+  workshopmanagementapi:
     image: pitstop/workshopmanagementapi:latest
     build: WorkshopManagementAPI
-    container_name: workshopmanagementapi_1
     depends_on:
+      - discoveryservice
       - rabbitmq
       - sqlserver
     ports:
-      - "5200:5200"
+      - "5200"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
-
-  workshopmanagementapi_2:
-    image: pitstop/workshopmanagementapi:latest
-    build: WorkshopManagementAPI
-    container_name: workshopmanagementapi_2
-    depends_on:
-      - rabbitmq
-      - sqlserver
-    ports:
-      - "5201:5200"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ApplicationInsights:InstrumentationKey=${PitStopAIKey}      
 
   apigateway:
     image: pitstop/apigateway:latest
     build: APIGateway
     container_name: apigateway
     depends_on:
+      - discoveryservice
       - vehiclemanagementapi
       - customermanagementapi
-      - workshopmanagementapi_1
-      - workshopmanagementapi_2
+      - workshopmanagementapi
     ports:
       - "10000:10000"
     environment:

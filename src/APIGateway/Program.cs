@@ -3,6 +3,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Ocelot.Middleware;
+using Ocelot.Provider.Consul;
 using Ocelot.DependencyInjection;
 using Serilog;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,7 +42,8 @@ namespace Pitstop.APIGateway
                 })
                 .ConfigureServices(s =>
                 {
-                    s.AddOcelot();
+                    s.AddOcelot()
+                     .AddConsul();
                     s.AddHealthChecks(checks =>
                     {
                         checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(5));

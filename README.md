@@ -46,7 +46,10 @@ I've created a solution architecture diagram which shows all the moving parts in
 The web application is the front-end for the system. Users can manage customers, vehicles and the planning for the workshop from this front-end. The front-end will only communicate with the different APIs in the system (throug the API Gateway) hand has no knowledge of the message-broker or any other services.
 
 #### API Gateway
-The API Gateway abstracts all the APIs in the solution. The PitStop web application calls all APIs through the API Gateway. The API Gateway also offers load-balancing of APIs.
+The API Gateway abstracts all the APIs in the solution. The PitStop web application calls all APIs through the API Gateway. The API Gateway also offers location-transparency and load-balancing of APIs. It uses the *DiscoveryService* to determine the available instances of the services it load-balances.
+
+#### Discovery Service
+The Discovery service is a service that administers the available running instances of the WorkshopManagementAPI service. This is the only service in the solution that is load-balanced. When a WorkshopManagementAPI service is started, it registers itself with the Discovery Service. When the service stops, it de-registers itself. The API gateway load-balances the workload over the available instances of the WorkshopManagement API that are registered with the Discovery Service.
 
 #### Customer Management Service
 This service offers an API that is used to manage Customers in the system. For now, only CREATE and READ functionality (list and single by unique Id) is implemented. 
@@ -74,7 +77,7 @@ This service publishes the following events:
 This service contains 2 parts: an API for managing the workshop planning and an event-handler that handles events and builds a read-model that is used by the API. 
 
 ##### API
-This is an API that is used to manage Maintenance Jobs in the system. Because we want to be able to keep Workshop Management up and running even when other services are down, the API also offers functionality to retrieve vehicle and customer information from the read-model. This read-model is filled by the event-handler (described below). To ensure the availability of this API, 2 instances of this API are started and load-balanced by the API Gateway.
+This is an API that is used to manage Maintenance Jobs in the system. Because we want to be able to keep Workshop Management up and running even when other services are down, the API also offers functionality to retrieve vehicle and customer information from the read-model. This read-model is filled by the event-handler (described below). To ensure the availability of this API, multiple instances of this API can be started. These instances will be load-balanced by the API Gateway.
 
 This service handles the following commands:
 
@@ -152,7 +155,11 @@ The database server used to host all databases is MS SQL Server running on Linux
 To simulate sending emails, I use MailDev. This test-server acts as both an SMTP Server as a POP3 server and offers a website to see the mails that were sent. No emails are actually sent when using this test-server. I use the default MailDev Docker image from Docker Hub (`djfarrelly/maildev`). See [https://github.com/djfarrelly/MailDev](https://github.com/djfarrelly/MailDev "MailDev Github repo") for more info.
 
 **Ocelot**
-Ocelot is an open-source API Gateway built on .NET Core. It is used to implement the API Gateway in the PitStop solution. See [https://github.com/ThreeMammals/Ocelot](https://github.com/ThreeMammals/Ocelot) for more info.
+Ocelot is an open-source API Gateway built on .NET Core. It is used to implement the API Gateway in the PitStop solution. See [https://github.com/ThreeMammals/Ocelot](https://github.com/ThreeMammals/Ocelot) for more info. Ocelot uses Consul (described below) for dynamic service-discovery.
+
+**Consul**
+Consul is an open-source service-mesh tool that can be used for service-discovery. Services can register themselves with Consul when they start and de-register themselves when they stop. 
+See [https://www.consul.io/](https://www.consul.io/) for more info.
 
 **Serilog**
 Serilog an open-source logging framework for .NET (Core). It supports semantic/structured logging. All components within the solution use Serilog for logging information and errors. Log information is sent to the Console and to a Seq server (described below). See [https://serilog.net/](https://serilog.net/) for more info.
@@ -310,7 +317,7 @@ If you want to test the individual APIs in the system, you can use the test UIs 
 | WorkshopManagement | [http://localhost:5200/swagger](http://localhost:5200/swagger) |
 
 ### The API Gateway
-All APIs are aggregated by the API Gateway. Swagger is not served through the gateway. 
+All APIs are aggregated by the API Gateway. 
 
 The gateway runs on port 10000 and it serves the following end-points:
 
@@ -369,7 +376,61 @@ This approach saves me from having to write lots of configuration. Especially fo
 - /api/refdata/vehicles
 
 #### Load balancing
-When running in Docker containers (*Production* environment), 2 instances of the the *WorkshopManagementAPI* are started (see the docker-compose file). In the *Production* configuration of the API Gateway, you can see two *DownStream* hosts are specified. Also a *RoundRobin* load-balancer is configured. This ensures that the API Gateway will use both hosts in a round-robin fashion.
+When running in Docker containers (the *Production* environment), multiple instances of the the *WorkshopManagementAPI* can be started. Work will be load-balanced over these instances. To start multiple instances, specify this on the command-line when using docker-compose:
+
+```
+docker-compose up --scale workshopmanagementapi=<number of instances>`
+```
+
+This will start <number of instances> separate instances of this service. Each service will register itself with the *DiscoveryService* (the Consul service) upon start-up. 
+
+In the *Production* configuration of the API Gateway, you can see a *Round Robin* style load-balancer is configured in the `ocelot.WorkshopManagementAPI.json` config-file:
+
+```
+{
+  "ReRoutes": [
+    {
+      "Key": "WorkshopPlanningAPI",
+      "UpstreamPathTemplate": "/api/workshopplanning/{trailingSegments}",
+      "DownstreamPathTemplate": "/api/workshopplanning/{trailingSegments}",
+      "DownstreamScheme": "http",
+      "ServiceName": "workshopmanagementapi",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
+    },
+    {
+      "Key": "WorkshopRefDataAPI",
+      "UpstreamPathTemplate": "/api/refdata/{trailingSegments}",
+      "DownstreamPathTemplate": "/api/refdata/{trailingSegments}",
+      "DownstreamScheme": "http",
+      "ServiceName": "workshopmanagementapi",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
+    }
+  ]
+}
+```
+
+As you can see, no *DownStreamHostsAndPorts* section exists in this configuration. This is because the API Gateway is configured to use *Consul* for dynamic service-discovery. This is specified in the `ocelot.global.json` configuration file in the *Production* folder:
+
+```
+{
+  "GlobalConfiguration": {
+    "BaseUrl": "http://apigateway:10000",
+    "ServiceDiscoveryProvider": {
+      "Host": "discoveryservice",
+      "Port": 8500,
+      "Type": "Consul"
+    }  
+  }
+}
+```
+
+If you want to see whether or not multiple instances of the service is registered with the discovery service, point your browser to [http://localhost:8500](http://localhost:8500) where the Consul UI is running. You will see multiple instances of the workshopmanagementapi service (in the example below, I started 4 instances):
+
+![](img/consul-ui.png)
 
 ## Logging
 To make sure you can see what's going on with the application, a lot of informational, warning- and error-logging is emitted. This logging can be seen in on the console (output of docker-compose). But a better way to look at this logging is using the Seq server that is part of the solution. If you start the application and it for some time, point your browser to [http://localhost:5341](http://localhost:5341) and you will see the Seq console with all the logging information:
