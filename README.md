@@ -437,7 +437,7 @@ If you want to see whether or not multiple instances of the service are register
 
 ![](img/consul-ui.png)
 
-If you click a particular service, you can see the instances (nodes) that are registered for this service. Each *node* is a separate container. For instance, the VehicleManagementAPI service:
+If you click a particular service, you can see the instances that are registered for this service. Each instance is a separate container. For instance, the VehicleManagementAPI service:
 
 ![](img/consul-ui-detail.png)
 
