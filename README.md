@@ -379,7 +379,7 @@ This approach saves me from having to write lots of configuration. Especially fo
 When running in Docker containers (the *Production* environment), multiple instances of the the *WorkshopManagementAPI* can be started. Work will be load-balanced over these instances. To start multiple instances, specify this on the command-line when using docker-compose:
 
 ```
-docker-compose up --scale workshopmanagementapi=3`
+docker-compose up --scale workshopmanagementapi=3
 ```
 
 This will start 3 instances of this service. Each service will register itself with the *DiscoveryService* (the Consul service) upon start-up. 
