@@ -190,7 +190,8 @@ The Visual Studio solution contains several files and folders. Most folders corr
 	- **docker-compose.yml** : the docker-compose file for the application.
 	- **RebuildAllDockerImages.ps1** / **RebuildAllDockerImages.sh** : do a docker build of all the projects in the solution.
 	- **RemoveUnusedImages.ps1** / **RemoveUnusedImages.sh** : removes "dangling" docker images (without a name).
-    - **RunAllDockerImages.ps1** / **RunAllDockerImages.sh** : run the project in the background, and start tailing the logs for all the containers. You can crtl-c from viewing the logs, and the the containers keep running.
+    - **StartSolution.ps1** / **StartSolution.sh** : run the project in the background, and start tailing the logs for all the containers. You can crtl-c from viewing the logs, and the the containers keep running.
+    - **StartSolutionHA.ps1** / **StartSolutionHA.sh** : run the project in the background with multiple instances of the API services load-balanced by the API Gateway.
 	- **StopAndRemoveAllContainers.ps1** / **StopAndRemoveAllContainers.sh** : stops and removes all containers.
 	- **nuget.config** : config file for NuGet containing the NuGet feeds used by the solution.
 - **APIGateway** : the API Gateway.
@@ -252,13 +253,13 @@ In order to run the application you need to take several steps. This description
    - `docker volume create rabbitmqdata` 
 
 ## Starting the application
-This is it, you're now ready to spin up the system! Open up a Powershell window and go to the `Pitstop/src` folder. Then issue the following command: `docker-compose up`. 
+This is it, you're now ready to spin up the system! Open up a Powershell window and go to the `Pitstop/src` folder. Then issue the following command: `docker-compose up`. This will start the solution with a single instance of the API services.
 
-	> A strange issue that I sometimes encounter with Docker CE on Windows 10 is that the containers are not started the first time after starting the Docker engine. I haven't found a cause for this behavior yet, but the solution that works for me is to restart the docker engine and try again. You do this by opening the Docker settings through the icon in the system-tray, going to the *Reset* tab and clicking on the *Restart Docker...* link:  
-	>
-	> ![](img/restart-docker.png)
+If you want to start the solution with multiple instances of the API services running, use the following command: `docker-compose up -d --scale customermanagementapi=2 --scale vehiclemanagementapi=2 --scale workshopmanagementapi=3`. This uses the *scale* argument to specify the number of instances of each services that must be started. The API gateway will automatically load-balance the workload over the available instances. 
 
-Because this will start everything in the foreground, you will see all the logging being emitted from the different components. You will probably see a couple of *Unable to connect to RabbitMQ/SQL Server, retrying in 5 sec.* messages in there. This is expected and not a problem. This is Polly doing its work to make sure that failures that occur when calling a component that is still starting up are handled gracefully. 
+You can also use the *StartSolution.ps1* / *StartSolution.sh* (single instance) or *StartSolutionHA.ps1* / *StartSolutionHA.sh* (multiple instances) scripts to start the solution.
+
+When the solution starts, you will see all the logging being emitted from the different components. You will probably see a couple of *Unable to connect to RabbitMQ/SQL Server, retrying in 5 sec.* messages in there. This is expected and not a problem. This is Polly doing its work to make sure that failures that occur when calling a component that is still starting up are handled gracefully. 
 
 The first time the services are started, the necessary databases are automatically created. You could check this by connecting to the SQL Server using SSMS (server *localhost*, port 1434; separate the server and port with a comma in SSMS: `localhost,1434`) and looking at the different databases:
 
