@@ -442,6 +442,10 @@ If you click a particular service, you can see the instances that are registered
 
 ![](img/consul-ui-detail.png)
 
+> I've added this way of load-balancing to the sample application to experiment with using Consul for service-discovery with Ocelot. Because the host-names of the API services are automatically generated when started, I needed this service-discovery mechanism. 
+> 
+> But this is actually a bit of overkill. Because docker networking can also handle load-balancing over multiple instances of a service automatically. When you create multiple instances of a service, you can reach each an instance by its service-name as specified in the docker-compose file. Each connection will be load-balanced over the available instances. So you don't actually need to know the actual host-names of the running instances. I could have configured Ocelot to just use the service-name as host (e.g. *customermanagementapi*) and docker networking would load balance over the running instances (e.g. *src_customermanagementapi_1*, *src_customermanagementapi_2*, ...).  
+
 ## Logging
 To make sure you can see what's going on with the application, a lot of informational, warning- and error-logging is emitted. This logging can be seen in on the console (output of docker-compose). But a better way to look at this logging is using the Seq server that is part of the solution. If you start the application and it for some time, point your browser to [http://localhost:5341](http://localhost:5341) and you will see the Seq console with all the logging information:
 
