@@ -20,7 +20,7 @@ namespace Pitstop.Infrastructure.Messaging
         private readonly string _routingKey;
         private IConnection _connection;
         private IModel _model;
-        private EventingBasicConsumer _consumer;
+        private AsyncEventingBasicConsumer _consumer;
         private string _consumerTag;
         private IMessageHandlerCallback _callback;
 
@@ -43,13 +43,13 @@ namespace Pitstop.Infrastructure.Messaging
                 .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Log.Error("Error connecting to RabbitMQ. Retrying in 5 sec."); })
                 .Execute(() =>
                 {
-                    var factory = new ConnectionFactory() { HostName = _host, UserName = _username, Password = _password };
+                    var factory = new ConnectionFactory() { HostName = _host, UserName = _username, Password = _password, DispatchConsumersAsync = true };
                     _connection = factory.CreateConnection();
                     _model = _connection.CreateModel();
                     _model.ExchangeDeclare(_exchange, "fanout", durable: true, autoDelete: false);
                     _model.QueueDeclare(_queuename, durable: true, autoDelete: false, exclusive: false);
                     _model.QueueBind(_queuename, _exchange, _routingKey);
-                    _consumer = new EventingBasicConsumer(_model);
+                    _consumer = new AsyncEventingBasicConsumer(_model);
                     _consumer.Received += Consumer_Received;
                     _consumerTag = _model.BasicConsume(_queuename, false, _consumer);
                 });
@@ -62,7 +62,7 @@ namespace Pitstop.Infrastructure.Messaging
             _connection.Close();
         }
 
-        private async void Consumer_Received(object sender, BasicDeliverEventArgs ea)
+        private async Task Consumer_Received(object sender, BasicDeliverEventArgs ea)
         {
             if (await HandleEvent(ea))
             {
