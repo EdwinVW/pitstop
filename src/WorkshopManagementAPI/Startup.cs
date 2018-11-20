@@ -116,9 +116,9 @@ namespace Pitstop.WorkshopManagementAPI
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<PlanMaintenanceJob, MaintenanceJobPlanned>()
-                    .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
                 cfg.CreateMap<FinishMaintenanceJob, MaintenanceJobFinished>()
-                    .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
             });
         }      
     }

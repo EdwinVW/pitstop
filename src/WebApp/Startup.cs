@@ -90,10 +90,10 @@ namespace PitStop
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<Customer, RegisterCustomer>()
-                    .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()))
-                    .ForCtorParam("customerId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()))
+                    .ForCtorParam("customerId", opt => opt.MapFrom(c => Guid.NewGuid()));
                 cfg.CreateMap<Vehicle, RegisterVehicle>()
-                    .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
                 cfg.CreateMap<VehicleManagementNewViewModel, RegisterVehicle>().ConvertUsing((vm, rv) =>
                     new RegisterVehicle(Guid.NewGuid(), vm.Vehicle.LicenseNumber, vm.Vehicle.Brand, vm.Vehicle.Type, vm.SelectedCustomerId));
             });

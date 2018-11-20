@@ -106,9 +106,9 @@ namespace Pitstop.CustomerManagementAPI
             {
                 cfg.CreateMap<RegisterCustomer, Customer>();
                 cfg.CreateMap<Customer, RegisterCustomer>()
-                    .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
                 cfg.CreateMap<RegisterCustomer, CustomerRegistered>()
-                    .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
             });
         }
     }
