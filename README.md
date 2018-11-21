@@ -197,7 +197,8 @@ The Visual Studio solution contains several files and folders. Most folders corr
 - **APIGateway** : the API Gateway.
 - **AuditlogService** : the AuditLog service.
 - **CustomerManagementAPI** : the Web API for managing customer data ("CRM").
-- **Infrastructure** - an infrastructural component with reusable stuff. 
+- **Infrastructure.Messaging** - an infrastructural library that offers messaging capabilities using 	RabbitMQ. 
+- **Infrastructure.ServiceDiscovery** - an infrastructural library that offers service-discovery 	capabilities using Consul. 
 - **InvoiceService** - the service that sends invoices for executed maintenance.
 - **NotificationService** - the service that sends customers a notification when they have an appointment.
 - **TimeService** - the service that lets "the world" know a certain period of time has passed. The current implementation only supports days. 
@@ -233,7 +234,7 @@ In order to run the application you need to take several steps. This description
 - Open the PitStop solution in Visual Studio or in Visual Studio Code.  
 
 - When using Visual Studio, add a NuGet source
-   To prevent project-references between projects in the solution, I've used a public MyGet feed for shared components. The URI for this feed is: `https://www.myget.org/F/pitstop/api/v3/index.json`. This feed contains only the Infrastructure package. Open Visual Studio and configure the NuGet sources and add the MyGet feed: 
+   To prevent project-references between projects in the solution, I've used a public MyGet feed for shared components. The URI for this feed is: `https://www.myget.org/F/pitstop/api/v3/index.json`. This feed contains the *Infrastructure.Messaging* and *Infrastructure.ServiceDiscovery* packages. Open Visual Studio and configure the NuGet sources and add the MyGet feed: 
 
    ![Add private NuGet feed](img/add-private-nuget-feed.png).
 
