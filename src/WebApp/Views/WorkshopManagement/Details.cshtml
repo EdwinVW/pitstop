@@ -52,10 +52,10 @@
         }
     </tbody>
 </table>
-<span><a asp-action="Index" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-default">Back</a></span>
+<span><a asp-action="Index" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-default">Back</a></span>
 @if (Model.MaintenanceJob.Status != "Completed" )
 { 
-    <span><a asp-action="Finish" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" asp-route-jobId="@Model.MaintenanceJob.Id" class="btn btn-default">Complete</a></span>
+    <span><a asp-action="Finish" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.ToString("yyyy-MM-dd")" asp-route-jobId="@Model.MaintenanceJob.Id" class="btn btn-default">Complete</a></span>
 }
 
 

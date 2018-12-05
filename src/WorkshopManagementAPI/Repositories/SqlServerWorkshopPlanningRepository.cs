@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pitstop.WorkshopManagementAPI.Domain;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Dapper;
 using Polly;
 using Pitstop.WorkshopManagementAPI.Repositories.Model;
@@ -25,7 +26,10 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
         {
             _serializerSettings = new JsonSerializerSettings();
             _serializerSettings.Formatting = Formatting.Indented;
-            _serializerSettings.Converters.Add(new StringEnumConverter { CamelCaseText = true });
+            _serializerSettings.Converters.Add(new StringEnumConverter 
+            { 
+                NamingStrategy = new CamelCaseNamingStrategy() 
+            });
         }
 
         public SqlServerWorkshopPlanningRepository(string connectionString)

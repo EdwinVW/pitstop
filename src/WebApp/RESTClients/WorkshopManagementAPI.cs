@@ -21,11 +21,11 @@ namespace WebApp.RESTClients
             _client = RestService.For<IWorkshopManagementAPI>(baseUri);
         }
 
-        public async Task<WorkshopPlanning> GetWorkshopPlanning(string date)
+        public async Task<WorkshopPlanning> GetWorkshopPlanning(string planningDate)
         {
             try
             {
-                return await _client.GetWorkshopPlanning(date);
+                return await _client.GetWorkshopPlanning(planningDate);
             }
             catch (ApiException ex)
             {
@@ -40,11 +40,11 @@ namespace WebApp.RESTClients
             }
         }
 
-        public async Task<MaintenanceJob> GetMaintenanceJob(string date, string jobId)
+        public async Task<MaintenanceJob> GetMaintenanceJob(string planningDate, string jobId)
         {
             try
             {
-                return await _client.GetMaintenanceJob(date, jobId);
+                return await _client.GetMaintenanceJob(planningDate, jobId);
             }
             catch (ApiException ex)
             {
@@ -59,19 +59,19 @@ namespace WebApp.RESTClients
             }
         }
 
-        public async Task RegisterPlanning(string date)
+        public async Task RegisterPlanning(string planningDate)
         {
-            await _client.RegisterPlanning(date);
+            await _client.RegisterPlanning(planningDate);
         }
 
-        public async Task PlanMaintenanceJob(string date, PlanMaintenanceJob cmd)
+        public async Task PlanMaintenanceJob(string planningDate, PlanMaintenanceJob cmd)
         {
-            await _client.PlanMaintenanceJob(date, cmd);
+            await _client.PlanMaintenanceJob(planningDate, cmd);
         }
 
-        public async Task FinishMaintenanceJob(string date, string jobId, FinishMaintenanceJob cmd)
+        public async Task FinishMaintenanceJob(string planningDate, string jobId, FinishMaintenanceJob cmd)
         {
-            await _client.FinishMaintenanceJob(date, jobId, cmd);
+            await _client.FinishMaintenanceJob(planningDate, jobId, cmd);
         }
 
         public async Task<List<Customer>> GetCustomers()

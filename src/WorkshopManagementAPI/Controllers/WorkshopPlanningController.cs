@@ -26,10 +26,10 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{date}", Name = "GetByDate")]
-        public async Task<IActionResult> GetByDate(DateTime date)
+        [Route("{planningDate}", Name = "GetByDate")]
+        public async Task<IActionResult> GetByDate(DateTime planningDate)
         {
-            var planning = await _planningRepo.GetWorkshopPlanningAsync(date);
+            var planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
             if (planning == null)
             {
                 return NotFound();
@@ -38,18 +38,18 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
         }
 
         [HttpPost]
-        [Route("{date}")]
-        public async Task<IActionResult> RegisterAsync(DateTime date)
+        [Route("{planningDate}")]
+        public async Task<IActionResult> RegisterAsync(DateTime planningDate)
         {
             try
             {
                 // insert planning
                 WorkshopPlanning planning = new WorkshopPlanning();
-                IEnumerable<Event> events = planning.Create(date);
+                IEnumerable<Event> events = planning.Create(planningDate);
                 await _planningRepo.SaveWorkshopPlanningAsync(planning, events);
 
                 // return result
-                return CreatedAtRoute("GetByDate", new { date = planning.Date }, planning);
+                return CreatedAtRoute("GetByDate", new { planningDate = planning.Date }, planning);
             }
             catch (ConcurrencyException)
             {
@@ -61,13 +61,13 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{date}/jobs/{jobId}")]
-        public async Task<IActionResult> GetMaintenanceJobAsync(DateTime date, Guid jobId)
+        [Route("{planningDate}/jobs/{jobId}")]
+        public async Task<IActionResult> GetMaintenanceJobAsync(DateTime planningDate, Guid jobId)
         {
             if (ModelState.IsValid)
             {
                 // get planning
-                WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(date);
+                WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
                 if (planning == null || planning.Jobs == null)
                 {
                     return NotFound();
@@ -84,15 +84,15 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
         }
 
         [HttpPost]
-        [Route("{date}/jobs")]
-        public async Task<IActionResult> PlanMaintenanceJobAsync(DateTime date, [FromBody] PlanMaintenanceJob command)
+        [Route("{planningDate}/jobs")]
+        public async Task<IActionResult> PlanMaintenanceJobAsync(DateTime planningDate, [FromBody] PlanMaintenanceJob command)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     // get planning
-                    WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(date);
+                    WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
                     if (planning == null)
                     {
                         return NotFound();
@@ -113,7 +113,7 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
                         }
 
                         // return result
-                        return CreatedAtRoute("GetByDate", new { date = planning.Date }, planning);
+                        return CreatedAtRoute("GetByDate", new { planningDate = planning.Date }, planning);
                     }
                     catch (BusinessRuleViolationException ex)
                     {
@@ -132,15 +132,15 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
         }
 
         [HttpPut]
-        [Route("{date}/jobs/{jobId}/finish")]
-        public async Task<IActionResult> FinishMaintenanceJobAsync(DateTime date, Guid jobId, [FromBody] FinishMaintenanceJob command)
+        [Route("{planningDate}/jobs/{jobId}/finish")]
+        public async Task<IActionResult> FinishMaintenanceJobAsync(DateTime planningDate, Guid jobId, [FromBody] FinishMaintenanceJob command)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     // get planning
-                    WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(date);
+                    WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
                     if (planning == null)
                     {
                         return NotFound();
