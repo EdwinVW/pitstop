@@ -104,7 +104,7 @@ namespace Pitstop.NotificationService
                 StringBuilder body = new StringBuilder();
                 body.AppendLine($"Dear {customer.Name},\n");
                 body.AppendLine($"We would like to remind you that you have an appointment with us for maintenance on your vehicle(s):\n");
-                foreach (MaintenanceJob job in jobsToNotify)
+                foreach (MaintenanceJob job in jobsPerCustomer)
                 {
                     body.AppendLine($"- {job.StartTime.ToString("dd-MM-yyyy")} at {job.StartTime.ToString("HH:mm")} : " +
                         $"{job.Description} on vehicle with license-number {job.LicenseNumber}");
