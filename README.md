@@ -3,7 +3,7 @@ This repo contains a sample application based on a Garage Management System for 
 
 ![](img/pitstop-garage.png)
 
-> This is an actual garage somewhere in Poland. Thanks to Thomas Moerkerken for the picture!
+> This is an actual garage somewhere in Dresden Germany. Thanks to Thomas Moerkerken for the picture!
 
 The application targets the employees of PitStop and supports their daily tasks. It should offer the following functionality:
 
