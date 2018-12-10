@@ -279,8 +279,8 @@ Upon the registration of the first Maintenance Job, the event-store database *Wo
 ## Testing the application
 To test the application you need to open the following web-pages:
 
-- The RabbitMQ management dashboard: [http://localhost:15672](http://localhost:15672). 
-   Username: rabbitmquser
+- The RabbitMQ management dashboard: [http://localhost:15672](http://localhost:15672).   
+   Username: rabbitmquser  
    Password: DEBmbwkSrzy9D1T9cJfa
 
 - The MailDev inbox: [http://localhost:4000](http://localhost:4000).
@@ -474,7 +474,7 @@ HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail htt
 ```
 
 ## Contributing
-This sample is a personal R&D project for me to learn. I've tried to document it as thoroughly as possible for people wanting to learn from it. If you have any improvements you want to contribute (to the code or the documentation) or find any bugs that need solving, just create a pull-request!
+This sample is a personal R&D project for me to learn. I've tried to document it as thoroughly as possible for people wanting to learn from it. If you have any improvements you want to contribute (to the code or the documentation) or find any bugs that need solving, just create an issue or a pull-request!
 
 ## Disclaimer
 The code in this repo is NOT production grade and lacks any automated testing. It is intentionally kept as simple as possible (KISS). Its primary purpose is demonstrating several architectural concepts and not being a full fledged application that can be put into production as is. 
