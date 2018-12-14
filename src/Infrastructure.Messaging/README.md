@@ -8,9 +8,10 @@ This library contains helper-classes for working with messaging within the Pitst
 
 ## Release notes
 ### Version 2.0.0
-- [**Breaking**] Removed the use of the MessageTypes enum that contained all the available message-types. Throughout the solution, message-type is now a simple string.
-- [**Breaking**] Removed the MessageType enum from all the interfaces and implementations.
-- [**Breaking**] Removed the MessageTypes enum.
+- [**Breaking**] Removed the use of the _MessageTypes_ enum that contained all the available message-types. Throughout the solution, message-type is now a simple string.
+- [**Breaking**] Removed the _MessageTypes_ enum from all the interfaces and implementations.
+- [**Breaking**] Removed the _MessageTypes_ enum.
+- [**Breaking**] Removed the _MessageType_ parameter from the Message base-class constructor. MessageType is now automatically filled with the name of the class.
 
 ### Version 1.1.0
 - Upgrade to .NET Core 2.2.
