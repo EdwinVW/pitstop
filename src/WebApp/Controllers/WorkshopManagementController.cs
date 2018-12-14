@@ -119,25 +119,26 @@ namespace PitStop.Controllers
                     
                     try
                     {
-
-                    // get or create planning for date
-                    var planning = await _workshopManagementAPI.GetWorkshopPlanning(dateStr);
+                        // get or create planning for date
+                        var planning = await _workshopManagementAPI.GetWorkshopPlanning(dateStr);
                         if (planning == null)
                         {
-                        // create planning for date
-                        await _workshopManagementAPI.RegisterPlanning(dateStr);
+                            // create planning for date
+                            RegisterPlanning registerPlanningCommand = 
+                                new RegisterPlanning(Guid.NewGuid(), inputModel.Date);
+                            await _workshopManagementAPI.RegisterPlanning(dateStr, registerPlanningCommand);
                         }
 
-                    // register maintenance job
-                    DateTime startTime = inputModel.Date.Add(inputModel.StartTime.TimeOfDay);
+                        // register maintenance job
+                        DateTime startTime = inputModel.Date.Add(inputModel.StartTime.TimeOfDay);
                         DateTime endTime = inputModel.Date.Add(inputModel.EndTime.TimeOfDay);
                         Vehicle vehicle = await _workshopManagementAPI.GetVehicleByLicenseNumber(inputModel.SelectedVehicleLicenseNumber);
                         Customer customer = await _workshopManagementAPI.GetCustomerById(vehicle.OwnerId);
 
-                        PlanMaintenanceJob cmd = new PlanMaintenanceJob(Guid.NewGuid(), Guid.NewGuid(), startTime, endTime,
+                        PlanMaintenanceJob planMaintenanceJobCommand = new PlanMaintenanceJob(Guid.NewGuid(), Guid.NewGuid(), startTime, endTime,
                             (customer.CustomerId, customer.Name, customer.TelephoneNumber),
                             (vehicle.LicenseNumber, vehicle.Brand, vehicle.Type), inputModel.Description);
-                        await _workshopManagementAPI.PlanMaintenanceJob(dateStr, cmd);
+                        await _workshopManagementAPI.PlanMaintenanceJob(dateStr, planMaintenanceJobCommand);
                     }
                     catch (ApiException ex)
                     {

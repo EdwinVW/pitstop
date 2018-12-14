@@ -17,7 +17,7 @@ namespace Pitstop.NotificationService.Events
         public MaintenanceJobPlanned(Guid messageId, Guid jobId, DateTime startTime, DateTime endTime,
             (string Id, string Name, string TelephoneNumber) customerInfo,
             (string LicenseNumber, string Brand, string Type) vehicleInfo,
-            string description) : base(messageId, MessageTypes.MaintenanceJobPlanned)
+            string description) : base(messageId)
         {
             JobId = jobId;
             StartTime = startTime;

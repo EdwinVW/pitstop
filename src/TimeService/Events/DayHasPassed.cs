@@ -7,7 +7,7 @@ namespace Pitstop.TimeService.Events
 {
     public class DayHasPassed : Event
     {
-        public DayHasPassed(Guid messageId) : base(messageId, MessageTypes.DayHasPassed)
+        public DayHasPassed(Guid messageId) : base(messageId)
         {
         }
     }

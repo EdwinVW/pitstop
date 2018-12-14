@@ -13,7 +13,7 @@ namespace Pitstop.WorkshopManagementAPI.Commands
         public readonly string Notes;
 
         public FinishMaintenanceJob(Guid messageId, Guid jobId, DateTime startTime, DateTime endTime, string notes) : 
-            base(messageId, MessageTypes.FinishMaintenanceJob)
+            base(messageId)
         {
             JobId = jobId;
             StartTime = startTime;

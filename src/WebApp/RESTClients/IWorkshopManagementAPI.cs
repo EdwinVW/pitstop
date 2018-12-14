@@ -16,7 +16,7 @@ namespace WebApp.RESTClients
         Task<MaintenanceJob> GetMaintenanceJob(string planningDate, string jobId);
 
         [Post("/workshopplanning/{planningDate}")]
-        Task RegisterPlanning(string planningDate);
+        Task RegisterPlanning(string planningDate, RegisterPlanning cmd);
 
         [Post("/workshopplanning/{planningDate}/jobs")]
         Task PlanMaintenanceJob(string planningDate, PlanMaintenanceJob cmd);

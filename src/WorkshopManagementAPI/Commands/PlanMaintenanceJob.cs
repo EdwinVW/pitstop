@@ -17,7 +17,7 @@ namespace Pitstop.WorkshopManagementAPI.Commands
         public PlanMaintenanceJob(Guid messageId, Guid jobId, DateTime startTime, DateTime endTime,
             (string Id, string Name, string TelephoneNumber) customerInfo,
             (string LicenceNumber, string Brand, string Type) vehicleInfo,
-            string description) : base(messageId, MessageTypes.PlanMaintenanceJob)
+            string description) : base(messageId)
         {
             JobId = jobId;
             StartTime = startTime;

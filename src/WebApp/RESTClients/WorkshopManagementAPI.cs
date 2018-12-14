@@ -59,9 +59,9 @@ namespace WebApp.RESTClients
             }
         }
 
-        public async Task RegisterPlanning(string planningDate)
+        public async Task RegisterPlanning(string planningDate, RegisterPlanning cmd)
         {
-            await _client.RegisterPlanning(planningDate);
+            await _client.RegisterPlanning(planningDate, cmd);
         }
 
         public async Task PlanMaintenanceJob(string planningDate, PlanMaintenanceJob cmd)

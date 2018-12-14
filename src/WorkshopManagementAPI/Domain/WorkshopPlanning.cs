@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WorkshopManagementAPI.Commands;
 
 namespace Pitstop.WorkshopManagementAPI.Domain
 {
@@ -44,10 +45,10 @@ namespace Pitstop.WorkshopManagementAPI.Domain
             IsReplaying = false;
         }
 
-        public IEnumerable<Event> Create(DateTime date)
+        public IEnumerable<Event> RegisterPlanning(RegisterPlanning cmd)
         {
             List<Event> events = new List<Event>();
-            WorkshopPlanningCreated e = new WorkshopPlanningCreated(Guid.NewGuid(), Date = date);
+            WorkshopPlanningCreated e = new WorkshopPlanningCreated(Guid.NewGuid(), Date = cmd.PlanningDate);
             events.AddRange(Handle(e));
             return events;
         }

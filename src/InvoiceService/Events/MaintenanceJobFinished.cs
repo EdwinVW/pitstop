@@ -10,7 +10,7 @@ namespace Pitstop.InvoiceService.Events
         public readonly DateTime EndTime;
 
         public MaintenanceJobFinished(Guid messageId, string jobId, DateTime startTime, DateTime endTime) : 
-            base(messageId, MessageTypes.MaintenanceJobFinished)
+            base(messageId)
         {
             JobId = jobId;
             StartTime = startTime;

@@ -10,52 +10,68 @@ using System.Linq;
 using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
 using Pitstop.WorkshopManagementAPI.Models;
+using WorkshopManagementAPI.CommandHandlers;
+using Serilog;
+using WorkshopManagementAPI.Commands;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Pitstop.WorkshopManagementAPI.Controllers
 {
     [Route("/api/[controller]")]
     public class WorkshopPlanningController : Controller
     {
-        IMessagePublisher _messagePublisher;
-        IWorkshopPlanningRepository _planningRepo;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IWorkshopPlanningRepository _planningRepo;
 
-        public WorkshopPlanningController(IWorkshopPlanningRepository planningRepo, IMessagePublisher messagePublisher)
+        public WorkshopPlanningController(IServiceProvider serviceProvider, 
+            IWorkshopPlanningRepository planningRepo)
         {
+            _serviceProvider = serviceProvider;
             _planningRepo = planningRepo;
-            _messagePublisher = messagePublisher;
         }
 
         [HttpGet]
         [Route("{planningDate}", Name = "GetByDate")]
         public async Task<IActionResult> GetByDate(DateTime planningDate)
         {
-            var planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
-            if (planning == null)
+            try
             {
-                return NotFound();
+                var planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
+                if (planning == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(planning);
             }
-            return Ok(planning);
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw;
+            }
         }
 
         [HttpPost]
         [Route("{planningDate}")]
-        public async Task<IActionResult> RegisterAsync(DateTime planningDate)
+        public async Task<IActionResult> RegisterPlanningAsync(DateTime planningDate, [FromBody] RegisterPlanning cmd)
         {
             try
             {
-                // insert planning
-                WorkshopPlanning planning = new WorkshopPlanning();
-                IEnumerable<Event> events = planning.Create(planningDate);
-                await _planningRepo.SaveWorkshopPlanningAsync(planning, events);
+                // handle command
+                WorkshopPlanning planning = await 
+                    _serviceProvider.GetRequiredService<IRegisterPlanningCommandHandler>()
+                    .HandleCommandAsync(planningDate, cmd);
 
                 // return result
                 return CreatedAtRoute("GetByDate", new { planningDate = planning.Date }, planning);
             }
             catch (ConcurrencyException)
             {
-                ModelState.AddModelError("", "Unable to save changes. " +
+                string errorMessage = "Unable to save changes. " +
                     "Try again, and if the problem persists " +
-                    "see your system administrator.");
+                    "see your system administrator.";
+                Log.Error(errorMessage);
+                ModelState.AddModelError("", errorMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -66,19 +82,27 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                // get planning
-                WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
-                if (planning == null || planning.Jobs == null)
+                try
                 {
-                    return NotFound();
+                    // get planning
+                    WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
+                    if (planning == null || planning.Jobs == null)
+                    {
+                        return NotFound();
+                    }
+                    // get job
+                    var job = planning.Jobs.FirstOrDefault(j => j.Id == jobId);
+                    if (job == null)
+                    {
+                        return NotFound();
+                    }
+                    return Ok(job);
                 }
-                // get job
-                var job = planning.Jobs.FirstOrDefault(j => j.Id == jobId);
-                if (job == null)
+                catch (Exception ex)
                 {
-                    return NotFound();
+                    Log.Error(ex.ToString());
+                    throw;
                 }
-                return Ok(job);
             }
             return BadRequest();
         }
@@ -91,25 +115,17 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // get planning
-                    WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
-                    if (planning == null)
-                    {
-                        return NotFound();
-                    }
-
-                    // handle command
                     try
                     {
-                        IEnumerable<Event> events = planning.PlanMaintenanceJob(command);
+                        // handle command
+                        WorkshopPlanning planning = await 
+                            _serviceProvider.GetRequiredService<IPlanMaintenanceJobCommandHandler>()
+                            .HandleCommandAsync(planningDate, command);
 
-                        // persist
-                        await _planningRepo.SaveWorkshopPlanningAsync(planning, events);
-
-                        // publish event
-                        foreach (var e in events)
+                        // handle result    
+                        if (planning == null)
                         {
-                            await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
+                            return NotFound();
                         }
 
                         // return result
@@ -124,9 +140,11 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
             }
             catch (ConcurrencyException)
             {
-                ModelState.AddModelError("ErrorMessage", "Unable to save changes. " +
+                string errorMessage = "Unable to save changes. " +
                     "Try again, and if the problem persists " +
-                    "see your system administrator.");
+                    "see your system administrator.";
+                Log.Error(errorMessage);
+                ModelState.AddModelError("ErrorMessage", errorMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -139,24 +157,16 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // get planning
-                    WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
-                    if (planning == null)
-                    {
-                        return NotFound();
-                    }
+                        // handle command
+                        WorkshopPlanning planning = await 
+                            _serviceProvider.GetRequiredService<IFinishMaintenanceJobCommandHandler>()                        
+                            .HandleCommandAsync(planningDate, command);
 
-                    // handle command
-                    IEnumerable<Event> events = planning.FinishMaintenanceJob(command);
-
-                    // persist
-                    await _planningRepo.SaveWorkshopPlanningAsync(planning, events);
-
-                    // publish event
-                    foreach (var e in events)
-                    {
-                        await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
-                    }
+                        // handle result    
+                        if (planning == null)
+                        {
+                            return NotFound();
+                        }
 
                     // return result
                     return Ok();
@@ -165,9 +175,11 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
             }
             catch (ConcurrencyException)
             {
-                ModelState.AddModelError("", "Unable to save changes. " +
+                string errorMessage = "Unable to save changes. " +
                     "Try again, and if the problem persists " +
-                    "see your system administrator.");
+                    "see your system administrator.";
+                Log.Error(errorMessage);
+                ModelState.AddModelError("", errorMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

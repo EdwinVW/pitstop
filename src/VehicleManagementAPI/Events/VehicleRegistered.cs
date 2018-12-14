@@ -13,7 +13,7 @@ namespace Pitstop.Application.VehicleManagement.Events
         public readonly string OwnerId;
 
         public VehicleRegistered(Guid messageId, string licenseNumber, string brand, string type, string ownerId) : 
-            base(messageId, MessageTypes.VehicleRegistered)
+            base(messageId)
         {
             LicenseNumber = licenseNumber;
             Brand = brand;

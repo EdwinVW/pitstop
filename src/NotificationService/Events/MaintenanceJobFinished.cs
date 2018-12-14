@@ -8,7 +8,7 @@ namespace Pitstop.NotificationService.Events
         public readonly string JobId;
 
         public MaintenanceJobFinished(Guid messageId, string jobId) : 
-            base(messageId, MessageTypes.MaintenanceJobFinished)
+            base(messageId)
         {
             JobId = jobId;
         }

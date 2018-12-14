@@ -42,7 +42,7 @@ namespace Pitstop.TimeService
                     _lastCheck = DateTime.Now;
                     DateTime passedDay = _lastCheck.AddDays(-1);
                     DayHasPassed e = new DayHasPassed(Guid.NewGuid());
-                    await _messagePublisher.PublishMessageAsync(MessageTypes.DayHasPassed, e, "");
+                    await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
                 }
                 Thread.Sleep(10000);
             }

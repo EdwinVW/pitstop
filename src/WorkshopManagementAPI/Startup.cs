@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using System.Linq;
 using Pitstop.Infrastructure.ServiceDiscovery;
+using WorkshopManagementAPI.CommandHandlers;
 
 namespace Pitstop.WorkshopManagementAPI
 {
@@ -57,6 +58,11 @@ namespace Pitstop.WorkshopManagementAPI
             string userName = configSection["UserName"];
             string password = configSection["Password"];
             services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
+
+            // add commandhandlers
+            services.AddTransient<IRegisterPlanningCommandHandler, RegisterPlanningCommandHandler>();
+            services.AddTransient<IPlanMaintenanceJobCommandHandler, PlanMaintenanceJobCommandHandler>();
+            services.AddTransient<IFinishMaintenanceJobCommandHandler, FinishMaintenanceJobCommandHandler>();
 
             // add consul
             services.Configure<ConsulConfig>(Configuration.GetSection("consulConfig"));

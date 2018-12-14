@@ -11,7 +11,7 @@ namespace Pitstop.InvoiceService.Events
         public readonly string Description;
 
         public MaintenanceJobPlanned(Guid messageId, string jobId, (string Id, string Name, string TelephoneNumber) customerInfo,
-            (string LicenseNumber, string Brand, string Type) vehicleInfo, string description) : base(messageId, MessageTypes.MaintenanceJobPlanned)
+            (string LicenseNumber, string Brand, string Type) vehicleInfo, string description) : base(messageId)
         {
             JobId = jobId;
             CustomerInfo = customerInfo;

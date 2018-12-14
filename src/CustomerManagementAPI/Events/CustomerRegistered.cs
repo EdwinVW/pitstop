@@ -16,7 +16,7 @@ namespace Pitstop.CustomerManagementAPI.Events
         public readonly string EmailAddress;
 
         public CustomerRegistered(Guid messageId, string customerId, string name, string address, string postalCode, string city,
-            string telephoneNumber, string emailAddress) : base(messageId, MessageTypes.CustomerRegistered)
+            string telephoneNumber, string emailAddress) : base(messageId)
         {
             CustomerId = customerId;
             Name = name;

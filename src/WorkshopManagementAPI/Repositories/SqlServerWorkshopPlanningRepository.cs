@@ -142,18 +142,16 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
             JObject[] objects = JsonConvert.DeserializeObject<JObject[]>(state, _serializerSettings);
             foreach(JObject obj in objects)
             {
-                string messageTypeString = obj.Value<string>("MessageType");
-                MessageTypes messageType = MessageTypes.Unknown;
-                Enum.TryParse<MessageTypes>(messageTypeString, true, out messageType);
+                string messageType = obj.Value<string>("MessageType");
                 switch (messageType)
                 {
-                    case MessageTypes.WorkshopPlanningCreated:
+                    case "WorkshopPlanningCreated":
                         events.Add(obj.ToObject<WorkshopPlanningCreated>());
                         break;
-                    case MessageTypes.MaintenanceJobPlanned:
+                    case "MaintenanceJobPlanned":
                         events.Add(obj.ToObject<MaintenanceJobPlanned>());
                         break;
-                    case MessageTypes.MaintenanceJobFinished:
+                    case "MaintenanceJobFinished":
                         events.Add(obj.ToObject<MaintenanceJobFinished>());
                         break;
                     default:
