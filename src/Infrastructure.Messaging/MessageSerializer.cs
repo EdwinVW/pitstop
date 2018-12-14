@@ -19,8 +19,7 @@ namespace Pitstop.Infrastructure.Messaging
         {
             _serializerSettings = new JsonSerializerSettings()
             {
-                DateFormatHandling = DateFormatHandling.IsoDateFormat//,
-                //TypeNameHandling = TypeNameHandling.All
+                DateFormatHandling = DateFormatHandling.IsoDateFormat
             };
             _serializerSettings.Converters.Add(new StringEnumConverter 
             { 

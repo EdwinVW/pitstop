@@ -34,7 +34,7 @@ namespace Pitstop.Infrastructure.Messaging
         /// <param name="message">The message to publish.</param>
         /// <param name="topic">Topic to publish the message to.</param>
         /// <param name="routingKey">The routingkey to use (RabbitMQ specific).</param>
-        public Task PublishMessageAsync(MessageTypes messageType, object message, string routingKey)
+        public Task PublishMessageAsync(string messageType, object message, string routingKey)
         {
             return Task.Run(() =>
                 Policy
@@ -51,7 +51,7 @@ namespace Pitstop.Infrastructure.Messaging
                                 string data = MessageSerializer.Serialize(message);
                                 var body = Encoding.UTF8.GetBytes(data);
                                 IBasicProperties properties = model.CreateBasicProperties();
-                                properties.Headers = new Dictionary<string, object> { { "MessageType", messageType.ToString() } };
+                                properties.Headers = new Dictionary<string, object> { { "MessageType", messageType } };
                                 model.BasicPublish(_exchange, routingKey, properties, body);
                             }
                         }

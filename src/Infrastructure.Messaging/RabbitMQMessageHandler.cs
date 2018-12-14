@@ -73,9 +73,7 @@ namespace Pitstop.Infrastructure.Messaging
         private Task<bool> HandleEvent(BasicDeliverEventArgs ea)
         {
             // determine messagetype
-            string messageTypeString = Encoding.UTF8.GetString((byte[])ea.BasicProperties.Headers["MessageType"]);
-            MessageTypes messageType = MessageTypes.Unknown;
-            Enum.TryParse<MessageTypes>(messageTypeString, out messageType);
+            string messageType = Encoding.UTF8.GetString((byte[])ea.BasicProperties.Headers["MessageType"]);
 
             // get body
             string body = Encoding.UTF8.GetString(ea.Body);

@@ -6,7 +6,19 @@ namespace Pitstop.Infrastructure.Messaging
 {
     public class Event : Message
     {
-        public Event(Guid messageId, MessageTypes messageType) : base(messageId, messageType)
+        public Event()
+        {
+        }
+
+        public Event(Guid messageId) : base(messageId)
+        {
+        }
+
+        public Event(string messageType) : base(messageType)
+        {
+        }
+
+        public Event(Guid messageId, string messageType) : base(messageId, messageType)
         {
         }
     }
