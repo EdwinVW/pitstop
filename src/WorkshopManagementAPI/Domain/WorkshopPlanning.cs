@@ -45,12 +45,18 @@ namespace Pitstop.WorkshopManagementAPI.Domain
             IsReplaying = false;
         }
 
-        public IEnumerable<Event> RegisterPlanning(RegisterPlanning cmd)
+        /// <summary>
+        /// Creates a new instance of a workshop-planning for the specified date.
+        /// </summary>
+        /// <param name="date">The date to create the planning for.</param>
+        /// <param name="planning">The initialized WorkshopPlanning instance.</param>
+        /// <returns>The WorkshopPlanningCreated event.</returns>
+        /// <remarks>This implementation makes sure creation of the planning becomes part of the event-stream.</remarks>
+        public static IEnumerable<Event> Create(DateTime date, out WorkshopPlanning planning)
         {
-            List<Event> events = new List<Event>();
-            WorkshopPlanningCreated e = new WorkshopPlanningCreated(Guid.NewGuid(), Date = cmd.PlanningDate);
-            events.AddRange(Handle(e));
-            return events;
+            planning = new WorkshopPlanning();
+            WorkshopPlanningCreated e = new WorkshopPlanningCreated(Guid.NewGuid(), date);
+            return planning.Handle(e);
         }
 
         public IEnumerable<Event> PlanMaintenanceJob(PlanMaintenanceJob command)

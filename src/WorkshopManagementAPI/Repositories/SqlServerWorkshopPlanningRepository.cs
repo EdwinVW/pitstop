@@ -55,10 +55,20 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                 sql =
                     "if OBJECT_ID('WorkshopPlanning') IS NULL " +
                     "CREATE TABLE WorkshopPlanning (" +
-                    "  Id varchar(50) NOT NULL," +
-                    "  Version int NOT NULL," +
-                    "  EventData text," +
-                    "  PRIMARY KEY(Id));";
+                    "  [Id] varchar(50) NOT NULL," +
+                    "  [CurrentVersion] int NOT NULL," +
+                    "PRIMARY KEY([Id])); " +
+                   
+                    Environment.NewLine +
+                   
+                    "if OBJECT_ID('WorkshopPlanningEvent') IS NULL " +
+                    "CREATE TABLE WorkshopPlanningEvent (" +
+                    "  [Id] varchar(50) NOT NULL REFERENCES WorkshopPlanning([Id])," +
+                    "  [Version] int NOT NULL," +
+                    "  [Timestamp] datetime2(7) NOT NULL," +
+                    "  [MessageType] varchar(75) NOT NULL," +
+                    "  [EventData] text," +
+                    "PRIMARY KEY([Id], [Version]));";
 
                 Policy
                     .Handle<Exception>()
@@ -71,19 +81,32 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
         public async Task<WorkshopPlanning> GetWorkshopPlanningAsync(DateTime date)
         {
             WorkshopPlanning planning = null;
-
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                Aggregate aggregate = await conn
-                    .QueryFirstOrDefaultAsync<Aggregate>("select * from WorkshopPlanning where Id = @Id", new { Id = date.ToString("yyyy-MM-dd") });
-
-                if (aggregate != null)
+                // get aggregate
+                 var aggregate = await conn
+                        .QuerySingleOrDefaultAsync<Aggregate>(
+                            "select * from WorkshopPlanning where Id = @Id", 
+                            new { Id = date.ToString("yyyy-MM-dd") });
+                
+                if (aggregate == null)
                 {
-                    IEnumerable<Event> events = DeserializeState(aggregate.EventData);
-                    planning = new WorkshopPlanning(events);
+                    return null;
                 }
-            }
 
+                // get events
+                IEnumerable<AggregateEvent> aggregateEvents = await conn
+                    .QueryAsync<AggregateEvent>(
+                        "select * from WorkshopPlanningEvent where Id = @Id order by [Version];",
+                        new { Id = date.ToString("yyyy-MM-dd") });
+            
+                List<Event> events = new List<Event>();
+                foreach (var aggregateEvent in aggregateEvents)
+                {
+                    events.Add(DeserializeEventData(aggregateEvent.MessageType, aggregateEvent.EventData));
+                }
+                planning = new WorkshopPlanning(events);
+            }
             return planning;
         }
 
@@ -91,75 +114,127 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                Aggregate aggregate = await conn
-                   .QueryFirstOrDefaultAsync<Aggregate>("select * from WorkshopPlanning where Id = @Id", new { Id = planning.Id });
+                // determine versions
+                int currentVersion = planning.Version;
+                int newVersion = currentVersion + newEvents.Count();
 
-                if (aggregate != null)
+                // update eventstore
+                await conn.OpenAsync();
+                using (var transaction = conn.BeginTransaction())
                 {
-                    // add new events to existing events
-                    var aggregateEvents = DeserializeState(aggregate.EventData);
-                    aggregateEvents.AddRange(newEvents);
+                    // store aggregate
+                    int affectedRows = 0;
+                    var aggregate = await conn
+                        .QuerySingleOrDefaultAsync<Aggregate>(
+                            "select * from WorkshopPlanning where Id = @Id", 
+                            new { Id = planning.Id },
+                            transaction);
 
-                    // determine versions
-                    int currentVersion = planning.Version;
-                    int newVersion = aggregateEvents.Count;
+                    if (aggregate != null)
+                    {
+                        // update existing aggregate
+                        affectedRows = await conn.ExecuteAsync(
+                            "update WorkshopPlanning " +
+                            "set [CurrentVersion] = @NewVersion " +
+                            "where [Id] = @Id " + 
+                            "and [CurrentVersion] = @CurrentVersion;",
+                            new { 
+                                Id = planning.Id, 
+                                NewVersion = newVersion,
+                                CurrentVersion = currentVersion
+                            },
+                            transaction);
+                    }
+                    else
+                    {
+                        // insert new aggregate
+                        affectedRows = await conn.ExecuteAsync(
+                            "insert WorkshopPlanning ([Id], [CurrentVersion]) values (@Id, @CurrentVersion)",
+                            new { Id = planning.Id, CurrentVersion = newVersion },
+                            transaction);
+                    }
 
-                    // update aggregate
-                    await conn.ExecuteAsync(
-                        "update WorkshopPlanning set Version = @NewVersion, EventData = @EventData where Id = @Id and Version = @CurrentVersion",
-                        new { Id = planning.Id, CurrentVersion = currentVersion, NewVersion = newVersion, EventData = SerializeState(aggregateEvents) });
-                }
-                else
-                {
-                    // insert new aggregate
-                    var aggregateEvents = new List<Event>(newEvents);
-                    await conn.ExecuteAsync(
-                        "insert WorkshopPlanning (Id, Version, EventData) values (@Id, @Version, @EventData)",
-                        new { Id = planning.Id, Version = aggregateEvents.Count, EventData = SerializeState(aggregateEvents) });
+                    // check concurrency
+                    if (affectedRows == 0)
+                    {
+                        transaction.Rollback();
+                        throw new ConcurrencyException();
+                    }
+
+                    // store events
+                    int eventVersion = currentVersion;
+                    foreach (var e in newEvents)
+                    {
+                        eventVersion++;
+                        await conn.ExecuteAsync(
+                            "insert WorkshopPlanningEvent (" +
+                            "  [Id], " +
+                            "  [Version]," +
+                            "  [Timestamp]," +
+                            "  [MessageType]," + 
+                            "  [EventData]" +
+                            ") " +
+                            "values (" +
+                            "  @Id, " +
+                            "  @NewVersion," + 
+                            "  @Timestamp," +
+                            "  @MessageType," + 
+                            "  @EventData);",
+                            new { 
+                                Id = planning.Id, 
+                                NewVersion = eventVersion,
+                                Timestamp = DateTime.Now,
+                                MessageType = e.MessageType,
+                                EventData = SerializeEventData(e) 
+                            }, transaction);
+                    }
+
+                    // commit
+                    transaction.Commit();
                 }
             }
         }
 
         /// <summary>
-        /// Serialize events to JSON.
+        /// Get events for a certain aggregate.
         /// </summary>
-        /// <param name="state">The events to serialize.</param>
-        private string SerializeState(List<Event> state)
+        /// <param name="planningId">The id of the planning.</param>
+        /// <param name="conn">The SQL connection to use.</param>
+        /// <returns></returns>
+        private async Task<IEnumerable<Event>> GetAggregateEvents(DateTime planningId, SqlConnection conn)
         {
-            JObject[] jsonData = state.Select(e => JObject.FromObject(e)).ToArray();
-            return JsonConvert.SerializeObject(state, _serializerSettings);
-        }
+            IEnumerable<AggregateEvent> aggregateEvents = await conn
+                .QueryAsync<AggregateEvent>(
+                    "select * from WorkshopPlanningEvent where Id = @Id order by [Version]",
+                    new { Id = planningId.ToString("yyyy-MM-dd") });
 
-        /// <summary>
-        /// Deserialize state from JSON.
-        /// </summary>
-        /// <param name="state">The JSON to deserialize.</param>
-        private List<Event> DeserializeState(string state)
-        {
             List<Event> events = new List<Event>();
-
-            // parse objects
-            JObject[] objects = JsonConvert.DeserializeObject<JObject[]>(state, _serializerSettings);
-            foreach(JObject obj in objects)
+            foreach (var aggregateEvent in aggregateEvents)
             {
-                string messageType = obj.Value<string>("MessageType");
-                switch (messageType)
-                {
-                    case "WorkshopPlanningCreated":
-                        events.Add(obj.ToObject<WorkshopPlanningCreated>());
-                        break;
-                    case "MaintenanceJobPlanned":
-                        events.Add(obj.ToObject<MaintenanceJobPlanned>());
-                        break;
-                    case "MaintenanceJobFinished":
-                        events.Add(obj.ToObject<MaintenanceJobFinished>());
-                        break;
-                    default:
-                        break;
-                }
+                events.Add(DeserializeEventData(aggregateEvent.MessageType, aggregateEvent.EventData));
             }
-
             return events;
+        }
+
+        /// <summary>
+        /// Serialize event-data to JSON.
+        /// </summary>
+        /// <param name="eventData">The event-data to serialize.</param>
+        private string SerializeEventData(Event eventData)
+        {
+            return JsonConvert.SerializeObject(eventData, _serializerSettings);
+        }
+
+        /// <summary>
+        /// Deserialize event-data from JSON.
+        /// </summary>
+        /// <param name="messageType">The message-type of the event.</param>
+        /// <param name="eventData">The event-data JSON to deserialize.</param>
+        private Event DeserializeEventData(string messageType, string eventData)
+        {
+            Type eventType = Type.GetType($"Pitstop.WorkshopManagementAPI.Events.{messageType}");
+            JObject obj = JsonConvert.DeserializeObject<JObject>(eventData, _serializerSettings);
+            return obj.ToObject(eventType) as Event;
         }
     }
 }

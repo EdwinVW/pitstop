@@ -60,7 +60,6 @@ namespace Pitstop.WorkshopManagementAPI
             services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
 
             // add commandhandlers
-            services.AddTransient<IRegisterPlanningCommandHandler, RegisterPlanningCommandHandler>();
             services.AddTransient<IPlanMaintenanceJobCommandHandler, PlanMaintenanceJobCommandHandler>();
             services.AddTransient<IFinishMaintenanceJobCommandHandler, FinishMaintenanceJobCommandHandler>();
 

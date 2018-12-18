@@ -119,16 +119,6 @@ namespace PitStop.Controllers
                     
                     try
                     {
-                        // get or create planning for date
-                        var planning = await _workshopManagementAPI.GetWorkshopPlanning(dateStr);
-                        if (planning == null)
-                        {
-                            // create planning for date
-                            RegisterPlanning registerPlanningCommand = 
-                                new RegisterPlanning(Guid.NewGuid(), inputModel.Date);
-                            await _workshopManagementAPI.RegisterPlanning(dateStr, registerPlanningCommand);
-                        }
-
                         // register maintenance job
                         DateTime startTime = inputModel.Date.Add(inputModel.StartTime.TimeOfDay);
                         DateTime endTime = inputModel.Date.Add(inputModel.EndTime.TimeOfDay);

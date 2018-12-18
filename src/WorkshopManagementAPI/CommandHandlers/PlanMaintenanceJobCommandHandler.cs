@@ -22,15 +22,17 @@ namespace WorkshopManagementAPI.CommandHandlers
 
         public async Task<WorkshopPlanning> HandleCommandAsync(DateTime planningDate, PlanMaintenanceJob command)
         {
-            // get planning
+            List<Event> events = new List<Event>();
+
+            // get or create workshop-planning
             WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
             if (planning == null)
             {
-                return null;
+                events.AddRange(WorkshopPlanning.Create(planningDate, out planning));
             }
 
             // handle command
-            IEnumerable<Event> events = planning.PlanMaintenanceJob(command);
+            events.AddRange(planning.PlanMaintenanceJob(command));
 
             // persist
             await _planningRepo.SaveWorkshopPlanningAsync(planning, events);

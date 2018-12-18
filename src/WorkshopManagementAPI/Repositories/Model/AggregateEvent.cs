@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 
 namespace Pitstop.WorkshopManagementAPI.Repositories.Model
 {
-    public class Aggregate
+    public class AggregateEvent
     {
         public string Id { get; set; }
-        public int CurrentVersion { get; set; }
+        public int Version { get; set; }
+        public DateTime Timestamp { get; set; }
+        public string MessageType { get; set; }
+        public string EventData { get; set; }
     }
 }

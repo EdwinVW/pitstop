@@ -34,6 +34,8 @@
         }
     </tbody>
 </table>
-<a asp-action="New" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-default">Schedule Maintenance</a>
-
+@if(Model.Date.Date >= DateTime.Now.Date)
+{
+    <a asp-action="New" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-default">Schedule Maintenance</a>
+}
 

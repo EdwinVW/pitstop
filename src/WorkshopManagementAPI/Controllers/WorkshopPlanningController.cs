@@ -51,30 +51,30 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("{planningDate}")]
-        public async Task<IActionResult> RegisterPlanningAsync(DateTime planningDate, [FromBody] RegisterPlanning cmd)
-        {
-            try
-            {
-                // handle command
-                WorkshopPlanning planning = await 
-                    _serviceProvider.GetRequiredService<IRegisterPlanningCommandHandler>()
-                    .HandleCommandAsync(planningDate, cmd);
+        // [HttpPost]
+        // [Route("{planningDate}")]
+        // public async Task<IActionResult> RegisterPlanningAsync(DateTime planningDate, [FromBody] RegisterPlanning cmd)
+        // {
+        //     try
+        //     {
+        //         // handle command
+        //         WorkshopPlanning planning = await 
+        //             _serviceProvider.GetRequiredService<IRegisterPlanningCommandHandler>()
+        //             .HandleCommandAsync(planningDate, cmd);
 
-                // return result
-                return CreatedAtRoute("GetByDate", new { planningDate = planning.Date }, planning);
-            }
-            catch (ConcurrencyException)
-            {
-                string errorMessage = "Unable to save changes. " +
-                    "Try again, and if the problem persists " +
-                    "see your system administrator.";
-                Log.Error(errorMessage);
-                ModelState.AddModelError("", errorMessage);
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
+        //         // return result
+        //         return CreatedAtRoute("GetByDate", new { planningDate = planning.Date }, planning);
+        //     }
+        //     catch (ConcurrencyException)
+        //     {
+        //         string errorMessage = "Unable to save changes. " +
+        //             "Try again, and if the problem persists " +
+        //             "see your system administrator.";
+        //         Log.Error(errorMessage);
+        //         ModelState.AddModelError("", errorMessage);
+        //         return StatusCode(StatusCodes.Status500InternalServerError);
+        //     }
+        // }
 
         [HttpGet]
         [Route("{planningDate}/jobs/{jobId}")]
