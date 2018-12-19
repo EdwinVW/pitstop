@@ -52,23 +52,21 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
 
                 // create tables
                 conn.ChangeDatabase("WorkshopManagementEventStore");
-                sql =
-                    "if OBJECT_ID('WorkshopPlanning') IS NULL " +
-                    "CREATE TABLE WorkshopPlanning (" +
-                    "  [Id] varchar(50) NOT NULL," +
-                    "  [CurrentVersion] int NOT NULL," +
-                    "PRIMARY KEY([Id])); " +
+                sql = @" 
+                    if OBJECT_ID('WorkshopPlanning') IS NULL 
+                    CREATE TABLE WorkshopPlanning (
+                        [Id] varchar(50) NOT NULL,
+                        [CurrentVersion] int NOT NULL,
+                    PRIMARY KEY([Id]));
                    
-                    Environment.NewLine +
-                   
-                    "if OBJECT_ID('WorkshopPlanningEvent') IS NULL " +
-                    "CREATE TABLE WorkshopPlanningEvent (" +
-                    "  [Id] varchar(50) NOT NULL REFERENCES WorkshopPlanning([Id])," +
-                    "  [Version] int NOT NULL," +
-                    "  [Timestamp] datetime2(7) NOT NULL," +
-                    "  [MessageType] varchar(75) NOT NULL," +
-                    "  [EventData] text," +
-                    "PRIMARY KEY([Id], [Version]));";
+                    if OBJECT_ID('WorkshopPlanningEvent') IS NULL
+                    CREATE TABLE WorkshopPlanningEvent (
+                        [Id] varchar(50) NOT NULL REFERENCES WorkshopPlanning([Id]),
+                        [Version] int NOT NULL,
+                        [Timestamp] datetime2(7) NOT NULL,
+                        [MessageType] varchar(75) NOT NULL,
+                        [EventData] text,
+                    PRIMARY KEY([Id], [Version]));";
 
                 Policy
                     .Handle<Exception>()
@@ -134,10 +132,10 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                     {
                         // update existing aggregate
                         affectedRows = await conn.ExecuteAsync(
-                            "update WorkshopPlanning " +
-                            "set [CurrentVersion] = @NewVersion " +
-                            "where [Id] = @Id " + 
-                            "and [CurrentVersion] = @CurrentVersion;",
+                            @"update WorkshopPlanning
+                              set [CurrentVersion] = @NewVersion
+                              where [Id] = @Id
+                              and [CurrentVersion] = @CurrentVersion;",
                             new { 
                                 Id = planning.Id, 
                                 NewVersion = newVersion,
@@ -167,19 +165,8 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                     {
                         eventVersion++;
                         await conn.ExecuteAsync(
-                            "insert WorkshopPlanningEvent (" +
-                            "  [Id], " +
-                            "  [Version]," +
-                            "  [Timestamp]," +
-                            "  [MessageType]," + 
-                            "  [EventData]" +
-                            ") " +
-                            "values (" +
-                            "  @Id, " +
-                            "  @NewVersion," + 
-                            "  @Timestamp," +
-                            "  @MessageType," + 
-                            "  @EventData);",
+                            @"insert WorkshopPlanningEvent ([Id], [Version], [Timestamp], [MessageType], [EventData])
+                              values (@Id, @NewVersion, @Timestamp, @MessageType,@EventData);",
                             new { 
                                 Id = planning.Id, 
                                 NewVersion = eventVersion,
