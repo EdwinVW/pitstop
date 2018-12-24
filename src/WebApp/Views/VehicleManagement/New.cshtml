@@ -7,7 +7,7 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
 
-<h3>Vehicle Management - register vehicle</h3>
+<h3 id="PageTitle">Vehicle Management - register vehicle</h3>
 
 <form asp-controller="VehicleManagement" asp-action="Register" method="post">
     <div class="form-group">
@@ -30,8 +30,8 @@
         <select asp-for="SelectedCustomerId" asp-items="Model.Customers" class="form-control"></select>
         <span asp-validation-for="SelectedCustomerId" class="text-danger"></span>
     </div>
-    <span><button type="submit" class="btn btn-default">Register</button></span>
-    <span><a asp-action="Index" asp-controller="VehicleManagement" class="btn btn-default">Cancel</a></span>
+    <span><button id="SubmitButton" type="submit" class="btn btn-default">Register</button></span>
+    <span><a id="CancelButton" asp-action="Index" asp-controller="VehicleManagement" class="btn btn-default">Cancel</a></span>
 </form>
 
 
