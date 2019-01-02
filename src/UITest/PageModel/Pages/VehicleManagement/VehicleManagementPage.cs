@@ -1,7 +1,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-namespace Pitstop.UITest.PageModel.Pages
+namespace Pitstop.UITest.PageModel.Pages.VehicleManagement
 {
     /// <summary>
     /// Represents the VehicleManagement page.

@@ -1,5 +1,8 @@
 using OpenQA.Selenium;
 using Pitstop.UITest.PageModel.Pages;
+using Pitstop.UITest.PageModel.Pages.CustomerManagement;
+using Pitstop.UITest.PageModel.Pages.VehicleManagement;
+using Pitstop.UITest.PageModel.Pages.WorkshopManagement;
 
 namespace Pitstop.UITest.PageModel
 {

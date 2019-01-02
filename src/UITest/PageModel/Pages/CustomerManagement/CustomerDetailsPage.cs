@@ -1,6 +1,6 @@
 using OpenQA.Selenium;
 
-namespace Pitstop.UITest.PageModel.Pages
+namespace Pitstop.UITest.PageModel.Pages.CustomerManagement
 {
     /// <summary>
     /// Represents the CustomerDetails page.

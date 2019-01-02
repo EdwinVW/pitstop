@@ -41,10 +41,34 @@ namespace Pitstop.UITest
                 .FillVehicleDetails($"Vehicle {testrunId}", "Testla", "Model T", $"TestCustomer {testrunId}")
                 .Submit()
                 .SelectVehicle($"Vehicle {testrunId}")
+                .Back(); 
+
+            pitstop.Menu
+                .WorkshopManagement()
+                .RegisterMaintenanceJob()
+                .Cancel()
+                .RegisterMaintenanceJob()
+                .FillJobDetails("08:00", "12:00", $"Job {testrunId}", $"Vehicle {testrunId}")
+                .Submit()
+                .SelectMaintenanceJob($"Job {testrunId}")
+                .Back(); 
+
+            pitstop.Menu
+                .WorkshopManagement()
+                .SelectMaintenanceJob($"Job {testrunId}")
+                .GetJobStatus(out string beforeJobStatus)
+                .Complete()
+                .FillJobDetails("08:00", "11:00", $"Mechanic notes {testrunId}")
+                .Complete()
+                .GetJobStatus(out string afterJobStatus)
                 .Back();
 
+            // assert
+            Assert.Equal("Planned", beforeJobStatus);
+            Assert.Equal("Completed", afterJobStatus);
+
             // cleanup
-            pitstop.Stop();
+            //pitstop.Stop();
         }
     }
 }

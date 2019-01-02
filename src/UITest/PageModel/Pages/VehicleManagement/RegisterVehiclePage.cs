@@ -1,7 +1,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-namespace Pitstop.UITest.PageModel.Pages
+namespace Pitstop.UITest.PageModel.Pages.VehicleManagement
 {
     /// <summary>
     /// Represents the RegisterVehicle page.
@@ -25,7 +25,7 @@ namespace Pitstop.UITest.PageModel.Pages
         public VehicleManagementPage Submit()
         {
             WebDriver.FindElement(By.Id("SubmitButton")).Click();
-            return new VehicleManagementPage(Pitstop);;
+            return new VehicleManagementPage(Pitstop);
         }
 
         public VehicleManagementPage Cancel()
