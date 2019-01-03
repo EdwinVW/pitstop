@@ -13,7 +13,7 @@ using Moq;
 using Pitstop.WorkshopManagementAPI.Repositories;
 using System.Threading.Tasks;
 
-namespace WorkshopManagement.UnitTests.CommandHandlers
+namespace WorkshopManagement.UnitTests.CommandHandlerTests
 {
     [Collection("AutomapperCollection")]
     public class FinishMaintenanceJobCommandHandlerTests
@@ -28,18 +28,23 @@ namespace WorkshopManagement.UnitTests.CommandHandlers
             DateTime endTime = date.AddHours(11);
             DateTime actualStartTime = date.AddHours(9);
             DateTime actualEndTime = date.AddHours(12);
-            var customerInfo = ("customer id", "customer name", "123456780");
-            var vehicleInfo = ("AB-123-C", "Volkswagen", "Tiguan");
-            string description = "Job description";
             var initializingEvents = new Event[] { 
-                new WorkshopPlanningCreated(Guid.NewGuid(), date), 
-                new MaintenanceJobPlanned(Guid.NewGuid(), jobId, startTime, endTime, 
-                    customerInfo, vehicleInfo, description) 
+                new WorkshopPlanningCreatedEventBuilder()
+                    .WithDate(date)
+                    .Build(),
+                new MaintenanceJobPlannedEventBuilder()
+                    .WithStartTime(startTime)
+                    .WithEndTime(endTime)
+                    .WithJobId(jobId)
+                    .Build()
             };
             WorkshopPlanning planning = new WorkshopPlanning(initializingEvents);
 
-            FinishMaintenanceJob command = new FinishMaintenanceJob(Guid.NewGuid(), jobId, 
-                actualStartTime, actualEndTime, "Notes");
+            FinishMaintenanceJob command = new FinishMaintenanceJobCommandBuilder()
+                .WithJobId(jobId)
+                .WithActualStartTime(actualStartTime)
+                .WithActualEndTime(actualEndTime)
+                .Build();
 
             Mock<IMessagePublisher> messagePublisherMock = new Mock<IMessagePublisher>(MockBehavior.Strict);
             Mock<IWorkshopPlanningRepository> repoMock = new Mock<IWorkshopPlanningRepository>(MockBehavior.Strict);
@@ -83,8 +88,11 @@ namespace WorkshopManagement.UnitTests.CommandHandlers
             Guid jobId = Guid.NewGuid();
             DateTime actualStartTime = date.AddHours(9);
             DateTime actualEndTime = date.AddHours(12);
-            FinishMaintenanceJob command = new FinishMaintenanceJob(Guid.NewGuid(), jobId, 
-                actualStartTime, actualEndTime, "Notes");
+            FinishMaintenanceJob command = new FinishMaintenanceJobCommandBuilder()
+                .WithJobId(jobId)
+                .WithActualStartTime(actualStartTime)
+                .WithActualEndTime(actualEndTime)
+                .Build();
 
             Mock<IMessagePublisher> messagePublisherMock = new Mock<IMessagePublisher>(MockBehavior.Strict);
             Mock<IWorkshopPlanningRepository> repoMock = new Mock<IWorkshopPlanningRepository>(MockBehavior.Strict);

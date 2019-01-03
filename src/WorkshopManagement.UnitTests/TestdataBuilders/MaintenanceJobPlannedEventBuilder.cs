@@ -1,33 +1,38 @@
 using System;
-using Pitstop.WorkshopManagementAPI.Commands;
-using Pitstop.WorkshopManagementAPI.Domain;
+using Pitstop.WorkshopManagementAPI.Events;
 
 namespace WorkshopManagement.UnitTests.TestdataBuilders
 {
-    public class PlanMaintenanceJobCommandBuilder
+    public class MaintenanceJobPlannedEventBuilder
     {
         public MaintenanceJobBuilder MaintenanceJobBuilder { get; private set; }
         public CustomerBuilder CustomerBuilder { get; private set; }
         public VehicleBuilder VehicleBuilder { get; private set; }
 
-        public PlanMaintenanceJobCommandBuilder()
+        public MaintenanceJobPlannedEventBuilder()
         {
             SetDefaults();
         }
 
-        public PlanMaintenanceJobCommandBuilder WithMaintenanceJobBuilder(MaintenanceJobBuilder maintenanceJobBuilder)
+        public MaintenanceJobPlannedEventBuilder WithJobId(Guid jobId)
         {
-            MaintenanceJobBuilder = maintenanceJobBuilder;
+            MaintenanceJobBuilder.WithJobId(jobId);
             return this;
-        }
+        }        
 
-        public PlanMaintenanceJobCommandBuilder WithVehicleBuilder(VehicleBuilder vehicleBuilder)
+        public MaintenanceJobPlannedEventBuilder WithStartTime(DateTime startTime)
         {
-            VehicleBuilder = vehicleBuilder;
+            MaintenanceJobBuilder.WithStartTime(startTime);
             return this;
-        }
+        } 
 
-        public PlanMaintenanceJob Build()
+        public MaintenanceJobPlannedEventBuilder WithEndTime(DateTime endTime)
+        {
+            MaintenanceJobBuilder.WithEndTime(endTime);
+            return this;
+        }         
+
+        public MaintenanceJobPlanned Build()
         {
              var customer = CustomerBuilder
                 .Build();
@@ -41,14 +46,14 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
                 .WithVehicle(vehicle)
                 .Build();
 
-            PlanMaintenanceJob command = new PlanMaintenanceJob(
+            MaintenanceJobPlanned e = new MaintenanceJobPlanned(
                 Guid.NewGuid(), job.Id, job.StartTime, job.EndTime,
                 (customer.CustomerId, customer.Name, customer.TelephoneNumber),
                 (vehicle.LicenseNumber, vehicle.Brand, vehicle.Type),
                 job.Description
             );
 
-            return command;
+            return e;
         }
 
         private void SetDefaults()

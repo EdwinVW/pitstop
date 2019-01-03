@@ -8,7 +8,7 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
         public string LicenseNumber { get; private set; }
         public string Brand { get; private set; }
         public string Type { get; private set; }
-        public string CustomerId { get; private set; }
+        public string OwnerId { get; private set; }
 
         public VehicleBuilder()
         {
@@ -33,19 +33,19 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
             return this;
         }
 
-        public VehicleBuilder WithCustomerId(string customerId)
+        public VehicleBuilder WithOwnerId(string ownerId)
         {
-            CustomerId = customerId;
+            OwnerId = ownerId;
             return this;
         }
 
         public Vehicle Build()
         {
-            if (string.IsNullOrEmpty(CustomerId))
+            if (string.IsNullOrEmpty(OwnerId))
             {
-                throw new InvalidOperationException("You must specify a customer id using the 'WithCustomerId' method.");
+                throw new InvalidOperationException("You must specify an owner id using the 'WithOwnerId' method.");
             }
-            return new Vehicle(LicenseNumber, Brand, Type, CustomerId);
+            return new Vehicle(LicenseNumber, Brand, Type, OwnerId);
         }
 
         private void SetDefaults()

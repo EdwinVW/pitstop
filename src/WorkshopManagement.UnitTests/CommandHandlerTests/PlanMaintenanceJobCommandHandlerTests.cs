@@ -13,7 +13,7 @@ using Moq;
 using Pitstop.WorkshopManagementAPI.Repositories;
 using System.Threading.Tasks;
 
-namespace WorkshopManagement.UnitTests.CommandHandlers
+namespace WorkshopManagement.UnitTests.CommandHandlerTests
 {
     [Collection("AutomapperCollection")]
     public class PlanMaintenanceJobCommandHandlerTests
@@ -24,7 +24,7 @@ namespace WorkshopManagement.UnitTests.CommandHandlers
             // arrange
             DateTime date = DateTime.Today;
             var initializingEvents = new Event[] { 
-                new WorkshopPlanningCreated(Guid.NewGuid(), date) 
+                new WorkshopPlanningCreatedEventBuilder().WithDate(date).Build() 
             };
             WorkshopPlanning planning = new WorkshopPlanning(initializingEvents);
 

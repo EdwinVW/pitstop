@@ -5,21 +5,21 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
 {
     public class MaintenanceJobBuilder
     {
-        public Guid Id { get; private set; }
+        public Guid JobId { get; private set; }
         public DateTime StartTime { get; private set; }
         public DateTime EndTime { get; private set; }
         public string Description { get; private set; }
-        public Customer Customer { get; private set; }
-        public Vehicle Vehicle { get; private set; }
+        public CustomerBuilder CustomerBuilder { get; private set; }
+        public VehicleBuilder VehicleBuilder { get; private set; }
 
         public MaintenanceJobBuilder()
         {
             SetDefaults();
         }
 
-        public MaintenanceJobBuilder WithId(Guid id)
+        public MaintenanceJobBuilder WithJobId(Guid id)
         {
-            Id = id;
+            JobId = id;
             return this;
         }
 
@@ -35,47 +35,58 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
             return this;
         }        
 
-        public MaintenanceJobBuilder WithDescription(string description)
-        {
-            Description = description;
-            return this;
-        }
-
         public MaintenanceJobBuilder WithCustomer(Customer customer)
         {
-            Customer = customer;
+            CustomerBuilder
+                .WithId(customer.CustomerId)
+                .WithName(customer.Name)
+                .WithTelephoneNumber(customer.TelephoneNumber);
+
+            VehicleBuilder.WithOwnerId(customer.CustomerId);
+
             return this;
         }
 
         public MaintenanceJobBuilder WithVehicle(Vehicle vehicle)
         {
-            Vehicle = vehicle;
+            VehicleBuilder
+                .WithLicenseNumber(vehicle.LicenseNumber)
+                .WithBrand(vehicle.Brand)
+                .WithType(vehicle.Type)
+                .WithOwnerId(vehicle.OwnerId);
+
             return this;
         }
 
         public MaintenanceJob Build()
         {
-            if (Customer == null)
+            if (CustomerBuilder == null)
             {
-                throw new InvalidOperationException("You must specify a customer using the 'WithCustomer' method.");
+                throw new InvalidOperationException("You must specify a customerbuilder using the 'WithCustomerBuilder' method.");
             }
 
-            if (Vehicle == null)
+            if (VehicleBuilder == null)
             {
-                throw new InvalidOperationException("You must specify a vehicle using the 'WithVehicle' method.");
+                throw new InvalidOperationException("You must specify a vehiclebuilder using the 'WithVehicleBuilder' method.");
             }
+
+            Customer customer = CustomerBuilder.Build();
+            Vehicle vehicle = VehicleBuilder.Build();
 
             var job = new MaintenanceJob();
-            job.Plan(Id, StartTime, EndTime, Vehicle, Customer, Description);
+            job.Plan(JobId, StartTime, EndTime, vehicle, customer, Description);
             return job;
         }
 
         private void SetDefaults()
         {
-            Id = Guid.NewGuid();
+            JobId = Guid.NewGuid();
             StartTime = DateTime.Today.AddHours(8);
             EndTime = DateTime.Today.AddHours(11);
-            Description = $"Job {Id}";
+            Description = $"Job {JobId}";
+            CustomerBuilder = new CustomerBuilder();
+            VehicleBuilder = new VehicleBuilder();
+            VehicleBuilder.WithOwnerId(CustomerBuilder.Id);
         }
     }
 }

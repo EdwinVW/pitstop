@@ -9,7 +9,7 @@ using Pitstop.WorkshopManagementAPI.Events;
 using WorkshopManagement.UnitTests.TestdataBuilders;
 using Xunit;
 
-namespace WorkshopManagement.UnitTests
+namespace WorkshopManagement.UnitTests.DomainTests
 {
     [Collection("AutomapperCollection")]
     public class WorkshopPlanningTests
@@ -39,7 +39,7 @@ namespace WorkshopManagement.UnitTests
             // arrange
             DateTime date = DateTime.Today;
             var initializingEvents = new Event[] { 
-                new WorkshopPlanningCreated(Guid.NewGuid(), date) 
+                new WorkshopPlanningCreatedEventBuilder().WithDate(date).Build() 
             };
             WorkshopPlanning sut = new WorkshopPlanning(initializingEvents);
 
@@ -78,7 +78,7 @@ namespace WorkshopManagement.UnitTests
         {
             // arrange
             var initializingEvents = new Event[] { 
-                new WorkshopPlanningCreated(Guid.NewGuid(), DateTime.Today)
+                new WorkshopPlanningCreatedEventBuilder().Build() 
             };
             WorkshopPlanning sut = new WorkshopPlanning(initializingEvents);
 
@@ -103,7 +103,7 @@ namespace WorkshopManagement.UnitTests
         {
             // arrange
             var initializingEvents = new Event[] { 
-                new WorkshopPlanningCreated(Guid.NewGuid(), DateTime.Today)
+                new WorkshopPlanningCreatedEventBuilder().WithDate(DateTime.Today).Build() 
             };
             WorkshopPlanning sut = new WorkshopPlanning(initializingEvents);
 
@@ -137,7 +137,7 @@ namespace WorkshopManagement.UnitTests
         {
             // arrange
             var initializingEvents = new Event[] { 
-                new WorkshopPlanningCreated(Guid.NewGuid(), DateTime.Today)
+                new WorkshopPlanningCreatedEventBuilder().Build() 
             };
             WorkshopPlanning sut = new WorkshopPlanning(initializingEvents);
             PlanMaintenanceJob command = new PlanMaintenanceJobCommandBuilder()
@@ -164,18 +164,23 @@ namespace WorkshopManagement.UnitTests
             DateTime endTime = date.AddHours(11);
             DateTime actualStartTime = date.AddHours(9);
             DateTime actualEndTime = date.AddHours(12);
-            var customerInfo = ("customer id", "customer name", "123456780");
-            var vehicleInfo = ("AB-123-C", "Volkswagen", "Tiguan");
-            string description = "Job description";
             var initializingEvents = new Event[] { 
-                new WorkshopPlanningCreated(Guid.NewGuid(), date), 
-                new MaintenanceJobPlanned(Guid.NewGuid(), jobId, startTime, endTime, 
-                    customerInfo, vehicleInfo, description) 
+                new WorkshopPlanningCreatedEventBuilder()
+                    .WithDate(date)
+                    .Build(), 
+                new MaintenanceJobPlannedEventBuilder()
+                    .WithStartTime(startTime)
+                    .WithEndTime(endTime)
+                    .WithJobId(jobId)
+                    .Build()
             };
             WorkshopPlanning sut = new WorkshopPlanning(initializingEvents);
             
-            FinishMaintenanceJob command = new FinishMaintenanceJob(Guid.NewGuid(), jobId, 
-                date.AddHours(9), date.AddHours(12), "Notes");
+            FinishMaintenanceJob command = new FinishMaintenanceJobCommandBuilder()
+                .WithJobId(jobId)
+                .WithActualStartTime(actualStartTime)
+                .WithActualEndTime(actualEndTime)
+                .Build();
 
             // act
             List<Event> events = new List<Event>(sut.FinishMaintenanceJob(command));
