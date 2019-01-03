@@ -108,14 +108,10 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
             return planning;
         }
 
-        public async Task SaveWorkshopPlanningAsync(WorkshopPlanning planning, IEnumerable<Event> newEvents)
+        public async Task SaveWorkshopPlanningAsync(string planningId, int originalVersion, int newVersion, IEnumerable<Event> newEvents)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                // determine versions
-                int currentVersion = planning.Version;
-                int newVersion = currentVersion + newEvents.Count();
-
                 // update eventstore
                 await conn.OpenAsync();
                 using (var transaction = conn.BeginTransaction())
@@ -125,7 +121,7 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                     var aggregate = await conn
                         .QuerySingleOrDefaultAsync<Aggregate>(
                             "select * from WorkshopPlanning where Id = @Id", 
-                            new { Id = planning.Id },
+                            new { Id = planningId },
                             transaction);
 
                     if (aggregate != null)
@@ -137,9 +133,9 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                               where [Id] = @Id
                               and [CurrentVersion] = @CurrentVersion;",
                             new { 
-                                Id = planning.Id, 
+                                Id = planningId, 
                                 NewVersion = newVersion,
-                                CurrentVersion = currentVersion
+                                CurrentVersion = originalVersion
                             },
                             transaction);
                     }
@@ -148,7 +144,7 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                         // insert new aggregate
                         affectedRows = await conn.ExecuteAsync(
                             "insert WorkshopPlanning ([Id], [CurrentVersion]) values (@Id, @CurrentVersion)",
-                            new { Id = planning.Id, CurrentVersion = newVersion },
+                            new { Id = planningId, CurrentVersion = newVersion },
                             transaction);
                     }
 
@@ -160,7 +156,7 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                     }
 
                     // store events
-                    int eventVersion = currentVersion;
+                    int eventVersion = originalVersion;
                     foreach (var e in newEvents)
                     {
                         eventVersion++;
@@ -168,7 +164,7 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                             @"insert WorkshopPlanningEvent ([Id], [Version], [Timestamp], [MessageType], [EventData])
                               values (@Id, @NewVersion, @Timestamp, @MessageType,@EventData);",
                             new { 
-                                Id = planning.Id, 
+                                Id = planningId, 
                                 NewVersion = eventVersion,
                                 Timestamp = DateTime.Now,
                                 MessageType = e.MessageType,

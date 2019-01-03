@@ -10,6 +10,6 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
     public interface IWorkshopPlanningRepository
     {
         Task<WorkshopPlanning> GetWorkshopPlanningAsync(DateTime date);
-        Task SaveWorkshopPlanningAsync(WorkshopPlanning planning, IEnumerable<Event> newEvents);
+        Task SaveWorkshopPlanningAsync(string planningId, int originalVersion, int newVersion, IEnumerable<Event> newEvents);
     }
 }

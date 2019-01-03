@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Workshop Management";
 }
-<h3>Workshop Management - overview</h3>
+<h3 id="PageTitle">Workshop Management - overview</h3>
 
 <div style="margin-top: 10px; margin-bottom: 10px;">
     <a asp-action="Index" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.AddDays(-1).ToString("yyyy-MM-dd")" class="btn btn-default"><</a>
@@ -36,6 +36,6 @@
 </table>
 @if(Model.Date.Date >= DateTime.Now.Date)
 {
-    <a asp-action="New" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-default">Schedule Maintenance</a>
+    <a id="RegisterMaintenanceJobButton" asp-action="New" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-default">Schedule Maintenance</a>
 }
 

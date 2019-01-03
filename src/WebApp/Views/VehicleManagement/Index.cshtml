@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Vehicles Overview";
 }
-<h3>Vehicle Management - overview</h3>
+<h3 id="PageTitle">Vehicle Management - overview</h3>
 
 <table class="table">
     <thead>
@@ -23,6 +23,6 @@
         }
     </tbody>
 </table>
-<a asp-action="New" asp-controller="VehicleManagement" class="btn btn-default">Register vehicle</a>
+<a id="RegisterVehicleButton" asp-action="New" asp-controller="VehicleManagement" class="btn btn-default">Register vehicle</a>
 
 

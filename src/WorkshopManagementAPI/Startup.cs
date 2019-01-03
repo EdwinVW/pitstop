@@ -100,7 +100,7 @@ namespace Pitstop.WorkshopManagementAPI
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            SetupAutoMapper();
+            AutomapperConfigurator.SetupAutoMapper();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -113,18 +113,6 @@ namespace Pitstop.WorkshopManagementAPI
 
             // register service in Consul
             app.RegisterWithConsul(lifetime);
-        }
-
-        private void SetupAutoMapper()
-        {
-            // setup automapper
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<PlanMaintenanceJob, MaintenanceJobPlanned>()
-                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
-                cfg.CreateMap<FinishMaintenanceJob, MaintenanceJobFinished>()
-                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
-            });
-        }      
+        }     
     }
 }
