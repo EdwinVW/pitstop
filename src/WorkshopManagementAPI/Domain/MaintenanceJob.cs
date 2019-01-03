@@ -16,6 +16,7 @@ namespace Pitstop.WorkshopManagementAPI.Domain
         public DateTime? ActualStartTime { get; private set; }
         public DateTime? ActualEndTime { get; private set; }
         public string Notes { get; private set; }
+        public string Status => (!ActualStartTime.HasValue && !ActualEndTime.HasValue) ? "Planned" : "Completed";
 
         public void Plan(Guid id, DateTime startTime, DateTime endTime, Vehicle vehicle, Customer customer, string description)
         {

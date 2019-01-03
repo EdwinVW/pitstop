@@ -35,7 +35,8 @@ namespace WorkshopManagementAPI.CommandHandlers
             events.AddRange(planning.PlanMaintenanceJob(command));
 
             // persist
-            await _planningRepo.SaveWorkshopPlanningAsync(planning, events);
+            await _planningRepo.SaveWorkshopPlanningAsync(
+                planning.Id, planning.OriginalVersion, planning.Version, events);
 
             // publish event
             foreach (var e in events)
