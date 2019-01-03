@@ -145,48 +145,57 @@ The AuditLog service picks up all events from the message-broker and stores them
 ## Technology
 This chapter describes the technology and libraries used to build this application. I'm not going to describe in detail how the different components work. For that I refer you to the documentation of each component on the Internet.
 
-**.NET Core & ASP.NET Core**
+**.NET Core & ASP.NET Core**  
 The application is built completely using .NET Core and ASP.NET Core. See [https://dot.net](https://dot.net ".NET web-site") for more info.
 
-**Docker**
+**Docker**  
 Every service within the system and all infrastructural components (database, message-broker, mail-server) are run in a Docker container. In this solution, only Linux based containers are used. Docker Compose is used to compose the application and connect all the components. See [https://www.docker.com/](https://www.docker.com/ "Docker web-site") for more info.
 
-**RabbitMQ**
+**RabbitMQ**  
 RabbitMQ is used as message-broker. I use a default RabbitMQ Docker image (including management) from Docker Hub (`rabbitmq:3-management`). See [https://www.rabbitmq.com/](https://www.rabbitmq.com/ "RabbitMQ web-site") for more info.
 
-**SQL Server on Linux**
+**SQL Server on Linux**  
 The database server used to host all databases is MS SQL Server running on Linux. I use a default SQL Server for Linux Docker image from Docker Hub (`microsoft/mssql-server-linux`). In this sample application, I chose to use a single SQL Server instance for hosting all databases. In a production environment you could choose for a setup with multiple instances to enable fail-over scenarios in case of an emergency.
 
-**MailDev**
+**MailDev**  
 To simulate sending emails, I use MailDev. This test-server acts as both an SMTP Server as a POP3 server and offers a website to see the mails that were sent. No emails are actually sent when using this test-server. I use the default MailDev Docker image from Docker Hub (`djfarrelly/maildev`). See [https://github.com/djfarrelly/MailDev](https://github.com/djfarrelly/MailDev "MailDev Github repo") for more info.
 
-**Ocelot**
+**Ocelot**  
 Ocelot is an open-source API Gateway built on .NET Core. It is used to implement the API Gateway in the PitStop solution. See [https://github.com/ThreeMammals/Ocelot](https://github.com/ThreeMammals/Ocelot) for more info. Ocelot uses Consul (described below) for dynamic service-discovery.
 
-**Consul**
+**Consul**  
 Consul is an open-source service-mesh tool that can be used for service-discovery. Services can register themselves with Consul when they start and de-register themselves when they stop. 
 See [https://www.consul.io/](https://www.consul.io/) for more info.
 
-**Serilog**
+**Serilog**  
 Serilog an open-source logging framework for .NET (Core). It supports semantic/structured logging. All components within the solution use Serilog for logging information and errors. Log information is sent to the Console and to a Seq server (described below). See [https://serilog.net/](https://serilog.net/) for more info.
 
-**Seq**
+**Seq**  
 Seq is a central log server that can aggregate logging from several different logging-frameworks (including Serilog). It supports structured logging and offers rich searching and filtering capabilities. All logging within the PitStop solution is sent to Seq. See [https://getseq.net/](https://getseq.net/) for more info.
 
-**AutoMapper**
+**AutoMapper**  
 AutoMapper is used (only where it adds value) to map between POCOs. This is primarily handy when mapping commands to events, events to events or events to models. See [http://automapper.org/](http://automapper.org/ "Automapper web-site") for more info.
 
-**Polly**
+**Polly**  
 Polly is used to make sure the services are resilient to outages of other services. It offers automatic retry or circuit-breaker logic that is used at every interaction with resources that could be down (database, message-broker, other services). It is used in the web application for retrying calls to the Web APIs and falling back to an off-line page when a call fails after a certain amount of retries. See [https://github.com/App-vNext/Polly](https://github.com/App-vNext/Polly "Polly Github repo") for more info.
 
-**Refit**
+**Refit**  
 Refit is used to simplify calling REST APis. See [https://github.com/paulcbetts/refit](https://github.com/paulcbetts/refit "Refit Github repo") for more info. 
 
-**SwashBuckle**
+**SwashBuckle**  
 Swashbuckle is used for auto-generating Swagger documentation and a test-ui for the ASP.NET Web APIs. See [https://github.com/domaindrivendev/Swashbuckle](https://github.com/domaindrivendev/Swashbuckle "Swashbuckle Github repo") for more info.
 
-**Dapper**
+**Dapper**  
 Dapper is used in several services as lightweight ORM layer. See [https://github.com/StackExchange/Dapper](https://github.com/StackExchange/Dapper "Dapper Github repo") for more info.
+
+**XUnit**  
+XUnit is a unit-testing framework. It is used in the WorkshopManagementAPI.UnitTests project. See [https://xunit.github.io](https://xunit.github.io) for more info.
+
+**Moq**  
+Moq is a mocking framework. It is used in the WorkshopManagementAPI.UnitTests project. See [https://github.com/Moq/moq4/wiki/Quickstart](https://github.com/Moq/moq4/wiki/Quickstart) for more info.
+
+**Selenium**  
+Selenium is a UI testing framework for driving a browser or application in an automated test. It is used in the UITest project. See [https://www.seleniumhq.org/](https://www.seleniumhq.org/) for more info.  
 
 ## Solution Folder structure
 The Visual Studio solution contains several files and folders. Most folders correspond to a component in the solution architecture. Look there for an in-depth description of the functionality of a component.
@@ -208,8 +217,10 @@ The Visual Studio solution contains several files and folders. Most folders corr
 - **InvoiceService** - the service that sends invoices for executed maintenance.
 - **NotificationService** - the service that sends customers a notification when they have an appointment.
 - **TimeService** - the service that lets "the world" know a certain period of time has passed. The current implementation only supports days. 
+- **UITest** - UI tests (using Selenium) for integration-/regression-testing.
 - **VehicleManagementAPI** - the Web API for managing vehicle data.
 - **WebApp** - the front-end web-application used by the end-users of the system (employees of PitStop garage).
+- **WorkshopManagement.UnitTests** - the unit-tests for the WorkshopManagement domain.
 - **WorkshopManagementAPI** - the Web API for managing workshop data.
 - **WorkshopManagementEventHandler** - the event-handler picking up events and creating the read-model for the WorkshopManagement bounded-context.
 
@@ -472,6 +483,24 @@ In the `Dockerfile` of the services, a `HEALTHCHECK` statement is added. This ch
 ```
 HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:5100/hc || exit 1
 ```
+
+## Automated tests
+The Pitstop solution contains 2 types of tests: unit-tests and UI tests. 
+
+Unit-tests exist for the WorkshopManagementAPI (core domain) and are situated in the *WorkshopManagement.UnitTests* project. There are tests for the domain classes and for the command-handlers. You can run the tests by executing the following steps:
+
+- Open a command-prompt.
+- Change the current-folder to the *src/WorkshopManagement.UnitTests* folder within the repo.
+- Execute the following command: `dotnet test`.
+
+The UI tests are situated in the *UITest* project. This project contains some tests that test the following functionality: all the menu-buttons in the UI, adding a customer, adding a vehicle, adding a maintenance-job and finishing a maintenance-job. It does this by automating the browser using the Selenium Chrome web-driver (so it only works with Chrome for now). These tests are mainly used for integration-/regression-testing. You can run the tests by executing the following steps:
+
+- Start the application as described above.
+- Open a command-prompt.
+- Change the current-folder to the *src/UITest* folder within the repo.
+- Execute the following command: `dotnet test`.
+
+Several browser-windows will be opened and automated by the Selenium web-driver.
 
 ## Contributing
 This sample is a personal R&D project for me to learn. I've tried to document it as thoroughly as possible for people wanting to learn from it. If you have any improvements you want to contribute (to the code or the documentation) or find any bugs that need solving, just create an issue or a pull-request!
