@@ -68,7 +68,7 @@ namespace Pitstop.UITest
             Assert.Equal("Completed", afterJobStatus);
 
             // cleanup
-            //pitstop.Stop();
+            pitstop.Stop();
         }
     }
 }
