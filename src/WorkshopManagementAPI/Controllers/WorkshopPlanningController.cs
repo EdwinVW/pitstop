@@ -20,14 +20,17 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
     [Route("/api/[controller]")]
     public class WorkshopPlanningController : Controller
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly IWorkshopPlanningRepository _planningRepo;
+        private readonly IPlanMaintenanceJobCommandHandler _planMaintenanceJobCommandHandler;
+        private readonly IFinishMaintenanceJobCommandHandler _finishMaintenanceJobCommandHandler;
 
-        public WorkshopPlanningController(IServiceProvider serviceProvider, 
-            IWorkshopPlanningRepository planningRepo)
+        public WorkshopPlanningController(IWorkshopPlanningRepository planningRepo,
+            IPlanMaintenanceJobCommandHandler planMaintenanceJobCommandHandler,
+            IFinishMaintenanceJobCommandHandler finishMaintenanceJobCommand)
         {
-            _serviceProvider = serviceProvider;
             _planningRepo = planningRepo;
+            _planMaintenanceJobCommandHandler = planMaintenanceJobCommandHandler;
+            _finishMaintenanceJobCommandHandler = finishMaintenanceJobCommand;
         }
 
         [HttpGet]
@@ -50,31 +53,6 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
                 throw;
             }
         }
-
-        // [HttpPost]
-        // [Route("{planningDate}")]
-        // public async Task<IActionResult> RegisterPlanningAsync(DateTime planningDate, [FromBody] RegisterPlanning cmd)
-        // {
-        //     try
-        //     {
-        //         // handle command
-        //         WorkshopPlanning planning = await 
-        //             _serviceProvider.GetRequiredService<IRegisterPlanningCommandHandler>()
-        //             .HandleCommandAsync(planningDate, cmd);
-
-        //         // return result
-        //         return CreatedAtRoute("GetByDate", new { planningDate = planning.Date }, planning);
-        //     }
-        //     catch (ConcurrencyException)
-        //     {
-        //         string errorMessage = "Unable to save changes. " +
-        //             "Try again, and if the problem persists " +
-        //             "see your system administrator.";
-        //         Log.Error(errorMessage);
-        //         ModelState.AddModelError("", errorMessage);
-        //         return StatusCode(StatusCodes.Status500InternalServerError);
-        //     }
-        // }
 
         [HttpGet]
         [Route("{planningDate}/jobs/{jobId}")]
@@ -118,9 +96,8 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
                     try
                     {
                         // handle command
-                        WorkshopPlanning planning = await 
-                            _serviceProvider.GetRequiredService<IPlanMaintenanceJobCommandHandler>()
-                            .HandleCommandAsync(planningDate, command);
+                        WorkshopPlanning planning = await
+                            _planMaintenanceJobCommandHandler.HandleCommandAsync(planningDate, command);
 
                         // handle result    
                         if (planning == null)
@@ -157,16 +134,15 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                        // handle command
-                        WorkshopPlanning planning = await 
-                            _serviceProvider.GetRequiredService<IFinishMaintenanceJobCommandHandler>()                        
-                            .HandleCommandAsync(planningDate, command);
+                    // handle command
+                    WorkshopPlanning planning = await
+                        _finishMaintenanceJobCommandHandler.HandleCommandAsync(planningDate, command);
 
-                        // handle result    
-                        if (planning == null)
-                        {
-                            return NotFound();
-                        }
+                    // handle result    
+                    if (planning == null)
+                    {
+                        return NotFound();
+                    }
 
                     // return result
                     return Ok();
