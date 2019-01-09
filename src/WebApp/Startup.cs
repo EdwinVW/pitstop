@@ -39,7 +39,7 @@ namespace PitStop
         {
             // Add framework services
             services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // add custom services
             services.AddTransient<ICustomerManagementAPI, CustomerManagementAPI>();

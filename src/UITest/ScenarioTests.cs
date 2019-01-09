@@ -28,7 +28,9 @@ namespace Pitstop.UITest
                 .RegisterCustomer()
                 .Cancel()
                 .RegisterCustomer()
-                .FillCustomerDetails($"TestCustomer {testrunId}", "Verzonnenstraat 21", "Uitdeduimerveen", "1234 AZ", "+31612345678", "tc@test.com")
+                .FillCustomerDetails(
+                    $"TestCustomer {testrunId}", "Verzonnenstraat 21", 
+                    "Uitdeduimerveen", "1234 AZ", "+31612345678", "tc@test.com")
                 .Submit()
                 .SelectCustomer($"TestCustomer {testrunId}")
                 .Back();
