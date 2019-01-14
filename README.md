@@ -148,6 +148,9 @@ This chapter describes the technology and libraries used to build this applicati
 **.NET Core & ASP.NET Core**  
 The application is built completely using .NET Core and ASP.NET Core. See [https://dot.net](https://dot.net ".NET web-site") for more info.
 
+**Entity Framework Core**  
+For the *CustomerManagementAPI* and the *VehicleManagementAPI* database-access is implemented using Entity Framework Core code-first. See [https://docs.microsoft.com/en-us/ef/core/index](https://docs.microsoft.com/en-us/ef/core/index "EF Core docs") for more info.
+
 **Docker**  
 Every service within the system and all infrastructural components (database, message-broker, mail-server) are run in a Docker container. In this solution, only Linux based containers are used. Docker Compose is used to compose the application and connect all the components. See [https://www.docker.com/](https://www.docker.com/ "Docker web-site") for more info.
 
