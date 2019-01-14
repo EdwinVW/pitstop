@@ -97,6 +97,12 @@ namespace Pitstop.CustomerManagementAPI
 
             // register service in Consul
             app.RegisterWithConsul(lifetime);
+
+            // auto migrate db
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                scope.ServiceProvider.GetService<CustomerManagementDBContext>().MigrateDB();
+            }
         }
 
         private void SetupAutoMapper()

@@ -10,10 +10,7 @@ namespace Pitstop.CustomerManagementAPI.DataAccess
     {
         public CustomerManagementDBContext(DbContextOptions<CustomerManagementDBContext> options) : base(options)
         {
-            Policy
-                .Handle<Exception>()
-                .WaitAndRetry(5, r => TimeSpan.FromSeconds(5))
-                .Execute(() => Database.Migrate());
+
         }
 
         public DbSet<Customer> Customers { get; set; }
@@ -23,6 +20,14 @@ namespace Pitstop.CustomerManagementAPI.DataAccess
             builder.Entity<Customer>().HasKey(m => m.CustomerId);
             builder.Entity<Customer>().ToTable("Customer");
             base.OnModelCreating(builder);
+        }
+
+        public void MigrateDB()
+        {
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(5, r => TimeSpan.FromSeconds(5))
+                .Execute(() => Database.Migrate());
         }
     }
 }

@@ -96,7 +96,13 @@ namespace Pitstop.Application.VehicleManagement
             });
 
             // register service in Consul
-            app.RegisterWithConsul(lifetime);            
+            app.RegisterWithConsul(lifetime);   
+
+            // auto migrate db
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                scope.ServiceProvider.GetService<VehicleManagementDBContext>().MigrateDB();
+            }                     
         }
 
         private void SetupAutoMapper()
