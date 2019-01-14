@@ -46,8 +46,8 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
                 .WithActualEndTime(actualEndTime)
                 .Build();
 
-            Mock<IMessagePublisher> messagePublisherMock = new Mock<IMessagePublisher>(MockBehavior.Strict);
-            Mock<IWorkshopPlanningRepository> repoMock = new Mock<IWorkshopPlanningRepository>(MockBehavior.Strict);
+            Mock<IMessagePublisher> messagePublisherMock = new Mock<IMessagePublisher>();
+            Mock<IWorkshopPlanningRepository> repoMock = new Mock<IWorkshopPlanningRepository>();
 
             repoMock
                 .Setup(m => m.GetWorkshopPlanningAsync(It.Is<DateTime>(p => p == date)))
@@ -77,7 +77,9 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
             
             // assert
             messagePublisherMock.VerifyAll();
+            messagePublisherMock.VerifyNoOtherCalls();
             repoMock.VerifyAll();            
+            repoMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -94,8 +96,8 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
                 .WithActualEndTime(actualEndTime)
                 .Build();
 
-            Mock<IMessagePublisher> messagePublisherMock = new Mock<IMessagePublisher>(MockBehavior.Strict);
-            Mock<IWorkshopPlanningRepository> repoMock = new Mock<IWorkshopPlanningRepository>(MockBehavior.Strict);
+            Mock<IMessagePublisher> messagePublisherMock = new Mock<IMessagePublisher>();
+            Mock<IWorkshopPlanningRepository> repoMock = new Mock<IWorkshopPlanningRepository>();
 
             repoMock
                 .Setup(m => m.GetWorkshopPlanningAsync(It.Is<DateTime>(p => p == date)))
@@ -109,7 +111,9 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
             
             // assert
             messagePublisherMock.VerifyAll();
+            messagePublisherMock.VerifyNoOtherCalls();
             repoMock.VerifyAll();
+            repoMock.VerifyNoOtherCalls();
             Assert.Null(result);
         }         
     }
