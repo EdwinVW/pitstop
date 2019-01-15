@@ -9,7 +9,7 @@ using Pitstop.Infrastructure.Messaging;
 using Pitstop.CustomerManagementAPI.Events;
 using Pitstop.CustomerManagementAPI.Commands;
 
-namespace Pitstop.Application.VehicleManagement.Controllers
+namespace Pitstop.Application.CustomerManagementAPI.Controllers
 {
     [Route("/api/[controller]")]
     public class CustomersController : Controller
