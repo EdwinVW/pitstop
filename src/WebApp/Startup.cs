@@ -18,21 +18,12 @@ namespace PitStop
 {
     public class Startup
     {
-        private IHostingEnvironment CurrentEnvironment { get; set; }
+        private IConfiguration _configuration;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
-
-            CurrentEnvironment = env;
+            _configuration = configuration;
         }
-
-        public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -58,7 +49,7 @@ namespace PitStop
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
+                .ReadFrom.Configuration(_configuration)
                 .CreateLogger();
 
             if (env.IsDevelopment())

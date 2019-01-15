@@ -25,35 +25,27 @@ namespace Pitstop.WorkshopManagementAPI
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        private IConfiguration _configuration;
+
+        public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
-
-            Environment = env;
+            _configuration = configuration;
         }
-
-        public IConfigurationRoot Configuration { get; }
-        public IHostingEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // add repo classes
-            var eventStoreConnectionString = Configuration.GetConnectionString("EventStoreCN");
+            var eventStoreConnectionString = _configuration.GetConnectionString("EventStoreCN");
             services.AddTransient<IWorkshopPlanningRepository>((sp) => 
                 new SqlServerWorkshopPlanningRepository(eventStoreConnectionString));
 
-            var workshopManagementConnectionString = Configuration.GetConnectionString("WorkshopManagementCN");
+            var workshopManagementConnectionString = _configuration.GetConnectionString("WorkshopManagementCN");
             services.AddTransient<IVehicleRepository>((sp) => new SqlServerRefDataRepository(workshopManagementConnectionString));
             services.AddTransient<ICustomerRepository>((sp) => new SqlServerRefDataRepository(workshopManagementConnectionString));
 
             // add messagepublisher classes
-            var configSection = Configuration.GetSection("RabbitMQ");
+            var configSection = _configuration.GetSection("RabbitMQ");
             string host = configSection["Host"];
             string userName = configSection["UserName"];
             string password = configSection["Password"];
@@ -63,10 +55,10 @@ namespace Pitstop.WorkshopManagementAPI
             services.AddCommandHandlers();
 
             // add consul
-            services.Configure<ConsulConfig>(Configuration.GetSection("consulConfig"));
+            services.Configure<ConsulConfig>(_configuration.GetSection("consulConfig"));
             services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
             {
-                var address = Configuration["consulConfig:address"];
+                var address = _configuration["consulConfig:address"];
                 consulConfig.Address = new Uri(address);
             }));          
 
@@ -83,8 +75,8 @@ namespace Pitstop.WorkshopManagementAPI
             services.AddHealthChecks(checks =>
             {
                 checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(1));
-                checks.AddSqlCheck("EventStoreCN", Configuration.GetConnectionString("EventStoreCN"));
-                checks.AddSqlCheck("WorkshopManagementCN", Configuration.GetConnectionString("WorkshopManagementCN"));
+                checks.AddSqlCheck("EventStoreCN", _configuration.GetConnectionString("EventStoreCN"));
+                checks.AddSqlCheck("WorkshopManagementCN", _configuration.GetConnectionString("WorkshopManagementCN"));
             });
         }
 
@@ -92,7 +84,7 @@ namespace Pitstop.WorkshopManagementAPI
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
         {
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
+                .ReadFrom.Configuration(_configuration)
                 .CreateLogger();
 
             app.UseMvc();

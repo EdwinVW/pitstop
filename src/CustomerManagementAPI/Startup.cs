@@ -22,37 +22,32 @@ namespace Pitstop.CustomerManagementAPI
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
-        }
+        private IConfiguration _configuration;
 
-        public IConfigurationRoot Configuration { get; }
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // add DBContext classes
-            var sqlConnectionString = Configuration.GetConnectionString("CustomerManagementCN");
+            var sqlConnectionString = _configuration.GetConnectionString("CustomerManagementCN");
             services.AddDbContext<CustomerManagementDBContext>(options => options.UseSqlServer(sqlConnectionString));
 
             // add messagepublisher classes
-            var configSection = Configuration.GetSection("RabbitMQ");
+            var configSection = _configuration.GetSection("RabbitMQ");
             string host = configSection["Host"];
             string userName = configSection["UserName"];
             string password = configSection["Password"];
             services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
 
             // add consul
-            services.Configure<ConsulConfig>(Configuration.GetSection("consulConfig"));
+            services.Configure<ConsulConfig>(_configuration.GetSection("consulConfig"));
             services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
             {
-                var address = Configuration["consulConfig:address"];
+                var address = _configuration["consulConfig:address"];
                 consulConfig.Address = new Uri(address);
             }));  
 
@@ -69,7 +64,7 @@ namespace Pitstop.CustomerManagementAPI
             services.AddHealthChecks(checks =>
             {
                 checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(1));
-                checks.AddSqlCheck("CustomerManagementCN", Configuration.GetConnectionString("CustomerManagementCN"));
+                checks.AddSqlCheck("CustomerManagementCN", _configuration.GetConnectionString("CustomerManagementCN"));
             });
         }
 
@@ -77,7 +72,7 @@ namespace Pitstop.CustomerManagementAPI
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime, CustomerManagementDBContext dbContext)
         {
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
+                .ReadFrom.Configuration(_configuration)
                 .CreateLogger();
 
             app.UseMvc();
