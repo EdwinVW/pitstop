@@ -81,7 +81,7 @@ namespace Pitstop.WorkshopManagementAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime, IWorkshopPlanningRepository workshopPlanningRepo)
         {
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)
@@ -104,6 +104,9 @@ namespace Pitstop.WorkshopManagementAPI
 
             // register service in Consul
             app.RegisterWithConsul(lifetime);
+
+            // initialize database
+            workshopPlanningRepo.EnsureDatabase();
         }     
     }
 }

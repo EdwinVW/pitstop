@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using Pitstop.WorkshopManagementAPI.Events;
 using Newtonsoft.Json.Converters;
 using System.Data.SqlClient;
+using Serilog;
 
 namespace Pitstop.WorkshopManagementAPI.Repositories
 {
@@ -35,45 +36,6 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
         public SqlServerWorkshopPlanningRepository(string connectionString)
         {
             _connectionString = connectionString;
-
-            // init db
-            using (SqlConnection conn = new SqlConnection(_connectionString.Replace("WorkshopManagementEventStore", "master")))
-            {
-                conn.Open();
-
-                // create database
-                string sql = "if DB_ID('WorkshopManagementEventStore') IS NULL CREATE DATABASE WorkshopManagementEventStore;";
-
-                Policy
-                    .Handle<Exception>()
-                    .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) => 
-                        { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
-                    .Execute(() => conn.Execute(sql));
-
-                // create tables
-                conn.ChangeDatabase("WorkshopManagementEventStore");
-                sql = @" 
-                    if OBJECT_ID('WorkshopPlanning') IS NULL 
-                    CREATE TABLE WorkshopPlanning (
-                        [Id] varchar(50) NOT NULL,
-                        [CurrentVersion] int NOT NULL,
-                    PRIMARY KEY([Id]));
-                   
-                    if OBJECT_ID('WorkshopPlanningEvent') IS NULL
-                    CREATE TABLE WorkshopPlanningEvent (
-                        [Id] varchar(50) NOT NULL REFERENCES WorkshopPlanning([Id]),
-                        [Version] int NOT NULL,
-                        [Timestamp] datetime2(7) NOT NULL,
-                        [MessageType] varchar(75) NOT NULL,
-                        [EventData] text,
-                    PRIMARY KEY([Id], [Version]));";
-
-                Policy
-                    .Handle<Exception>()
-                    .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) => 
-                        { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
-                    .Execute(() => conn.Execute(sql));
-            }
         }
 
         public async Task<WorkshopPlanning> GetWorkshopPlanningAsync(DateTime date)
@@ -175,6 +137,47 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                     // commit
                     transaction.Commit();
                 }
+            }
+        }
+
+        public void EnsureDatabase()
+        {
+            // init db
+            using (SqlConnection conn = new SqlConnection(_connectionString.Replace("WorkshopManagementEventStore", "master")))
+            {
+                conn.Open();
+
+                // create database
+                string sql = "if DB_ID('WorkshopManagementEventStore') IS NULL CREATE DATABASE WorkshopManagementEventStore;";
+
+                Policy
+                    .Handle<Exception>()
+                    .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) => 
+                        { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
+                    .Execute(() => conn.Execute(sql));
+
+                conn.ChangeDatabase("WorkshopManagementEventStore");
+                sql = @" 
+                    if OBJECT_ID('WorkshopPlanning') IS NULL 
+                    CREATE TABLE WorkshopPlanning (
+                        [Id] varchar(50) NOT NULL,
+                        [CurrentVersion] int NOT NULL,
+                    PRIMARY KEY([Id]));
+                   
+                    if OBJECT_ID('WorkshopPlanningEvent') IS NULL
+                    CREATE TABLE WorkshopPlanningEvent (
+                        [Id] varchar(50) NOT NULL REFERENCES WorkshopPlanning([Id]),
+                        [Version] int NOT NULL,
+                        [Timestamp] datetime2(7) NOT NULL,
+                        [MessageType] varchar(75) NOT NULL,
+                        [EventData] text,
+                    PRIMARY KEY([Id], [Version]));";
+
+                Policy
+                    .Handle<Exception>()
+                    .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) => 
+                        { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
+                    .Execute(() => conn.Execute(sql));
             }
         }
 
