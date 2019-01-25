@@ -15,8 +15,6 @@ using Pitstop.CustomerManagementAPI.Commands;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Microsoft.Extensions.HealthChecks;
-using Pitstop.Infrastructure.ServiceDiscovery;
-using Consul;
 
 namespace Pitstop.CustomerManagementAPI
 {
@@ -42,14 +40,6 @@ namespace Pitstop.CustomerManagementAPI
             string userName = configSection["UserName"];
             string password = configSection["Password"];
             services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
-
-            // add consul
-            services.Configure<ConsulConfig>(_configuration.GetSection("consulConfig"));
-            services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
-            {
-                var address = _configuration["consulConfig:address"];
-                consulConfig.Address = new Uri(address);
-            }));  
 
             // Add framework services.
             services.AddMvc()
@@ -89,9 +79,6 @@ namespace Pitstop.CustomerManagementAPI
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "CustomerManagement API - v1");
             });
-
-            // register service in Consul
-            app.RegisterWithConsul(lifetime);
 
             // auto migrate db
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())

@@ -6,6 +6,7 @@ using Refit;
 using WebApp.Commands;
 using System;
 using System.Net;
+using Microsoft.Extensions.Configuration;
 
 namespace WebApp.RESTClients
 {
@@ -13,11 +14,10 @@ namespace WebApp.RESTClients
     {
         private IWorkshopManagementAPI _client;
 
-        public WorkshopManagementAPI(IHostingEnvironment env)
+        public WorkshopManagementAPI(IConfiguration config)
         {
-            string apiHost = env.IsDevelopment() ? "localhost" : "apigateway";
-            int apiPort = 10000;
-            string baseUri = $"http://{apiHost}:{apiPort}/api";
+            string apiHostAndPort = config.GetSection("APIServiceLocations").GetValue<string>("WorkshopManagementAPI");
+            string baseUri = $"http://{apiHostAndPort}/api";
             _client = RestService.For<IWorkshopManagementAPI>(baseUri);
         }
 

@@ -15,7 +15,7 @@ The application targets the employees of PitStop and supports their daily tasks.
 - Sending invoices to customers
 - Sending notifications to customers 
 
->The primary goal of this sample is to demonstrate several Web-Scale Architecture concepts like: Microservices, CQRS, Event Sourcing, Domain Driven Design (DDD), Eventual Consistency and API Gateway.
+>The primary goal of this sample is to demonstrate several Web-Scale Architecture concepts like: Microservices, CQRS, Event Sourcing, Domain Driven Design (DDD), and Eventual Consistency.
 
 ### Context-map
 I've created a context-map that describes the bounded contexts (DDD) within the system and the relationships between them:
@@ -49,13 +49,7 @@ I've created a solution architecture diagram which shows all the moving parts in
 ![Solution Architecture](img/solution-architecture.png)
 
 #### PitStop Web App
-The web application is the front-end for the system. Users can manage customers, vehicles and the planning for the workshop from this front-end. The front-end will only communicate with the different APIs in the system (throug the API Gateway) hand has no knowledge of the message-broker or any other services.
-
-#### API Gateway
-The API Gateway abstracts all the APIs in the solution. The PitStop web application calls all APIs through the API Gateway. The API Gateway also offers location-transparency and load-balancing of APIs. It uses the *DiscoveryService* to determine the available instances of the services it load-balances.
-
-#### Discovery Service
-The Discovery service is a service that administers the available running instances of the API services. When an API service is started, it registers itself with the Discovery Service. When the service stops, it de-registers itself. The API gateway load-balances the workload over the available instances of the services that are registered with the Discovery Service.
+The web application is the front-end for the system. Users can manage customers, vehicles and the planning for the workshop from this front-end. The front-end will only communicate with the different APIs in the system and has no knowledge of the message-broker or any other services.
 
 #### Customer Management Service
 This service offers an API that is used to manage Customers in the system. For now, only CREATE and READ functionality (list and single by unique Id) is implemented. 
@@ -83,7 +77,7 @@ This service publishes the following events:
 This service contains 2 parts: an API for managing the workshop planning and an event-handler that handles events and builds a read-model that is used by the API. 
 
 ##### API
-This is an API that is used to manage Maintenance Jobs in the system. Because we want to be able to keep Workshop Management up and running even when other services are down, the API also offers functionality to retrieve vehicle and customer information from the read-model. This read-model is filled by the event-handler (described below). To ensure the availability of this API, multiple instances of this API can be started. These instances will be load-balanced by the API Gateway.
+This is an API that is used to manage Maintenance Jobs in the system. Because we want to be able to keep Workshop Management up and running even when other services are down, the API also offers functionality to retrieve vehicle and customer information from the read-model. This read-model is filled by the event-handler (described below). 
 
 This service handles the following commands:
 
@@ -163,13 +157,6 @@ The database server used to host all databases is MS SQL Server running on Linux
 **MailDev**  
 To simulate sending emails, I use MailDev. This test-server acts as both an SMTP Server as a POP3 server and offers a website to see the mails that were sent. No emails are actually sent when using this test-server. I use the default MailDev Docker image from Docker Hub (`djfarrelly/maildev`). See [https://github.com/djfarrelly/MailDev](https://github.com/djfarrelly/MailDev "MailDev Github repo") for more info.
 
-**Ocelot**  
-Ocelot is an open-source API Gateway built on .NET Core. It is used to implement the API Gateway in the PitStop solution. See [https://github.com/ThreeMammals/Ocelot](https://github.com/ThreeMammals/Ocelot) for more info. Ocelot uses Consul (described below) for dynamic service-discovery.
-
-**Consul**  
-Consul is an open-source service-mesh tool that can be used for service-discovery. Services can register themselves with Consul when they start and de-register themselves when they stop. 
-See [https://www.consul.io/](https://www.consul.io/) for more info.
-
 **Serilog**  
 Serilog an open-source logging framework for .NET (Core). It supports semantic/structured logging. All components within the solution use Serilog for logging information and errors. Log information is sent to the Console and to a Seq server (described below). See [https://serilog.net/](https://serilog.net/) for more info.
 
@@ -209,14 +196,12 @@ The Visual Studio solution contains several files and folders. Most folders corr
 	- **RebuildAllDockerImages.ps1** / **RebuildAllDockerImages.sh** : do a docker build of all the projects in the solution.
 	- **RemoveUnusedImages.ps1** / **RemoveUnusedImages.sh** : removes "dangling" docker images (without a name).
     - **StartSolution.ps1** / **StartSolution.sh** : run the project in the background, and start tailing the logs for all the containers. You can crtl-c from viewing the logs, and the the containers keep running.
-    - **StartSolutionHA.ps1** / **StartSolutionHA.sh** : run the project in the background with multiple instances of the API services load-balanced by the API Gateway.
+    - **StartSolutionWithLocalAPIs.ps1** / **StartSolutionWithLocalAPIs.sh** : run the project in the background and publish the ports of the API services to `localhost` for easy acces to their swagger UI. When using this script, scaling API services to multiple instances is not supported (a port can only be exposed once on `localhost`).
 	- **StopAndRemoveAllContainers.ps1** / **StopAndRemoveAllContainers.sh** : stops and removes all containers.
 	- **nuget.config** : config file for NuGet containing the NuGet feeds used by the solution.
-- **APIGateway** : the API Gateway.
 - **AuditlogService** : the AuditLog service.
 - **CustomerManagementAPI** : the Web API for managing customer data ("CRM").
 - **Infrastructure.Messaging** - an infrastructural library that offers messaging capabilities using 	RabbitMQ. 
-- **Infrastructure.ServiceDiscovery** - an infrastructural library that offers service-discovery 	capabilities using Consul. 
 - **InvoiceService** - the service that sends invoices for executed maintenance.
 - **NotificationService** - the service that sends customers a notification when they have an appointment.
 - **TimeService** - the service that lets "the world" know a certain period of time has passed. The current implementation only supports days. 
@@ -254,7 +239,7 @@ In order to run the application you need to take several steps. This description
 - Open the PitStop solution in Visual Studio or in Visual Studio Code.  
 
 - When using Visual Studio, add a NuGet source
-   To prevent project-references between projects in the solution, I've used a public MyGet feed for shared components. The URI for this feed is: `https://www.myget.org/F/pitstop/api/v3/index.json`. This feed contains the *Infrastructure.Messaging* and *Infrastructure.ServiceDiscovery* packages. Open Visual Studio and configure the NuGet sources and add the MyGet feed: 
+   To prevent project-references between projects in the solution, I've used a public MyGet feed for shared components. The URI for this feed is: `https://www.myget.org/F/pitstop/api/v3/index.json`. This feed contains the *Infrastructure.Messaging* package. Open Visual Studio and configure the NuGet sources and add the MyGet feed: 
 
    ![Add private NuGet feed](img/add-private-nuget-feed.png).
 
@@ -274,14 +259,14 @@ In order to run the application you need to take several steps. This description
    - `docker volume create rabbitmqdata` 
 
 ## Starting the application
-This is it, you're now ready to spin up the system! Open up a Powershell window and go to the `Pitstop/src` folder. Then issue the following command: `docker-compose up`. This will start the solution with a single instance of the API services.
+This is it, you're now ready to spin up the system! Open up a Powershell window and go to the `Pitstop/src` folder. Then issue the following command: `docker-compose up`. This will start the solution with a single instance of the API services. You can also use the *StartSolution.ps1* / *StartSolution.sh* scripts to start the solution.
 
-If you want to start the solution with multiple instances of the API services running, use the following command: `docker-compose up -d --scale customermanagementapi=2 --scale vehiclemanagementapi=2 --scale workshopmanagementapi=3`. This uses the *scale* argument to specify the number of instances of each services that must be started. The API gateway will automatically load-balance the workload over the available instances. 
+If you want to start the solution with multiple instances of the API services running, use the following command: `docker-compose up -d --scale customermanagementapi=2 --scale vehiclemanagementapi=2 --scale workshopmanagementapi=3`. This uses the *scale* argument to specify the number of instances of each services that must be started. The docker-compose networking stack will automatically load-balance the requests over the available instances. From the client perspective nothing needs to change. It can still communicate with a service by using the container-name specified in the `docker-compose.yml` file (e.g. `workshopmanagementapi`) as if there was only 1 instance. But when you look at the started containers, you will see multiple instances running with a name that is postfixed with a number (e.g. `workshopmanagementapi_1`, `workshopmanagementapi_2`).
 
-You can also use the *StartSolution.ps1* / *StartSolution.sh* (single instance) or *StartSolutionHA.ps1* / *StartSolutionHA.sh* (multiple instances) scripts to start the solution.
-
+### Resiliency
 When the solution starts, you will see all the logging being emitted from the different components. You will probably see a couple of *Unable to connect to RabbitMQ/SQL Server, retrying in 5 sec.* messages in there. This is expected and not a problem. This is Polly doing its work to make sure that failures that occur when calling a component that is still starting up are handled gracefully. 
 
+### Automatic database creation
 The first time the services are started, the necessary databases are automatically created. You could check this by connecting to the SQL Server using SSMS (server *localhost*, port 1434; separate the server and port with a comma in SSMS: `localhost,1434`) and looking at the different databases:
 
 ![](img/ssms-databases.png)
@@ -334,6 +319,8 @@ If you want to test the individual APIs in the system, you can use the test UIs 
 
 In order to test de API's directly, you need to start the solution using the *docker-compose.local.yml* override file. You do this by starting the solution using the following command: `docker-compose -f docker-compose.yml -f docker-compose.local.yml up`. This will make sure that the ports used by the API services are exposed to the host so you can access them directly from the browser. 
 
+You can also use the *StartSolutionWithLocalAPIs.ps1* / *StartSolutionWithLocalAPIs.sh* scripts to start the solution. 
+
 The following URLs can be used:
 
 | API                | URL                                                            |
@@ -341,131 +328,6 @@ The following URLs can be used:
 | CustomerManagement | [http://localhost:5100/swagger](http://localhost:5100/swagger) |
 | VehicleManagement  | [http://localhost:5000/swagger](http://localhost:5000/swagger) |
 | WorkshopManagement | [http://localhost:5200/swagger](http://localhost:5200/swagger) |
-
-### The API Gateway
-All APIs are aggregated by the API Gateway. 
-
-The gateway runs on port 10000 and it serves the following end-points:
-
-| Resource           | Gateway URL           | API URL                                         |
-|:-------------------|:----------------------|:------------------------------------------------|
-| Customers          | /api/customers        | customermanagementapi:5100/api/customers        |
-| Vehicles           | /api/vehicles         | vehiclemanagementapi:5000/api/vehicles          |
-| Workshop planning  | /api/workshopplanning | workshopmanagementapi:5200/api/workshopplanning |
-| Workshop Refdata   | /api/refdata          | workshopmanagmeentapi:5200/api/refdata          |
-
-The configuration of the API Gateway is situated in the *APIGateway* project in the *OcelotConfig* folder. There is a separate folder for the *Development* and *Production* environment. For every API a separate config file exists. See the [Ocelot documentation](https://ocelot.readthedocs.io/en/latest/) for more info about the configuration-format.
-
-> When you change the configuration, make sure to rebuild the API Gateway Docker container! The config file is stored inside the container. If you want to be able to change the configuration "on the fly", define and mount a Docker volume and put the config file there.
-
-**Development environment**
-The configuration for an API (in this case the *CustomerManagement API*) looks something like this for the development environment:
-
-```
-{
-  "ReRoutes": [
-    {
-      "ServiceName": "CustomerManagementAPI",
-      "UpstreamPathTemplate": "/api/customers/",
-      "DownstreamPathTemplate": "/api/customers",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "customermanagementapi",
-          "Port": 5100
-        }
-      ]
-    },
-    {
-      "ServiceName": "CustomerManagementAPI",
-      "UpstreamPathTemplate": "/api/customers/{trailingSegments}",
-      "DownstreamPathTemplate": "/api/customers/{trailingSegments}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "customermanagementapi",
-          "Port": 5100
-        }
-      ]
-    }
-  ]
-}
-```
-
-For this environment, the downstream hosts and ports are statically configured in the Ocelot configuration-file. The first routing-rule matches `http://<host>/api/customers` for getting all the customers. The second rule matches `http://<host>/api/customers/<whatever>`. Because everything that is specified as `<whatever>` after `/api/customers/` is forwarded to the downstream API, I only need to specify routing-rules for each individual API controller. ASP.NET Core MVC routing in the downstream API that is called will take care of the rest. 
-
-This approach saves me from having to write lots of configuration. Especially for the WorkshopManagement API which serves up several resources:
-
-- /api/workshopplanning/{date}
-- /api/workshopplanning/{date}/jobs
-- /api/workshopplanning/{date}/jobs/{jobId}
-- /api/refdata/customers
-- /api/refdata/vehicles
-
-**Production Environment**
-When running in Docker containers - the *Production* environment - multiple instances of the the API services can be started. Work will be load-balanced over these instances. To start multiple instances, specify this on the command-line when using docker-compose:
-
-```
-docker-compose up --scale customermanagementapi=2 --scale vehiclemanagementapi=3 --scale workshopmanagementapi=3
-```
-
-This will start 2 instances of the CustomerManagementAPI, 2 instances of the VehicleManagementAPI and 3 instances of this service. Each service will register itself with the *DiscoveryService* (the Consul service) upon start-up. 
-
-In the *Production* configuration of the API Gateway, you can see a *Round Robin* style load-balancer is configured in the Ocelot config-files:
-
-```
-{
-  "ReRoutes": [
-    {
-      "Key": "WorkshopPlanningAPI",
-      "UpstreamPathTemplate": "/api/workshopplanning/{trailingSegments}",
-      "DownstreamPathTemplate": "/api/workshopplanning/{trailingSegments}",
-      "DownstreamScheme": "http",
-      "ServiceName": "workshopmanagementapi",
-      "LoadBalancerOptions": {
-        "Type": "RoundRobin"
-      }
-    },
-    {
-      "Key": "WorkshopRefDataAPI",
-      "UpstreamPathTemplate": "/api/refdata/{trailingSegments}",
-      "DownstreamPathTemplate": "/api/refdata/{trailingSegments}",
-      "DownstreamScheme": "http",
-      "ServiceName": "workshopmanagementapi",
-      "LoadBalancerOptions": {
-        "Type": "RoundRobin"
-      }
-    }
-  ]
-}
-```
-
-As you can see, no *DownStreamHostsAndPorts* section exists in this configuration. This is because the API Gateway is configured to use *Consul* for dynamic service-discovery. This is specified in the `ocelot.global.json` configuration file in the *Production* folder:
-
-```
-{
-  "GlobalConfiguration": {
-    "BaseUrl": "http://apigateway:10000",
-    "ServiceDiscoveryProvider": {
-      "Host": "discoveryservice",
-      "Port": 8500,
-      "Type": "Consul"
-    }  
-  }
-}
-```
-
-If you want to see whether or not multiple instances of the service are registered with the discovery service, point your browser to [http://localhost:8500](http://localhost:8500) where the Consul UI is running. You will see multiple instances of the API services:
-
-![](img/consul-ui.png)
-
-If you click a particular service, you can see the instances that are registered for this service. Each instance is a separate container. For instance, the VehicleManagementAPI service:
-
-![](img/consul-ui-detail.png)
-
-> I've added this way of load-balancing to the sample application to experiment with using Consul for service-discovery with Ocelot. Because the host-names of the API services are automatically generated when started, I needed this service-discovery mechanism. 
-> 
-> But this is actually a bit of overkill. Because docker networking can also handle load-balancing over multiple instances of a service automatically. When you create multiple instances of a service, you can reach each an instance by its service-name as specified in the docker-compose file. Each connection will be load-balanced over the available instances. So you don't actually need to know the actual host-names of the running instances. I could have configured Ocelot to just use the service-name as host (e.g. *customermanagementapi*) and docker networking would load balance over the running instances (e.g. *src_customermanagementapi_1*, *src_customermanagementapi_2*, ...).  
 
 ## Logging
 To make sure you can see what's going on with the application, a lot of informational, warning- and error-logging is emitted. This logging can be seen in on the console (output of docker-compose). But a better way to look at this logging is using the Seq server that is part of the solution. If you start the application and it for some time, point your browser to [http://localhost:5341](http://localhost:5341) and you will see the Seq console with all the logging information:

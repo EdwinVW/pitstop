@@ -13,13 +13,6 @@ services:
       - RABBITMQ_DEFAULT_USER=rabbitmquser
       - RABBITMQ_DEFAULT_PASS=DEBmbwkSrzy9D1T9cJfa
       
-  discoveryservice:
-    image: consul:latest
-    container_name: discoveryservice
-    ports:
-      - "8500:8500"
-    command: ["agent", "-dev", "-client", "0.0.0.0", "-bind", "0.0.0.0"]  
-
   sqlserver:
     image: microsoft/mssql-server-linux:latest
     container_name: sqlserver
@@ -51,7 +44,6 @@ services:
     image: pitstop/vehiclemanagementapi:latest
     build: VehicleManagementAPI
     depends_on:
-      - discoveryservice
       - rabbitmq
       - sqlserver
     ports:
@@ -64,7 +56,6 @@ services:
     image: pitstop/customermanagementapi:latest
     build: CustomerManagementAPI
     depends_on:
-      - discoveryservice
       - rabbitmq
       - sqlserver
     ports:
@@ -77,26 +68,10 @@ services:
     image: pitstop/workshopmanagementapi:latest
     build: WorkshopManagementAPI
     depends_on:
-      - discoveryservice
       - rabbitmq
       - sqlserver
     ports:
       - "5200"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
-
-  apigateway:
-    image: pitstop/apigateway:latest
-    build: APIGateway
-    container_name: apigateway
-    depends_on:
-      - discoveryservice
-      - vehiclemanagementapi
-      - customermanagementapi
-      - workshopmanagementapi
-    ports:
-      - "10000:10000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
@@ -154,8 +129,6 @@ services:
     image: pitstop/webapp:latest
     build: WebApp
     container_name: webapp
-    depends_on:
-      - apigateway
     ports:
       - "7000:7000"
     environment:

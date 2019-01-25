@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore;
 using Serilog;
-using Consul;
 
 namespace Pitstop.WorkshopManagementAPI
 {

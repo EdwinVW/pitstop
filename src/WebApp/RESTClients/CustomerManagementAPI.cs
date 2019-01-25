@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Refit;
 using WebApp.Commands;
 using System.Net;
+using Microsoft.Extensions.Configuration;
 
 namespace WebApp.RESTClients
 {
@@ -12,11 +13,10 @@ namespace WebApp.RESTClients
     {
         private ICustomerManagementAPI _client;
 
-        public  CustomerManagementAPI(IHostingEnvironment env)
+        public  CustomerManagementAPI(IConfiguration config)
         {
-            string apiHost = env.IsDevelopment() ? "localhost" : "apigateway";
-            int apiPort = 10000;
-            string baseUri = $"http://{apiHost}:{apiPort}/api";
+            string apiHostAndPort = config.GetSection("APIServiceLocations").GetValue<string>("CustomerManagementAPI");
+            string baseUri = $"http://{apiHostAndPort}/api";
             _client = RestService.For<ICustomerManagementAPI>(baseUri);
         }
 
