@@ -92,6 +92,7 @@ services:
     depends_on:
       - rabbitmq
       - sqlserver
+      - mailserver
     environment:
       - PITSTOP_ENVIRONMENT=Production
 
@@ -129,6 +130,10 @@ services:
     image: pitstop/webapp:latest
     build: WebApp
     container_name: webapp
+    depends_on:
+      - customermanagementapi
+      - vehiclemanagementapi
+      - workshopmanagementapi
     ports:
       - "7000:7000"
     environment:
