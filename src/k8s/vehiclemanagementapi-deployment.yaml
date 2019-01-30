@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: vehiclemanagementapi
+  name: vehiclemanagementapi
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: pitstop
+        pitstop.service: vehiclemanagementapi
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+        - name: ApplicationInsights__InstrumentationKey
+          value: befe2a5c-f406-4e9c-9a77-1dc88b331642
+        image: pitstop/vehiclemanagementapi:latest
+        name: vehiclemanagementapi
+        ports:
+        - containerPort: 5000
+        resources: {}
+      restartPolicy: Always
+status: {}

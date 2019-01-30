@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: invoiceservice
+  name: invoiceservice
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: pitstop
+        pitstop.service: invoiceservice
+    spec:
+      containers:
+      - env:
+        - name: PITSTOP_ENVIRONMENT
+          value: Production
+        image: pitstop/invoiceservice:latest
+        name: invoiceservice
+        resources: {}
+      restartPolicy: Always
+status: {}

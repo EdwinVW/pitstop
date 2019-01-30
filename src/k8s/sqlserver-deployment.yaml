@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: sqlserver
+  name: sqlserver
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: pitstop
+        pitstop.service: sqlserver
+    spec:
+      containers:
+      - env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: MSSQL_PID
+          value: Developer
+        - name: SA_PASSWORD
+          value: 8jkGh47hnDw89Haq8LN2
+        image: microsoft/mssql-server-linux:latest
+        name: sqlserver
+        ports:
+        - containerPort: 1433
+        resources: {}
+      restartPolicy: Always
+status: {}

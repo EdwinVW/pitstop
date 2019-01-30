@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: mailserver
+  name: mailserver
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: pitstop
+        pitstop.service: mailserver
+    spec:
+      containers:
+      - image: djfarrelly/maildev
+        name: mailserver
+        ports:
+        - containerPort: 25
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+status: {}

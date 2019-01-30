@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: webapp
+  name: webapp
+spec:
+  type: NodePort
+  ports:
+  - name: "7000"
+    port: 7000
+    targetPort: 7000
+    nodePort: 30004
+  selector:
+    app: pitstop
+    pitstop.service: webapp
+status:
+  loadBalancer: {}

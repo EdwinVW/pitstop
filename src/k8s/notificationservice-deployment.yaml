@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: notificationservice
+  name: notificationservice
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: pitstop
+        pitstop.service: notificationservice
+    spec:
+      containers:
+      - env:
+        - name: PITSTOP_ENVIRONMENT
+          value: Production
+        image: pitstop/notificationservice:latest
+        name: notificationservice
+        resources: {}
+      restartPolicy: Always
+status: {}

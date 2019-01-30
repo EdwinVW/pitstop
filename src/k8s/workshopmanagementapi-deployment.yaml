@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: workshopmanagementapi
+  name: workshopmanagementapi
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: pitstop
+        pitstop.service: workshopmanagementapi
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+        - name: ApplicationInsights__InstrumentationKey
+          value: befe2a5c-f406-4e9c-9a77-1dc88b331642
+        image: pitstop/workshopmanagementapi:latest
+        name: workshopmanagementapi
+        ports:
+        - containerPort: 5200
+        resources: {}
+      restartPolicy: Always
+status: {}

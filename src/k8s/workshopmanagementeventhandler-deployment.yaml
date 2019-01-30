@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: workshopmanagementeventhandler
+  name: workshopmanagementeventhandler
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: pitstop
+        pitstop.service: workshopmanagementeventhandler
+    spec:
+      containers:
+      - env:
+        - name: PITSTOP_ENVIRONMENT
+          value: Production
+        image: pitstop/workshopmanagementeventhandler:latest
+        name: workshopmanagementeventhandler
+        resources: {}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: logserver
+  name: logserver
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: pitstop
+        pitstop.service: logserver
+    spec:
+      containers:
+      - env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        image: datalust/seq:latest
+        name: logserver
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+status: {}

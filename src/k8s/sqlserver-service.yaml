@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: sqlserver
+  name: sqlserver
+spec:
+  type: NodePort
+  ports:
+  - name: "tds"
+    port: 1433
+    targetPort: 1433
+    nodePort: 30000
+  selector:
+    app: pitstop
+    pitstop.service: sqlserver
+status:
+  loadBalancer: {}
