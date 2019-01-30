@@ -6,10 +6,12 @@ metadata:
     pitstop.service: vehiclemanagementapi
   name: vehiclemanagementapi
 spec:
+  type: NodePort
   ports:
   - name: "5000"
     port: 5000
     targetPort: 5000
+    nodePort: 30006
   selector:
     app: pitstop
     pitstop.service: vehiclemanagementapi

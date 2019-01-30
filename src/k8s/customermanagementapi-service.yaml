@@ -6,10 +6,12 @@ metadata:
     pitstop.service: customermanagementapi
   name: customermanagementapi
 spec:
+  type: NodePort
   ports:
   - name: "5100"
     port: 5100
     targetPort: 5100
+    nodePort: 30005
   selector:
     app: pitstop
     pitstop.service: customermanagementapi
