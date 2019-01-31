@@ -7,7 +7,6 @@ metadata:
   name: notificationservice
 spec:
   replicas: 1
-  strategy: {}
   template:
     metadata:
       labels:
@@ -20,6 +19,4 @@ spec:
           value: Production
         image: pitstop/notificationservice:latest
         name: notificationservice
-        resources: {}
       restartPolicy: Always
-status: {}

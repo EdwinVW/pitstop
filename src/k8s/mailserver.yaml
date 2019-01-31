@@ -7,7 +7,6 @@ metadata:
   name: mailserver
 spec:
   replicas: 1
-  strategy: {}
   template:
     metadata:
       labels:
@@ -20,6 +19,27 @@ spec:
         ports:
         - containerPort: 25
         - containerPort: 80
-        resources: {}
       restartPolicy: Always
-status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: mailserver
+  name: mailserver
+spec:
+  type: NodePort
+  ports:
+  - name: "smtp"
+    port: 25
+    targetPort: 25
+  - name: "web"
+    port: 4000
+    targetPort: 80
+    nodePort: 30002
+  selector:
+    app: pitstop
+    pitstop.service: mailserver

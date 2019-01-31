@@ -7,7 +7,6 @@ metadata:
   name: vehiclemanagementapi
 spec:
   replicas: 1
-  strategy: {}
   template:
     metadata:
       labels:
@@ -24,6 +23,25 @@ spec:
         name: vehiclemanagementapi
         ports:
         - containerPort: 5000
-        resources: {}
       restartPolicy: Always
-status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: vehiclemanagementapi
+  name: vehiclemanagementapi
+spec:
+  type: NodePort
+  ports:
+  - name: "5000"
+    port: 5000
+    targetPort: 5000
+    nodePort: 30006
+  selector:
+    app: pitstop
+    pitstop.service: vehiclemanagementapi
+

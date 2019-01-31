@@ -7,7 +7,6 @@ metadata:
   name: workshopmanagementapi
 spec:
   replicas: 1
-  strategy: {}
   template:
     metadata:
       labels:
@@ -24,6 +23,24 @@ spec:
         name: workshopmanagementapi
         ports:
         - containerPort: 5200
-        resources: {}
       restartPolicy: Always
-status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: workshopmanagementapi
+  name: workshopmanagementapi
+spec:
+  type: NodePort
+  ports:
+  - name: "5200"
+    port: 5200
+    targetPort: 5200
+    nodePort: 30007
+  selector:
+    app: pitstop
+    pitstop.service: workshopmanagementapi

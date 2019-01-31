@@ -7,7 +7,6 @@ metadata:
   name: logserver
 spec:
   replicas: 1
-  strategy: {}
   template:
     metadata:
       labels:
@@ -22,6 +21,24 @@ spec:
         name: logserver
         ports:
         - containerPort: 80
-        resources: {}
       restartPolicy: Always
-status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: logserver
+  name: logserver
+spec:
+  type: NodePort
+  ports:
+  - name: "seq"
+    port: 5341
+    targetPort: 80
+    nodePort: 30003
+  selector:
+    app: pitstop
+    pitstop.service: logserver

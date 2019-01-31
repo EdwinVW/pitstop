@@ -26,6 +26,27 @@ spec:
         ports:
         - containerPort: 15672
         - containerPort: 5672
-        resources: {}
       restartPolicy: Always
-status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pitstop
+    pitstop.service: rabbitmq
+  name: rabbitmq
+spec:
+  type: NodePort
+  ports:
+  - name: "admin"
+    port: 15672
+    targetPort: 15672
+    nodePort: 30001
+  - name: "data"
+    port: 5672
+    targetPort: 5672
+  selector:
+    app: pitstop
+    pitstop.service: rabbitmq
