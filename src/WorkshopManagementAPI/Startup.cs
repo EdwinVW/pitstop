@@ -75,6 +75,7 @@ namespace Pitstop.WorkshopManagementAPI
         {
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)
+                .Enrich.WithMachineName()
                 .CreateLogger();
 
             app.UseMvc();

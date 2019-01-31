@@ -63,6 +63,7 @@ namespace Pitstop.CustomerManagementAPI
         {
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)
+                .Enrich.WithMachineName()
                 .CreateLogger();
 
             app.UseMvc();

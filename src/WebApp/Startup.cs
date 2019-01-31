@@ -50,6 +50,7 @@ namespace PitStop
         {
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)
+                .Enrich.WithMachineName()
                 .CreateLogger();
 
             if (env.IsDevelopment())
