@@ -5,6 +5,7 @@ metadata:
     app: pitstop
     pitstop.service: mailserver
   name: mailserver
+  namespace: pitstop
 spec:
   replicas: 1
   template:
@@ -30,6 +31,7 @@ metadata:
     app: pitstop
     pitstop.service: mailserver
   name: mailserver
+  namespace: pitstop
 spec:
   type: NodePort
   ports:

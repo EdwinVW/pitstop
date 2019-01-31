@@ -5,6 +5,7 @@ metadata:
     app: pitstop
     pitstop.service: webapp
   name: webapp
+  namespace: pitstop
 spec:
   replicas: 1
   template:
@@ -34,13 +35,13 @@ metadata:
     app: pitstop
     pitstop.service: webapp
   name: webapp
+  namespace: pitstop
 spec:
   type: LoadBalancer
   ports:
   - name: "7000"
     port: 7000
     targetPort: 7000
-    # nodePort: 30004
   selector:
     app: pitstop
     pitstop.service: webapp

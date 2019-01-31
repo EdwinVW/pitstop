@@ -5,6 +5,7 @@ metadata:
     app: pitstop
     pitstop.service: rabbitmq
   name: rabbitmq
+  namespace: pitstop
 spec:
   replicas: 1
   strategy:
@@ -37,6 +38,7 @@ metadata:
     app: pitstop
     pitstop.service: rabbitmq
   name: rabbitmq
+  namespace: pitstop
 spec:
   type: NodePort
   ports:

@@ -5,6 +5,7 @@ metadata:
     app: pitstop
     pitstop.service: auditlogservice
   name: auditlogservice
+  namespace: pitstop
 spec:
   replicas: 1
   template:

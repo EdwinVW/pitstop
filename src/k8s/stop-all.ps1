@@ -1,2 +1,2 @@
-kubectl delete svc -l app=pitstop
-kubectl delete deploy -l app=pitstop
+kubectl delete svc -l app=pitstop -n pitstop
+kubectl delete deploy -l app=pitstop -n pitstop

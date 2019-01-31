@@ -5,6 +5,7 @@ metadata:
     app: pitstop
     pitstop.service: customermanagementapi
   name: customermanagementapi
+  namespace: pitstop
 spec:
   replicas: 1
   template:
@@ -34,6 +35,7 @@ metadata:
     app: pitstop
     pitstop.service: customermanagementapi
   name: customermanagementapi
+  namespace: pitstop
 spec:
   type: NodePort
   ports:

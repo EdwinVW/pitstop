@@ -5,6 +5,7 @@ metadata:
     app: pitstop
     pitstop.service: notificationservice
   name: notificationservice
+  namespace: pitstop
 spec:
   replicas: 1
   template:

@@ -5,6 +5,7 @@ metadata:
     app: pitstop
     pitstop.service: workshopmanagementeventhandler
   name: workshopmanagementeventhandler
+  namespace: pitstop
 spec:
   replicas: 1
   template:
