@@ -30,6 +30,14 @@
             <td width="150">Emailaddress :</td>
             <td><b>@Model.Customer.EmailAddress</b></td>
         </tr>
+        @if (Model.Customer.LoyaltyLevel.HasValue)
+        {
+            string imagePath = $"/images/{Model.Customer.LoyaltyLevel}.png";
+            <tr>
+                <td width="150">LoyaltyLevel :</td>
+                <td><img src="@imagePath" /></td>
+            </tr>        
+        }
     </tbody>
 </table>
 <span><a id="BackButton" asp-action="Index" asp-controller="CustomerManagement" class="btn btn-default">Back</a></span>

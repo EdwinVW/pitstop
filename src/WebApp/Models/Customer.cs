@@ -34,5 +34,8 @@ namespace Pitstop.Models
         [Display(Name = "Email address")]
         [EmailAddress()]
         public string EmailAddress { get; set; }
+
+        [Display(Name = "Loyalty level")]
+        public int? LoyaltyLevel { get; set; }
     }
 }
