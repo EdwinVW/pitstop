@@ -2,8 +2,9 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: pitstop
-    pitstop.service: webapp
+    system: pitstop
+    app: webpp
+    version: v1
   name: webapp
   namespace: pitstop
 spec:
@@ -11,8 +12,9 @@ spec:
   template:
     metadata:
       labels:
-        app: pitstop
-        pitstop.service: webapp
+        system: pitstop
+        app: webpp
+        version: v1
     spec:
       containers:
       - env:
@@ -32,8 +34,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: pitstop
-    pitstop.service: webapp
+    system: pitstop
+    app: webpp
+    version: v1
   name: webapp
   namespace: pitstop
 spec:
@@ -43,6 +46,7 @@ spec:
     port: 7000
     targetPort: 7000
   selector:
-    app: pitstop
-    pitstop.service: webapp
+    system: pitstop
+    app: webpp
+    version: v1
 

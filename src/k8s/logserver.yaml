@@ -2,8 +2,9 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: pitstop
-    pitstop.service: logserver
+    system: pitstop
+    app: logserver
+    version: v1
   name: logserver
   namespace: pitstop
 spec:
@@ -11,8 +12,9 @@ spec:
   template:
     metadata:
       labels:
-        app: pitstop
-        pitstop.service: logserver
+        system: pitstop
+        app: logserver
+        version: v1
     spec:
       containers:
       - env:
@@ -30,17 +32,19 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: pitstop
-    pitstop.service: logserver
+    system: pitstop
+    app: logserver
+    version: v1
   name: logserver
   namespace: pitstop
 spec:
   type: NodePort
   ports:
-  - name: "seq"
+  - name: "http-5341"
     port: 5341
     targetPort: 80
     nodePort: 30003
   selector:
-    app: pitstop
-    pitstop.service: logserver
+    system: pitstop
+    app: logserver
+    version: v1

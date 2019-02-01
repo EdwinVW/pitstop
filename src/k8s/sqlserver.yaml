@@ -2,8 +2,9 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: pitstop
-    pitstop.service: sqlserver
+    system: pitstop
+    app: sqlserver
+    version: v1
   name: sqlserver
   namespace: pitstop
 spec:
@@ -13,8 +14,9 @@ spec:
   template:
     metadata:
       labels:
-        app: pitstop
-        pitstop.service: sqlserver
+        system: pitstop
+        app: sqlserver
+        version: v1
     spec:
       containers:
       - env:
@@ -36,8 +38,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: pitstop
-    pitstop.service: sqlserver
+    system: pitstop
+    app: sqlserver
+    version: v1
   name: sqlserver
   namespace: pitstop
 spec:
@@ -48,5 +51,6 @@ spec:
     targetPort: 1433
     nodePort: 30000
   selector:
-    app: pitstop
-    pitstop.service: sqlserver
+    system: pitstop
+    app: sqlserver
+    version: v1

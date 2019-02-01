@@ -2,8 +2,9 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: pitstop
-    pitstop.service: rabbitmq
+    system: pitstop
+    app: rabbitmq
+    version: v1
   name: rabbitmq
   namespace: pitstop
 spec:
@@ -13,8 +14,9 @@ spec:
   template:
     metadata:
       labels:
-        app: pitstop
-        pitstop.service: rabbitmq
+        system: pitstop
+        app: rabbitmq
+        version: v1
     spec:
       containers:
       - env:
@@ -35,14 +37,15 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: pitstop
-    pitstop.service: rabbitmq
+    system: pitstop
+    app: rabbitmq
+    version: v1
   name: rabbitmq
   namespace: pitstop
 spec:
   type: NodePort
   ports:
-  - name: "admin"
+  - name: "http-admin"
     port: 15672
     targetPort: 15672
     nodePort: 30001
@@ -50,5 +53,6 @@ spec:
     port: 5672
     targetPort: 5672
   selector:
-    app: pitstop
-    pitstop.service: rabbitmq
+    system: pitstop
+    app: rabbitmq
+    version: v1

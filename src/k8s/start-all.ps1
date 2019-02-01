@@ -1,3 +1,5 @@
+$mesh=$args[0]
+
 kubectl apply `
     -f ./pitstop-namespace.yaml `
     -f ./rabbitmq.yaml `
@@ -9,7 +11,7 @@ kubectl apply `
     -f ./notificationservice.yaml `
     -f ./workshopmanagementeventhandler.yaml `
     -f ./auditlogservice.yaml `
-    -f ./customermanagementapi.yaml `
-    -f ./vehiclemanagementapi.yaml `
-    -f ./workshopmanagementapi.yaml `
-    -f ./webapp.yaml
+    -f ./customermanagementapi$mesh.yaml `
+    -f ./vehiclemanagementapi$mesh.yaml `
+    -f ./workshopmanagementapi$mesh.yaml `
+    -f ./webapp$mesh.yaml

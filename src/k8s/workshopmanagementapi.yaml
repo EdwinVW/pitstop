@@ -2,8 +2,9 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: pitstop
-    pitstop.service: workshopmanagementapi
+    system: pitstop
+    app: workshopmanagementapi
+    version: v1
   name: workshopmanagementapi
   namespace: pitstop
 spec:
@@ -11,8 +12,9 @@ spec:
   template:
     metadata:
       labels:
-        app: pitstop
-        pitstop.service: workshopmanagementapi
+        system: pitstop
+        app: workshopmanagementapi
+        version: v1
     spec:
       containers:
       - env:
@@ -32,17 +34,19 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: pitstop
-    pitstop.service: workshopmanagementapi
+    system: pitstop
+    app: workshopmanagementapi
+    version: v1
   name: workshopmanagementapi
   namespace: pitstop
 spec:
   type: NodePort
   ports:
-  - name: "5200"
+  - name: "http-5200"
     port: 5200
     targetPort: 5200
     nodePort: 30007
   selector:
-    app: pitstop
-    pitstop.service: workshopmanagementapi
+    system: pitstop
+    app: workshopmanagementapi
+    version: v1

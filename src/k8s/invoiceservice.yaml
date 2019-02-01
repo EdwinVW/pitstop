@@ -2,8 +2,9 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: pitstop
-    pitstop.service: invoiceservice
+    system: pitstop
+    app: invoiceservice
+    version: v1
   name: invoiceservice
   namespace: pitstop
 spec:
@@ -11,8 +12,9 @@ spec:
   template:
     metadata:
       labels:
-        app: pitstop
-        pitstop.service: invoiceservice
+        system: pitstop
+        app: invoiceservice
+        version: v1
     spec:
       containers:
       - env:

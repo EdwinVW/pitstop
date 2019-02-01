@@ -2,8 +2,9 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: pitstop
-    pitstop.service: mailserver
+    system: pitstop
+    app: mailserver
+    version: v1
   name: mailserver
   namespace: pitstop
 spec:
@@ -11,8 +12,9 @@ spec:
   template:
     metadata:
       labels:
-        app: pitstop
-        pitstop.service: mailserver
+        system: pitstop
+        app: mailserver
+        version: v1
     spec:
       containers:
       - image: djfarrelly/maildev
@@ -28,8 +30,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: pitstop
-    pitstop.service: mailserver
+    system: pitstop
+    app: mailserver
+    version: v1
   name: mailserver
   namespace: pitstop
 spec:
@@ -43,5 +46,6 @@ spec:
     targetPort: 80
     nodePort: 30002
   selector:
-    app: pitstop
-    pitstop.service: mailserver
+    system: pitstop
+    app: mailserver
+    version: v1
