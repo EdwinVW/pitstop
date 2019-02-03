@@ -1,6 +1,6 @@
 param (
-    [Parameter(Mandatory=$true)][int]$jobId
+    [Parameter(Mandatory=$true)][string]$jobName
 )
 
-stop-job $jobId
-remove-job $jobId
+stop-job $jobName
+remove-job $jobName
