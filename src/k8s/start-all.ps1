@@ -1,4 +1,14 @@
-$mesh=$args[0]
+# If started without argument, the solution is started without service-mesh. 
+# If started with argument -mesh, the solution is started with the Istio service-mesh.
+
+param (
+    [switch]$mesh = $false
+)
+
+$meshPostfix = ''
+if ($mesh) {
+    $meshPostfix = '-istio'
+}
 
 kubectl apply `
     -f ./pitstop-namespace.yaml `
@@ -11,7 +21,7 @@ kubectl apply `
     -f ./notificationservice.yaml `
     -f ./workshopmanagementeventhandler.yaml `
     -f ./auditlogservice.yaml `
-    -f ./customermanagementapi$mesh.yaml `
-    -f ./vehiclemanagementapi$mesh.yaml `
-    -f ./workshopmanagementapi$mesh.yaml `
-    -f ./webapp$mesh.yaml
+    -f ./customermanagementapi$meshPostfix.yaml `
+    -f ./vehiclemanagementapi$meshPostfix.yaml `
+    -f ./workshopmanagementapi$meshPostfix.yaml `
+    -f ./webapp$meshPostfix.yaml
