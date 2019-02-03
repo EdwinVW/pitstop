@@ -1,12 +1,21 @@
 param (
-    [Parameter(Mandatory=$true)][string]$jobName,
-    [Parameter(Mandatory=$true)][string]$uri
+    [Parameter(Mandatory=$true)][string]$jobName
 )
 
-start-job -name $jobName -arg $uri -scriptblock {
-    param($uri)
-    for (;;) {
-        Invoke-Webrequest $uri | Out-Null
-        Start-Sleep -Milliseconds 50
-    } 
+$uris = Get-Content loadtest-uris.json | ConvertFrom-Json
+
+echo 'Starting load-test for:'
+foreach ($uri in $uris) {
+    echo $uri
+}
+
+start-job -name $jobName -arg $uris -scriptblock {
+    param($uris)
+    for(;;) {
+        foreach ($uri in $uris) {
+            echo $uri
+            Invoke-Webrequest $uri | Out-Null
+            Start-Sleep -Milliseconds 25
+        } 
+    }
 } 
