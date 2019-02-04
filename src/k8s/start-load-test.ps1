@@ -5,16 +5,23 @@ param (
 $uris = Get-Content -Path loadtest-uris.txt
 
 echo 'Starting load-test for:'
-foreach ($uri in $uris) {
-    echo $uri
-}
+echo $uris
 
-start-job -name $jobName -argumentlist (,$uris) -scriptblock {
-    param($uris)
-    for(;;) {
-        foreach ($uri in $uris) {
+foreach ($uri in $uris) {
+    start-job -name $jobName -argumentlist $uri -scriptblock {
+        param($uri)
+        
+        for(;;) {
+            # execute request
+            echo "Execute request: $uri"
+            $progressPreference = 'SilentlyContinue' 
             Invoke-Webrequest $uri -ErrorAction SilentlyContinue | Out-Null
-            Start-Sleep -Milliseconds 25
+            $progressPreference = 'Continue' 
+
+            # random delay
+            $delay = Get-Random -Minimum 100 -Maximum 2000
+            echo "Wait $delay ms. ..."
+            Start-Sleep -Milliseconds $delay
         } 
     }
 }
