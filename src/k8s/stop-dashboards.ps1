@@ -15,3 +15,12 @@ if ($IstioGrafanaDashboardUp) {
 } else {
     echo 'Istio Grafana dashboard is not running'
 }
+
+$IstioKialiDashboardUp = get-job IstioKialiDashboard -ErrorAction SilentlyContinue
+if ($IstioKialiDashboardUp) {
+    stop-job IstioKialiDashboard
+    remove-job IstioKialiDashboard
+    echo 'Istio Kiali dashboard stopped'
+} else {
+    echo 'Istio Kiali dashboard is not running'
+}
