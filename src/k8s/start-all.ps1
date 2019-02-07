@@ -21,7 +21,8 @@ kubectl apply `
     -f ./notificationservice.yaml `
     -f ./workshopmanagementeventhandler.yaml `
     -f ./auditlogservice.yaml `
-    -f ./customermanagementapi$meshPostfix.yaml `
+    -f ./customermanagementapi-v1$meshPostfix.yaml `
+    -f ./customermanagementapi-svc.yaml `
     -f ./vehiclemanagementapi$meshPostfix.yaml `
     -f ./workshopmanagementapi$meshPostfix.yaml `
     -f ./webapp$meshPostfix.yaml
