@@ -11,9 +11,9 @@ $K8SDashboardUp = get-job IstioJaegerDB -ErrorAction SilentlyContinue
 if ($K8SDashboardUp) {
     stop-job IstioJaegerDB
     remove-job IstioJaegerDB
-    echo 'K8S Jaeger stopped'
+    echo 'Istio Jaeger dashboard stopped'
 } else {
-    echo 'K8S Jaeger is not running'
+    echo 'Istio Jaeger dashboard is not running'
 }
 
 $IstioGrafanaDashboardUp = get-job IstioGrafanaDB -ErrorAction SilentlyContinue
