@@ -1,7 +1,7 @@
-$K8SDashboardUp = get-job K8SDashboard -ErrorAction SilentlyContinue
+$K8SDashboardUp = get-job K8SDB -ErrorAction SilentlyContinue
 if ($K8SDashboardUp) {
-    stop-job K8SDashboard
-    remove-job K8SDashboard
+    stop-job K8SDB
+    remove-job K8SDB
     echo 'K8S dashboard stopped'
 } else {
     echo 'K8S dashboard is not running'
