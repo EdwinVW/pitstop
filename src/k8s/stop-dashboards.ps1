@@ -7,19 +7,28 @@ if ($K8SDashboardUp) {
     echo 'K8S dashboard is not running'
 }
 
-$IstioGrafanaDashboardUp = get-job IstioGrafanaDashboard -ErrorAction SilentlyContinue
+$K8SDashboardUp = get-job IstioJaegerDB -ErrorAction SilentlyContinue
+if ($K8SDashboardUp) {
+    stop-job IstioJaegerDB
+    remove-job IstioJaegerDB
+    echo 'K8S Jaeger stopped'
+} else {
+    echo 'K8S Jaeger is not running'
+}
+
+$IstioGrafanaDashboardUp = get-job IstioGrafanaDB -ErrorAction SilentlyContinue
 if ($IstioGrafanaDashboardUp) {
-    stop-job IstioGrafanaDashboard
-    remove-job IstioGrafanaDashboard
+    stop-job IstioGrafanaDB
+    remove-job IstioGrafanaDB
     echo 'Istio Grafana dashboard stopped'
 } else {
     echo 'Istio Grafana dashboard is not running'
 }
 
-$IstioKialiDashboardUp = get-job IstioKialiDashboard -ErrorAction SilentlyContinue
+$IstioKialiDashboardUp = get-job IstioKialiDB -ErrorAction SilentlyContinue
 if ($IstioKialiDashboardUp) {
-    stop-job IstioKialiDashboard
-    remove-job IstioKialiDashboard
+    stop-job IstioKialiDB
+    remove-job IstioKialiDB
     echo 'Istio Kiali dashboard stopped'
 } else {
     echo 'Istio Kiali dashboard is not running'
