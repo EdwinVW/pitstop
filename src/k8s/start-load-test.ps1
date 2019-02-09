@@ -15,7 +15,7 @@ foreach ($uri in $uris) {
             # execute request
             echo "Execute request: $uri"
             $progressPreference = 'SilentlyContinue' 
-            Invoke-Webrequest $uri -ErrorAction SilentlyContinue | Out-Null
+            Invoke-Webrequest -Headers @{"Cache-Control"="no-cache"} $uri -ErrorAction SilentlyContinue | Out-Null
             $progressPreference = 'Continue' 
 
             # random delay
