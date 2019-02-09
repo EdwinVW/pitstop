@@ -23,6 +23,7 @@ spec:
         - name: ApplicationInsights__InstrumentationKey
           value: befe2a5c-f406-4e9c-9a77-1dc88b331642
         image: pitstop/vehiclemanagementapi:latest
+        imagePullPolicy: IfNotPresent
         name: vehiclemanagementapi
         ports:
         - containerPort: 5000

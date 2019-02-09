@@ -21,5 +21,6 @@ spec:
         - name: PITSTOP_ENVIRONMENT
           value: Production
         image: pitstop/timeservice:latest
+        imagePullPolicy: IfNotPresent
         name: timeservice
       restartPolicy: Always

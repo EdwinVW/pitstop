@@ -21,5 +21,6 @@ spec:
         - name: PITSTOP_ENVIRONMENT
           value: Production
         image: pitstop/notificationservice:latest
+        imagePullPolicy: IfNotPresent
         name: notificationservice
       restartPolicy: Always

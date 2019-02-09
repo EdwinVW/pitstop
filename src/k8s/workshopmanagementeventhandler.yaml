@@ -21,5 +21,6 @@ spec:
         - name: PITSTOP_ENVIRONMENT
           value: Production
         image: pitstop/workshopmanagementeventhandler:latest
+        imagePullPolicy: IfNotPresent
         name: workshopmanagementeventhandler
       restartPolicy: Always

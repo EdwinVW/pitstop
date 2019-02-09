@@ -21,6 +21,7 @@ spec:
         - name: ACCEPT_EULA
           value: "Y"
         image: datalust/seq:latest
+        imagePullPolicy: IfNotPresent
         name: logserver
         ports:
         - containerPort: 80

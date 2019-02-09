@@ -25,6 +25,7 @@ spec:
         - name: RABBITMQ_DEFAULT_USER
           value: rabbitmquser
         image: rabbitmq:3-management
+        imagePullPolicy: IfNotPresent
         name: rabbitmq
         ports:
         - containerPort: 15672

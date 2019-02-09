@@ -27,6 +27,7 @@ spec:
         - name: SA_PASSWORD
           value: 8jkGh47hnDw89Haq8LN2
         image: microsoft/mssql-server-linux:latest
+        imagePullPolicy: IfNotPresent
         name: sqlserver
         ports:
         - containerPort: 1433
