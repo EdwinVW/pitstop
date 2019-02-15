@@ -77,16 +77,16 @@ For this to work, you must have installed the Git client (see [Step 0.1](#step-0
 9. You will be asked to specify a folder for cloning the repo into. Select a folder and confirm. The repo will be cloned in this folder.
 10. When VS Code asks you to open the cloned repo, do that. Now you can start working with the repo.
 
-This would be a good time to walk through the solution and see what's in there. In the <a href="https://github.com/edwinvw/pitstop" target="_blank">README file</a> in the repo, you will find information about the solution structure. Read this until yout get to the *Getting Started* section.
+This would be a good time to walk through the solution and see what's in there. In the <a href="https://github.com/EdwinVW/pitstop/wiki" target="_blank">Wiki</a> of the repo, you will find information about the solution structure. Read this until yout get to the *Getting Started* section.
 
 ### Step 1.2: Build the Docker images
-In order to build the Docker images, follow the instructions in the <a href="https://github.com/edwinvw/pitstop#building-the-docker-images" target="_blank">'Building the Docker images' section</a> in the repo's README file.
+In order to build the Docker images, follow the instructions in the <a href="https://github.com/EdwinVW/pitstop/wiki/Building%20the%20Docker%20images" target="_blank">'Building the Docker images' section</a> in the repo's Wiki.
 
 ### Step 1.3: Run the application
-In order to run the application, follow the instructions in the <a href="https://github.com/edwinvw/pitstop#starting-the-application" target="_blank">'Starting the application' section</a> in the repo's README file.
+In order to run the application, follow the instructions in the <a href="https://github.com/EdwinVW/pitstop/wiki/Run%20the%20application%20using%20using%20Docker%20Compose" target="_blank">'Starting the application' section</a> in the repo's Wiki.
 
 ### Step 1.4: Get to know the solution
-In order to get to know the functionality of the application, make sure you have read the introduction of the solution in the repo's README file up to the *Technology* section. After that follow the <a href="https://github.com/edwinvw/pitstop#testing-the-application" target="_blank">'Testing the application' section</a> in the repo's README file. 
+In order to get to know the functionality of the application, make sure you have read the introduction of the solution in the repo's README file up to the *Technology* section. After that follow the <a href="https://github.com/EdwinVW/pitstop/wiki/Testing%20the%20application" target="_blank">'Testing the application' section</a> in the repo's Wiki. 
 
 ---
 
