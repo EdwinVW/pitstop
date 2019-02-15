@@ -77,7 +77,7 @@ For this to work, you must have installed the Git client (see [Step 0.1](#step-0
 9. You will be asked to specify a folder for cloning the repo into. Select a folder and confirm. The repo will be cloned in this folder.
 10. When VS Code asks you to open the cloned repo, do that. Now you can start working with the repo.
 
-This would be a good time to walk through the solution and see what's in there. In the <a href="https://github.com/EdwinVW/pitstop/wiki" target="_blank">Wiki</a> of the repo, you will find information about the solution structure. Read this until yout get to the *Getting Started* section.
+This would be a good time to walk through the solution and see what's in there. In the <a href="https://github.com/EdwinVW/pitstop/wiki" target="_blank">Wiki</a> of the repo, you can find an overview of the solution structure. 
 
 ### Step 1.2: Build the Docker images
 In order to build the Docker images, follow the instructions in the <a href="https://github.com/EdwinVW/pitstop/wiki/Building%20the%20Docker%20images" target="_blank">'Building the Docker images' section</a> in the repo's Wiki.
