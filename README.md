@@ -1,5 +1,5 @@
 # Pitstop - Garage Management System
-This repo contains a sample application based on a Garage Management System for PitStop - a fictitious garage / car repair shop. The primary goal of this sample is to demonstrate several Web-Scale Architecture concepts like:  
+This repo contains a sample application based on a Garage Management System for Pitstop - a fictitious garage / car repair shop. The primary goal of this sample is to demonstrate several software-architecture concepts like:  
 * Microservices  
 * CQRS  
 * Event Sourcing  
