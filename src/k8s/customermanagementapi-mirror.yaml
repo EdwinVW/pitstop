@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: customermanagementapi-mirror
+  name: customermanagementapi
   namespace: pitstop
 spec:
   host: customermanagementapi
@@ -18,7 +18,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: customermanagementapi-mirror
+  name: customermanagementapi
   namespace: pitstop
 spec:
   hosts:

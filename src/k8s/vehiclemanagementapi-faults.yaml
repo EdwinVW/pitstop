@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: vehiclemanagementapi-vs
+  name: vehiclemanagementapi
   namespace: pitstop
 spec:
   hosts:
