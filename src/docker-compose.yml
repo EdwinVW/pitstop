@@ -50,7 +50,6 @@ services:
       - "5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
 
   customermanagementapi:
     image: pitstop/customermanagementapi:latest
@@ -62,7 +61,6 @@ services:
       - "5100"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
 
   workshopmanagementapi:
     image: pitstop/workshopmanagementapi:latest
@@ -74,7 +72,6 @@ services:
       - "5200"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
 
   auditlogservice:
     image: pitstop/auditlogservice:latest
@@ -138,7 +135,6 @@ services:
       - "7000:7000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
 
 volumes:
   sqlserverdata:

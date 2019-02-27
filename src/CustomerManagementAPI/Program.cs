@@ -16,7 +16,6 @@ namespace Pitstop.CustomerManagementAPI
         public static IWebHost BuildWebHost(string[] args)
         {
             return WebHost.CreateDefaultBuilder()
-                .UseApplicationInsights()
                 .UseSerilog()
                 .UseHealthChecks("/hc")
                 .UseStartup<Startup>()
