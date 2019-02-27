@@ -12,6 +12,7 @@ fi
 
 kubectl apply \
     -f ./pitstop-namespace.yaml \
+    -f ./pitstop-secrets.yaml \    
     -f ./rabbitmq.yaml \
     -f ./logserver.yaml \
     -f ./sqlserver.yaml \

@@ -21,7 +21,10 @@ spec:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
         - name: ApplicationInsights__InstrumentationKey
-          value: befe2a5c-f406-4e9c-9a77-1dc88b331642
+          valueFrom:
+            configMapKeyRef:
+              name: pitstop-secrets
+              key: appinsights.key
         image: pitstop/webapp:latest
         imagePullPolicy: IfNotPresent
         name: webapp
