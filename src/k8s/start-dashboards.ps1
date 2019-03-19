@@ -11,5 +11,5 @@ start-job -name IstioGrafanaDB -scriptblock {
 }
 
 start-job -name IstioKialiDB -scriptblock {
-    kubectl -n istio-system port-forward svc/kiali 20001
+    kubectl -n istio-system port-forward svc/kiali 20001:20001
 }
