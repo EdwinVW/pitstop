@@ -134,15 +134,15 @@ namespace PitStop.Controllers
                     {
                         if (ex.StatusCode == HttpStatusCode.Conflict)
                         {
-                        // add errormessage from API exception to model
-                        var content = ex.GetContentAs<BusinessRuleViolation>();
+                            // add errormessage from API exception to model
+                            var content = ex.GetContentAs<BusinessRuleViolation>();
                             inputModel.Error = content.ErrorMessage;
 
-                        // repopulate list of available vehicles in the model
-                        inputModel.Vehicles = await GetAvailableVehiclesList();
+                            // repopulate list of available vehicles in the model
+                            inputModel.Vehicles = await GetAvailableVehiclesList();
 
-                        // back to New view
-                        return View("New", inputModel);
+                            // back to New view
+                            return View("New", inputModel);
                         }
                     }
 
