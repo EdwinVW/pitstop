@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.WorkshopManagementEventHandler.DataAccess;
@@ -7,11 +8,12 @@ using Pitstop.WorkshopManagementEventHandler.Model;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Pitstop.WorkshopManagementEventHandler
 {
-    public class EventHandler : IMessageHandlerCallback
+    public class EventHandler : IHostedService, IMessageHandlerCallback
     {
         WorkshopManagementDBContext _dbContext;
         IMessageHandler _messageHandler;
@@ -30,6 +32,18 @@ namespace Pitstop.WorkshopManagementEventHandler
         public void Stop()
         {
             _messageHandler.Stop();
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            _messageHandler.Start(this);
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            _messageHandler.Stop();
+            return Task.CompletedTask;
         }
 
         public async Task<bool> HandleMessageAsync(string messageType, string message)

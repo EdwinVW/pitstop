@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Linq;
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.InvoiceService.CommunicationChannels;
 using Pitstop.InvoiceService.Events;
@@ -9,11 +10,12 @@ using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Pitstop.InvoiceService
 {
-    public class InvoiceManager : IMessageHandlerCallback
+    public class InvoiceManager : IHostedService, IMessageHandlerCallback
     {
         private const decimal HOURLY_RATE = 18.50M;
         private IMessageHandler _messageHandler;
@@ -27,14 +29,16 @@ namespace Pitstop.InvoiceService
             _emailCommunicator = emailCommunicator;
         }
 
-        public void Start()
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             _messageHandler.Start(this);
+            return Task.CompletedTask;
         }
 
-        public void Stop()
+        public Task StopAsync(CancellationToken cancellationToken)
         {
             _messageHandler.Stop();
+            return Task.CompletedTask;
         }
 
         public async Task<bool> HandleMessageAsync(string messageType, string message)

@@ -6,18 +6,20 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using Serilog;
+using Microsoft.Extensions.Hosting;
+using System.Threading;
 
 namespace AuditlogService
 {
-    public class AuditLogManager : IMessageHandlerCallback
+    public class AuditLogManager : IHostedService, IMessageHandlerCallback
     {
         IMessageHandler _messageHandler;
         private string _logPath;
 
-        public AuditLogManager(IMessageHandler messageHandler, string logpath)
+        public AuditLogManager(IMessageHandler messageHandler, AuditlogManagerConfig config)
         {
             _messageHandler = messageHandler;
-            _logPath = logpath;
+            _logPath = config.LogPath;
 
             if (!Directory.Exists(_logPath))
             {
@@ -25,14 +27,16 @@ namespace AuditlogService
             }
         }
 
-        public void Start()
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             _messageHandler.Start(this);
+            return Task.CompletedTask;
         }
 
-        public void Stop()
+        public Task StopAsync(CancellationToken cancellationToken)
         {
             _messageHandler.Stop();
+            return Task.CompletedTask;
         }
 
         public async Task<bool> HandleMessageAsync(string messageType, string message)

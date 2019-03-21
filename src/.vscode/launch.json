@@ -5,10 +5,74 @@
    "version": "0.2.0",
    "configurations": [
         {
-            "name": ".NET Core Attach",
+            "name": "Run AuditlogService",
             "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:pickProcess}"
-        }
-    ,]
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/AuditlogService/bin/Debug/netcoreapp2.2/Pitstop.AuditlogService.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/AuditlogService/bin/Debug/netcoreapp2.2",
+            "stopAtEntry": false,
+            "console": "externalTerminal",
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development"
+            }
+        },
+        {
+            "name": "Run InvoiceService",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/InvoiceService/bin/Debug/netcoreapp2.2/Pitstop.InvoiceService.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/InvoiceService/bin/Debug/netcoreapp2.2",
+            "stopAtEntry": false,
+            "console": "externalTerminal",
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development"
+            }
+        },
+        {
+            "name": "Run NotificationService",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/NotificationService/bin/Debug/netcoreapp2.2/Pitstop.NotificationService.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/NotificationService/bin/Debug/netcoreapp2.2",
+            "stopAtEntry": false,
+            "console": "externalTerminal",
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development"
+            }
+        },        
+        {
+            "name": "Run TimeService",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/TimeService/bin/Debug/netcoreapp2.2/Pitstop.TimeService.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/TimeService/bin/Debug/netcoreapp2.2",
+            "stopAtEntry": false,
+            "console": "externalTerminal",
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development"
+            }
+        }, 
+        {
+            "name": "Run WorkshopManagementEventHandler",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/WorkshopManagementEventHandler/bin/Debug/netcoreapp2.2/Pitstop.WorkshopManagementEventHandler.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/WorkshopManagementEventHandler/bin/Debug/netcoreapp2.2",
+            "stopAtEntry": false,
+            "console": "externalTerminal",
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development"
+            }
+        }          
+    ]
 }

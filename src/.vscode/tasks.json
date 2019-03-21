@@ -7,18 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}\\Pitstop.sln"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "restore",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "restore",
-                "${workspaceFolder}\\Pitstop.sln",
-                "-f"
+                "${workspaceFolder}"
             ],
             "problemMatcher": "$msCompile"
         }

@@ -1,65 +1,66 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Pitstop.Infrastructure.Messaging;
 using Serilog;
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace AuditlogService
 {
     class Program
     {
-        private static string _env;
-        public static IConfigurationRoot Config { get; private set; }
-
-        static Program()
+        public static async Task Main(string[] args)
         {
-            _env = Environment.GetEnvironmentVariable("PITSTOP_ENVIRONMENT");
-
-            Config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{_env}.json", optional: false)
-                .Build();
-
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Config)
-                .CreateLogger();
-
-            Log.Information($"Environment: {_env}");
+            var host = CreateHostBuilder(args).Build();
+            await host.RunAsync();
         }
 
-        static void Main(string[] args)
+        private static IHostBuilder CreateHostBuilder(string[] args)
         {
-            // get configuration
-            var rabbitMQConfigSection = Config.GetSection("RabbitMQ");
-            string host = rabbitMQConfigSection["Host"];
-            string userName = rabbitMQConfigSection["UserName"];
-            string password = rabbitMQConfigSection["Password"];
-
-            var auditlogConfigSection = Config.GetSection("Auditlog");
-            string logPath = auditlogConfigSection["path"];
-
-            // start auditlog manager
-            RabbitMQMessageHandler messageHandler = new RabbitMQMessageHandler(host, userName, password, "Pitstop", "Auditlog", "");
-            AuditLogManager manager = new AuditLogManager(messageHandler, logPath);
-            manager.Start();
-
-            if (_env == "Development")
-            {
-                Console.WriteLine("Auditlog service started. Press any key to stop...");
-                Console.ReadKey(true);
-                manager.Stop();
-            }
-            else
-            {
-                Log.Information("AuditLog service started.");
-
-                while (true)
+            var hostBuilder = new HostBuilder()
+                .ConfigureHostConfiguration(configHost =>
                 {
-                    Thread.Sleep(10000);
-                }
-            }
+                    configHost.SetBasePath(Directory.GetCurrentDirectory());
+                    configHost.AddJsonFile("hostsettings.json", optional: true);
+                    configHost.AddJsonFile($"appsettings.json", optional: false);
+                    configHost.AddEnvironmentVariables();
+                    configHost.AddEnvironmentVariables("DOTNET_");
+                    configHost.AddCommandLine(args);
+                })
+                .ConfigureAppConfiguration((hostContext, config) =>
+                {
+                    config.AddJsonFile($"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: false);
+                })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddTransient<IMessageHandler>((svc) =>
+                    {
+                        var rabbitMQConfigSection = hostContext.Configuration.GetSection("RabbitMQ");
+                        string rabbitMQHost = rabbitMQConfigSection["Host"];
+                        string rabbitMQUserName = rabbitMQConfigSection["UserName"];
+                        string rabbitMQPassword = rabbitMQConfigSection["Password"];
+                        return new RabbitMQMessageHandler(rabbitMQHost, rabbitMQUserName, rabbitMQPassword, "Pitstop", "Auditlog", ""); ;
+                    });
+
+                    services.AddTransient<AuditlogManagerConfig>((svc) =>
+                    {
+                        var auditlogConfigSection = hostContext.Configuration.GetSection("Auditlog");
+                        string logPath = auditlogConfigSection["path"];
+                        return new AuditlogManagerConfig { LogPath = logPath };
+                    });
+
+                    services.AddHostedService<AuditLogManager>();
+                })
+                .UseSerilog((hostContext, loggerConfiguration) =>
+                {
+                    loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration);
+                })
+                .UseConsoleLifetime();
+                
+            return hostBuilder;
         }
     }
 }

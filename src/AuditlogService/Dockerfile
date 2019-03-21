@@ -15,4 +15,4 @@ FROM microsoft/dotnet:2.2-runtime
 COPY --from=build-env /app/out .
 
 # Start
-ENTRYPOINT ["dotnet", "PitStop.AuditlogService.dll"]
+ENTRYPOINT ["dotnet", "Pitstop.AuditlogService.dll"]

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Linq;
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.NotificationService.Events;
 using Pitstop.NotificationService.Model;
@@ -8,12 +9,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 
 namespace Pitstop.NotificationService
 {
-    public class NotificationManager : IMessageHandlerCallback
+    public class NotificationManager : IHostedService, IMessageHandlerCallback
     {
         IMessageHandler _messageHandler;
         INotificationRepository _repo;
@@ -26,14 +28,16 @@ namespace Pitstop.NotificationService
             _emailNotifier = emailNotifier;
         }
 
-        public void Start()
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             _messageHandler.Start(this);
+            return Task.CompletedTask;
         }
 
-        public void Stop()
+        public Task StopAsync(CancellationToken cancellationToken)
         {
             _messageHandler.Stop();
+            return Task.CompletedTask;
         }
 
         public async Task<bool> HandleMessageAsync(string messageType, string message)

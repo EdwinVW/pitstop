@@ -1,4 +1,5 @@
-﻿using Pitstop.Infrastructure.Messaging;
+﻿using Microsoft.Extensions.Hosting;
+using Pitstop.Infrastructure.Messaging;
 using Pitstop.TimeService.Events;
 using Serilog;
 using System;
@@ -7,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace Pitstop.TimeService
 {
-    public class TimeManager
+    public class TimeManager : IHostedService
     {
         DateTime _lastCheck;
         CancellationTokenSource _cancellationTokenSource;
         Task _task;
         IMessagePublisher _messagePublisher;
-
 
         public TimeManager(IMessagePublisher messagePublisher)
         {
@@ -22,14 +22,16 @@ namespace Pitstop.TimeService
             _messagePublisher = messagePublisher;
         }
 
-        public void Start()
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             _task = Task.Run(() => Worker(), _cancellationTokenSource.Token);
+            return Task.CompletedTask;
         }
 
-        public void Stop()
+        public Task StopAsync(CancellationToken cancellationToken)
         {
             _cancellationTokenSource.Cancel();
+            return Task.CompletedTask;
         }
 
         private async void Worker()

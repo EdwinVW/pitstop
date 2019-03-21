@@ -1,62 +1,59 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Pitstop.Infrastructure.Messaging;
 using Serilog;
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Pitstop.TimeService
 {
     class Program
     {
-        private static string _env;
-        public static IConfigurationRoot Config { get; private set; }
-
-        static Program()
+        public static async Task Main(string[] args)
         {
-            _env = Environment.GetEnvironmentVariable("PITSTOP_ENVIRONMENT");
-
-            Config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{_env}.json", optional: false)
-                .Build();
-
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Config)
-                .CreateLogger();
-
-            Log.Information($"Environment: {_env}");
+            var host = CreateHostBuilder(args).Build();
+            await host.RunAsync();
         }
 
-        static void Main(string[] args)
+        private static IHostBuilder CreateHostBuilder(string[] args)
         {
-            // get configuration
-            var configSection = Config.GetSection("RabbitMQ");
-            string host = configSection["Host"];
-            string userName = configSection["UserName"];
-            string password = configSection["Password"];
-
-            // start time manager
-            RabbitMQMessagePublisher messagePublisher = new RabbitMQMessagePublisher(host, userName, password, "Pitstop");
-            TimeManager manager = new TimeManager(messagePublisher);
-            manager.Start();
-
-            if (_env == "Development")
-            {
-                Log.Information("TimeService service started.");
-                Console.WriteLine("Press any key to stop...");
-                Console.ReadKey(true);
-                manager.Stop();
-            }
-            else
-            {
-                Log.Information("Time service started.");
-                while (true)
+            var hostBuilder = new HostBuilder()
+                .ConfigureHostConfiguration(configHost =>
                 {
-                    Thread.Sleep(10000);
-                }
-            }
-        }
+                    configHost.SetBasePath(Directory.GetCurrentDirectory());
+                    configHost.AddJsonFile("hostsettings.json", optional: true);
+                    configHost.AddJsonFile($"appsettings.json", optional: false);
+                    configHost.AddEnvironmentVariables();
+                    configHost.AddEnvironmentVariables("DOTNET_");
+                    configHost.AddCommandLine(args);
+                })
+                .ConfigureAppConfiguration((hostContext, config) =>
+                {
+                    config.AddJsonFile($"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: false);
+                })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddTransient<IMessagePublisher>((svc) =>
+                    {
+                        var rabbitMQConfigSection = hostContext.Configuration.GetSection("RabbitMQ");
+                        string rabbitMQHost = rabbitMQConfigSection["Host"];
+                        string rabbitMQUserName = rabbitMQConfigSection["UserName"];
+                        string rabbitMQPassword = rabbitMQConfigSection["Password"];
+                        return new RabbitMQMessagePublisher(rabbitMQHost, rabbitMQUserName, rabbitMQPassword, "Pitstop");
+                    });
+
+                    services.AddHostedService<TimeManager>();
+                })
+                .UseSerilog((hostContext, loggerConfiguration) =>
+                {
+                    loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration);
+                })
+                .UseConsoleLifetime();
+
+            return hostBuilder;
+        }        
     }
 }

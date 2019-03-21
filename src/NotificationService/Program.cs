@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.NotificationService.NotificationChannels;
 using Pitstop.NotificationService.Repositories;
@@ -6,70 +8,70 @@ using Serilog;
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Pitstop.NotificationService
 {
     class Program
     {
-        private static string _env;
-        public static IConfigurationRoot Config { get; private set; }
-
-        static Program()
+        public static async Task Main(string[] args)
         {
-            _env = Environment.GetEnvironmentVariable("PITSTOP_ENVIRONMENT");
-
-            Config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{_env}.json", optional: false)
-                .Build();
-
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Config)
-                .CreateLogger();
-
-            Log.Information($"Environment: {_env}");
+            var host = CreateHostBuilder(args).Build();
+            await host.RunAsync();
         }
 
-        static void Main(string[] args)
+        private static IHostBuilder CreateHostBuilder(string[] args)
         {
-            // get configuration
-            var rmqConfigSection = Config.GetSection("RabbitMQ");
-            string rmqHost = rmqConfigSection["Host"];
-            string rmqUserName = rmqConfigSection["UserName"];
-            string rmqPassword = rmqConfigSection["Password"];
-
-            var mailConfigSection = Config.GetSection("Email");
-            string mailHost = mailConfigSection["Host"];
-            int mailPort = Convert.ToInt32(mailConfigSection["Port"]);
-            string mailUserName = mailConfigSection["User"];
-            string mailPassword = mailConfigSection["Pwd"];
-
-            var sqlConnectionString = Config.GetConnectionString("NotificationServiceCN");
-
-            // start notification service
-            RabbitMQMessageHandler messageHandler = 
-                new RabbitMQMessageHandler(rmqHost, rmqUserName, rmqPassword, "Pitstop", "Notifications", "");
-            INotificationRepository repo = new SqlServerNotificationRepository(sqlConnectionString);
-            IEmailNotifier emailNotifier = new SMTPEmailNotifier(mailHost, mailPort, mailUserName, mailPassword);
-            NotificationManager manager = new NotificationManager(messageHandler, repo, emailNotifier);
-            manager.Start();
-
-            if (_env == "Development")
-            {
-                Log.Information("Notification service started.");
-                Console.WriteLine("Press any key to stop...");
-                Console.ReadKey(true);
-                manager.Stop();
-            }
-            else
-            {
-                Log.Information("Notification service started.");
-                while (true)
+            var hostBuilder = new HostBuilder()
+                .ConfigureHostConfiguration(configHost =>
                 {
-                    Thread.Sleep(10000);
-                }
-            }
+                    configHost.SetBasePath(Directory.GetCurrentDirectory());
+                    configHost.AddJsonFile("hostsettings.json", optional: true);
+                    configHost.AddJsonFile($"appsettings.json", optional: false);
+                    configHost.AddEnvironmentVariables();
+                    configHost.AddEnvironmentVariables("DOTNET_");
+                    configHost.AddCommandLine(args);
+                })
+                .ConfigureAppConfiguration((hostContext, config) =>
+                {
+                    config.AddJsonFile($"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: false);
+                })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddTransient<IMessageHandler>((svc) =>
+                    {
+                        var rabbitMQConfigSection = hostContext.Configuration.GetSection("RabbitMQ");
+                        string rabbitMQHost = rabbitMQConfigSection["Host"];
+                        string rabbitMQUserName = rabbitMQConfigSection["UserName"];
+                        string rabbitMQPassword = rabbitMQConfigSection["Password"];
+                        return new RabbitMQMessageHandler(rabbitMQHost, rabbitMQUserName, rabbitMQPassword, "Pitstop", "Notifications", ""); ;
+                    });
+
+                    services.AddTransient<INotificationRepository>((svc) =>
+                    {
+                        var sqlConnectionString = hostContext.Configuration.GetConnectionString("NotificationServiceCN");
+                        return new SqlServerNotificationRepository(sqlConnectionString);
+                    });
+
+                    services.AddTransient<IEmailNotifier>((svc) =>
+                    {
+                        var mailConfigSection = hostContext.Configuration.GetSection("Email");
+                        string mailHost = mailConfigSection["Host"];
+                        int mailPort = Convert.ToInt32(mailConfigSection["Port"]);
+                        string mailUserName = mailConfigSection["User"];
+                        string mailPassword = mailConfigSection["Pwd"];
+                        return new SMTPEmailNotifier(mailHost, mailPort, mailUserName, mailPassword);
+                    });
+
+                    services.AddHostedService<NotificationManager>();
+                })
+                .UseSerilog((hostContext, loggerConfiguration) =>
+                {
+                    loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration);
+                })
+                .UseConsoleLifetime();
+
+            return hostBuilder;
         }
     }
 }
