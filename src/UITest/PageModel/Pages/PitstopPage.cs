@@ -17,7 +17,7 @@ namespace Pitstop.UITest.PageModel.Pages
         /// Initialize a new PitstopPage instance.
         /// </summary>
         /// <param name="title">The title on the page. This is the text shown as standard title on the page (not the browser window-title!).</param>
-        /// <param name="webApp">The WebApp instance used for the test.</param>
+        /// <param name="pitstop">The WebApp instance used for the test.</param>
         public PitstopPage(string title, PitstopApp pitstop)
         {
             Title = title;
@@ -35,7 +35,7 @@ namespace Pitstop.UITest.PageModel.Pages
         }
 
         /// <summary>
-        /// Indication whether the page with the title of the page is shown.
+        /// Gets the current page with the title of the page being shown.
         /// </summary>
         public PitstopPage GetActivePageTitle(out string pageTitle)
         {
