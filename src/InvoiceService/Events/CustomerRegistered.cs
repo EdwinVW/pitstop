@@ -12,8 +12,7 @@ namespace Pitstop.InvoiceService.Events
         public readonly string City;
 
 
-        public CustomerRegistered(Guid messageId, string customerId, string name, string address, string postalCode, string city) : 
-            base(messageId, MessageTypes.CustomerRegistered)
+        public CustomerRegistered(Guid messageId, string customerId, string name, string address, string postalCode, string city) : base(messageId)
         {
             CustomerId = customerId;
             Name = name;

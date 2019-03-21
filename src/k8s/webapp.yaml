@@ -1,0 +1,51 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    system: pitstop
+    app: webpp
+    version: v1
+  name: webapp
+  namespace: pitstop
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        system: pitstop
+        app: webpp
+        version: v1
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+        image: pitstop/webapp:latest
+        imagePullPolicy: IfNotPresent
+        name: webapp
+        ports:
+        - containerPort: 7000
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    system: pitstop
+    app: webpp
+    version: v1
+  name: webapp
+  namespace: pitstop
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "7000"
+    port: 7000
+    targetPort: 7000
+  selector:
+    system: pitstop
+    app: webpp
+    version: v1
+

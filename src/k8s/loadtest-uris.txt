@@ -1,0 +1,3 @@
+http://localhost:7000/CustomerManagement
+http://localhost:7000/VehicleManagement
+http://localhost:7000/WorkshopManagement

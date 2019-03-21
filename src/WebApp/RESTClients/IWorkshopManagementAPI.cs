@@ -9,20 +9,20 @@ namespace WebApp.RESTClients
 {
     public interface IWorkshopManagementAPI
     {
-        [Get("/workshopplanning/{date}")]
-        Task<WorkshopPlanning> GetWorkshopPlanning(string date);
+        [Get("/workshopplanning/{planningDate}")]
+        Task<WorkshopPlanning> GetWorkshopPlanning(string planningDate);
 
-        [Get("/workshopplanning/{date}/jobs/{jobId}")]
-        Task<MaintenanceJob> GetMaintenanceJob(string date, string jobId);
+        [Get("/workshopplanning/{planningDate}/jobs/{jobId}")]
+        Task<MaintenanceJob> GetMaintenanceJob(string planningDate, string jobId);
 
-        [Post("/workshopplanning/{date}")]
-        Task RegisterPlanning(string date);
+        [Post("/workshopplanning/{planningDate}")]
+        Task RegisterPlanning(string planningDate, RegisterPlanning cmd);
 
-        [Post("/workshopplanning/{date}/jobs")]
-        Task PlanMaintenanceJob(string date, PlanMaintenanceJob cmd);
+        [Post("/workshopplanning/{planningDate}/jobs")]
+        Task PlanMaintenanceJob(string planningDate, PlanMaintenanceJob cmd);
 
-        [Put("/workshopplanning/{date}/jobs/{jobId}/finish")]
-        Task FinishMaintenanceJob(string date, string jobId, FinishMaintenanceJob cmd);
+        [Put("/workshopplanning/{planningDate}/jobs/{jobId}/finish")]
+        Task FinishMaintenanceJob(string planningDate, string jobId, FinishMaintenanceJob cmd);
 
         [Get("/refdata/customers")]
         Task<List<Customer>> GetCustomers();

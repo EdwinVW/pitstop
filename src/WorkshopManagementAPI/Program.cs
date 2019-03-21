@@ -10,7 +10,6 @@ namespace Pitstop.WorkshopManagementAPI
         public static void Main(string[] args)
         {
             WebHost.CreateDefaultBuilder(args)
-                .UseApplicationInsights()
                 .UseSerilog()
                 .UseHealthChecks("/hc")
                 .UseStartup<Startup>()

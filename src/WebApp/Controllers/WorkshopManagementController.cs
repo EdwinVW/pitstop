@@ -29,23 +29,23 @@ namespace PitStop.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(DateTime? date)
+        public async Task<IActionResult> Index(DateTime? planningDate)
         {
             return await _resiliencyHelper.ExecuteResilient(async () =>
             {
-                if (date == null)
+                if (planningDate == null)
                 {
-                    date = DateTime.Now.Date;
+                    planningDate = DateTime.Now.Date;
                 }
 
                 var model = new WorkshopManagementViewModel
                 {
-                    Date = date.Value,
+                    Date = planningDate.Value,
                     MaintenanceJobs = new List<MaintenanceJob>()
                 };
 
                 // get planning
-                string dateStr = date.Value.ToString("yyyy-MM-dd");
+                string dateStr = planningDate.Value.ToString("yyyy-MM-dd");
                 WorkshopPlanning planning = await _workshopManagementAPI.GetWorkshopPlanning(dateStr);
                 if (planning?.Jobs?.Count > 0)
                 {
@@ -57,14 +57,14 @@ namespace PitStop.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(DateTime date, string jobId)
+        public async Task<IActionResult> Details(DateTime planningDate, string jobId)
         {
             return await _resiliencyHelper.ExecuteResilient(async () =>
             {
-                string dateStr = date.ToString("yyyy-MM-dd");
+                string dateStr = planningDate.ToString("yyyy-MM-dd");
                 var model = new WorkshopManagementDetailsViewModel
                 {
-                    Date = date,
+                    Date = planningDate,
                     MaintenanceJob = await _workshopManagementAPI.GetMaintenanceJob(dateStr, jobId)
                 };
                 return View(model);
@@ -72,16 +72,16 @@ namespace PitStop.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> New(DateTime date)
+        public async Task<IActionResult> New(DateTime planningDate)
         {
             return await _resiliencyHelper.ExecuteResilient(async () =>
             {
-                DateTime startTime = date.Date.AddHours(8);
+                DateTime startTime = planningDate.Date.AddHours(8);
 
                 var model = new WorkshopManagementNewViewModel
                 {
                     Id = Guid.NewGuid(),
-                    Date = date,
+                    Date = planningDate,
                     StartTime = startTime,
                     EndTime = startTime.AddHours(2),
                     Vehicles = await GetAvailableVehiclesList()
@@ -91,16 +91,16 @@ namespace PitStop.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Finish(DateTime date, string jobId)
+        public async Task<IActionResult> Finish(DateTime planningDate, string jobId)
         {
             return await _resiliencyHelper.ExecuteResilient(async () =>
             {
-                string dateStr = date.ToString("yyyy-MM-dd");
+                string dateStr = planningDate.ToString("yyyy-MM-dd");
                 MaintenanceJob job = await _workshopManagementAPI.GetMaintenanceJob(dateStr, jobId);
                 var model = new WorkshopManagementFinishViewModel
                 {
                     Id = job.Id,
-                    Date = date,
+                    Date = planningDate,
                     ActualStartTime = job.StartTime,
                     ActualEndTime = job.EndTime
                 };
@@ -115,28 +115,20 @@ namespace PitStop.Controllers
             {
                 return await _resiliencyHelper.ExecuteResilient(async () =>
                 {
+                    string dateStr = inputModel.Date.ToString("yyyy-MM-dd");
+                    
                     try
                     {
-                        string dateStr = inputModel.Date.ToString("yyyy-MM-dd");
-
-                    // get or create planning for date
-                    var planning = await _workshopManagementAPI.GetWorkshopPlanning(dateStr);
-                        if (planning == null)
-                        {
-                        // create planning for date
-                        await _workshopManagementAPI.RegisterPlanning(dateStr);
-                        }
-
-                    // register maintenance job
-                    DateTime startTime = inputModel.Date.Add(inputModel.StartTime.TimeOfDay);
+                        // register maintenance job
+                        DateTime startTime = inputModel.Date.Add(inputModel.StartTime.TimeOfDay);
                         DateTime endTime = inputModel.Date.Add(inputModel.EndTime.TimeOfDay);
                         Vehicle vehicle = await _workshopManagementAPI.GetVehicleByLicenseNumber(inputModel.SelectedVehicleLicenseNumber);
                         Customer customer = await _workshopManagementAPI.GetCustomerById(vehicle.OwnerId);
 
-                        PlanMaintenanceJob cmd = new PlanMaintenanceJob(Guid.NewGuid(), Guid.NewGuid(), startTime, endTime,
+                        PlanMaintenanceJob planMaintenanceJobCommand = new PlanMaintenanceJob(Guid.NewGuid(), Guid.NewGuid(), startTime, endTime,
                             (customer.CustomerId, customer.Name, customer.TelephoneNumber),
                             (vehicle.LicenseNumber, vehicle.Brand, vehicle.Type), inputModel.Description);
-                        await _workshopManagementAPI.PlanMaintenanceJob(dateStr, cmd);
+                        await _workshopManagementAPI.PlanMaintenanceJob(dateStr, planMaintenanceJobCommand);
                     }
                     catch (ApiException ex)
                     {
@@ -154,7 +146,7 @@ namespace PitStop.Controllers
                         }
                     }
 
-                    return RedirectToAction("Index", new { date = inputModel.Date });
+                    return RedirectToAction("Index", new { planningDate = dateStr });
                 }, View("Offline", new WorkshopManagementOfflineViewModel()));
             }
             else
@@ -165,7 +157,7 @@ namespace PitStop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> FinishMaintenanceJob(DateTime date, [FromForm] WorkshopManagementFinishViewModel inputModel)
+        public async Task<IActionResult> FinishMaintenanceJob([FromForm] WorkshopManagementFinishViewModel inputModel)
         {
             if (ModelState.IsValid)
             {
@@ -180,7 +172,7 @@ namespace PitStop.Controllers
 
                     await _workshopManagementAPI.FinishMaintenanceJob(dateStr, inputModel.Id.ToString("D"), cmd);
 
-                    return RedirectToAction("Details", new { date, jobId = inputModel.Id });
+                    return RedirectToAction("Details", new { planningDate = dateStr, jobId = inputModel.Id });
                 }, View("Offline", new WorkshopManagementOfflineViewModel()));
             }
             else

@@ -8,7 +8,6 @@ namespace Pitstop.WorkshopManagementAPI.Repositories.Model
     public class Aggregate
     {
         public string Id { get; set; }
-        public int Version { get; set; }
-        public string EventData { get; set; }
+        public int CurrentVersion { get; set; }
     }
 }

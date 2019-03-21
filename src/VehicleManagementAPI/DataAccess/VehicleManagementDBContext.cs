@@ -13,10 +13,6 @@ namespace Pitstop.Application.VehicleManagement.DataAccess
     {
         public VehicleManagementDBContext(DbContextOptions<VehicleManagementDBContext> options) : base(options)
         {
-            Policy
-                .Handle<Exception>()
-                .WaitAndRetry(5, r => TimeSpan.FromSeconds(5))
-                .Execute(() => Database.Migrate());
         }
 
         public DbSet<Vehicle> Vehicles { get; set; }
@@ -26,6 +22,14 @@ namespace Pitstop.Application.VehicleManagement.DataAccess
             builder.Entity<Vehicle>().HasKey(m => m.LicenseNumber);
             builder.Entity<Vehicle>().ToTable("Vehicle");
             base.OnModelCreating(builder);
+        }
+
+        public void MigrateDB()
+        {
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(5, r => TimeSpan.FromSeconds(5))
+                .Execute(() => Database.Migrate());
         }
     }
 }

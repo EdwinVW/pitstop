@@ -36,21 +36,21 @@ namespace Pitstop.NotificationService
             _messageHandler.Stop();
         }
 
-        public async Task<bool> HandleMessageAsync(MessageTypes messageType, string message)
+        public async Task<bool> HandleMessageAsync(string messageType, string message)
         {
             JObject messageObject = MessageSerializer.Deserialize(message);
             switch (messageType)
             {
-                case MessageTypes.CustomerRegistered:
+                case "CustomerRegistered":
                     await HandleAsync(messageObject.ToObject<CustomerRegistered>());
                     break;
-                case MessageTypes.MaintenanceJobPlanned:
+                case "MaintenanceJobPlanned":
                     await HandleAsync(messageObject.ToObject<MaintenanceJobPlanned>());
                     break;
-                case MessageTypes.MaintenanceJobFinished:
+                case "MaintenanceJobFinished":
                     await HandleAsync(messageObject.ToObject<MaintenanceJobFinished>());
                     break;
-                case MessageTypes.DayHasPassed:
+                case "DayHasPassed":
                     await HandleAsync(messageObject.ToObject<DayHasPassed>());
                     break;
                 default:
@@ -104,7 +104,7 @@ namespace Pitstop.NotificationService
                 StringBuilder body = new StringBuilder();
                 body.AppendLine($"Dear {customer.Name},\n");
                 body.AppendLine($"We would like to remind you that you have an appointment with us for maintenance on your vehicle(s):\n");
-                foreach (MaintenanceJob job in jobsToNotify)
+                foreach (MaintenanceJob job in jobsPerCustomer)
                 {
                     body.AppendLine($"- {job.StartTime.ToString("dd-MM-yyyy")} at {job.StartTime.ToString("HH:mm")} : " +
                         $"{job.Description} on vehicle with license-number {job.LicenseNumber}");

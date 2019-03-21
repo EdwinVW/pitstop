@@ -35,7 +35,7 @@ namespace AuditlogService
             _messageHandler.Stop();
         }
 
-        public async Task<bool> HandleMessageAsync(MessageTypes messageType, string message)
+        public async Task<bool> HandleMessageAsync(string messageType, string message)
         {
             string logMessage = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:ffffff")} - {message}{Environment.NewLine}";
             string logFile = Path.Combine(_logPath, $"{DateTime.Now.ToString("yyyy-MM-dd")}-auditlog.txt");

@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: vehiclemanagementapi
+  namespace: pitstop
+spec:
+  hosts:
+    - vehiclemanagementapi
+  http:
+  - fault:
+      abort:
+        percent: 25
+        httpStatus: 500
+    route:
+      - destination:
+          host: vehiclemanagementapi
+

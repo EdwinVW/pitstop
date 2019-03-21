@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    system: pitstop
+    app: customermanagementapi
+  name: customermanagementapi
+  namespace: pitstop
+spec:
+  type: NodePort
+  ports:
+  - name: "http-5100"
+    port: 5100
+    targetPort: 5100
+    nodePort: 30005
+  selector:
+    system: pitstop
+    app: customermanagementapi
+    version: v1

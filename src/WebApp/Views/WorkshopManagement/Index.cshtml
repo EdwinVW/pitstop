@@ -2,13 +2,13 @@
 @{
     ViewData["Title"] = "Workshop Management";
 }
-<h3>Workshop Management - overview</h3>
+<h3 id="PageTitle">Workshop Management - overview</h3>
 
 <div style="margin-top: 10px; margin-bottom: 10px;">
-    <a asp-action="Index" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.AddDays(-1).ToString("yyy-MM-dd")" class="btn btn-default"><</a>
+    <a asp-action="Index" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.AddDays(-1).ToString("yyyy-MM-dd")" class="btn btn-default"><</a>
     <span class="text-primary"><b>@Model.Date.ToString("dd-MM-yyyy")</b></span>
-    <a asp-action="Index" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.AddDays(1).ToString("yyy-MM-dd")" class="btn btn-default">></a>
-    <a asp-action="Index" asp-controller="WorkshopManagement" asp-route-date="@DateTime.Now.ToString("yyy-MM-dd")" class="btn btn-default">Today</a>
+    <a asp-action="Index" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.AddDays(1).ToString("yyyy-MM-dd")" class="btn btn-default">></a>
+    <a asp-action="Index" asp-controller="WorkshopManagement" asp-route-planningDate="@DateTime.Now.ToString("yyyy-MM-dd")" class="btn btn-default">Today</a>
 </div>
 
 <table class="table">
@@ -24,7 +24,7 @@
     <tbody>
         @foreach (var job in Model.MaintenanceJobs)
         {
-            <tr class="clickable @(job.Status == "Completed" ? "completedjob" : "")" onclick="location.href = '@(Url.Action("Details", "WorkshopManagement", new { date = Model.Date, jobId = job.Id }))'">
+            <tr class="clickable @(job.Status == "Completed" ? "completedjob" : "")" onclick="location.href = '@(Url.Action("Details", "WorkshopManagement", new { planningDate = Model.Date.ToString("yyyy-MM-dd"), jobId = job.Id }))'">
                 <td>@job.Status</td>
                 <td>@job.StartTime.ToString("HH:mm")</td>
                 <td>@job.EndTime.ToString("HH:mm")</td>
@@ -34,6 +34,8 @@
         }
     </tbody>
 </table>
-<a asp-action="New" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-default">Schedule Maintenance</a>
-
+@if(Model.Date.Date >= DateTime.Now.Date)
+{
+    <a id="RegisterMaintenanceJobButton" asp-action="New" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-default">Schedule Maintenance</a>
+}
 

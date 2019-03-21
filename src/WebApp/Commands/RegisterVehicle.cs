@@ -13,7 +13,7 @@ namespace WebApp.Commands
         public readonly string OwnerId;
 
         public RegisterVehicle(Guid messageId, string licenseNumber, string brand, string type, string ownerId) : 
-            base(messageId, MessageTypes.RegisterVehicle)
+            base(messageId)
         {
             LicenseNumber = licenseNumber;
             Brand = brand;

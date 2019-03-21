@@ -9,13 +9,17 @@ namespace Pitstop.Application.VehicleManagement
     {
         public static void Main(string[] args)
         {
-            WebHost.CreateDefaultBuilder(args)
-                .UseApplicationInsights()
+            BuildWebHost(args)
+                .Run();
+        }
+
+        private static IWebHost BuildWebHost(string[] args)
+        {
+            return WebHost.CreateDefaultBuilder(args)
                 .UseSerilog()
                 .UseHealthChecks("/hc")
                 .UseStartup<Startup>()
-                .Build()
-                .Run();
+                .Build();
         }
     }
 }

@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    system: pitstop
+    app: timeservice
+    version: v1
+  name: timeservice
+  namespace: pitstop
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        system: pitstop
+        app: timeservice
+        version: v1
+    spec:
+      containers:
+      - env:
+        - name: PITSTOP_ENVIRONMENT
+          value: Production
+        image: pitstop/timeservice:latest
+        imagePullPolicy: IfNotPresent
+        name: timeservice
+      restartPolicy: Always

@@ -20,27 +20,22 @@ namespace Pitstop.Application.VehicleManagement
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
-        }
+        private IConfiguration _configuration;
 
-        public IConfigurationRoot Configuration { get; }
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // add DBContext classes
-            var sqlConnectionString = Configuration.GetConnectionString("VehicleManagementCN");
+            var sqlConnectionString = _configuration.GetConnectionString("VehicleManagementCN");
             services.AddDbContext<VehicleManagementDBContext>(options => options.UseSqlServer(sqlConnectionString));
 
             // add messagepublisher classes
-            var configSection = Configuration.GetSection("RabbitMQ");
+            var configSection = _configuration.GetSection("RabbitMQ");
             string host = configSection["Host"];
             string userName = configSection["UserName"];
             string password = configSection["Password"];
@@ -48,7 +43,7 @@ namespace Pitstop.Application.VehicleManagement
 
             // Add framework services.
             services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -59,15 +54,16 @@ namespace Pitstop.Application.VehicleManagement
             services.AddHealthChecks(checks =>
             {
                 checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(1));
-                checks.AddSqlCheck("VehicleManagementCN", Configuration.GetConnectionString("VehicleManagementCN"));
+                checks.AddSqlCheck("VehicleManagementCN", _configuration.GetConnectionString("VehicleManagementCN"));
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, VehicleManagementDBContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime, VehicleManagementDBContext dbContext)
         {
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
+                .ReadFrom.Configuration(_configuration)
+                .Enrich.WithMachineName()
                 .CreateLogger();
 
             app.UseMvc();
@@ -84,6 +80,12 @@ namespace Pitstop.Application.VehicleManagement
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "VehicleManagement API - v1");
             });
+
+            // auto migrate db
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                scope.ServiceProvider.GetService<VehicleManagementDBContext>().MigrateDB();
+            }                     
         }
 
         private void SetupAutoMapper()
@@ -93,7 +95,7 @@ namespace Pitstop.Application.VehicleManagement
             {
                 cfg.CreateMap<RegisterVehicle, Vehicle>();
                 cfg.CreateMap<RegisterVehicle, VehicleRegistered>()
-                    .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
             });
         }
     }

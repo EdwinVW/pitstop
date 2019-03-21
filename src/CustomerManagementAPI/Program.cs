@@ -10,13 +10,16 @@ namespace Pitstop.CustomerManagementAPI
     {
         public static void Main(string[] args)
         {
-            WebHost.CreateDefaultBuilder(args)
-                .UseApplicationInsights()
+            BuildWebHost(args).Run();
+        }
+
+        public static IWebHost BuildWebHost(string[] args)
+        {
+            return WebHost.CreateDefaultBuilder()
                 .UseSerilog()
                 .UseHealthChecks("/hc")
                 .UseStartup<Startup>()
-                .Build()
-                .Run();
+                .Build();
         }
     }
 }

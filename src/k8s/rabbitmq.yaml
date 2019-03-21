@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    system: pitstop
+    app: rabbitmq
+    version: v1
+  name: rabbitmq
+  namespace: pitstop
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        system: pitstop
+        app: rabbitmq
+        version: v1
+    spec:
+      containers:
+      - env:
+        - name: RABBITMQ_DEFAULT_PASS
+          value: DEBmbwkSrzy9D1T9cJfa
+        - name: RABBITMQ_DEFAULT_USER
+          value: rabbitmquser
+        image: rabbitmq:3-management
+        imagePullPolicy: IfNotPresent
+        name: rabbitmq
+        ports:
+        - containerPort: 15672
+        - containerPort: 5672
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    system: pitstop
+    app: rabbitmq
+    version: v1
+  name: rabbitmq
+  namespace: pitstop
+spec:
+  type: NodePort
+  ports:
+  - name: "http-admin"
+    port: 15672
+    targetPort: 15672
+    nodePort: 30001
+  - name: "data"
+    port: 5672
+    targetPort: 5672
+  selector:
+    system: pitstop
+    app: rabbitmq
+    version: v1

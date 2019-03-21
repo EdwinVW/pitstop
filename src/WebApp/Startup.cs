@@ -18,28 +18,19 @@ namespace PitStop
 {
     public class Startup
     {
-        private IHostingEnvironment CurrentEnvironment { get; set; }
+        private IConfiguration _configuration;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
-
-            CurrentEnvironment = env;
+            _configuration = configuration;
         }
-
-        public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services
             services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // add custom services
             services.AddTransient<ICustomerManagementAPI, CustomerManagementAPI>();
@@ -49,12 +40,8 @@ namespace PitStop
             services.AddHealthChecks(checks =>
             {
                 checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(1));
-                
-                string apiHost = CurrentEnvironment.IsDevelopment() ? "localhost" : "apigateway";
-                checks.AddUrlCheck($"http://{apiHost}:10000/api/customers");
-                checks.AddUrlCheck($"http://{apiHost}:10000/api/vehicles");
-                checks.AddUrlCheck($"http://{apiHost}:10000/api/refdata/customers");
-                checks.AddUrlCheck($"http://{apiHost}:10000/api/refdata/vehicles");
+                checks.AddValueTaskCheck("HTTP Endpoint", () => new
+                    ValueTask<IHealthCheckResult>(HealthCheckResult.Healthy("Ok")));
             });
         }
 
@@ -62,7 +49,8 @@ namespace PitStop
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
+                .ReadFrom.Configuration(_configuration)
+                .Enrich.WithMachineName()
                 .CreateLogger();
 
             if (env.IsDevelopment())
@@ -94,10 +82,10 @@ namespace PitStop
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<Customer, RegisterCustomer>()
-                    .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()))
-                    .ForCtorParam("customerId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()))
+                    .ForCtorParam("customerId", opt => opt.MapFrom(c => Guid.NewGuid()));
                 cfg.CreateMap<Vehicle, RegisterVehicle>()
-                    .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
                 cfg.CreateMap<VehicleManagementNewViewModel, RegisterVehicle>().ConvertUsing((vm, rv) =>
                     new RegisterVehicle(Guid.NewGuid(), vm.Vehicle.LicenseNumber, vm.Vehicle.Brand, vm.Vehicle.Type, vm.SelectedCustomerId));
             });

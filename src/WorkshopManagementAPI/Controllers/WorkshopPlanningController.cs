@@ -10,110 +10,103 @@ using System.Linq;
 using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
 using Pitstop.WorkshopManagementAPI.Models;
+using WorkshopManagementAPI.CommandHandlers;
+using Serilog;
+using WorkshopManagementAPI.Commands;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Pitstop.WorkshopManagementAPI.Controllers
 {
     [Route("/api/[controller]")]
     public class WorkshopPlanningController : Controller
     {
-        IMessagePublisher _messagePublisher;
-        IWorkshopPlanningRepository _planningRepo;
+        private readonly IWorkshopPlanningRepository _planningRepo;
+        private readonly IPlanMaintenanceJobCommandHandler _planMaintenanceJobCommandHandler;
+        private readonly IFinishMaintenanceJobCommandHandler _finishMaintenanceJobCommandHandler;
 
-        public WorkshopPlanningController(IWorkshopPlanningRepository planningRepo, IMessagePublisher messagePublisher)
+        public WorkshopPlanningController(IWorkshopPlanningRepository planningRepo,
+            IPlanMaintenanceJobCommandHandler planMaintenanceJobCommandHandler,
+            IFinishMaintenanceJobCommandHandler finishMaintenanceJobCommand)
         {
             _planningRepo = planningRepo;
-            _messagePublisher = messagePublisher;
+            _planMaintenanceJobCommandHandler = planMaintenanceJobCommandHandler;
+            _finishMaintenanceJobCommandHandler = finishMaintenanceJobCommand;
         }
 
         [HttpGet]
-        [Route("{date}", Name = "GetByDate")]
-        public async Task<IActionResult> GetByDate(DateTime date)
-        {
-            var planning = await _planningRepo.GetWorkshopPlanningAsync(date);
-            if (planning == null)
-            {
-                return NotFound();
-            }
-            return Ok(planning);
-        }
-
-        [HttpPost]
-        [Route("{date}")]
-        public async Task<IActionResult> RegisterAsync(DateTime date)
+        [Route("{planningDate}", Name = "GetByDate")]
+        public async Task<IActionResult> GetByDate(DateTime planningDate)
         {
             try
             {
-                // insert planning
-                WorkshopPlanning planning = new WorkshopPlanning();
-                IEnumerable<Event> events = planning.Create(date);
-                await _planningRepo.SaveWorkshopPlanningAsync(planning, events);
+                var planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
+                if (planning == null)
+                {
+                    return NotFound();
+                }
 
-                // return result
-                return CreatedAtRoute("GetByDate", new { date = planning.Date }, planning);
+                return Ok(planning);
             }
-            catch (ConcurrencyException)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "Unable to save changes. " +
-                    "Try again, and if the problem persists " +
-                    "see your system administrator.");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                Log.Error(ex.ToString());
+                throw;
             }
         }
 
         [HttpGet]
-        [Route("{date}/jobs/{jobId}")]
-        public async Task<IActionResult> GetMaintenanceJobAsync(DateTime date, Guid jobId)
+        [Route("{planningDate}/jobs/{jobId}")]
+        public async Task<IActionResult> GetMaintenanceJobAsync(DateTime planningDate, Guid jobId)
         {
             if (ModelState.IsValid)
             {
-                // get planning
-                WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(date);
-                if (planning == null || planning.Jobs == null)
+                try
                 {
-                    return NotFound();
+                    // get planning
+                    WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
+                    if (planning == null || planning.Jobs == null)
+                    {
+                        return NotFound();
+                    }
+                    // get job
+                    var job = planning.Jobs.FirstOrDefault(j => j.Id == jobId);
+                    if (job == null)
+                    {
+                        return NotFound();
+                    }
+                    return Ok(job);
                 }
-                // get job
-                var job = planning.Jobs.FirstOrDefault(j => j.Id == jobId);
-                if (job == null)
+                catch (Exception ex)
                 {
-                    return NotFound();
+                    Log.Error(ex.ToString());
+                    throw;
                 }
-                return Ok(job);
             }
             return BadRequest();
         }
 
         [HttpPost]
-        [Route("{date}/jobs")]
-        public async Task<IActionResult> PlanMaintenanceJobAsync(DateTime date, [FromBody] PlanMaintenanceJob command)
+        [Route("{planningDate}/jobs")]
+        public async Task<IActionResult> PlanMaintenanceJobAsync(DateTime planningDate, [FromBody] PlanMaintenanceJob command)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    // get planning
-                    WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(date);
-                    if (planning == null)
-                    {
-                        return NotFound();
-                    }
-
-                    // handle command
                     try
                     {
-                        IEnumerable<Event> events = planning.PlanMaintenanceJob(command);
+                        // handle command
+                        WorkshopPlanning planning = await
+                            _planMaintenanceJobCommandHandler.HandleCommandAsync(planningDate, command);
 
-                        // persist
-                        await _planningRepo.SaveWorkshopPlanningAsync(planning, events);
-
-                        // publish event
-                        foreach (var e in events)
+                        // handle result    
+                        if (planning == null)
                         {
-                            await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
+                            return NotFound();
                         }
 
                         // return result
-                        return CreatedAtRoute("GetByDate", new { date = planning.Date }, planning);
+                        return CreatedAtRoute("GetByDate", new { planningDate = planning.Date }, planning);
                     }
                     catch (BusinessRuleViolationException ex)
                     {
@@ -124,38 +117,31 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
             }
             catch (ConcurrencyException)
             {
-                ModelState.AddModelError("ErrorMessage", "Unable to save changes. " +
+                string errorMessage = "Unable to save changes. " +
                     "Try again, and if the problem persists " +
-                    "see your system administrator.");
+                    "see your system administrator.";
+                Log.Error(errorMessage);
+                ModelState.AddModelError("ErrorMessage", errorMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         [HttpPut]
-        [Route("{date}/jobs/{jobId}/finish")]
-        public async Task<IActionResult> FinishMaintenanceJobAsync(DateTime date, Guid jobId, [FromBody] FinishMaintenanceJob command)
+        [Route("{planningDate}/jobs/{jobId}/finish")]
+        public async Task<IActionResult> FinishMaintenanceJobAsync(DateTime planningDate, Guid jobId, [FromBody] FinishMaintenanceJob command)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    // get planning
-                    WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(date);
+                    // handle command
+                    WorkshopPlanning planning = await
+                        _finishMaintenanceJobCommandHandler.HandleCommandAsync(planningDate, command);
+
+                    // handle result    
                     if (planning == null)
                     {
                         return NotFound();
-                    }
-
-                    // handle command
-                    IEnumerable<Event> events = planning.FinishMaintenanceJob(command);
-
-                    // persist
-                    await _planningRepo.SaveWorkshopPlanningAsync(planning, events);
-
-                    // publish event
-                    foreach (var e in events)
-                    {
-                        await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
                     }
 
                     // return result
@@ -165,9 +151,11 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
             }
             catch (ConcurrencyException)
             {
-                ModelState.AddModelError("", "Unable to save changes. " +
+                string errorMessage = "Unable to save changes. " +
                     "Try again, and if the problem persists " +
-                    "see your system administrator.");
+                    "see your system administrator.";
+                Log.Error(errorMessage);
+                ModelState.AddModelError("", errorMessage);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

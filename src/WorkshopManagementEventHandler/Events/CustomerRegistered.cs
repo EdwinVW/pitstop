@@ -12,7 +12,7 @@ namespace Pitstop.WorkshopManagementEventHandler.Events
         public readonly string TelephoneNumber;
 
         public CustomerRegistered(Guid messageId, string customerId, string name, string telephoneNumber) : 
-            base(messageId, MessageTypes.CustomerRegistered)
+            base(messageId)
         {
             CustomerId = customerId;
             Name = name;

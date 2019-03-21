@@ -1,0 +1,19 @@
+# Use this overide file when debugging.
+# This override will expose the ports of the API services to the host
+# which will enable you to access the API services directly from the browser.
+# Do NOT start multiple instances of the API services when using this override 
+# (this will cause port collisions).
+version: '3'
+services:
+
+  vehiclemanagementapi:
+    ports:
+      - "5000:5000"
+
+  customermanagementapi:
+    ports:
+      - "5100:5100"
+
+  workshopmanagementapi:
+    ports:
+      - "5200:5200"

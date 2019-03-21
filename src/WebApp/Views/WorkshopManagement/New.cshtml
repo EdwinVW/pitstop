@@ -7,7 +7,7 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
 
-<h3>Workshop Management - schedule maintenance</h3>
+<h3 id="PageTitle">Workshop Management - schedule maintenance</h3>
 
 @if (!string.IsNullOrEmpty(Model.Error))
 {
@@ -39,8 +39,8 @@
         <span asp-validation-for="SelectedVehicleLicenseNumber" class="text-danger"></span>
     </div>
     <input asp-for="Date" type="hidden" />
-    <span><button type="submit" class="btn btn-default">Register</button></span>
-    <span><a asp-action="Index" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" asp-controller="WorkshopManagement" class="btn btn-default">Cancel</a></span>
+    <span><button id="SubmitButton" type="submit" class="btn btn-default">Register</button></span>
+    <span><a id="CancelButton" asp-action="Index" asp-route-planningDate="@Model.Date.ToString("yyyy-MM-dd")" asp-controller="WorkshopManagement" class="btn btn-default">Cancel</a></span>
 </form>
 
 

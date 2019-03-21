@@ -13,7 +13,7 @@ namespace Pitstop.NotificationService.Events
         public readonly string EmailAddress;
 
         public CustomerRegistered(Guid messageId, string customerId, string name, string telephoneNumber, string emailAddress) : 
-            base(messageId, MessageTypes.CustomerRegistered)
+            base(messageId)
         {
             CustomerId = customerId;
             Name = name;

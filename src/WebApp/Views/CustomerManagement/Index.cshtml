@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Customers Overview";
 }
-<h3>Customer Management - overview</h3>
+<h3 id="PageTitle">Customer Management - overview</h3>
 
 <table class="table">
     <thead>
@@ -25,6 +25,6 @@
         }
     </tbody>
 </table>
-<a asp-action="New" asp-controller="CustomerManagement" class="btn btn-default">Register customer</a>
+<a id="RegisterCustomerButton" asp-action="New" asp-controller="CustomerManagement" class="btn btn-default">Register customer</a>
 
 

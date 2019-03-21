@@ -11,13 +11,13 @@ namespace Pitstop.WorkshopManagementAPI.Commands
         public readonly DateTime StartTime;
         public readonly DateTime EndTime;
         public readonly (string Id, string Name, string TelephoneNumber) CustomerInfo;
-        public readonly (string LicenceNumber, string Brand, string Type) VehicleInfo;
+        public readonly (string LicenseNumber, string Brand, string Type) VehicleInfo;
         public readonly string Description;
 
         public PlanMaintenanceJob(Guid messageId, Guid jobId, DateTime startTime, DateTime endTime,
             (string Id, string Name, string TelephoneNumber) customerInfo,
-            (string LicenceNumber, string Brand, string Type) vehicleInfo,
-            string description) : base(messageId, MessageTypes.PlanMaintenanceJob)
+            (string LicenseNumber, string Brand, string Type) vehicleInfo,
+            string description) : base(messageId)
         {
             JobId = jobId;
             StartTime = startTime;

@@ -3,7 +3,7 @@
     ViewData["Title"] = "Planning Details";
 }
 
-<h3>Workshop Management - details</h3>
+<h3 id="PageTitle">Workshop Management - details</h3>
 
 <table class="table">
     <tbody>
@@ -13,7 +13,7 @@
         </tr>
         <tr>
             <td width="150">Status :</td>
-            <td><b>@Model.MaintenanceJob.Status</b></td>
+            <td id="JobStatus"><b>@Model.MaintenanceJob.Status</b></td>
         </tr>
         <tr>
             <td width="150">Start time :</td>
@@ -52,10 +52,10 @@
         }
     </tbody>
 </table>
-<span><a asp-action="Index" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-default">Back</a></span>
+<span><a id="BackButton" asp-action="Index" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-default">Back</a></span>
 @if (Model.MaintenanceJob.Status != "Completed" )
 { 
-    <span><a asp-action="Finish" asp-controller="WorkshopManagement" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" asp-route-jobId="@Model.MaintenanceJob.Id" class="btn btn-default">Complete</a></span>
+    <span><a id="CompleteButton" asp-action="Finish" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.ToString("yyyy-MM-dd")" asp-route-jobId="@Model.MaintenanceJob.Id" class="btn btn-default">Complete</a></span>
 }
 
 

@@ -1,0 +1,51 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    system: pitstop
+    app: workshopmanagementapi
+    version: v1
+  name: workshopmanagementapi
+  namespace: pitstop
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        system: pitstop
+        app: workshopmanagementapi
+        version: v1
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+        image: pitstop/workshopmanagementapi:latest
+        imagePullPolicy: IfNotPresent
+        name: workshopmanagementapi
+        ports:
+        - containerPort: 5200
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    system: pitstop
+    app: workshopmanagementapi
+    version: v1
+  name: workshopmanagementapi
+  namespace: pitstop
+spec:
+  type: NodePort
+  ports:
+  - name: "http-5200"
+    port: 5200
+    targetPort: 5200
+    nodePort: 30007
+  selector:
+    system: pitstop
+    app: workshopmanagementapi
+    version: v1

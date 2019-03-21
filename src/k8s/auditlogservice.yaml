@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    system: pitstop
+    app: auditlogservice
+    version: v1
+  name: auditlogservice
+  namespace: pitstop
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        system: pitstop
+        app: auditlogservice
+        version: v1
+    spec:
+      containers:
+      - env:
+        - name: PITSTOP_ENVIRONMENT
+          value: Production
+        image: pitstop/auditlogservice:latest
+        imagePullPolicy: IfNotPresent
+        name: auditlogservice
+      restartPolicy: Always
+

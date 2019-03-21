@@ -23,14 +23,14 @@ namespace Pitstop.InvoiceService.Repositories
             Policy
             .Handle<Exception>()
             .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) => { Log.Error("Error connecting to DB. Retrying in 5 sec."); })
-            .Execute(() => InitializeDB());
+            .Execute(InitializeDB);
         }
 
-        private async void InitializeDB()
+        private async Task InitializeDB()
         {
             using (SqlConnection conn = new SqlConnection(_connectionString.Replace("Invoicing", "master")))
             {
-                conn.Open();
+                await conn.OpenAsync();
 
                 // create database
                 string sql =

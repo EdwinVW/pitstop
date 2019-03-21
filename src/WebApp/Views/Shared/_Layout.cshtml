@@ -1,10 +1,9 @@
-﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - PitStop</title>
+    <title>@ViewData["Title"] - Pitstop</title>
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -16,7 +15,6 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
-    @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -28,15 +26,15 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">PitStop</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Pitstop</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="CustomerManagement" asp-action="Index">Customer Management</a></li>
-                    <li><a asp-area="" asp-controller="VehicleManagement" asp-action="Index">Vehicle Management</a></li>
-                    <li><a asp-area="" asp-controller="WorkshopManagement" asp-action="Index">Workshop Management</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    <li><a id="MainMenu.Home" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a id="MainMenu.CustomerManagement" asp-area="" asp-controller="CustomerManagement" asp-action="Index">Customer Management</a></li>
+                    <li><a id="MainMenu.VehicleManagement" asp-area="" asp-controller="VehicleManagement" asp-action="Index">Vehicle Management</a></li>
+                    <li><a id="MainMenu.WorkshopManagement" asp-area="" asp-controller="WorkshopManagement" asp-action="Index">Workshop Management</a></li>
+                    <li><a id="MainMenu.About" asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                 </ul>
             </div>
         </div>
@@ -45,7 +43,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2017 - PitStop</p>
+            <p>&copy; 2017 - @DateTime.Now.Year.ToString() Pitstop</p>
         </footer>
     </div>
 
