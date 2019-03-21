@@ -11,7 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Pitstop.NotificationService
 {
@@ -119,7 +118,7 @@ namespace Pitstop.NotificationService
                 body.AppendLine($"Greetings,\n");
                 body.AppendLine($"The PitStop crew");
 
-                // sent notification
+                // send notification
                 await _emailNotifier.SendEmailAsync(
                     customer.EmailAddress, "noreply@pitstop.nl", "Vehicle maintenance reminder", body.ToString());
 
