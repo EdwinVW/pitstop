@@ -5,7 +5,7 @@ skinparam linetype ortho
 
 package Pitstop.Infrastructure {
     interface IMessageHandlerCallback {
-        Task HandleMessageAsync(MessageTypes messageType, string message);
+        Task HandleMessageAsync(string messageType, string message);
     }
 
     interface IMessageHandler {
@@ -15,17 +15,13 @@ package Pitstop.Infrastructure {
 
     class RabbitMQMessageHandler {
     }
-
-    enum MessageTypes {
-        CustomerRegistered
-    }
 }
 
 package CustomerEventHandler {
     class CustomerManager {
         IMessageHandler _messageHandler;
         CustomerManager(IMessageHandler messageHandler)
-        Task HandleMessageAsync(MessageTypes messageType, string message);
+        Task HandleMessageAsync(string messageType, string message);
     }
 }
 

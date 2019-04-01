@@ -153,11 +153,11 @@ You need to add a reference to the *PitStop.Infrastructure* nuget package. The p
 Follow the following steps to add a reference to the package: 
 
 1. Open the terminal window in Visual Studio Code using the *Terminal* menu.
-2. Type the following command in this window: `dotnet add package PitStop.Infrastructure`. 
+2. Type the following command in this window: `dotnet add package PitStop.Infrastructure.Messaging`. 
 3. In the .csproj file the following XML snippet will be added: 
    ```xml
    <ItemGroup>
-     <PackageReference Include="Pitstop.Infrastructure" Version="3.5.2" />
+     <PackageReference Include="Pitstop.Infrastructure.Messaging" Version="2.0.0" />
    </ItemGroup>
    ```
 4. Visual Studio Code will detect changes in the references and automatically restore the references.
@@ -248,12 +248,12 @@ Execute the following steps to add the *CustomerManager* to your project:
 	            _messageHandler.Stop();
 	        }
 	
-	        public async Task<bool> HandleMessageAsync(MessageTypes messageType, string message)
+	        public async Task<bool> HandleMessageAsync(string messageType, string message)
 	        {
 	            JObject messageObject = MessageSerializer.Deserialize(message);
 	            switch (messageType)
 	            {
-	                case MessageTypes.CustomerRegistered:
+	                case "CustomerRegistered":
 	                    await HandleAsync(messageObject.ToObject<CustomerRegistered>());
 	                    break;
 	                default:
@@ -299,7 +299,7 @@ Now that you created a *CustomerManager* that can handle *CustomerRegistered* ev
 	        static void Main(string[] args)
 	        {
 	            // determine environment
-	            _env = Environment.GetEnvironmentVariable("PITSTOP_ENVIRONMENT") ?? "Development";
+	            _env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Development";
 	
 	            // create rabbitmq message-handler
 	            string rabbitMQHost = (_env == "Development") ? "localhost" : "rabbitmq";
@@ -336,7 +336,7 @@ Now that you created a *CustomerManager* that can handle *CustomerRegistered* ev
 > 
 > Details to notice:
 > - We pass in the following arguments to the *RabbitMQMessageHandler* constructor: *host*, *username*, *password*, *exchange*, *queue*, *routing-key*. If the specified exchange or queue do not exist, they are automatically created.  
-> - Based on the environment we use a different RabbitMQ hostname and use a different approach to waiting for exit. Set the *PITSTOP_ENVIRONMENT* environment variable on your machine to deviate from the default (*Development*). When running in a Docker container later, the environment variable will automatically be set to *Production*.
+> - Based on the environment we use a different RabbitMQ hostname and use a different approach to waiting for exit. Set the *DOTNET_ENVIRONMENT* environment variable on your machine to deviate from the default (*Development*). When running in a Docker container later, the environment variable will automatically be set to *Production*.
 
 **Build the code**
 In order to check whether or not you made any mistakes until now, build the code. Do this by pressing `Ctrl-Shift-B` in Visual Studio Code and choosing the task *Build*. The output window should look like this:
@@ -382,7 +382,7 @@ Now that you have created a functional service, let's run it in a Docker contain
 	COPY --from=build-env /app/out .
 	
 	# Set environment variables
-	ENV PITSTOP_ENVIRONMENT=Production
+	ENV DOTNET_ENVIRONMENT=Production
 
 	# Start
 	ENTRYPOINT ["dotnet", "CustomerEventHandler.dll"]
@@ -396,7 +396,7 @@ Now that you have created a functional service, let's run it in a Docker contain
 > - After the restore, it copies the rest of the files to the working-folder and publishes the application by running `dotnet publish -c Release -o out`. It builds the *Release* configuration and outputs the result in the folder *out* within the working-folder.
 > - Now it starts the second phase which runs in a container based on the .NET Core run-time container (*microsoft/dotnet:2.1-runtime*). This container does not contain the entire .NET Core SDK - so it's much smaller.
 > - It then copies the output from the other build phase (that was called *build-env*) to the local folder within the container.
-> - It sets the *PITSTOP_ENVIRONMENT* environment-variable to *Production*.
+> - It sets the *DOTNET_ENVIRONMENT* environment-variable to *Production*.
 > - Finally is specifies the entry-point - the command to execute when the container starts. In this case it specifies the command `dotnet` and as argument the assembly that was created during the build. This will start the *CustomerEventHandler* console application you've created.
 
 Now you are going to build a Docker image using the Dockerfile.
@@ -442,7 +442,7 @@ The last step in this lab is to extend the docker-compose file to include your s
        depends_on:
          - rabbitmq
        environment:
-         - PITSTOP_ENVIRONMENT=Production    
+         - DOTNET_ENVIRONMENT=Production    
    ```
 3. Save the file.
 4. Open the Powershell window where you started the solution using `docker-compose up`.
