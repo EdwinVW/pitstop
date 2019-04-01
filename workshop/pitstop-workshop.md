@@ -181,7 +181,7 @@ Now you can start adding some business logic. First you need to add the definiti
 
 You need to define a C# class to hold this information. We will only use the *name* property in our code, so in your event-definition you can skip the other customer properties.
 
-The infrastructure package you referenced in the previous step contains an *Event* base-class for events. This base-class contains the *messageId* and *messageType* properties. For convenience, the infrastructure package also contains an *MessageTypes* enum with all the available message-types in the solution. 
+The infrastructure package you referenced in the previous step contains an *Event* base-class for events. This class inherits from the *Message* base-class which contains the *MessageId* and *MessageType* properties (the message-type is inferred from the name of the class).
 
 Follow the following steps to add the *CustomerRegistered* event-definition to your service:
 
@@ -199,7 +199,7 @@ Follow the following steps to add the *CustomerRegistered* event-definition to y
 	       public readonly string Name;
 	
 	       public CustomerRegistered(Guid messageId, string customerId, string name) : 
-	           base(messageId, MessageTypes.CustomerRegistered)
+	           base(messageId)
 	       {
 	           CustomerId = customerId;
 	           Name = name;
