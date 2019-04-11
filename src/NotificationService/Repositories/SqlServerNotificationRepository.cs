@@ -6,6 +6,7 @@ using Polly;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Linq;
+using Serilog;
 
 namespace Pitstop.NotificationService.Repositories
 {
@@ -18,10 +19,13 @@ namespace Pitstop.NotificationService.Repositories
             _connectionString = connectionString;
 
             // init db
+            Log.Information("Initialize Database");
+
             Policy
             .Handle<Exception>()
-            .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) => { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
-            .Execute(InitializeDB);
+            .WaitAndRetryAsync(10, r => TimeSpan.FromSeconds(10), (ex, ts) => { Log.Error("Error connecting to DB. Retrying in 10 sec."); })
+            .ExecuteAsync(InitializeDB)
+            .Wait();
         }
 
         private async Task InitializeDB()

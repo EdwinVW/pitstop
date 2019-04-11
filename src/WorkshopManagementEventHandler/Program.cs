@@ -58,7 +58,7 @@ namespace Pitstop.WorkshopManagementEventHandler
 
                         Policy
                             .Handle<Exception>()
-                            .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) => { Log.Error("Error connecting to DB. Retrying in 5 sec."); })
+                            .WaitAndRetry(10, r => TimeSpan.FromSeconds(10), (ex, ts) => { Log.Error("Error connecting to DB. Retrying in 10 sec."); })
                             .Execute(() => DBInitializer.Initialize(dbContext));
 
                         return dbContext;

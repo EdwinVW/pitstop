@@ -28,7 +28,7 @@ namespace Pitstop.Application.VehicleManagement.DataAccess
         {
             Policy
                 .Handle<Exception>()
-                .WaitAndRetry(5, r => TimeSpan.FromSeconds(5))
+                .WaitAndRetry(10, r => TimeSpan.FromSeconds(10))
                 .Execute(() => Database.Migrate());
         }
     }

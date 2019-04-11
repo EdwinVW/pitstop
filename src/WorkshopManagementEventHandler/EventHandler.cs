@@ -79,7 +79,7 @@ namespace Pitstop.WorkshopManagementEventHandler
 
         private async Task<bool> HandleAsync(VehicleRegistered e)
         {
-            Log.Information("Vehicle registered: {LicenseNumber}, {Brand}, {Type}, Owner Id: {OwnerId}", 
+            Log.Information("Register Vehicle: {LicenseNumber}, {Brand}, {Type}, Owner Id: {OwnerId}", 
                 e.LicenseNumber, e.Brand, e.Type, e.OwnerId);
 
             try
@@ -103,7 +103,7 @@ namespace Pitstop.WorkshopManagementEventHandler
 
         private async Task<bool> HandleAsync(CustomerRegistered e)
         {
-            Log.Information("Customer registered: {CustomerId}, {Name}, {TelephoneNumber}", 
+            Log.Information("Register Customer: {CustomerId}, {Name}, {TelephoneNumber}", 
                 e.CustomerId, e.Name, e.TelephoneNumber);
 
             try
@@ -126,7 +126,7 @@ namespace Pitstop.WorkshopManagementEventHandler
 
         private async Task<bool> HandleAsync(MaintenanceJobPlanned e)
         {
-            Log.Information("Maintenance job planned: {JobId}, {StartTime}, {EndTime}, {CustomerName}, {LicenseNumber}", 
+            Log.Information("Register Maintenance Job: {JobId}, {StartTime}, {EndTime}, {CustomerName}, {LicenseNumber}", 
                 e.JobId, e.StartTime, e.EndTime, e.CustomerInfo.Name, e.VehicleInfo.LicenseNumber);
 
             try
@@ -179,7 +179,7 @@ namespace Pitstop.WorkshopManagementEventHandler
 
         private async Task<bool> HandleAsync(MaintenanceJobFinished e)
         {
-            Log.Information("Maintenance job finished: {JobId}, {ActualStartTime}, {EndTime}",
+            Log.Information("Finish Maintenance job: {JobId}, {ActualStartTime}, {EndTime}",
                 e.JobId, e.StartTime, e.EndTime);
 
             try

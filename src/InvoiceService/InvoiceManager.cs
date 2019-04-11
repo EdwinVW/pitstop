@@ -5,6 +5,7 @@ using Pitstop.InvoiceService.CommunicationChannels;
 using Pitstop.InvoiceService.Events;
 using Pitstop.InvoiceService.Model;
 using Pitstop.InvoiceService.Repositories;
+using Serilog;
 using System;
 using System.Linq;
 using System.Net.Mail;
@@ -43,27 +44,38 @@ namespace Pitstop.InvoiceService
 
         public async Task<bool> HandleMessageAsync(string messageType, string message)
         {
-            JObject messageObject = MessageSerializer.Deserialize(message);
-            switch (messageType)
+            try
             {
-                case "CustomerRegistered":
-                    await HandleAsync(messageObject.ToObject<CustomerRegistered>());
-                    break;
-                case "MaintenanceJobPlanned":
-                    await HandleAsync(messageObject.ToObject<MaintenanceJobPlanned>());
-                    break;
-                case "MaintenanceJobFinished":
-                    await HandleAsync(messageObject.ToObject<MaintenanceJobFinished>());
-                    break;
-                case "DayHasPassed":
-                    await HandleAsync(messageObject.ToObject<DayHasPassed>());
-                    break;
+                JObject messageObject = MessageSerializer.Deserialize(message);
+                switch (messageType)
+                {
+                    case "CustomerRegistered":
+                        await HandleAsync(messageObject.ToObject<CustomerRegistered>());
+                        break;
+                    case "MaintenanceJobPlanned":
+                        await HandleAsync(messageObject.ToObject<MaintenanceJobPlanned>());
+                        break;
+                    case "MaintenanceJobFinished":
+                        await HandleAsync(messageObject.ToObject<MaintenanceJobFinished>());
+                        break;
+                    case "DayHasPassed":
+                        await HandleAsync(messageObject.ToObject<DayHasPassed>());
+                        break;
+                }
             }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Error while handling {messageType} event.");
+            }
+
             return true;
         }
 
         private async Task HandleAsync(CustomerRegistered cr)
         {
+            Log.Information("Register customer: {Id}, {Name}, {Address}, {PostalCode}, {City}", 
+                cr.CustomerId, cr.Name, cr.Address, cr.PostalCode, cr.City);
+
             Customer customer = new Customer
             {
                 CustomerId = cr.CustomerId,
@@ -78,6 +90,9 @@ namespace Pitstop.InvoiceService
 
         private async Task HandleAsync(MaintenanceJobPlanned mjp)
         {
+            Log.Information("Register Maintenance Job: {Id}, {Description}, {CustomerId}, {VehicleLicenseNumber}", 
+                mjp.JobId, mjp.Description, mjp.CustomerInfo.Id, mjp.VehicleInfo.LicenseNumber);
+
             MaintenanceJob job = new MaintenanceJob
             {
                 JobId = mjp.JobId.ToString(),
@@ -91,6 +106,9 @@ namespace Pitstop.InvoiceService
 
         private async Task HandleAsync(MaintenanceJobFinished mjf)
         {
+            Log.Information("Finish Maintenance Job: {Id}, {StartTime}, {EndTime}", 
+                mjf.JobId, mjf.StartTime, mjf.EndTime);
+
             await _repo.MarkMaintenanceJobAsFinished(mjf.JobId, mjf.StartTime, mjf.EndTime);
         }
 
@@ -124,6 +142,8 @@ namespace Pitstop.InvoiceService
 
                 await SendInvoice(customer, invoice);
                 await _repo.RegisterInvoiceAsync(invoice);
+
+                Log.Information("Invoice {Id} sent to {Customer}", invoice.InvoiceId, customer.Name);
             }
         }
 
@@ -219,7 +239,7 @@ namespace Pitstop.InvoiceService
             body.AppendLine("The PitStop crew<br/>");
 
             body.AppendLine("</htm></body>");
-            
+
             MailMessage mailMessage = new MailMessage
             {
                 From = new MailAddress("invoicing@pitstop.nl"),

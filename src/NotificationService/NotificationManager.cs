@@ -5,6 +5,7 @@ using Pitstop.NotificationService.Events;
 using Pitstop.NotificationService.Model;
 using Pitstop.NotificationService.NotificationChannels;
 using Pitstop.NotificationService.Repositories;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,24 +42,32 @@ namespace Pitstop.NotificationService
 
         public async Task<bool> HandleMessageAsync(string messageType, string message)
         {
-            JObject messageObject = MessageSerializer.Deserialize(message);
-            switch (messageType)
+            try
             {
-                case "CustomerRegistered":
-                    await HandleAsync(messageObject.ToObject<CustomerRegistered>());
-                    break;
-                case "MaintenanceJobPlanned":
-                    await HandleAsync(messageObject.ToObject<MaintenanceJobPlanned>());
-                    break;
-                case "MaintenanceJobFinished":
-                    await HandleAsync(messageObject.ToObject<MaintenanceJobFinished>());
-                    break;
-                case "DayHasPassed":
-                    await HandleAsync(messageObject.ToObject<DayHasPassed>());
-                    break;
-                default:
-                    break;
+                JObject messageObject = MessageSerializer.Deserialize(message);
+                switch (messageType)
+                {
+                    case "CustomerRegistered":
+                        await HandleAsync(messageObject.ToObject<CustomerRegistered>());
+                        break;
+                    case "MaintenanceJobPlanned":
+                        await HandleAsync(messageObject.ToObject<MaintenanceJobPlanned>());
+                        break;
+                    case "MaintenanceJobFinished":
+                        await HandleAsync(messageObject.ToObject<MaintenanceJobFinished>());
+                        break;
+                    case "DayHasPassed":
+                        await HandleAsync(messageObject.ToObject<DayHasPassed>());
+                        break;
+                    default:
+                        break;
+                }
             }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Error while handling {messageType} event.");
+            }
+
             return true;
         }
 
@@ -71,6 +80,9 @@ namespace Pitstop.NotificationService
                 TelephoneNumber = cr.TelephoneNumber,
                 EmailAddress = cr.EmailAddress
             };
+
+            Log.Information("Register customer: {Id}, {Name}, {TelephoneNumber}, {Email}", 
+                customer.CustomerId, customer.Name, customer.TelephoneNumber, customer.EmailAddress);
 
             await _repo.RegisterCustomerAsync(customer);
         }
@@ -86,11 +98,16 @@ namespace Pitstop.NotificationService
                 Description = mjp.Description
             };
 
+            Log.Information("Register Maintenance Job: {Id}, {CustomerId}, {VehicleLicenseNumber}, {StartTime}, {Description}", 
+                job.JobId, job.CustomerId, job.LicenseNumber, job.StartTime, job.Description);
+
             await _repo.RegisterMaintenanceJobAsync(job);
         }
 
         private async Task HandleAsync(MaintenanceJobFinished mjf)
         {
+            Log.Information("Remove finished Maintenance Job: {Id}", mjf.JobId);
+
             await _repo.RemoveMaintenanceJobsAsync(new string[] { mjf.JobId.ToString() });
         }
 
@@ -117,6 +134,8 @@ namespace Pitstop.NotificationService
                 body.AppendLine($"Once arrived, you can notify your arrival at our front-desk.\n");
                 body.AppendLine($"Greetings,\n");
                 body.AppendLine($"The PitStop crew");
+
+                Log.Information("Sent notification to: {CustomerName}", customer.Name);
 
                 // send notification
                 await _emailNotifier.SendEmailAsync(
