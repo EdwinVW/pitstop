@@ -31,7 +31,7 @@ This workshop assumes you are working with Visual Studio Code. If you use Visual
 Download link: <a href="https://visualstudio.microsoft.com/downloads" target="_blank">Visual Studio 2017 (Community or Code)</a>
 
 #### .NET Core SDK
-Install the .NET Core SDK 2.1. 
+Install the .NET Core SDK 2.2. 
 
 Download link: <a href="https://www.microsoft.com/net/download" target="_blank">.NET Core SDK</a>
 
@@ -366,7 +366,7 @@ Now that you have created a functional service, let's run it in a Docker contain
 1. Add a new file to the project named *Dockerfile*.
 2. Paste the following code into the new file:
    ```docker
-	FROM microsoft/dotnet:2.1-sdk AS build-env
+	FROM microsoft/dotnet:2.2-sdk AS build-env
 	WORKDIR /app
 	
 	# Copy necessary files and restore as distinct layer
@@ -378,7 +378,7 @@ Now that you have created a functional service, let's run it in a Docker contain
 	RUN dotnet publish -c Release -o out
 	
 	# Build runtime image
-	FROM microsoft/dotnet:2.1-runtime
+	FROM microsoft/dotnet:2.2-runtime
 	COPY --from=build-env /app/out .
 	
 	# Set environment variables
@@ -390,11 +390,11 @@ Now that you have created a functional service, let's run it in a Docker contain
    ```
 
 > Please take some time to go over the Dockerfile now. You see an example of the Docker multi-stage build mechanism. 
-> - First it starts in a container that is based on an image that contains the full .NET Core SDK (*microsoft/dotnet:2.1-sdk*). We call this *build-env* for later reference.
+> - First it starts in a container that is based on an image that contains the full .NET Core SDK (*microsoft/dotnet:2.2-sdk*). We call this *build-env* for later reference.
 > - After that it sets the folder */app* as the current working-folder for the build. It copies the *.csproj* file of your project into to the working-folder. 
 > - Then it restores all the dependencies by running `dotnet restore` and specifying both the default nuget feed as well as the private PitStop MyGet feed as sources for finding nuget packages. 
 > - After the restore, it copies the rest of the files to the working-folder and publishes the application by running `dotnet publish -c Release -o out`. It builds the *Release* configuration and outputs the result in the folder *out* within the working-folder.
-> - Now it starts the second phase which runs in a container based on the .NET Core run-time container (*microsoft/dotnet:2.1-runtime*). This container does not contain the entire .NET Core SDK - so it's much smaller.
+> - Now it starts the second phase which runs in a container based on the .NET Core run-time container (*microsoft/dotnet:2.2-runtime*). This container does not contain the entire .NET Core SDK - so it's much smaller.
 > - It then copies the output from the other build phase (that was called *build-env*) to the local folder within the container.
 > - It sets the *DOTNET_ENVIRONMENT* environment-variable to *Production*.
 > - Finally is specifies the entry-point - the command to execute when the container starts. In this case it specifies the command `dotnet` and as argument the assembly that was created during the build. This will start the *CustomerEventHandler* console application you've created.
