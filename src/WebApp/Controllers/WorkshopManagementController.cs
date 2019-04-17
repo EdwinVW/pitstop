@@ -135,7 +135,7 @@ namespace PitStop.Controllers
                         if (ex.StatusCode == HttpStatusCode.Conflict)
                         {
                             // add errormessage from API exception to model
-                            var content = ex.GetContentAs<BusinessRuleViolation>();
+                            var content = await ex.GetContentAsAsync<BusinessRuleViolation>();
                             inputModel.Error = content.ErrorMessage;
 
                             // repopulate list of available vehicles in the model
