@@ -5,7 +5,7 @@ Welcome to the PitStop workshop! In this workshop you will learn how to build Mi
 There are some prerequisites for this workshop. First you need an active Internet connection. Additionally you will need to install the following software on your laptop:
 
 - Docker Community Edition (CE)
-- Visual Studio 2017 (Community or Code)
+- Visual Studio Code
 - .NET Core SDK
 - (optional) Git client
 
@@ -25,10 +25,10 @@ During the installation of Docker CE, do not switch to Windows containers. We wi
 
 After the installation, start the Docker engine by double clicking the Docker for Windows icon. 
 
-#### Visual Studio
-This workshop assumes you are working with Visual Studio Code. If you use Visual Studio CE, there will be some minor differences.
+#### Visual Studio Code
+This workshop assumes you are working with Visual Studio Code. 
 
-Download link: <a href="https://visualstudio.microsoft.com/downloads" target="_blank">Visual Studio 2017 (Community or Code)</a>
+Download link: <a href="https://visualstudio.microsoft.com/downloads" target="_blank">Visual Studio Code</a>
 
 #### .NET Core SDK
 Install the .NET Core SDK 2.1. 
