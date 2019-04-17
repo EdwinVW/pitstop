@@ -397,7 +397,7 @@ Now that you have created a functional service, let's run it in a Docker contain
 > - Now it starts the second phase which runs in a container based on the .NET Core run-time container (*microsoft/dotnet:2.2-runtime*). This container does not contain the entire .NET Core SDK - so it's much smaller.
 > - It then copies the output from the other build phase (that was called *build-env*) to the local folder within the container.
 > - It sets the *DOTNET_ENVIRONMENT* environment-variable to *Production*.
-> - Finally is specifies the entry-point - the command to execute when the container starts. In this case it specifies the command `dotnet` and as argument the assembly that was created during the build. This will start the *CustomerEventHandler* console application you've created.
+> - Finally it specifies the entry-point - the command to execute when the container starts. In this case it specifies the command `dotnet` and as argument the assembly that was created during the build. This will start the *CustomerEventHandler* console application you've created.
 
 Now you are going to build a Docker image using the Dockerfile.
 
