@@ -179,7 +179,7 @@ Now you can start adding some business logic. First you need to add the definiti
 }
 ```
 
-You need to define a C# class to hold this information. We will only use the *name* property in our code, so in your event-definition you can skip the other customer properties.
+You need to define a C# class to hold this information. We will only use the *customer id* and *name* properties in our code, so in your event-definition you can skip the other customer properties.
 
 The infrastructure package you referenced in the previous step contains an *Event* base-class for events. This class inherits from the *Message* base-class which contains the *MessageId* and *MessageType* properties (the message-type is inferred from the name of the class).
 
