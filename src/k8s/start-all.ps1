@@ -2,12 +2,21 @@
 # If started with argument -mesh, the solution is started with the Istio service-mesh.
 
 param (
-    [switch]$mesh = $false
+    [switch]$istio = $false,
+    [switch]$linkerd = $false
 )
 
+if ($istio -and $linkerd) {
+    echo "Error: You can specify only 1 mesh implementation."
+    return
+}
+
 $meshPostfix = ''
-if ($mesh) {
+if ($istio) {
     $meshPostfix = '-istio'
+}
+if ($linkerd) {
+    $meshPostfix = '-linkerd'
 }
 
 kubectl apply `

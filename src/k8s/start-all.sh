@@ -5,9 +5,14 @@
 
 MESHPOSTFIX=''
 
-if [ "$1" = "--mesh" ]
- then
+if [ "$1" = "--istio" ]
+then
     MESHPOSTFIX='-istio'
+fi
+
+if [ "$1" = "--linkerd" ]
+then
+    MESHPOSTFIX='-linkerd'
 fi
 
 kubectl apply \
