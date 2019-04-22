@@ -9,6 +9,7 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
         public DateTime StartTime { get; private set; }
         public DateTime EndTime { get; private set; }
         public string Description { get; private set; }
+        public string Status { get; private set; }
         public CustomerBuilder CustomerBuilder { get; private set; }
         public VehicleBuilder VehicleBuilder { get; private set; }
 
@@ -34,6 +35,12 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
             EndTime = endTime;
             return this;
         }        
+
+        public MaintenanceJobBuilder WithStatus(string status)
+        {
+            Status = status;
+            return this;
+        }
 
         public MaintenanceJobBuilder WithCustomer(Customer customer)
         {

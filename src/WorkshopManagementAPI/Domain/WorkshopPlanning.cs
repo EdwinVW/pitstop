@@ -14,11 +14,6 @@ namespace Pitstop.WorkshopManagementAPI.Domain
     public class WorkshopPlanning
     {
         /// <summary>
-        /// The maximum number of parallel jobs in the workshop (restricted by the available resources).
-        /// </summary>
-        private const int MAX_PARALLEL_JOBS = 3;
-
-        /// <summary>
         /// Indication whether the aggregate is replaying events (true) or not (false).
         /// </summary>
         private bool IsReplaying { get; set; } = false;
@@ -50,7 +45,7 @@ namespace Pitstop.WorkshopManagementAPI.Domain
         {
             get
             {
-                return Date.ToString("yyy-MM-dd");
+                return Date.ToString("yyyy-MM-dd");
             }
         }
 
@@ -90,27 +85,9 @@ namespace Pitstop.WorkshopManagementAPI.Domain
         public IEnumerable<Event> PlanMaintenanceJob(PlanMaintenanceJob command)
         {
             // check business rules
-
-            // maintenance jobs may not span multiple days
-            if (command.StartTime.Date != command.EndTime.Date)
-            {
-                throw new BusinessRuleViolationException("Start-time and end-time of a Maintenance Job must be within a 1 day.");
-            }
-
-            // no more than 3 jobs can be planned at the same time (limited resources)
-            if (Jobs.Count(j => (j.StartTime >= command.StartTime && j.StartTime <= command.EndTime) || 
-                                (j.EndTime >= command.StartTime && j.EndTime <= command.EndTime)) >= MAX_PARALLEL_JOBS)
-            {
-                throw new BusinessRuleViolationException($"Maintenancejob overlaps with more than {MAX_PARALLEL_JOBS} other jobs.");
-            }
-
-            // only 1 maintenance job can be executed on a vehicle during a certain time-slot
-            if (Jobs.Any(j => j.Vehicle.LicenseNumber == command.VehicleInfo.LicenseNumber && 
-                    (j.StartTime >= command.StartTime && j.StartTime <= command.EndTime ||
-                    j.EndTime >= command.StartTime && j.EndTime <= command.EndTime) ))
-            {
-                throw new BusinessRuleViolationException($"Only 1 maintenance job can be executed on a vehicle during a certain time-slot.");
-            }
+            this.PlannedMaintenanceJobShouldFallWithinOneBusinessDay(command);
+            this.NumberOfParallelMaintenanceJobsMustNotExceedAvailableWorkStations(command);
+            this.NumberOfParallelMaintenanceJobsOnAVehicleIsOne(command);
 
             // handle event
             MaintenanceJobPlanned e = Mapper.Map<MaintenanceJobPlanned>(command);
@@ -125,6 +102,9 @@ namespace Pitstop.WorkshopManagementAPI.Domain
             {
                 throw new MaintenanceJobNotFoundException($"Maintenance job with id {command.JobId} found.");
             }
+
+            // check business rules
+            job.FinishedMaintenanceJobCanNotBeFinished();
 
             // handle event
             MaintenanceJobFinished e = Mapper.Map<MaintenanceJobFinished>(command);
