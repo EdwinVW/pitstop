@@ -26,7 +26,8 @@ kubectl apply \
     -f ./notificationservice.yaml \
     -f ./workshopmanagementeventhandler.yaml \
     -f ./auditlogservice.yaml \
-    -f ./customermanagementapi$MESHPOSTFIX.yaml \
+    -f ./customermanagementapi-v1$MESHPOSTFIX.yaml \
+    -f ./customermanagementapi-svc.yaml \
     -f ./vehiclemanagementapi$MESHPOSTFIX.yaml \
     -f ./workshopmanagementapi$MESHPOSTFIX.yaml \
     -f ./webapp$MESHPOSTFIX.yaml
