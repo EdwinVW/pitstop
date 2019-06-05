@@ -34,7 +34,7 @@ kind: Service
 metadata:
   labels:
     system: pitstop
-    app: webpp
+    app: webapp
     version: v1
   name: webapp
   namespace: pitstop
