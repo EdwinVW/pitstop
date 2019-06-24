@@ -10,13 +10,12 @@ namespace Pitstop.WorkshopManagementAPI
         public static void SetupAutoMapper()
         {
             // setup automapper
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<PlanMaintenanceJob, MaintenanceJobPlanned>()
-                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
-                cfg.CreateMap<FinishMaintenanceJob, MaintenanceJobFinished>()
-                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
-            });
+            var cfg = new AutoMapper.Configuration.MapperConfigurationExpression();
+            cfg.CreateMap<PlanMaintenanceJob, MaintenanceJobPlanned>()
+                .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
+            cfg.CreateMap<FinishMaintenanceJob, MaintenanceJobFinished>()
+                .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
+            Mapper.Initialize(cfg);
         } 
     }
 }

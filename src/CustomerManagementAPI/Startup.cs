@@ -91,14 +91,14 @@ namespace Pitstop.CustomerManagementAPI
         private void SetupAutoMapper()
         {
             // setup automapper
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<RegisterCustomer, Customer>();
-                cfg.CreateMap<Customer, RegisterCustomer>()
-                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
-                cfg.CreateMap<RegisterCustomer, CustomerRegistered>()
-                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
-            });
+            var cfg = new AutoMapper.Configuration.MapperConfigurationExpression();
+            cfg.CreateMap<RegisterCustomer, Customer>();
+            cfg.CreateMap<Customer, RegisterCustomer>()
+                .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
+            cfg.CreateMap<RegisterCustomer, CustomerRegistered>()
+                .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
+            
+            Mapper.Initialize(cfg);
         }
     }
 }

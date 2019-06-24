@@ -7,6 +7,9 @@ This library contains helper-classes for working with messaging within the Pitst
 - A helper class (_MessageSerializer_) for serializing and deserializing commands and events to and from JSON.
 
 ## Release notes
+### Version 2.1.0
+- Upgraded all dependencies to the latest version.
+
 ### Version 2.0.0
 - [**Breaking**] Removed the use of the _MessageTypes_ enum that contained all the available message-types. Throughout the solution, message-type is now a simple string.
 - [**Breaking**] Removed the _MessageTypes_ enum from all the interfaces and implementations.

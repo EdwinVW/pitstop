@@ -91,12 +91,11 @@ namespace Pitstop.Application.VehicleManagement
         private void SetupAutoMapper()
         {
             // setup automapper
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<RegisterVehicle, Vehicle>();
-                cfg.CreateMap<RegisterVehicle, VehicleRegistered>()
-                    .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
-            });
+            var cfg = new AutoMapper.Configuration.MapperConfigurationExpression();
+            cfg.CreateMap<RegisterVehicle, Vehicle>();
+            cfg.CreateMap<RegisterVehicle, VehicleRegistered>()
+                .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
+            Mapper.Initialize(cfg);
         }
     }
 }
