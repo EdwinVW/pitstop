@@ -33,9 +33,9 @@ namespace PitStop
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // add custom services
-            services.AddTransient<ICustomerManagementAPI, CustomerManagementAPI>();
-            services.AddTransient<IVehicleManagementAPI, VehicleManagementAPI>();
-            services.AddTransient<IWorkshopManagementAPI, WorkshopManagementAPI>();
+            services.AddHttpClient<ICustomerManagementAPI, CustomerManagementAPI>();
+            services.AddHttpClient<IVehicleManagementAPI, VehicleManagementAPI>();
+            services.AddHttpClient<IWorkshopManagementAPI, WorkshopManagementAPI>();
 
             services.AddHealthChecks(checks =>
             {

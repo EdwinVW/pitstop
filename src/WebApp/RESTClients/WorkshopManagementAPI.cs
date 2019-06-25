@@ -7,25 +7,26 @@ using WebApp.Commands;
 using System;
 using System.Net;
 using Microsoft.Extensions.Configuration;
+using System.Net.Http;
 
 namespace WebApp.RESTClients
 {
     public class WorkshopManagementAPI : IWorkshopManagementAPI
     {
-        private IWorkshopManagementAPI _client;
+        private IWorkshopManagementAPI _restClient;
 
-        public WorkshopManagementAPI(IConfiguration config)
+        public WorkshopManagementAPI(IConfiguration config, HttpClient httpClient)
         {
             string apiHostAndPort = config.GetSection("APIServiceLocations").GetValue<string>("WorkshopManagementAPI");
-            string baseUri = $"http://{apiHostAndPort}/api";
-            _client = RestService.For<IWorkshopManagementAPI>(baseUri);
+            httpClient.BaseAddress = new Uri($"http://{apiHostAndPort}/api");
+            _restClient = RestService.For<IWorkshopManagementAPI>(httpClient);
         }
 
         public async Task<WorkshopPlanning> GetWorkshopPlanning(string planningDate)
         {
             try
             {
-                return await _client.GetWorkshopPlanning(planningDate);
+                return await _restClient.GetWorkshopPlanning(planningDate);
             }
             catch (ApiException ex)
             {
@@ -44,7 +45,7 @@ namespace WebApp.RESTClients
         {
             try
             {
-                return await _client.GetMaintenanceJob(planningDate, jobId);
+                return await _restClient.GetMaintenanceJob(planningDate, jobId);
             }
             catch (ApiException ex)
             {
@@ -61,29 +62,29 @@ namespace WebApp.RESTClients
 
         public async Task RegisterPlanning(string planningDate, RegisterPlanning cmd)
         {
-            await _client.RegisterPlanning(planningDate, cmd);
+            await _restClient.RegisterPlanning(planningDate, cmd);
         }
 
         public async Task PlanMaintenanceJob(string planningDate, PlanMaintenanceJob cmd)
         {
-            await _client.PlanMaintenanceJob(planningDate, cmd);
+            await _restClient.PlanMaintenanceJob(planningDate, cmd);
         }
 
         public async Task FinishMaintenanceJob(string planningDate, string jobId, FinishMaintenanceJob cmd)
         {
-            await _client.FinishMaintenanceJob(planningDate, jobId, cmd);
+            await _restClient.FinishMaintenanceJob(planningDate, jobId, cmd);
         }
 
         public async Task<List<Customer>> GetCustomers()
         {
-            return await _client.GetCustomers();
+            return await _restClient.GetCustomers();
         }
 
         public async Task<Customer> GetCustomerById(string id)
         {
             try
             {
-                return await _client.GetCustomerById(id);
+                return await _restClient.GetCustomerById(id);
             }
             catch (ApiException ex)
             {
@@ -100,14 +101,14 @@ namespace WebApp.RESTClients
 
         public async Task<List<Vehicle>> GetVehicles()
         {
-            return await _client.GetVehicles();
+            return await _restClient.GetVehicles();
         }
 
         public async Task<Vehicle> GetVehicleByLicenseNumber([AliasAs("id")] string licenseNumber)
         {
             try
             {
-                return await _client.GetVehicleByLicenseNumber(licenseNumber);
+                return await _restClient.GetVehicleByLicenseNumber(licenseNumber);
             }
             catch (ApiException ex)
             {
