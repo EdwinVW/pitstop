@@ -30,7 +30,7 @@ namespace Pitstop.WorkshopManagementEventHandler
                     configHost.AddJsonFile("hostsettings.json", optional: true);
                     configHost.AddJsonFile($"appsettings.json", optional: false);
                     configHost.AddEnvironmentVariables();
-                    configHost.AddEnvironmentVariables("DOTNET_");
+                    configHost.AddEnvironmentVariables("PITSTOP_");
                     configHost.AddCommandLine(args);
                 })
                 .ConfigureAppConfiguration((hostContext, config) =>
