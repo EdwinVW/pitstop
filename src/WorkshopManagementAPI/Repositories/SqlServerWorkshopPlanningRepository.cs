@@ -44,6 +44,12 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 // get aggregate
+                await Policy
+                    .Handle<Exception>()
+                    .WaitAndRetryAsync(5, r => TimeSpan.FromSeconds(5), (ex, ts) => 
+                        { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
+                    .ExecuteAsync(() => conn.OpenAsync());
+
                  var aggregate = await conn
                         .QuerySingleOrDefaultAsync<Aggregate>(
                             "select * from WorkshopPlanning where Id = @Id", 
@@ -75,7 +81,12 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 // update eventstore
-                await conn.OpenAsync();
+                await Policy
+                    .Handle<Exception>()
+                    .WaitAndRetryAsync(5, r => TimeSpan.FromSeconds(5), (ex, ts) => 
+                        { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
+                    .ExecuteAsync(() => conn.OpenAsync());
+
                 using (var transaction = conn.BeginTransaction())
                 {
                     // store aggregate
@@ -145,17 +156,19 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
             // init db
             using (SqlConnection conn = new SqlConnection(_connectionString.Replace("WorkshopManagementEventStore", "master")))
             {
-                conn.Open();
-
-                // create database
-                string sql = "if DB_ID('WorkshopManagementEventStore') IS NULL CREATE DATABASE WorkshopManagementEventStore;";
-
+                Console.WriteLine("Ensure database exists");
+                
                 Policy
                     .Handle<Exception>()
                     .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) => 
                         { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
-                    .Execute(() => conn.Execute(sql));
+                    .Execute(() => conn.Open());
 
+                // create database
+                string sql = "if DB_ID('WorkshopManagementEventStore') IS NULL CREATE DATABASE WorkshopManagementEventStore;";
+                conn.Execute(sql);
+
+                // create tables
                 conn.ChangeDatabase("WorkshopManagementEventStore");
                 sql = @" 
                     if OBJECT_ID('WorkshopPlanning') IS NULL 
@@ -172,12 +185,7 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                         [MessageType] varchar(75) NOT NULL,
                         [EventData] text,
                     PRIMARY KEY([Id], [Version]));";
-
-                Policy
-                    .Handle<Exception>()
-                    .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) => 
-                        { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
-                    .Execute(() => conn.Execute(sql));
+                conn.Execute(sql);
             }
         }
 
