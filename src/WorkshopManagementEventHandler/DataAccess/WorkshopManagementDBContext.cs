@@ -28,16 +28,5 @@ namespace Pitstop.WorkshopManagementEventHandler.DataAccess
 
             base.OnModelCreating(builder);
         }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    // only used by EF tooling
-        //    // TODO: make CN configurable
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //        optionsBuilder.UseSqlServer("server=localhost:1434;user id=sa;password=8jkGh47hnDw89Haq8LN2;database=WorkshopManagement;");
-        //    }
-        //    base.OnConfiguring(optionsBuilder);
-        //}
     }
 }

@@ -4,7 +4,7 @@ metadata:
   labels:
     system: pitstop
     app: notificationservice
-    version: v1
+    version: "1.0"
   name: notificationservice
   namespace: pitstop
 spec:
@@ -14,13 +14,13 @@ spec:
       labels:
         system: pitstop
         app: notificationservice
-        version: v1
+        version: "1.0"
     spec:
       containers:
       - env:
         - name: PITSTOP_ENVIRONMENT
           value: Production
-        image: pitstop/notificationservice:latest
+        image: pitstop/notificationservice:1.0
         imagePullPolicy: IfNotPresent
         name: notificationservice
       restartPolicy: Always

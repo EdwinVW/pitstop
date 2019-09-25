@@ -3,18 +3,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Pitstop.Application.VehicleManagement.DataAccess;
-using Swashbuckle.AspNetCore.Swagger;
-using AutoMapper;
-using Pitstop.Application.VehicleManagement.Model;
 using Pitstop.Infrastructure.Messaging;
-using Pitstop.Application.VehicleManagement.Commands;
-using Pitstop.Application.VehicleManagement.Events;
-using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Microsoft.Extensions.HealthChecks;
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Hosting;
 
 namespace Pitstop.Application.VehicleManagement
 {
@@ -42,13 +37,14 @@ namespace Pitstop.Application.VehicleManagement
             services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
 
             // Add framework services.
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services
+                .AddMvc(options => options.EnableEndpointRouting = false)
+                .AddNewtonsoftJson();
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "VehicleManagement API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "VehicleManagement API", Version = "v1" });
             });
 
             services.AddHealthChecks(checks =>
@@ -59,7 +55,7 @@ namespace Pitstop.Application.VehicleManagement
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime, VehicleManagementDBContext dbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, VehicleManagementDBContext dbContext)
         {
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)
@@ -69,8 +65,6 @@ namespace Pitstop.Application.VehicleManagement
             app.UseMvc();
             app.UseDefaultFiles();
             app.UseStaticFiles();
-
-            SetupAutoMapper();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -86,16 +80,6 @@ namespace Pitstop.Application.VehicleManagement
             {
                 scope.ServiceProvider.GetService<VehicleManagementDBContext>().MigrateDB();
             }                     
-        }
-
-        private void SetupAutoMapper()
-        {
-            // setup automapper
-            var cfg = new AutoMapper.Configuration.MapperConfigurationExpression();
-            cfg.CreateMap<RegisterVehicle, Vehicle>();
-            cfg.CreateMap<RegisterVehicle, VehicleRegistered>()
-                .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
-            Mapper.Initialize(cfg);
         }
     }
 }

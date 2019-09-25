@@ -31,7 +31,10 @@ data:
         - istio-io
         - networking-istio-io
       scope: Namespaced
-      version: v1alpha3
+      versions:
+        - name: v1alpha3
+          served: true
+          storage: true
       additionalPrinterColumns:
       - JSONPath: .spec.gateways
         description: The names of gateways and sidecars that should apply these routes
@@ -73,7 +76,10 @@ data:
         - istio-io
         - networking-istio-io
       scope: Namespaced
-      version: v1alpha3
+      versions:
+        - name: v1alpha3
+          served: true
+          storage: true
       additionalPrinterColumns:
       - JSONPath: .spec.host
         description: The name of a service from the service registry
@@ -111,7 +117,10 @@ data:
         - istio-io
         - networking-istio-io
       scope: Namespaced
-      version: v1alpha3
+      versions:
+        - name: v1alpha3
+          served: true
+          storage: true
       additionalPrinterColumns:
       - JSONPath: .spec.hosts
         description: The hosts associated with the ServiceEntry
@@ -156,7 +165,10 @@ data:
         - istio-io
         - networking-istio-io
       scope: Namespaced
-      version: v1alpha3
+      versions:
+        - name: v1alpha3
+          served: true
+          storage: true
     ---
     apiVersion: apiextensions.k8s.io/v1beta1
     kind: CustomResourceDefinition
@@ -179,7 +191,10 @@ data:
         - istio-io
         - networking-istio-io
       scope: Namespaced
-      version: v1alpha3
+      versions:
+        - name: v1alpha3
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -202,7 +217,10 @@ data:
         - istio-io
         - rbac-istio-io
       scope: Cluster
-      version: v1alpha1
+      versions:
+        - name: v1alpha1
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -225,7 +243,10 @@ data:
         - istio-io
         - authentication-istio-io
       scope: Namespaced
-      version: v1alpha1
+      versions:
+        - name: v1alpha1
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -249,7 +270,10 @@ data:
         - istio-io
         - authentication-istio-io
       scope: Cluster
-      version: v1alpha1
+      versions:
+        - name: v1alpha1
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -272,7 +296,10 @@ data:
         - istio-io
         - apim-istio-io
       scope: Namespaced
-      version: v1alpha2
+      versions:
+        - name: v1alpha2
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -295,7 +322,10 @@ data:
         - istio-io
         - apim-istio-io
       scope: Namespaced
-      version: v1alpha2
+      versions:
+        - name: v1alpha2
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -318,7 +348,10 @@ data:
         - istio-io
         - apim-istio-io
       scope: Namespaced
-      version: v1alpha2
+      versions:
+        - name: v1alpha2
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -341,7 +374,10 @@ data:
         - istio-io
         - apim-istio-io
       scope: Namespaced
-      version: v1alpha2
+      versions:
+        - name: v1alpha2
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -366,7 +402,10 @@ data:
         - istio-io
         - policy-istio-io
       scope: Namespaced
-      version: v1alpha2
+      versions:
+        - name: v1alpha2
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -391,7 +430,10 @@ data:
         - istio-io
         - policy-istio-io
       scope: Namespaced
-      version: v1alpha2
+      versions:
+        - name: v1alpha2
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -416,7 +458,10 @@ data:
         - istio-io
         - rbac-istio-io
       scope: Namespaced
-      version: v1alpha1
+      versions:
+        - name: v1alpha1
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -441,7 +486,10 @@ data:
         - istio-io
         - rbac-istio-io
       scope: Namespaced
-      version: v1alpha1
+      versions:
+        - name: v1alpha1
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -466,7 +514,10 @@ data:
         - istio-io
         - rbac-istio-io
       scope: Namespaced
-      version: v1alpha1
+      versions:
+        - name: v1alpha1
+          served: true
+          storage: true
       additionalPrinterColumns:
       - JSONPath: .spec.roleRef.name
         description: The name of the ServiceRole object being referenced
@@ -503,7 +554,10 @@ data:
         - istio-io
         - policy-istio-io
       scope: Namespaced
-      version: v1alpha2
+      versions:
+        - name: v1alpha2
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -528,7 +582,10 @@ data:
         - istio-io
         - policy-istio-io
       scope: Namespaced
-      version: v1alpha2
+      versions:
+        - name: v1alpha2
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -553,7 +610,10 @@ data:
         - istio-io
         - policy-istio-io
       scope: Namespaced
-      version: v1alpha2
+      versions:
+        - name: v1alpha2
+          served: true
+          storage: true
     ---
     kind: CustomResourceDefinition
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -578,7 +638,10 @@ data:
         - istio-io
         - policy-istio-io
       scope: Namespaced
-      version: v1alpha2
+      versions:
+        - name: v1alpha2
+          served: true
+          storage: true
     ---
     
 
@@ -612,7 +675,10 @@ data:
         - istio-io
         - networking-istio-io
       scope: Namespaced
-      version: v1alpha3
+      versions:
+        - name: v1alpha3
+          served: true
+          storage: true
     ---
     
 
@@ -644,7 +710,10 @@ data:
           - istio-io
           - rbac-istio-io
       scope: Namespaced
-      version: v1alpha1
+      versions:
+        - name: v1alpha1
+          served: true
+          storage: true
     ---
     
 
@@ -698,7 +767,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   namespace: istio-system
-  name: istio-init-crd-10
+  name: istio-init-crd-10-1.3.0
 spec:
   template:
     metadata:
@@ -708,7 +777,7 @@ spec:
       serviceAccountName: istio-init-service-account
       containers:
       - name: istio-init-crd-10
-        image: "docker.io/istio/kubectl:1.2.5"
+        image: "docker.io/istio/kubectl:1.3.0"
         imagePullPolicy: IfNotPresent
         volumeMounts:
         - name: crd-10
@@ -727,7 +796,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   namespace: istio-system
-  name: istio-init-crd-11
+  name: istio-init-crd-11-1.3.0
 spec:
   template:
     metadata:
@@ -737,7 +806,7 @@ spec:
       serviceAccountName: istio-init-service-account
       containers:
       - name: istio-init-crd-11
-        image: "docker.io/istio/kubectl:1.2.5"
+        image: "docker.io/istio/kubectl:1.3.0"
         imagePullPolicy: IfNotPresent
         volumeMounts:
         - name: crd-11
@@ -756,7 +825,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   namespace: istio-system
-  name: istio-init-crd-12
+  name: istio-init-crd-12-1.3.0
 spec:
   template:
     metadata:
@@ -766,7 +835,7 @@ spec:
       serviceAccountName: istio-init-service-account
       containers:
         - name: istio-init-crd-12
-          image: "docker.io/istio/kubectl:1.2.5"
+          image: "docker.io/istio/kubectl:1.3.0"
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: crd-12

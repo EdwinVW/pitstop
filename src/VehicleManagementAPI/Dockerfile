@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.2-sdk AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS build-env
 WORKDIR /app
 
 # Copy necessary files and restore as distinct layer
@@ -10,7 +10,7 @@ COPY . ./
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM microsoft/dotnet:2.2-aspnetcore-runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0
 COPY --from=build-env /app/out .
 
 # Expose ports
@@ -19,4 +19,4 @@ ENV ASPNETCORE_URLS http://*:5000
 HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:5000/hc || exit 1
 
 # Start
-ENTRYPOINT ["dotnet", "Pitstop.VehicleManagement.dll"]
+ENTRYPOINT ["dotnet", "Pitstop.VehicleManagementAPI.dll"]

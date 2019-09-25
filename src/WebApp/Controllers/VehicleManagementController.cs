@@ -1,15 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Pitstop.Models;
 using Pitstop.ViewModels;
-using AutoMapper;
-using Polly;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Commands;
 using WebApp.RESTClients;
+using Pitstop.WebApp.Mappers;
 
 namespace PitStop.Controllers
 {
@@ -83,7 +81,7 @@ namespace PitStop.Controllers
             {
                 return await _resiliencyHelper.ExecuteResilient(async () =>
                 {
-                    RegisterVehicle cmd = Mapper.Map<RegisterVehicle>(inputModel);
+                    RegisterVehicle cmd = inputModel.MapToRegisterVehicle();
                     await _vehicleManagementAPI.RegisterVehicle(cmd);
                     return RedirectToAction("Index");
                 }, View("Offline", new VehicleManagementOfflineViewModel()));

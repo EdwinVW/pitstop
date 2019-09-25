@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Pitstop.CustomerManagementAPI.DataAccess;
 using Pitstop.CustomerManagementAPI.Model;
-using AutoMapper;
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.CustomerManagementAPI.Events;
 using Pitstop.CustomerManagementAPI.Commands;
+using Pitstop.CustomerManagementAPI.Mappers;
+using Serilog;
+using System;
 
 namespace Pitstop.Application.CustomerManagementAPI.Controllers
 {
@@ -49,12 +51,12 @@ namespace Pitstop.Application.CustomerManagementAPI.Controllers
                 if (ModelState.IsValid)
                 {
                     // insert customer
-                    Customer customer = Mapper.Map<Customer>(command);
+                    Customer customer = command.MapToCustomer();
                     _dbContext.Customers.Add(customer);
                     await _dbContext.SaveChangesAsync();
 
                     // send event
-                    CustomerRegistered e = Mapper.Map<CustomerRegistered>(command);
+                    CustomerRegistered e = command.MapToCustomerRegistered();
                     await _messagePublisher.PublishMessageAsync(e.MessageType, e , "");
 
                     // return result
@@ -68,6 +70,7 @@ namespace Pitstop.Application.CustomerManagementAPI.Controllers
                     "Try again, and if the problem persists " +
                     "see your system administrator.");
                 return StatusCode(StatusCodes.Status500InternalServerError);
+                throw;
             }
         }
     }

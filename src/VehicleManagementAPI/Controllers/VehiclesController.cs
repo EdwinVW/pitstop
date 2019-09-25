@@ -4,10 +4,10 @@ using Pitstop.Application.VehicleManagement.Model;
 using Pitstop.Application.VehicleManagement.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
-using AutoMapper;
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.Application.VehicleManagement.Events;
 using Pitstop.Application.VehicleManagement.Commands;
+using Pitstop.VehicleManagementAPI.Mappers;
 
 namespace Pitstop.Application.VehicleManagement.Controllers
 {
@@ -49,12 +49,12 @@ namespace Pitstop.Application.VehicleManagement.Controllers
                 if (ModelState.IsValid)
                 {
                     // insert vehicle
-                    Vehicle vehicle = Mapper.Map<Vehicle>(command);
+                    Vehicle vehicle = command.MapToVehicle();
                     _dbContext.Vehicles.Add(vehicle);
                     await _dbContext.SaveChangesAsync();
 
                     // send event
-                    var e = Mapper.Map<VehicleRegistered>(command);
+                    var e = VehicleRegistered.FromCommand(command);
                     await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
                     //return result

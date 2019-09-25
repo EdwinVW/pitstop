@@ -4,7 +4,7 @@ metadata:
   labels:
     system: pitstop
     app: auditlogservice
-    version: v1
+    version: "1.0"
   name: auditlogservice
   namespace: pitstop
 spec:
@@ -14,13 +14,13 @@ spec:
       labels:
         system: pitstop
         app: auditlogservice
-        version: v1
+        version: "1.0"
     spec:
       containers:
       - env:
         - name: PITSTOP_ENVIRONMENT
           value: Production
-        image: pitstop/auditlogservice:latest
+        image: pitstop/auditlogservice:1.0
         imagePullPolicy: IfNotPresent
         name: auditlogservice
       restartPolicy: Always

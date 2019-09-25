@@ -4,7 +4,7 @@ metadata:
   labels:
     system: pitstop
     app: timeservice
-    version: v1
+    version: "1.0"
   name: timeservice
   namespace: pitstop
 spec:
@@ -14,13 +14,13 @@ spec:
       labels:
         system: pitstop
         app: timeservice
-        version: v1
+        version: "1.0"
     spec:
       containers:
       - env:
         - name: PITSTOP_ENVIRONMENT
           value: Production
-        image: pitstop/timeservice:latest
+        image: pitstop/timeservice:1.0
         imagePullPolicy: IfNotPresent
         name: timeservice
       restartPolicy: Always

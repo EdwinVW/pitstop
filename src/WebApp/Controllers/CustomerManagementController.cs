@@ -1,11 +1,8 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Pitstop.Models;
 using Pitstop.ViewModels;
-using PitStop.Controllers;
-using Polly;
-using System;
+using Pitstop.WebApp.Mappers;
 using System.Threading.Tasks;
 using WebApp.Commands;
 using WebApp.RESTClients;
@@ -68,7 +65,7 @@ namespace PitStop.Controllers
             {
                 return await _resiliencyHelper.ExecuteResilient(async () =>
                 {
-                    RegisterCustomer cmd = Mapper.Map<RegisterCustomer>(inputModel.Customer);
+                    RegisterCustomer cmd = inputModel.MapToRegisterCustomer();
                     await _customerManagementAPI.RegisterCustomer(cmd);
                     return RedirectToAction("Index");
                 }, View("Offline", new CustomerManagementOfflineViewModel()));

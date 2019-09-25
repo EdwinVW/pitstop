@@ -4,7 +4,7 @@ metadata:
   labels:
     system: pitstop
     app: customermanagementapi
-    version: v2
+    version: "2.0"
   name: customermanagementapi-v2
   namespace: pitstop
 spec:
@@ -14,13 +14,13 @@ spec:
       labels:
         system: pitstop
         app: customermanagementapi
-        version: v2
+        version: "2.0"
     spec:
       containers:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: pitstop/customermanagementapi:v2
+        image: pitstop/customermanagementapi:2.0
         imagePullPolicy: IfNotPresent
         name: customermanagementapi
         ports:

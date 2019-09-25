@@ -2,19 +2,14 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Pitstop.CustomerManagementAPI.DataAccess;
-using Swashbuckle.AspNetCore.Swagger;
-using AutoMapper;
-using Pitstop.CustomerManagementAPI.Model;
 using Pitstop.Infrastructure.Messaging;
 using System;
-using Pitstop.CustomerManagementAPI.Events;
-using Pitstop.CustomerManagementAPI.Commands;
-using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Microsoft.Extensions.HealthChecks;
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Hosting;
 
 namespace Pitstop.CustomerManagementAPI
 {
@@ -42,13 +37,14 @@ namespace Pitstop.CustomerManagementAPI
             services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
 
             // Add framework services.
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services
+                .AddMvc(options => options.EnableEndpointRouting = false)
+                .AddNewtonsoftJson();
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "CustomerManagement API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CustomerManagement API", Version = "v1" });
             });
             
             services.AddHealthChecks(checks =>
@@ -59,7 +55,7 @@ namespace Pitstop.CustomerManagementAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime, CustomerManagementDBContext dbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, CustomerManagementDBContext dbContext)
         {
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)
@@ -69,8 +65,6 @@ namespace Pitstop.CustomerManagementAPI
             app.UseMvc();
             app.UseDefaultFiles();
             app.UseStaticFiles();
-
-            SetupAutoMapper();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -86,19 +80,6 @@ namespace Pitstop.CustomerManagementAPI
             {
                 scope.ServiceProvider.GetService<CustomerManagementDBContext>().MigrateDB();
             }
-        }
-
-        private void SetupAutoMapper()
-        {
-            // setup automapper
-            var cfg = new AutoMapper.Configuration.MapperConfigurationExpression();
-            cfg.CreateMap<RegisterCustomer, Customer>();
-            cfg.CreateMap<Customer, RegisterCustomer>()
-                .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
-            cfg.CreateMap<RegisterCustomer, CustomerRegistered>()
-                .ForCtorParam("messageId", opt => opt.MapFrom(c => Guid.NewGuid()));
-            
-            Mapper.Initialize(cfg);
         }
     }
 }

@@ -5,13 +5,93 @@
    "version": "0.2.0",
    "configurations": [
         {
+            "name": "Run WebApp",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "",
+            "program": "${workspaceFolder}/WebApp/bin/Debug/netcoreapp3.0/WebApp.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/WebApp/bin/Debug/netcoreapp3.0",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "Run CustomerManagementAPI",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "",
+            "program": "${workspaceFolder}/CustomerManagementAPI/bin/Debug/netcoreapp3.0/Pitstop.CustomerManagementAPI.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/CustomerManagementAPI/bin/Debug/netcoreapp3.0",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "Run VehicleManagementAPI",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "",
+            "program": "${workspaceFolder}/VehicleManagementAPI/bin/Debug/netcoreapp3.0/Pitstop.VehicleManagementAPI.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/VehicleManagementAPI/bin/Debug/netcoreapp3.0",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },    
+        {
+            "name": "Run WorkshopManagementAPI",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "",
+            "program": "${workspaceFolder}/WorkshopManagementAPI/bin/Debug/netcoreapp3.0/Pitstop.WorkshopManagementAPI.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/WorkshopManagementAPI/bin/Debug/netcoreapp3.0",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },                
+        {
             "name": "Run AuditlogService",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/AuditlogService/bin/Debug/netcoreapp2.2/Pitstop.AuditlogService.dll",
+            "program": "${workspaceFolder}/AuditlogService/bin/Debug/netcoreapp3.0/Pitstop.AuditlogService.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/AuditlogService/bin/Debug/netcoreapp2.2",
+            "cwd": "${workspaceFolder}/AuditlogService/bin/Debug/netcoreapp3.0",
             "stopAtEntry": false,
             "console": "externalTerminal",
             "env": {
@@ -23,9 +103,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/InvoiceService/bin/Debug/netcoreapp2.2/Pitstop.InvoiceService.dll",
+            "program": "${workspaceFolder}/InvoiceService/bin/Debug/netcoreapp3.0/Pitstop.InvoiceService.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/InvoiceService/bin/Debug/netcoreapp2.2",
+            "cwd": "${workspaceFolder}/InvoiceService/bin/Debug/netcoreapp3.0",
             "stopAtEntry": false,
             "console": "externalTerminal",
             "env": {
@@ -37,9 +117,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/NotificationService/bin/Debug/netcoreapp2.2/Pitstop.NotificationService.dll",
+            "program": "${workspaceFolder}/NotificationService/bin/Debug/netcoreapp3.0/Pitstop.NotificationService.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/NotificationService/bin/Debug/netcoreapp2.2",
+            "cwd": "${workspaceFolder}/NotificationService/bin/Debug/netcoreapp3.0",
             "stopAtEntry": false,
             "console": "externalTerminal",
             "env": {
@@ -51,9 +131,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/TimeService/bin/Debug/netcoreapp2.2/Pitstop.TimeService.dll",
+            "program": "${workspaceFolder}/TimeService/bin/Debug/netcoreapp3.0/Pitstop.TimeService.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/TimeService/bin/Debug/netcoreapp2.2",
+            "cwd": "${workspaceFolder}/TimeService/bin/Debug/netcoreapp3.0",
             "stopAtEntry": false,
             "console": "externalTerminal",
             "env": {
@@ -64,10 +144,10 @@
             "name": "Run WorkshopManagementEventHandler",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/WorkshopManagementEventHandler/bin/Debug/netcoreapp2.2/Pitstop.WorkshopManagementEventHandler.dll",
+            "preLaunchTask": "",
+            "program": "${workspaceFolder}/WorkshopManagementEventHandler/bin/Debug/netcoreapp3.0/Pitstop.WorkshopManagementEventHandler.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/WorkshopManagementEventHandler/bin/Debug/netcoreapp2.2",
+            "cwd": "${workspaceFolder}/WorkshopManagementEventHandler/bin/Debug/netcoreapp3.0",
             "stopAtEntry": false,
             "console": "externalTerminal",
             "env": {

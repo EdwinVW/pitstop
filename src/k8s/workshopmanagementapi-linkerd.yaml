@@ -5,7 +5,7 @@ metadata:
   labels:
     app: workshopmanagementapi
     system: pitstop
-    version: v1
+    version: "1.0"
   name: workshopmanagementapi
   namespace: pitstop
 spec:
@@ -23,13 +23,13 @@ spec:
         linkerd.io/control-plane-ns: linkerd
         linkerd.io/proxy-deployment: workshopmanagementapi
         system: pitstop
-        version: v1
+        version: "1.0"
     spec:
       containers:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: pitstop/workshopmanagementapi:latest
+        image: pitstop/workshopmanagementapi:1.0
         imagePullPolicy: IfNotPresent
         name: workshopmanagementapi
         ports:
@@ -65,15 +65,15 @@ spec:
         - name: LINKERD2_PROXY_IDENTITY_TRUST_ANCHORS
           value: |
             -----BEGIN CERTIFICATE-----
-            MIIBhDCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
-            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwNDE4MDU1NTU3WhcNMjAwNDE3
-            MDU1NjE3WjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
-            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARGjPTTtncBX0gAWJEQZkPBJjxm
-            Cq5/1fSKJJG/XLA311EQDu2Bq1Aulf7pbjXN0WTX3L+OyKgcJlQgigW4lsZ8o0Iw
+            MIIBgzCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
+            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwOTI1MTMzNTQzWhcNMjAwOTI0
+            MTMzNjAzWjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
+            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARfUhg7gf/1Yn/0r5A0IBuob+C5
+            /DAl+aQz//caFmRdeQcVS8uWs1kWhkiIPLVCGfgA5oVgnhwtuY/No8C1TH3+o0Iw
             QDAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMC
-            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSQAwRgIhAKMEqdZjKEPy7FKw
-            hIp2m8ykjSmpgJir+yqGo51KynqnAiEA7EiIVC1LTXEjx4yDqpo3Ueim8i0TyV/V
-            cmSf9B4T+UM=
+            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSAAwRQIgSx02kAAaS+0ezRre
+            D3VWSoLqm/Bjn4Lu/5X0ZEOz3yMCIQCoSI4YhqIXn+49nzqVD6VioRwLhFInoDop
+            Ms1nzSz82w==
             -----END CERTIFICATE-----
         - name: LINKERD2_PROXY_IDENTITY_TOKEN_FILE
           value: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -154,8 +154,8 @@ metadata:
   labels:
     system: pitstop
     app: workshopmanagementapi
-    version: v1
-  name: workshopmanagementapi
+    version: "1.0"
+  name: workshopmanagementapisvc
   namespace: pitstop
 spec:
   type: NodePort
@@ -167,5 +167,5 @@ spec:
   selector:
     system: pitstop
     app: workshopmanagementapi
-    version: v1
+    version: "1.0"
 ---

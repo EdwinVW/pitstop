@@ -4,7 +4,7 @@ metadata:
   labels:
     system: pitstop
     app: workshopmanagementapi
-    version: v1
+    version: "1.0"
   name: workshopmanagementapi
   namespace: pitstop
 spec:
@@ -14,13 +14,13 @@ spec:
       labels:
         system: pitstop
         app: workshopmanagementapi
-        version: v1
+        version: "1.0"
     spec:
       containers:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: pitstop/workshopmanagementapi:latest
+        image: pitstop/workshopmanagementapi:1.0
         imagePullPolicy: IfNotPresent
         name: workshopmanagementapi
         ports:
@@ -35,7 +35,7 @@ metadata:
   labels:
     system: pitstop
     app: workshopmanagementapi
-    version: v1
+    version: "1.0"
   name: workshopmanagementapi
   namespace: pitstop
 spec:
@@ -48,4 +48,4 @@ spec:
   selector:
     system: pitstop
     app: workshopmanagementapi
-    version: v1
+    version: "1.0"

@@ -6,12 +6,12 @@ metadata:
 spec:
   host: customermanagementapi
   subsets:
-    - name: version-v1
+    - name: v1
       labels:
-        version: v1
-    - name: version-v2
+        version: "1.0"
+    - name: v2
       labels:
-        version: v2
+        version: "2.0"
 
 ---
 
@@ -27,8 +27,8 @@ spec:
     - route:
       - destination:
           host: customermanagementapi
-          subset: version-v1
+          subset: v1
         weight: 100
       mirror:
         host: customermanagementapi
-        subset: version-v2
+        subset: v2

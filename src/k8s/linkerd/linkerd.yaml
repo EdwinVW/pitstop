@@ -15,11 +15,11 @@ metadata:
     linkerd.io/created-by: linkerd/cli stable-2.3.0
 data:
   global: |
-    {"linkerdNamespace":"linkerd","cniEnabled":false,"version":"stable-2.3.0","identityContext":{"trustDomain":"cluster.local","trustAnchorsPem":"-----BEGIN CERTIFICATE-----\nMIIBhDCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0\neS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwNDE4MDU1NTU3WhcNMjAwNDE3\nMDU1NjE3WjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j\nYWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARGjPTTtncBX0gAWJEQZkPBJjxm\nCq5/1fSKJJG/XLA311EQDu2Bq1Aulf7pbjXN0WTX3L+OyKgcJlQgigW4lsZ8o0Iw\nQDAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMC\nMA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSQAwRgIhAKMEqdZjKEPy7FKw\nhIp2m8ykjSmpgJir+yqGo51KynqnAiEA7EiIVC1LTXEjx4yDqpo3Ueim8i0TyV/V\ncmSf9B4T+UM=\n-----END CERTIFICATE-----\n","issuanceLifetime":"86400s","clockSkewAllowance":"20s"},"autoInjectContext":null}
+    {"linkerdNamespace":"linkerd","cniEnabled":false,"version":"stable-2.3.0","identityContext":{"trustDomain":"cluster.local","trustAnchorsPem":"-----BEGIN CERTIFICATE-----\nMIIBgzCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0\neS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwOTI1MTMzOTMyWhcNMjAwOTI0\nMTMzOTUyWjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j\nYWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQmYkgSeiVaRtw/hNsZm/oBu7iw\nd3W6pBf+7wXdv07tDIYN9uBAvF2zCguMnw0OCNRWsxrZQD4H/ZxbZ0aTD9H3o0Iw\nQDAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMC\nMA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSAAwRQIgNhZIuKlQdKAh8Wf3\npJAYgn7Mgsq6BLsXS7kUyBBisuMCIQCnNemOLWP8nnIJhbRNacqflizxAgf6angH\nuEH4gRhKdg==\n-----END CERTIFICATE-----\n","issuanceLifetime":"86400s","clockSkewAllowance":"20s"},"autoInjectContext":null}
   proxy: |
     {"proxyImage":{"imageName":"gcr.io/linkerd-io/proxy","pullPolicy":"IfNotPresent"},"proxyInitImage":{"imageName":"gcr.io/linkerd-io/proxy-init","pullPolicy":"IfNotPresent"},"controlPort":{"port":4190},"ignoreInboundPorts":[],"ignoreOutboundPorts":[],"inboundPort":{"port":4143},"adminPort":{"port":4191},"outboundPort":{"port":4140},"resource":{"requestCpu":"","requestMemory":"","limitCpu":"","limitMemory":""},"proxyUid":"2102","logLevel":{"level":"warn,linkerd2_proxy=info"},"disableExternalProfiles":true}
   install: |
-    {"uuid":"6b853269-69c2-47fc-8ba7-6e82a793dd46","cliVersion":"stable-2.3.0","flags":[]}
+    {"uuid":"37f9a0dd-5d73-4541-9541-3eadbbc3f9de","cliVersion":"stable-2.3.0","flags":[]}
 ---
 ###
 ### Identity Controller Service
@@ -80,10 +80,10 @@ metadata:
     linkerd.io/control-plane-component: identity
   annotations:
     linkerd.io/created-by: linkerd/cli stable-2.3.0
-    linkerd.io/identity-issuer-expiry: 2020-04-17T05:56:17Z
+    linkerd.io/identity-issuer-expiry: 2020-09-24T13:39:52Z
 data:
-  crt.pem: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJoRENDQVNtZ0F3SUJBZ0lCQVRBS0JnZ3Foa2pPUFFRREFqQXBNU2N3SlFZRFZRUURFeDVwWkdWdWRHbDAKZVM1c2FXNXJaWEprTG1Oc2RYTjBaWEl1Ykc5allXd3dIaGNOTVRrd05ERTRNRFUxTlRVM1doY05NakF3TkRFMwpNRFUxTmpFM1dqQXBNU2N3SlFZRFZRUURFeDVwWkdWdWRHbDBlUzVzYVc1clpYSmtMbU5zZFhOMFpYSXViRzlqCllXd3dXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CQndOQ0FBUkdqUFRUdG5jQlgwZ0FXSkVRWmtQQkpqeG0KQ3E1LzFmU0tKSkcvWExBMzExRVFEdTJCcTFBdWxmN3BialhOMFdUWDNMK095S2djSmxRZ2lnVzRsc1o4bzBJdwpRREFPQmdOVkhROEJBZjhFQkFNQ0FRWXdIUVlEVlIwbEJCWXdGQVlJS3dZQkJRVUhBd0VHQ0NzR0FRVUZCd01DCk1BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0NnWUlLb1pJemowRUF3SURTUUF3UmdJaEFLTUVxZFpqS0VQeTdGS3cKaElwMm04eWtqU21wZ0ppcit5cUdvNTFLeW5xbkFpRUE3RWlJVkMxTFRYRWp4NHlEcXBvM1VlaW04aTBUeVYvVgpjbVNmOUI0VCtVTT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
-  key.pem: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUorczFrR2VWTGZFK1BWeDJ4NngyaTdmcUNLVHMweVNPMDFLWWZ2dmowcWZvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFUm96MDA3WjNBVjlJQUZpUkVHWkR3U1k4WmdxdWY5WDBpaVNSdjF5d045ZFJFQTd0Z2F0UQpMcFgrNlc0MXpkRmsxOXkvanNpb0hDWlVJSW9GdUpiR2ZBPT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+  crt.pem: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJnekNDQVNtZ0F3SUJBZ0lCQVRBS0JnZ3Foa2pPUFFRREFqQXBNU2N3SlFZRFZRUURFeDVwWkdWdWRHbDAKZVM1c2FXNXJaWEprTG1Oc2RYTjBaWEl1Ykc5allXd3dIaGNOTVRrd09USTFNVE16T1RNeVdoY05NakF3T1RJMApNVE16T1RVeVdqQXBNU2N3SlFZRFZRUURFeDVwWkdWdWRHbDBlUzVzYVc1clpYSmtMbU5zZFhOMFpYSXViRzlqCllXd3dXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CQndOQ0FBUW1Za2dTZWlWYVJ0dy9oTnNabS9vQnU3aXcKZDNXNnBCZis3d1hkdjA3dERJWU45dUJBdkYyekNndU1udzBPQ05SV3N4clpRRDRIL1p4YlowYVREOUgzbzBJdwpRREFPQmdOVkhROEJBZjhFQkFNQ0FRWXdIUVlEVlIwbEJCWXdGQVlJS3dZQkJRVUhBd0VHQ0NzR0FRVUZCd01DCk1BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0NnWUlLb1pJemowRUF3SURTQUF3UlFJZ05oWkl1S2xRZEtBaDhXZjMKcEpBWWduN01nc3E2QkxzWFM3a1V5QkJpc3VNQ0lRQ25OZW1PTFdQOG5uSUpoYlJOYWNxZmxpenhBZ2Y2YW5nSAp1RUg0Z1JoS2RnPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+  key.pem: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUwyTXR1RTY5T2RudUZpNDRqTDVpSTlHajZQdGw2WHhNek5qNnl5NUd5SGtvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFSm1KSUVub2xXa2JjUDRUYkdadjZBYnU0c0hkMXVxUVgvdThGM2I5TzdReUdEZmJnUUx4ZApzd29Mako4TkRnalVWck1hMlVBK0IvMmNXMmRHa3cvUjl3PT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -170,15 +170,15 @@ spec:
         - name: LINKERD2_PROXY_IDENTITY_TRUST_ANCHORS
           value: |
             -----BEGIN CERTIFICATE-----
-            MIIBhDCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
-            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwNDE4MDU1NTU3WhcNMjAwNDE3
-            MDU1NjE3WjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
-            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARGjPTTtncBX0gAWJEQZkPBJjxm
-            Cq5/1fSKJJG/XLA311EQDu2Bq1Aulf7pbjXN0WTX3L+OyKgcJlQgigW4lsZ8o0Iw
+            MIIBgzCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
+            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwOTI1MTMzOTMyWhcNMjAwOTI0
+            MTMzOTUyWjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
+            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQmYkgSeiVaRtw/hNsZm/oBu7iw
+            d3W6pBf+7wXdv07tDIYN9uBAvF2zCguMnw0OCNRWsxrZQD4H/ZxbZ0aTD9H3o0Iw
             QDAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMC
-            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSQAwRgIhAKMEqdZjKEPy7FKw
-            hIp2m8ykjSmpgJir+yqGo51KynqnAiEA7EiIVC1LTXEjx4yDqpo3Ueim8i0TyV/V
-            cmSf9B4T+UM=
+            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSAAwRQIgNhZIuKlQdKAh8Wf3
+            pJAYgn7Mgsq6BLsXS7kUyBBisuMCIQCnNemOLWP8nnIJhbRNacqflizxAgf6angH
+            uEH4gRhKdg==
             -----END CERTIFICATE-----
         - name: LINKERD2_PROXY_IDENTITY_TOKEN_FILE
           value: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -477,15 +477,15 @@ spec:
         - name: LINKERD2_PROXY_IDENTITY_TRUST_ANCHORS
           value: |
             -----BEGIN CERTIFICATE-----
-            MIIBhDCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
-            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwNDE4MDU1NTU3WhcNMjAwNDE3
-            MDU1NjE3WjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
-            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARGjPTTtncBX0gAWJEQZkPBJjxm
-            Cq5/1fSKJJG/XLA311EQDu2Bq1Aulf7pbjXN0WTX3L+OyKgcJlQgigW4lsZ8o0Iw
+            MIIBgzCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
+            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwOTI1MTMzOTMyWhcNMjAwOTI0
+            MTMzOTUyWjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
+            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQmYkgSeiVaRtw/hNsZm/oBu7iw
+            d3W6pBf+7wXdv07tDIYN9uBAvF2zCguMnw0OCNRWsxrZQD4H/ZxbZ0aTD9H3o0Iw
             QDAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMC
-            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSQAwRgIhAKMEqdZjKEPy7FKw
-            hIp2m8ykjSmpgJir+yqGo51KynqnAiEA7EiIVC1LTXEjx4yDqpo3Ueim8i0TyV/V
-            cmSf9B4T+UM=
+            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSAAwRQIgNhZIuKlQdKAh8Wf3
+            pJAYgn7Mgsq6BLsXS7kUyBBisuMCIQCnNemOLWP8nnIJhbRNacqflizxAgf6angH
+            uEH4gRhKdg==
             -----END CERTIFICATE-----
         - name: LINKERD2_PROXY_IDENTITY_TOKEN_FILE
           value: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -785,15 +785,15 @@ spec:
         - name: LINKERD2_PROXY_IDENTITY_TRUST_ANCHORS
           value: |
             -----BEGIN CERTIFICATE-----
-            MIIBhDCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
-            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwNDE4MDU1NTU3WhcNMjAwNDE3
-            MDU1NjE3WjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
-            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARGjPTTtncBX0gAWJEQZkPBJjxm
-            Cq5/1fSKJJG/XLA311EQDu2Bq1Aulf7pbjXN0WTX3L+OyKgcJlQgigW4lsZ8o0Iw
+            MIIBgzCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
+            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwOTI1MTMzOTMyWhcNMjAwOTI0
+            MTMzOTUyWjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
+            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQmYkgSeiVaRtw/hNsZm/oBu7iw
+            d3W6pBf+7wXdv07tDIYN9uBAvF2zCguMnw0OCNRWsxrZQD4H/ZxbZ0aTD9H3o0Iw
             QDAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMC
-            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSQAwRgIhAKMEqdZjKEPy7FKw
-            hIp2m8ykjSmpgJir+yqGo51KynqnAiEA7EiIVC1LTXEjx4yDqpo3Ueim8i0TyV/V
-            cmSf9B4T+UM=
+            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSAAwRQIgNhZIuKlQdKAh8Wf3
+            pJAYgn7Mgsq6BLsXS7kUyBBisuMCIQCnNemOLWP8nnIJhbRNacqflizxAgf6angH
+            uEH4gRhKdg==
             -----END CERTIFICATE-----
         - name: LINKERD2_PROXY_IDENTITY_TOKEN_FILE
           value: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -1012,15 +1012,15 @@ spec:
         - name: LINKERD2_PROXY_IDENTITY_TRUST_ANCHORS
           value: |
             -----BEGIN CERTIFICATE-----
-            MIIBhDCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
-            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwNDE4MDU1NTU3WhcNMjAwNDE3
-            MDU1NjE3WjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
-            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARGjPTTtncBX0gAWJEQZkPBJjxm
-            Cq5/1fSKJJG/XLA311EQDu2Bq1Aulf7pbjXN0WTX3L+OyKgcJlQgigW4lsZ8o0Iw
+            MIIBgzCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
+            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwOTI1MTMzOTMyWhcNMjAwOTI0
+            MTMzOTUyWjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
+            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQmYkgSeiVaRtw/hNsZm/oBu7iw
+            d3W6pBf+7wXdv07tDIYN9uBAvF2zCguMnw0OCNRWsxrZQD4H/ZxbZ0aTD9H3o0Iw
             QDAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMC
-            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSQAwRgIhAKMEqdZjKEPy7FKw
-            hIp2m8ykjSmpgJir+yqGo51KynqnAiEA7EiIVC1LTXEjx4yDqpo3Ueim8i0TyV/V
-            cmSf9B4T+UM=
+            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSAAwRQIgNhZIuKlQdKAh8Wf3
+            pJAYgn7Mgsq6BLsXS7kUyBBisuMCIQCnNemOLWP8nnIJhbRNacqflizxAgf6angH
+            uEH4gRhKdg==
             -----END CERTIFICATE-----
         - name: LINKERD2_PROXY_IDENTITY_TOKEN_FILE
           value: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -1300,15 +1300,15 @@ spec:
         - name: LINKERD2_PROXY_IDENTITY_TRUST_ANCHORS
           value: |
             -----BEGIN CERTIFICATE-----
-            MIIBhDCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
-            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwNDE4MDU1NTU3WhcNMjAwNDE3
-            MDU1NjE3WjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
-            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARGjPTTtncBX0gAWJEQZkPBJjxm
-            Cq5/1fSKJJG/XLA311EQDu2Bq1Aulf7pbjXN0WTX3L+OyKgcJlQgigW4lsZ8o0Iw
+            MIIBgzCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
+            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwOTI1MTMzOTMyWhcNMjAwOTI0
+            MTMzOTUyWjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
+            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQmYkgSeiVaRtw/hNsZm/oBu7iw
+            d3W6pBf+7wXdv07tDIYN9uBAvF2zCguMnw0OCNRWsxrZQD4H/ZxbZ0aTD9H3o0Iw
             QDAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMC
-            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSQAwRgIhAKMEqdZjKEPy7FKw
-            hIp2m8ykjSmpgJir+yqGo51KynqnAiEA7EiIVC1LTXEjx4yDqpo3Ueim8i0TyV/V
-            cmSf9B4T+UM=
+            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSAAwRQIgNhZIuKlQdKAh8Wf3
+            pJAYgn7Mgsq6BLsXS7kUyBBisuMCIQCnNemOLWP8nnIJhbRNacqflizxAgf6angH
+            uEH4gRhKdg==
             -----END CERTIFICATE-----
         - name: LINKERD2_PROXY_IDENTITY_TOKEN_FILE
           value: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -1588,15 +1588,15 @@ spec:
         - name: LINKERD2_PROXY_IDENTITY_TRUST_ANCHORS
           value: |
             -----BEGIN CERTIFICATE-----
-            MIIBhDCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
-            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwNDE4MDU1NTU3WhcNMjAwNDE3
-            MDU1NjE3WjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
-            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARGjPTTtncBX0gAWJEQZkPBJjxm
-            Cq5/1fSKJJG/XLA311EQDu2Bq1Aulf7pbjXN0WTX3L+OyKgcJlQgigW4lsZ8o0Iw
+            MIIBgzCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
+            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwOTI1MTMzOTMyWhcNMjAwOTI0
+            MTMzOTUyWjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
+            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQmYkgSeiVaRtw/hNsZm/oBu7iw
+            d3W6pBf+7wXdv07tDIYN9uBAvF2zCguMnw0OCNRWsxrZQD4H/ZxbZ0aTD9H3o0Iw
             QDAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMC
-            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSQAwRgIhAKMEqdZjKEPy7FKw
-            hIp2m8ykjSmpgJir+yqGo51KynqnAiEA7EiIVC1LTXEjx4yDqpo3Ueim8i0TyV/V
-            cmSf9B4T+UM=
+            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSAAwRQIgNhZIuKlQdKAh8Wf3
+            pJAYgn7Mgsq6BLsXS7kUyBBisuMCIQCnNemOLWP8nnIJhbRNacqflizxAgf6angH
+            uEH4gRhKdg==
             -----END CERTIFICATE-----
         - name: LINKERD2_PROXY_IDENTITY_TOKEN_FILE
           value: /var/run/secrets/kubernetes.io/serviceaccount/token

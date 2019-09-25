@@ -4,7 +4,7 @@ metadata:
   labels:
     system: pitstop
     app: workshopmanagementeventhandler
-    version: v1
+    version: "1.0"
   name: workshopmanagementeventhandler
   namespace: pitstop
 spec:
@@ -14,13 +14,13 @@ spec:
       labels:
         system: pitstop
         app: workshopmanagementeventhandler
-        version: v1
+        version: "1.0"
     spec:
       containers:
       - env:
         - name: PITSTOP_ENVIRONMENT
           value: Production
-        image: pitstop/workshopmanagementeventhandler:latest
+        image: pitstop/workshopmanagementeventhandler:1.0
         imagePullPolicy: IfNotPresent
         name: workshopmanagementeventhandler
       restartPolicy: Always

@@ -22,7 +22,7 @@ namespace Pitstop.InvoiceService
 
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var hostBuilder = new HostBuilder()
+            var hostBuilder = Host.CreateDefaultBuilder(args)
                 .ConfigureHostConfiguration(configHost =>
                 {
                     configHost.SetBasePath(Directory.GetCurrentDirectory());

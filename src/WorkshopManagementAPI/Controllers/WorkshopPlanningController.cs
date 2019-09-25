@@ -1,19 +1,15 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Pitstop.Infrastructure.Messaging;
 using Pitstop.WorkshopManagementAPI.Repositories;
 using System;
 using Pitstop.WorkshopManagementAPI.Domain;
-using System.Collections.Generic;
 using System.Linq;
 using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
 using Pitstop.WorkshopManagementAPI.Models;
 using WorkshopManagementAPI.CommandHandlers;
 using Serilog;
-using WorkshopManagementAPI.Commands;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Pitstop.WorkshopManagementAPI.Controllers
 {
@@ -24,7 +20,8 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
         private readonly IPlanMaintenanceJobCommandHandler _planMaintenanceJobCommandHandler;
         private readonly IFinishMaintenanceJobCommandHandler _finishMaintenanceJobCommandHandler;
 
-        public WorkshopPlanningController(IWorkshopPlanningRepository planningRepo,
+        public WorkshopPlanningController(
+            IWorkshopPlanningRepository planningRepo,
             IPlanMaintenanceJobCommandHandler planMaintenanceJobCommandHandler,
             IFinishMaintenanceJobCommandHandler finishMaintenanceJobCommand)
         {

@@ -4,7 +4,7 @@ metadata:
   labels:
     system: pitstop
     app: webpp
-    version: v1
+    version: "1.0"
   name: webapp
   namespace: pitstop
 spec:
@@ -14,13 +14,13 @@ spec:
       labels:
         system: pitstop
         app: webpp
-        version: v1
+        version: "1.0"
     spec:
       containers:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: pitstop/webapp:latest
+        image: pitstop/webapp:1.0
         imagePullPolicy: IfNotPresent
         name: webapp
         ports:
@@ -35,7 +35,7 @@ metadata:
   labels:
     system: pitstop
     app: webapp
-    version: v1
+    version: "1.0"
   name: webapp
   namespace: pitstop
 spec:
@@ -47,5 +47,5 @@ spec:
   selector:
     system: pitstop
     app: webpp
-    version: v1
+    version: "1.0"
 

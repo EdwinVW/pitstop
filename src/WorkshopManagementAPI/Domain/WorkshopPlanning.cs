@@ -1,13 +1,11 @@
-﻿using AutoMapper;
-using Pitstop.Infrastructure.Messaging;
+﻿using Pitstop.Infrastructure.Messaging;
 using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
 using Pitstop.WorkshopManagementAPI.Events;
+using Pitstop.WorkshopManagementAPI.Mappers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using WorkshopManagementAPI.Commands;
 
 namespace Pitstop.WorkshopManagementAPI.Domain
 {
@@ -90,7 +88,7 @@ namespace Pitstop.WorkshopManagementAPI.Domain
             this.NumberOfParallelMaintenanceJobsOnAVehicleIsOne(command);
 
             // handle event
-            MaintenanceJobPlanned e = Mapper.Map<MaintenanceJobPlanned>(command);
+            MaintenanceJobPlanned e = command.MapToMaintenanceJobPlanned();
             return HandleEvent(e);
         }
 
@@ -107,7 +105,7 @@ namespace Pitstop.WorkshopManagementAPI.Domain
             job.FinishedMaintenanceJobCanNotBeFinished();
 
             // handle event
-            MaintenanceJobFinished e = Mapper.Map<MaintenanceJobFinished>(command);
+            MaintenanceJobFinished e = command.MapToMaintenanceJobFinished();
             return HandleEvent(e);
         }
 
