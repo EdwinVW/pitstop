@@ -66,14 +66,14 @@ spec:
           value: |
             -----BEGIN CERTIFICATE-----
             MIIBgzCCASmgAwIBAgIBATAKBggqhkjOPQQDAjApMScwJQYDVQQDEx5pZGVudGl0
-            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwOTI1MTMzNTQzWhcNMjAwOTI0
-            MTMzNjAzWjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
-            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARfUhg7gf/1Yn/0r5A0IBuob+C5
-            /DAl+aQz//caFmRdeQcVS8uWs1kWhkiIPLVCGfgA5oVgnhwtuY/No8C1TH3+o0Iw
+            eS5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMTkwOTI1MjEzNzA3WhcNMjAwOTI0
+            MjEzNzI3WjApMScwJQYDVQQDEx5pZGVudGl0eS5saW5rZXJkLmNsdXN0ZXIubG9j
+            YWwwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAT+tzqo3Ox8ZQ4/OUlqH10UShfh
+            PFicmq8LoiOVADq0YCqTpM21LYV1Op92XwFM/eBl1syLCiV5PtiZgkQRgHJwo0Iw
             QDAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMC
-            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSAAwRQIgSx02kAAaS+0ezRre
-            D3VWSoLqm/Bjn4Lu/5X0ZEOz3yMCIQCoSI4YhqIXn+49nzqVD6VioRwLhFInoDop
-            Ms1nzSz82w==
+            MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSAAwRQIgSbImZPEXo8DXxQ7K
+            b9XeFuuEnQrEmoxGAbc+eC8SPOkCIQDkPL9yDPKZDxuF93aBOPcgBOXDmbqc1Tpe
+            d+3bVTDggQ==
             -----END CERTIFICATE-----
         - name: LINKERD2_PROXY_IDENTITY_TOKEN_FILE
           value: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -155,7 +155,7 @@ metadata:
     system: pitstop
     app: workshopmanagementapi
     version: "1.0"
-  name: workshopmanagementapisvc
+  name: workshopmanagementapi
   namespace: pitstop
 spec:
   type: NodePort
