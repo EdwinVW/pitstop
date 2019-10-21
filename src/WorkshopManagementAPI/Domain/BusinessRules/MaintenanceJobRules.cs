@@ -1,6 +1,7 @@
+using Pitstop.WorkshopManagementAPI.Domain.Entities;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
 
-namespace Pitstop.WorkshopManagementAPI.Domain
+namespace Pitstop.WorkshopManagementAPI.Domain.BusinessRules
 {
     public static class MaintenanceJobRules
     {

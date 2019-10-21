@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pitstop.WorkshopManagementAPI.Domain
+namespace Pitstop.WorkshopManagementAPI.Domain.Entities
 {
     public class MaintenanceJob
     {

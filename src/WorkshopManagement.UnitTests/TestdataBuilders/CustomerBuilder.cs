@@ -1,5 +1,6 @@
 using System;
 using Pitstop.WorkshopManagementAPI.Domain;
+using Pitstop.WorkshopManagementAPI.Domain.Entities;
 
 namespace WorkshopManagement.UnitTests.TestdataBuilders
 {

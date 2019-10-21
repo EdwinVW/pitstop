@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Pitstop.WorkshopManagementAPI.Models
+﻿namespace Pitstop.WorkshopManagementAPI.Models
 {
     public class BusinessRuleViolation
     {

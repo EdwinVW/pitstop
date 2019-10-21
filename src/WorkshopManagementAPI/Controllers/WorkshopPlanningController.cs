@@ -104,7 +104,7 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
                         }
 
                         // return result
-                        return CreatedAtRoute("GetByDate", new { planningDate = DateTime.ParseExact(planning.Id, "yyyy-MM-dd", CultureInfo.InvariantCulture) }, planning);
+                        return CreatedAtRoute("GetByDate", new { planningDate = planning.Id }, planning);
                     }
                     catch (BusinessRuleViolationException ex)
                     {

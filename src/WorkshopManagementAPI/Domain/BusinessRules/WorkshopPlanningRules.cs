@@ -2,7 +2,7 @@ using System.Linq;
 using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
 
-namespace Pitstop.WorkshopManagementAPI.Domain
+namespace Pitstop.WorkshopManagementAPI.Domain.BusinessRules
 {
     public static class WorkshopPlanningRules
     {

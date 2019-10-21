@@ -1,6 +1,6 @@
 ﻿using Pitstop.WorkshopManagementAPI.Domain.Core;
 
-namespace Pitstop.WorkshopManagementAPI.Domain
+namespace Pitstop.WorkshopManagementAPI.Domain.Entities
 {
     public class Vehicle : Entity<string>
     {

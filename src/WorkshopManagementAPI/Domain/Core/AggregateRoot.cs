@@ -54,7 +54,7 @@ namespace Pitstop.WorkshopManagementAPI.Domain.Core
             IsReplaying = true;
             foreach (Event e in events)
             {
-                HandleEvent(e);
+                When(e);
                 OriginalVersion++;
                 Version++;
             }
@@ -78,7 +78,7 @@ namespace Pitstop.WorkshopManagementAPI.Domain.Core
         protected void RaiseEvent(Event @event)
         {
             // let the derived aggregate handle the event
-            HandleEvent(@event);
+            When(@event);
 
             // save the event so it can be published outside the aggregate
             _events.Add(@event);
@@ -97,8 +97,8 @@ namespace Pitstop.WorkshopManagementAPI.Domain.Core
         /// Handle a specific event. Derived classes should overide this method and implement 
         /// the handling of different types of events.
         /// </summary>
-        /// <param name="eventToHandle">The event to handle.</param>
-        protected virtual void HandleEvent(Event eventToHandle)
+        /// <param name="@event">The event to handle.</param>
+        protected virtual void When(dynamic @event)
         {
             throw new NotImplementedException();
         }

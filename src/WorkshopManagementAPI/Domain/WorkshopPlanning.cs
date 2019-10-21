@@ -1,7 +1,10 @@
 ﻿using Pitstop.Infrastructure.Messaging;
 using Pitstop.WorkshopManagementAPI.Commands;
+using Pitstop.WorkshopManagementAPI.Domain.BusinessRules;
 using Pitstop.WorkshopManagementAPI.Domain.Core;
+using Pitstop.WorkshopManagementAPI.Domain.Entities;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
+using Pitstop.WorkshopManagementAPI.Domain.ValueObjects;
 using Pitstop.WorkshopManagementAPI.Events;
 using Pitstop.WorkshopManagementAPI.Mappers;
 using System;
@@ -10,16 +13,16 @@ using System.Linq;
 
 namespace Pitstop.WorkshopManagementAPI.Domain
 {
-    public class WorkshopPlanning : AggregateRoot<string>
+    public class WorkshopPlanning : AggregateRoot<WorkshopPlanningId>
     {
         /// <summary>
         /// The list of maintenance-jobs for this day. 
         /// </summary>
         public List<MaintenanceJob> Jobs { get; private set; }
 
-        public WorkshopPlanning(DateTime date) : base(date.ToString("yyyy-MM-dd")) { }
+        public WorkshopPlanning(DateTime date) : base(new WorkshopPlanningId(date)) { }
 
-        public WorkshopPlanning(DateTime date, IEnumerable<Event> events) : base(date.ToString("yyyy-MM-dd"), events) { }
+        public WorkshopPlanning(DateTime date, IEnumerable<Event> events) : base(new WorkshopPlanningId(date), events) { }
 
         /// <summary>
         /// Creates a new instance of a workshop-planning for the specified date.
@@ -66,23 +69,10 @@ namespace Pitstop.WorkshopManagementAPI.Domain
         /// Handles an event and updates the aggregate version.
         /// </summary>
         /// <remarks>Caution: this handles is also called while replaying events to restore state.
-        /// So, do not execute any checks that couold fail or introduce any side-effects in this handler.</remarks>
-        protected override void HandleEvent(Event eventToHandle)
+        /// So, do not execute any checks that could fail or introduce any side-effects in this handler.</remarks>
+        protected override void When(dynamic @event)
         {
-            switch(eventToHandle)
-            {
-                case WorkshopPlanningCreated e:
-                    Handle(e);
-                    break;
-                case MaintenanceJobPlanned e:
-                    Handle(e);
-                    break;
-                case MaintenanceJobFinished e:
-                    Handle(e);
-                    break;
-                default:
-                    throw new InvalidOperationException("Unknown event-type specified for replay.");
-            }
+            Handle(@event);
         }
 
         private void Handle(WorkshopPlanningCreated e)

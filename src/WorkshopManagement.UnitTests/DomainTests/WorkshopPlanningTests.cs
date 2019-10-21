@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Pitstop.Infrastructure.Messaging;
-using Pitstop.WorkshopManagementAPI;
 using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Domain;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
@@ -19,8 +18,6 @@ namespace WorkshopManagement.UnitTests.DomainTests
         {
             // arrange
             DateTime date = DateTime.Today;
-            string workshopPlanningId = date.ToString("yyyy-MM-dd");
-
 
             // act
             WorkshopPlanning sut = WorkshopPlanning.Create(date);
@@ -29,7 +26,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
             // assert
             Assert.NotNull(sut);
             Assert.NotNull(sut.Id);
-            Assert.Equal(workshopPlanningId, sut.Id);
+            Assert.Equal(date, sut.Id);
             Assert.Equal(0, sut.OriginalVersion);
             Assert.Equal(1, sut.Version);
             Assert.Empty(sut.Jobs);
@@ -41,7 +38,6 @@ namespace WorkshopManagement.UnitTests.DomainTests
         {
             // arrange
             DateTime date = DateTime.Today;
-            string workshopPlanningId = date.ToString("yyyy-MM-dd");
             var initializingEvents = new Event[] {
                 new WorkshopPlanningCreatedEventBuilder().WithDate(date).Build()
             };
@@ -57,7 +53,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
             // assert
             Assert.NotNull(sut);
             Assert.NotNull(sut.Id);
-            Assert.Equal(workshopPlanningId, sut.Id);
+            Assert.Equal(date, sut.Id);
             Assert.Equal(1, sut.OriginalVersion);
             Assert.Equal(2, sut.Version);
             Assert.Collection(sut.Jobs,
@@ -170,7 +166,6 @@ namespace WorkshopManagement.UnitTests.DomainTests
         {
             // arrange
             DateTime date = DateTime.Today;
-            string workshopPlanningId = date.ToString("yyyy-MM-dd");
             Guid jobId = Guid.NewGuid();
             DateTime startTime = date.AddHours(8);
             DateTime endTime = date.AddHours(11);
@@ -201,7 +196,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
             // assert
             Assert.NotNull(sut);
             Assert.NotNull(sut.Id);
-            Assert.Equal(workshopPlanningId, sut.Id);
+            Assert.Equal(date, sut.Id);
             Assert.Equal(2, sut.OriginalVersion);
             Assert.Equal(3, sut.Version);
             Assert.Collection(sut.Jobs,

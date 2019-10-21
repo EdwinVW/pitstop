@@ -2,6 +2,7 @@ using System;
 using Xunit;
 using Pitstop.WorkshopManagementAPI.Domain;
 using WorkshopManagement.UnitTests.TestdataBuilders;
+using Pitstop.WorkshopManagementAPI.Domain.Entities;
 
 namespace WorkshopManagement.UnitTests.DomainTests
 {
