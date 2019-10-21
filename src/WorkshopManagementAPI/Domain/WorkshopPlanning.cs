@@ -25,15 +25,11 @@ namespace Pitstop.WorkshopManagementAPI.Domain
         /// Creates a new instance of a workshop-planning for the specified date.
         /// </summary>
         /// <param name="date">The date to create the planning for.</param>
-        /// <param name="planning">The initialized WorkshopPlanning instance.</param>
-        /// <returns>The WorkshopPlanningCreated event.</returns>
-        /// <remarks>This implementation makes sure creation of the planning becomes part of the event-stream.</remarks>
         public static WorkshopPlanning Create(DateTime date)
         {
             WorkshopPlanning planning = new WorkshopPlanning(date);
             WorkshopPlanningCreated e = new WorkshopPlanningCreated(Guid.NewGuid(), date);
-            planning.HandleEvent(e);
-            planning.AddEvents(e.AsEnumerable());
+            planning.RaiseEvent(e);
             return planning;
         }
 
@@ -46,8 +42,7 @@ namespace Pitstop.WorkshopManagementAPI.Domain
 
             // handle event
             MaintenanceJobPlanned e = command.MapToMaintenanceJobPlanned();
-            HandleEvent(e);
-            AddEvents(e.AsEnumerable());
+            RaiseEvent(e);
         }
 
         public void FinishMaintenanceJob(FinishMaintenanceJob command)
@@ -64,13 +59,14 @@ namespace Pitstop.WorkshopManagementAPI.Domain
 
             // handle event
             MaintenanceJobFinished e = command.MapToMaintenanceJobFinished();
-            HandleEvent(e);
-            AddEvents(e.AsEnumerable());
+            RaiseEvent(e);
         }
 
         /// <summary>
         /// Handles an event and updates the aggregate version.
         /// </summary>
+        /// <remarks>Caution: this handles is also called while replaying events to restore state.
+        /// So, do not execute any checks that couold fail or introduce any side-effects in this handler.</remarks>
         protected override void HandleEvent(Event eventToHandle)
         {
             switch(eventToHandle)

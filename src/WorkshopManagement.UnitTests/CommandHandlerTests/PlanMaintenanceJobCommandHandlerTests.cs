@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
 using Pitstop.Infrastructure.Messaging;
-using Pitstop.WorkshopManagementAPI;
 using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Domain;
-using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
-using Pitstop.WorkshopManagementAPI.Events;
 using WorkshopManagement.UnitTests.TestdataBuilders;
 using WorkshopManagementAPI.CommandHandlers;
 using Xunit;
 using Moq;
 using Pitstop.WorkshopManagementAPI.Repositories;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace WorkshopManagement.UnitTests.CommandHandlerTests
 {
@@ -89,9 +87,9 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
                     It.Is<string>(p => p == workshopPlanningId),
                     It.Is<int>(p => p == 0),
                     It.Is<int>(p => p == 2),
-                    It.Is<List<Event>>(p =>  
-                        p[0].MessageType == "WorkshopPlanningCreated" && 
-                        p[1].MessageType == "MaintenanceJobPlanned")
+                    It.Is<IEnumerable<Event>>(p =>  
+                        p.First().MessageType == "WorkshopPlanningCreated" && 
+                        p.Last().MessageType == "MaintenanceJobPlanned")
                 ))
                 .Returns(Task.CompletedTask);
 

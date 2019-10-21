@@ -70,14 +70,19 @@ namespace Pitstop.WorkshopManagementAPI.Domain.Core
         }
 
         /// <summary>
-        /// Add an (or more) event(s) that occured while handling an event 
-        /// to the list of events.
+        /// Let the aggregate handle an event and save it in the list of events 
+        /// so it can be used outside the aggregate (persisted, published on a bus, ...).
         /// </summary>
-        /// <param name="events">The list of events to add.</param>
-        protected void AddEvents(IEnumerable<Event> events)
+        /// <param name="event">The event to handle.</param>
+        /// <remarks>Use GetEvents to retrieve the list of events.</remarks>
+        protected void RaiseEvent(Event @event)
         {
-            _events.AddRange(events);
-            Version += events.Count();
+            // let the derived aggregate handle the event
+            HandleEvent(@event);
+
+            // save the event so it can be published outside the aggregate
+            _events.Add(@event);
+            Version += 1;
         }
 
         /// <summary>
