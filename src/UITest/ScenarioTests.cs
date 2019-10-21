@@ -18,7 +18,7 @@ namespace Pitstop.UITest
         public void End_To_End()
         {
             // arrange
-            Guid testrunId = Guid.NewGuid();
+            string testrunId = Guid.NewGuid().ToString("N");
             PitstopApp pitstop = new PitstopApp(testrunId, TestConstants.PitstopStartUrl);
             var homePage = pitstop.Start();
 

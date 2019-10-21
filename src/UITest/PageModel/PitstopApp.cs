@@ -40,7 +40,7 @@ namespace Pitstop.UITest.PageModel
         /// </summary>
         /// <param name="testrunId">The unique test-run Id.</param>
         /// <param name="startUrl">The Url to start.</param>
-        public PitstopApp(Guid testrunId, Uri startUrl)
+        public PitstopApp(string testrunId, Uri startUrl)
         {
             string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             ChromeOptions options = new ChromeOptions();
