@@ -34,7 +34,7 @@ namespace Pitstop.WorkshopManagementAPI.Domain
         public static void NumberOfParallelMaintenanceJobsOnAVehicleIsOne(
             this WorkshopPlanning planning, PlanMaintenanceJob command)
         {
-            if (planning.Jobs.Any(j => j.Vehicle.LicenseNumber == command.VehicleInfo.LicenseNumber &&
+            if (planning.Jobs.Any(j => j.Vehicle.Id == command.VehicleInfo.LicenseNumber &&
                     (j.StartTime >= command.StartTime && j.StartTime <= command.EndTime ||
                     j.EndTime >= command.StartTime && j.EndTime <= command.EndTime)))
             {

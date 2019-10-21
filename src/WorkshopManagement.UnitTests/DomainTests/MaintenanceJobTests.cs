@@ -22,10 +22,10 @@ namespace WorkshopManagement.UnitTests.DomainTests
             Assert.Equal(maintenanceJobBuilder.JobId, sut.Id);
             Assert.Equal(maintenanceJobBuilder.StartTime, sut.StartTime);
             Assert.Equal(maintenanceJobBuilder.EndTime, sut.EndTime);
-            Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Id, sut.Customer.CustomerId);
+            Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Id, sut.Customer.Id);
             Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Name, sut.Customer.Name);
             Assert.Equal(maintenanceJobBuilder.CustomerBuilder.TelephoneNumber, sut.Customer.TelephoneNumber);
-            Assert.Equal(maintenanceJobBuilder.VehicleBuilder.LicenseNumber, sut.Vehicle.LicenseNumber);
+            Assert.Equal(maintenanceJobBuilder.VehicleBuilder.LicenseNumber, sut.Vehicle.Id);
             Assert.Equal(maintenanceJobBuilder.VehicleBuilder.Brand, sut.Vehicle.Brand);
             Assert.Equal(maintenanceJobBuilder.VehicleBuilder.Type, sut.Vehicle.Type);
             Assert.Equal(maintenanceJobBuilder.VehicleBuilder.OwnerId, sut.Vehicle.OwnerId);
@@ -55,10 +55,10 @@ namespace WorkshopManagement.UnitTests.DomainTests
             Assert.Equal(maintenanceJobBuilder.JobId, sut.Id);
             Assert.Equal(maintenanceJobBuilder.StartTime, sut.StartTime);
             Assert.Equal(maintenanceJobBuilder.EndTime, sut.EndTime);
-            Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Id, sut.Customer.CustomerId);
+            Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Id, sut.Customer.Id);
             Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Name, sut.Customer.Name);
             Assert.Equal(maintenanceJobBuilder.CustomerBuilder.TelephoneNumber, sut.Customer.TelephoneNumber);
-            Assert.Equal(maintenanceJobBuilder.VehicleBuilder.LicenseNumber, sut.Vehicle.LicenseNumber);
+            Assert.Equal(maintenanceJobBuilder.VehicleBuilder.LicenseNumber, sut.Vehicle.Id);
             Assert.Equal(maintenanceJobBuilder.VehicleBuilder.Brand, sut.Vehicle.Brand);
             Assert.Equal(maintenanceJobBuilder.VehicleBuilder.Type, sut.Vehicle.Type);
             Assert.Equal(maintenanceJobBuilder.VehicleBuilder.OwnerId, sut.Vehicle.OwnerId);

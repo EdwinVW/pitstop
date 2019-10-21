@@ -30,9 +30,10 @@ namespace WorkshopManagementAPI.CommandHandlers
             }
 
             // handle command
-            IEnumerable<Event> events = planning.FinishMaintenanceJob(command);
+            planning.FinishMaintenanceJob(command);
 
             // persist
+            IEnumerable<Event> events = planning.GetEvents();
             await _planningRepo.SaveWorkshopPlanningAsync(
                 planning.Id, planning.OriginalVersion, planning.Version, events);
 

@@ -10,6 +10,7 @@ using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
 using Pitstop.WorkshopManagementAPI.Models;
 using WorkshopManagementAPI.CommandHandlers;
 using Serilog;
+using System.Globalization;
 
 namespace Pitstop.WorkshopManagementAPI.Controllers
 {
@@ -103,7 +104,7 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
                         }
 
                         // return result
-                        return CreatedAtRoute("GetByDate", new { planningDate = planning.Date }, planning);
+                        return CreatedAtRoute("GetByDate", new { planningDate = DateTime.ParseExact(planning.Id, "yyyy-MM-dd", CultureInfo.InvariantCulture) }, planning);
                     }
                     catch (BusinessRuleViolationException ex)
                     {

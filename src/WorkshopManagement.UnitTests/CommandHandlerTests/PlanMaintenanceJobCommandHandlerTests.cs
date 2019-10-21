@@ -26,7 +26,7 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
             var initializingEvents = new Event[] { 
                 new WorkshopPlanningCreatedEventBuilder().WithDate(date).Build() 
             };
-            WorkshopPlanning planning = new WorkshopPlanning(initializingEvents);
+            WorkshopPlanning planning = new WorkshopPlanning(date, initializingEvents);
 
             PlanMaintenanceJob command = new PlanMaintenanceJobCommandBuilder()
                 .Build();
@@ -73,6 +73,7 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
         {
             // arrange
             DateTime date = DateTime.Today;
+            string workshopPlanningId = date.ToString("yyy-MM-dd");
             PlanMaintenanceJob command = new PlanMaintenanceJobCommandBuilder()
                 .Build();
 
@@ -85,7 +86,7 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
 
             repoMock
                 .Setup(m => m.SaveWorkshopPlanningAsync(
-                    It.Is<string>(p => p == date.ToString("yyyy-MM-dd")),
+                    It.Is<string>(p => p == workshopPlanningId),
                     It.Is<int>(p => p == 0),
                     It.Is<int>(p => p == 2),
                     It.Is<List<Event>>(p =>  

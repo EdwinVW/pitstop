@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Pitstop.WorkshopManagementAPI.Domain.Core;
 
 namespace Pitstop.WorkshopManagementAPI.Domain
 {
-    public class Vehicle
+    public class Vehicle : Entity<string>
     {
-        public string LicenseNumber { get; private set; }
         public string Brand { get; private set; }
         public string Type { get; private set; }
         public string OwnerId { get; private set; }
 
-        public Vehicle(string licenseNumber, string brand, string type, string ownerId)
+        public Vehicle(string licenseNumber, string brand, string type, string ownerId) : base(licenseNumber)
         {
-            LicenseNumber = licenseNumber;
             Brand = brand;
             Type = type;
             OwnerId = ownerId;

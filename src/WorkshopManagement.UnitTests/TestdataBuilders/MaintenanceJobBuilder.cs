@@ -45,11 +45,11 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
         public MaintenanceJobBuilder WithCustomer(Customer customer)
         {
             CustomerBuilder
-                .WithId(customer.CustomerId)
+                .WithId(customer.Id)
                 .WithName(customer.Name)
                 .WithTelephoneNumber(customer.TelephoneNumber);
 
-            VehicleBuilder.WithOwnerId(customer.CustomerId);
+            VehicleBuilder.WithOwnerId(customer.Id);
 
             return this;
         }
@@ -57,7 +57,7 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
         public MaintenanceJobBuilder WithVehicle(Vehicle vehicle)
         {
             VehicleBuilder
-                .WithLicenseNumber(vehicle.LicenseNumber)
+                .WithLicenseNumber(vehicle.Id)
                 .WithBrand(vehicle.Brand)
                 .WithType(vehicle.Type)
                 .WithOwnerId(vehicle.OwnerId);

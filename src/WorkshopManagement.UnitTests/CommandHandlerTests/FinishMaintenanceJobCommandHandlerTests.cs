@@ -23,6 +23,7 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
         {
             // arrange
             DateTime date = DateTime.Today;
+            string workshopPlanningId = date.ToString("yyyy-MM-dd");
             Guid jobId = Guid.NewGuid();
             DateTime startTime = date.AddHours(8);
             DateTime endTime = date.AddHours(11);
@@ -38,7 +39,7 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
                     .WithJobId(jobId)
                     .Build()
             };
-            WorkshopPlanning planning = new WorkshopPlanning(initializingEvents);
+            WorkshopPlanning planning = new WorkshopPlanning(date, initializingEvents);
 
             FinishMaintenanceJob command = new FinishMaintenanceJobCommandBuilder()
                 .WithJobId(jobId)

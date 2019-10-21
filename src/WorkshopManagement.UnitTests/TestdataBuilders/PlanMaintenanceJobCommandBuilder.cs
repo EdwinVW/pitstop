@@ -33,7 +33,7 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
                 .Build();
             
             var vehicle = VehicleBuilder
-                .WithOwnerId(customer.CustomerId)
+                .WithOwnerId(customer.Id)
                 .Build();
             
             var job = MaintenanceJobBuilder
@@ -43,8 +43,8 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
 
             PlanMaintenanceJob command = new PlanMaintenanceJob(
                 Guid.NewGuid(), job.Id, job.StartTime, job.EndTime,
-                (customer.CustomerId, customer.Name, customer.TelephoneNumber),
-                (vehicle.LicenseNumber, vehicle.Brand, vehicle.Type),
+                (customer.Id, customer.Name, customer.TelephoneNumber),
+                (vehicle.Id, vehicle.Brand, vehicle.Type),
                 job.Description
             );
 

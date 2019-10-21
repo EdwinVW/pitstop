@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Pitstop.WorkshopManagementAPI.Domain;
 using Newtonsoft.Json;
@@ -10,10 +9,8 @@ using Polly;
 using Pitstop.WorkshopManagementAPI.Repositories.Model;
 using Pitstop.Infrastructure.Messaging;
 using Newtonsoft.Json.Linq;
-using Pitstop.WorkshopManagementAPI.Events;
 using Newtonsoft.Json.Converters;
 using System.Data.SqlClient;
-using Serilog;
 
 namespace Pitstop.WorkshopManagementAPI.Repositories
 {
@@ -71,7 +68,7 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                 {
                     events.Add(DeserializeEventData(aggregateEvent.MessageType, aggregateEvent.EventData));
                 }
-                planning = new WorkshopPlanning(events);
+                planning = new WorkshopPlanning(date, events);
             }
             return planning;
         }
@@ -195,12 +192,12 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
         /// <param name="planningId">The id of the planning.</param>
         /// <param name="conn">The SQL connection to use.</param>
         /// <returns></returns>
-        private async Task<IEnumerable<Event>> GetAggregateEvents(DateTime planningId, SqlConnection conn)
+        private async Task<IEnumerable<Event>> GetAggregateEvents(string planningId, SqlConnection conn)
         {
             IEnumerable<AggregateEvent> aggregateEvents = await conn
                 .QueryAsync<AggregateEvent>(
                     "select * from WorkshopPlanningEvent where Id = @Id order by [Version]",
-                    new { Id = planningId.ToString("yyyy-MM-dd") });
+                    new { Id = planningId });
 
             List<Event> events = new List<Event>();
             foreach (var aggregateEvent in aggregateEvents)

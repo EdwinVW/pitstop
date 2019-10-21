@@ -19,14 +19,17 @@ namespace WorkshopManagement.UnitTests.DomainTests
         {
             // arrange
             DateTime date = DateTime.Today;
+            string workshopPlanningId = date.ToString("yyyy-MM-dd");
+
 
             // act
-            List<Event> events = new List<Event>(WorkshopPlanning.Create(date, out WorkshopPlanning sut));
+            WorkshopPlanning sut = WorkshopPlanning.Create(date);
+            IEnumerable<Event> events = sut.GetEvents();
 
             // assert
             Assert.NotNull(sut);
             Assert.NotNull(sut.Id);
-            Assert.Equal(date, sut.Date);
+            Assert.Equal(workshopPlanningId, sut.Id);
             Assert.Equal(0, sut.OriginalVersion);
             Assert.Equal(1, sut.Version);
             Assert.Empty(sut.Jobs);
@@ -38,21 +41,23 @@ namespace WorkshopManagement.UnitTests.DomainTests
         {
             // arrange
             DateTime date = DateTime.Today;
+            string workshopPlanningId = date.ToString("yyyy-MM-dd");
             var initializingEvents = new Event[] {
                 new WorkshopPlanningCreatedEventBuilder().WithDate(date).Build()
             };
-            WorkshopPlanning sut = new WorkshopPlanning(initializingEvents);
+            WorkshopPlanning sut = new WorkshopPlanning(date, initializingEvents);
 
             PlanMaintenanceJob command = new PlanMaintenanceJobCommandBuilder()
                 .Build();
 
             // act
-            List<Event> events = new List<Event>(sut.PlanMaintenanceJob(command));
+            sut.PlanMaintenanceJob(command);
+            IEnumerable<Event> events = sut.GetEvents();
 
             // assert
             Assert.NotNull(sut);
             Assert.NotNull(sut.Id);
-            Assert.Equal(date, sut.Date);
+            Assert.Equal(workshopPlanningId, sut.Id);
             Assert.Equal(1, sut.OriginalVersion);
             Assert.Equal(2, sut.Version);
             Assert.Collection(sut.Jobs,
@@ -61,10 +66,10 @@ namespace WorkshopManagement.UnitTests.DomainTests
                     Assert.Equal(command.JobId, item0.Id);
                     Assert.Equal(command.StartTime, item0.StartTime);
                     Assert.Equal(command.EndTime, item0.EndTime);
-                    Assert.Equal(command.CustomerInfo.Id, item0.Customer.CustomerId);
+                    Assert.Equal(command.CustomerInfo.Id, item0.Customer.Id);
                     Assert.Equal(command.CustomerInfo.Name, item0.Customer.Name);
                     Assert.Equal(command.CustomerInfo.TelephoneNumber, item0.Customer.TelephoneNumber);
-                    Assert.Equal(command.VehicleInfo.LicenseNumber, item0.Vehicle.LicenseNumber);
+                    Assert.Equal(command.VehicleInfo.LicenseNumber, item0.Vehicle.Id);
                     Assert.Equal(command.VehicleInfo.Brand, item0.Vehicle.Brand);
                     Assert.Equal(command.VehicleInfo.Type, item0.Vehicle.Type);
                     Assert.Equal(command.CustomerInfo.Id, item0.Vehicle.OwnerId);
@@ -78,10 +83,11 @@ namespace WorkshopManagement.UnitTests.DomainTests
         public void Plan_MaintenanceJob_That_Spans_Two_Days_Should_Throw_Exception()
         {
             // arrange
+            DateTime date = DateTime.Today;
             var initializingEvents = new Event[] {
-                new WorkshopPlanningCreatedEventBuilder().Build()
+                new WorkshopPlanningCreatedEventBuilder().WithDate(date).Build()
             };
-            WorkshopPlanning sut = new WorkshopPlanning(initializingEvents);
+            WorkshopPlanning sut = new WorkshopPlanning(date, initializingEvents);
 
             MaintenanceJobBuilder maintenanceJobBuilder = new MaintenanceJobBuilder();
             maintenanceJobBuilder
@@ -103,10 +109,11 @@ namespace WorkshopManagement.UnitTests.DomainTests
         public void Planning_Too_Much_MaintenanceJobs_In_Parallel_Should_Throw_Exception()
         {
             // arrange
+            DateTime date = DateTime.Today;            
             var initializingEvents = new Event[] {
-                new WorkshopPlanningCreatedEventBuilder().WithDate(DateTime.Today).Build()
+                new WorkshopPlanningCreatedEventBuilder().WithDate(date).Build()
             };
-            WorkshopPlanning sut = new WorkshopPlanning(initializingEvents);
+            WorkshopPlanning sut = new WorkshopPlanning(date, initializingEvents);
 
             VehicleBuilder vehicleBuilder = new VehicleBuilder();
             PlanMaintenanceJobCommandBuilder commandBuilder = new PlanMaintenanceJobCommandBuilder()
@@ -138,10 +145,11 @@ namespace WorkshopManagement.UnitTests.DomainTests
         public void Plan_Two_MaintenanceJobs_In_Parallel_For_The_Same_Vehicle_Should_Throw_Exception()
         {
             // arrange
+            DateTime date = DateTime.Today;            
             var initializingEvents = new Event[] {
-                new WorkshopPlanningCreatedEventBuilder().Build()
+                new WorkshopPlanningCreatedEventBuilder().WithDate(date).Build()
             };
-            WorkshopPlanning sut = new WorkshopPlanning(initializingEvents);
+            WorkshopPlanning sut = new WorkshopPlanning(date, initializingEvents);
             PlanMaintenanceJob command = new PlanMaintenanceJobCommandBuilder()
                 .Build();
 
@@ -162,6 +170,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
         {
             // arrange
             DateTime date = DateTime.Today;
+            string workshopPlanningId = date.ToString("yyyy-MM-dd");
             Guid jobId = Guid.NewGuid();
             DateTime startTime = date.AddHours(8);
             DateTime endTime = date.AddHours(11);
@@ -177,7 +186,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
                     .WithJobId(jobId)
                     .Build()
             };
-            WorkshopPlanning sut = new WorkshopPlanning(initializingEvents);
+            WorkshopPlanning sut = new WorkshopPlanning(date, initializingEvents);
 
             FinishMaintenanceJob command = new FinishMaintenanceJobCommandBuilder()
                 .WithJobId(jobId)
@@ -186,12 +195,13 @@ namespace WorkshopManagement.UnitTests.DomainTests
                 .Build();
 
             // act
-            List<Event> events = new List<Event>(sut.FinishMaintenanceJob(command));
+            sut.FinishMaintenanceJob(command);
+            IEnumerable<Event> events = sut.GetEvents();
 
             // assert
             Assert.NotNull(sut);
             Assert.NotNull(sut.Id);
-            Assert.Equal(date, sut.Date);
+            Assert.Equal(workshopPlanningId, sut.Id);
             Assert.Equal(2, sut.OriginalVersion);
             Assert.Equal(3, sut.Version);
             Assert.Collection(sut.Jobs,
@@ -234,7 +244,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
                     .WithNotes(notes)
                     .Build()
             };
-            WorkshopPlanning sut = new WorkshopPlanning(initializingEvents);
+            WorkshopPlanning sut = new WorkshopPlanning(date, initializingEvents);
 
             FinishMaintenanceJob command = new FinishMaintenanceJobCommandBuilder()
                 .WithJobId(jobId)
