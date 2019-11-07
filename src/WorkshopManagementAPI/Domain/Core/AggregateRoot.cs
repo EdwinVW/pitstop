@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Pitstop.Infrastructure.Messaging;
 
 namespace Pitstop.WorkshopManagementAPI.Domain.Core
@@ -10,12 +8,12 @@ namespace Pitstop.WorkshopManagementAPI.Domain.Core
     /// </summary>
     /// <typeparam name="TId">The type of the Id of the entity.</typeparam>
     /// <remarks>In a real-world project, this class should be shared over domains in a NuGet package.</remarks>
-    public class AggregateRoot<TId> : Entity<TId>
+    public abstract class AggregateRoot<TId> : Entity<TId>
     {
         /// <summary>
         /// The list of events that occur while handling commands.
         /// </summary>
-        private List<Event> _events;
+        private readonly List<Event> _events;
 
         /// <summary>
         /// Indication whether the aggregate is replaying events (true) or not (false).
@@ -62,7 +60,7 @@ namespace Pitstop.WorkshopManagementAPI.Domain.Core
         }
 
         /// <summary>
-        /// Get the list of events that occured while handling commands.
+        /// Get the list of events that occurred while handling commands.
         /// </summary>
         public IEnumerable<Event> GetEvents()
         {
@@ -86,7 +84,7 @@ namespace Pitstop.WorkshopManagementAPI.Domain.Core
         }
 
         /// <summary>
-        /// Clear the list of events that occorred while handling a command.
+        /// Clear the list of events that occurred while handling a command.
         /// </summary>
         public void ClearEvents()
         {
@@ -94,13 +92,12 @@ namespace Pitstop.WorkshopManagementAPI.Domain.Core
         }
 
         /// <summary>
-        /// Handle a specific event. Derived classes should overide this method and implement 
-        /// the handling of different types of events.
+        /// Handle a specific event. Derived classes should  implement this method 
+        ///for every event type.
         /// </summary>
         /// <param name="@event">The event to handle.</param>
-        protected virtual void When(dynamic @event)
-        {
-            throw new NotImplementedException();
-        }
+        /// <remarks>Because the parameter type of the specified event is dynamic, 
+        /// the appropriate overload of the When method is called.</remarks>
+        protected abstract void When(dynamic @event);
     }
 }
