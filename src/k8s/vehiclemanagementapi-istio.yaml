@@ -16,7 +16,7 @@ spec:
     metadata:
       annotations:
         sidecar.istio.io/interceptionMode: REDIRECT
-        sidecar.istio.io/status: '{"version":"610f2b5742375d30d7f484e296fd022086a4c611b5a6b136bcf0758767fefecc","initContainers":["istio-init"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-certs"],"imagePullSecrets":null}'
+        sidecar.istio.io/status: '{"version":"2696c96840179bdcd8f86ed60a643396f0cb250f56458b46a7fc667e6c75ef7f","initContainers":["istio-init"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-certs"],"imagePullSecrets":null}'
         traffic.sidecar.istio.io/excludeInboundPorts: "15020"
         traffic.sidecar.istio.io/includeInboundPorts: "5000"
         traffic.sidecar.istio.io/includeOutboundIPRanges: '*'
@@ -114,7 +114,7 @@ spec:
           value: vehiclemanagementapi
         - name: ISTIO_META_OWNER
           value: kubernetes://api/extensions/v1beta1/namespaces/pitstop/deployments/vehiclemanagementapi
-        image: docker.io/istio/proxyv2:1.3.0
+        image: docker.io/istio/proxyv2:1.3.4
         imagePullPolicy: IfNotPresent
         name: istio-proxy
         ports:
@@ -162,7 +162,7 @@ spec:
         - '*'
         - -d
         - "15020"
-        image: docker.io/istio/proxy_init:1.3.0
+        image: docker.io/istio/proxy_init:1.3.4
         imagePullPolicy: IfNotPresent
         name: istio-init
         resources:
