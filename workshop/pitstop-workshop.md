@@ -1,5 +1,5 @@
 # PitStop Workshop
-Welcome to the PitStop workshop! In this workshop you will learn how to build Microservices based systems using .NET Core and Docker. In most workshops you start from scratch, but in this workshop you will actually start with a complete working solution. You will learn by adding functionality to the solution.
+Welcome to the Pitstop workshop! In this workshop you will learn how to build Microservices based systems using .NET Core and Docker. In most workshops you start from scratch, but in this workshop you will actually start with a complete working solution. You will learn by adding functionality to the solution.
 
 ## Lab 0: Preparation
 There are some prerequisites for this workshop. First you need an active Internet connection. Additionally you will need to install the following software on your laptop:
@@ -31,12 +31,12 @@ This workshop assumes you are working with Visual Studio Code.
 Download link: <a href="https://visualstudio.microsoft.com/downloads" target="_blank">Visual Studio Code</a>
 
 #### .NET Core SDK
-Install the .NET Core SDK 2.2. 
+Install the .NET Core SDK compatible with the Pitstop projects (check the `.csproj` file). 
 
 Download link: <a href="https://www.microsoft.com/net/download" target="_blank">.NET Core SDK</a>
 
 #### Git client (optional)
-Optionally you can install the Git client for your OS to interact with the PitStop repo on Github. This is optional because you can also download the code from Github in a zip file. 
+Optionally you can install the Git client for your OS to interact with the Pitstop repo on Github. This is optional because you can also download the code from Github in a zip file. 
 
 Download link: <a href="https://git-scm.com/downloads" target="_blank">Git</a> 
 
@@ -46,7 +46,7 @@ If you do not already have a Github account, create one by going to the <a href=
 ---
 
 ## Lab 1: Run the applicaton
-In this lab we'll make sure you can run PitStop on your machine. This will involve the following activities:
+In this lab we'll make sure you can run Pitstop on your machine. This will involve the following activities:
 
 - [Get the sources](#step-1.1:-get-the-sources)
 - [Build the Docker images](#step-1.2:-build-the-docker-images)
@@ -57,7 +57,7 @@ In this lab we'll make sure you can run PitStop on your machine. This will invol
 There are 2 ways of getting the sources from Github onto your machine: download a zip file from Github or fork and clone the repo. Both are described below, choose the one that works best for you.
 
 **Download a zip file**
-1. Open your browser and navigate to the PitStop repo on Github: <a href="https://github.com/edwinvw/pitstop" target="_blank">https://github.com/edwinvw/pitstop</a>. 
+1. Open your browser and navigate to the Pitstop repo on Github: <a href="https://github.com/edwinvw/pitstop" target="_blank">https://github.com/edwinvw/pitstop</a>. 
 2. Click the green *Clone or download* button. A dialog is shown. 
 3. Click the *Download ZIP* button and store the zip file on your machine. 
 4. Extract the zip file into an arbitrary folder (e.g. `c:\dev`).
@@ -66,7 +66,7 @@ There are 2 ways of getting the sources from Github onto your machine: download 
 
 **Fork and clone the repo**
 For this to work, you must have installed the Git client (see [Step 0.1](#step-0.1:-install-prerequisites)). 
-1. Open your browser and navigate to the PitStop repo on Github: <a href="https://github.com/edwinvw/pitstop" target="_blank">https://github.com/edwinvw/pitstop</a>. 
+1. Open your browser and navigate to the Pitstop repo on Github: <a href="https://github.com/edwinvw/pitstop" target="_blank">https://github.com/edwinvw/pitstop</a>. 
 2. Click the *Fork* button.
 3. The repo is forked to your Github account. If you have multiple accounts, Github will ask which account to fork to.
 4. Click the green *Clone or download* button on the forked repo. A dialog is shown.
@@ -91,7 +91,7 @@ In order to get to know the functionality of the application, make sure you have
 ---
 
 ## Lab 2: Add handler for customer events
-When something happens within the PitStop application that could be interesting for other parts of the system, an event is published to the message-broker. For instance: when a new customer is registered, a *CustomerRegistered* event is published. 
+When something happens within the Pitstop application that could be interesting for other parts of the system, an event is published to the message-broker. For instance: when a new customer is registered, a *CustomerRegistered* event is published. 
 
 In this lab you will add a service to the solution that will react to customer events. What we will do when the event is received is up to your imagination. For the workshop, we will keep it simple and just dump a message on the console. 
 
@@ -110,7 +110,7 @@ This lab will involve the following steps:
 First we will add a new service to the solution. 
 
 1. Open a command-prompt or Powershell window.
-2. Make sure you are in the `src` folder within the PitStop repository.
+2. Make sure you are in the `src` folder within the Pitstop repository.
 3. Use the `dotnet new` command to create a new .NET Core console application named *CustomerEventHandler*:
    ```
    dotnet new console -o CustomerEventHandler
@@ -146,18 +146,18 @@ Let's open Visual Studio Code to start coding:
 4. Start the application by pressing `F5`. The project will be built and started. You can see the output in the 'DEBUG CONSOLE' window that was automatically opened.
 
 **Add reference to the infrastructure package**
-The CustomerEventHandler service will need to receive messages from the message-broker. I have created a nuget package (*PitStop.Infrastructure*) that contains a library that will make it easy to implement this without any specific knowledge about RabbitMQ (the broker that is used in the solution). 
+The CustomerEventHandler service will need to receive messages from the message-broker. I have created a nuget package (*Pitstop.Infrastructure*) that contains a library that will make it easy to implement this without any specific knowledge about RabbitMQ (the broker that is used in the solution). 
 
-You need to add a reference to the *PitStop.Infrastructure* nuget package. The package is hosted in a private MyGet feed on the Internet. The location of the feed is specified in the nuget.config file in the solution, so it will automatically be resolved.
+You need to add a reference to the *Pitstop.Infrastructure.Messaging* nuget package. The package is hosted in a private MyGet feed on the Internet. The location of the feed is specified in the nuget.config file in the solution, so it will automatically be resolved.
 
 Follow the following steps to add a reference to the package: 
 
 1. Open the terminal window in Visual Studio Code using the *Terminal* menu.
 2. Type the following command in this window: `dotnet add package PitStop.Infrastructure.Messaging`. 
-3. In the .csproj file the following XML snippet will be added: 
+3. In the .csproj file the following XML snippet will be added (the version will be the latest version): 
    ```xml
    <ItemGroup>
-     <PackageReference Include="Pitstop.Infrastructure.Messaging" Version="2.0.0" />
+     <PackageReference Include="Pitstop.Infrastructure.Messaging" Version="..." />
    </ItemGroup>
    ```
 4. Visual Studio Code will detect changes in the references and automatically restore the references.
@@ -346,17 +346,17 @@ In order to check whether or not you made any mistakes until now, build the code
 ### Step 2.3: Run the service
 We can start the *CustomerEventHandler* to test whether or not it works. 
 
-1. Make sure you have the PitStop application running on your machine (as described in [Step 1.3: Run the application](#step-1.3:-run-the-application)).
+1. Make sure you have the Pitstop application running on your machine (as described in [Step 1.3: Run the application](#step-1.3:-run-the-application)).
 2. Open a command prompt or Powershell window and go to the *CustomerEventHandler* folder.
 3. Start the application by giving the following command: `dotnet run`.
-4. Open the browser and go to http://localhost:7000 to open the PitStop web-app.
+4. Open the browser and go to http://localhost:7000 to open the Pitstop web-app.
 5. Go to the *Customer Management* tab and register a new customer.
 
 Watch the output window of your *CustomerEventHandler*. You should see that a message is printed to the console, something like this:
 
 ![](img/dotnet-run-customereventhandler-broker.png) 
 
-That's it! You have now created a new service that can react on events emitted by the services in the PitStop solution. Pretty sweet!
+That's it! You have now created a new service that can react on events emitted by the services in the Pitstop solution. Pretty sweet!
 
 **Before continuing, stop the *CaseEventHandler* by pressing a random key.**
 
@@ -392,7 +392,7 @@ Now that you have created a functional service, let's run it in a Docker contain
 > Please take some time to go over the Dockerfile now. You see an example of the Docker multi-stage build mechanism. 
 > - First it starts in a container that is based on an image that contains the full .NET Core SDK (*microsoft/dotnet:2.2-sdk*). We call this *build-env* for later reference.
 > - After that it sets the folder */app* as the current working-folder for the build. It copies the *.csproj* file of your project into to the working-folder. 
-> - Then it restores all the dependencies by running `dotnet restore` and specifying both the default nuget feed as well as the private PitStop MyGet feed as sources for finding nuget packages. 
+> - Then it restores all the dependencies by running `dotnet restore` and specifying both the default nuget feed as well as the private Pitstop MyGet feed as sources for finding nuget packages. 
 > - After the restore, it copies the rest of the files to the working-folder and publishes the application by running `dotnet publish -c Release -o out`. It builds the *Release* configuration and outputs the result in the folder *out* within the working-folder.
 > - Now it starts the second phase which runs in a container based on the .NET Core run-time container (*microsoft/dotnet:2.2-runtime*). This container does not contain the entire .NET Core SDK - so it's much smaller.
 > - It then copies the output from the other build phase (that was called *build-env*) to the local folder within the container.
@@ -419,7 +419,7 @@ Now that you have the Docker image, you can start a container based on this imag
 	`docker run -it --rm --network src_default --name customereventhandler pitstop/customereventhandler:latest`
 
    >In this command you specify the virtual network to connect with. In this case we specify the name of the default network that was created by docker-compose when we started the solution (*src_default*). By doing this, the container can find and access the RabbitMQ server that is running in a separate Docker container on the virtual network.
-2. Open the browser and go to http://localhost:7000 to open the PitStop web-app.
+2. Open the browser and go to http://localhost:7000 to open the Pitstop web-app.
 3. Go to the *Customer Management* tab and register a new customer.
 
 Watch the output of your running container. You should see that message again that indicates that a customer was registered:
@@ -431,7 +431,7 @@ Watch the output of your running container. You should see that message again th
 ### Step 2.6: Run the service using docker-compose
 The last step in this lab is to extend the docker-compose file to include your service. 
 
-1. Open the *docker-compose* file in the *src* folder of the PitStop repo in Visual Studio Code.
+1. Open the *docker-compose* file in the *src* folder of the Pitstop repo in Visual Studio Code.
 2. Add this snippet to the *docker-compose* file just before the webapp part:
  
    ```
@@ -448,7 +448,7 @@ The last step in this lab is to extend the docker-compose file to include your s
 4. Open the Powershell window where you started the solution using `docker-compose up`.
 5. Stop the running solution by pressing `Ctrl-C` and wait until all the containers are stopped.
 6. Restart the solution by giving the command: `docker-compose up`. The *CustomerEventHandler* will be started together with all the other services.
-2. Open the browser and go to http://localhost:7000 to open the PitStop web-app.
+2. Open the browser and go to http://localhost:7000 to open the Pitstop web-app.
 3. Go to the *Customer Management* tab and register a new customer.
 
 Watch the docker-compose logging in the console. You should see that message again that indicates that a customer was registered:
@@ -464,12 +464,12 @@ Thanks!
 ## Advanced Labs 
 The following labs are more advanced labs you can do on your own if you're done with the first two labs. There's no extensive description on how to complete these labs, only a description of the required outcome. It's up to you to figure out the best way to implement these requirements. 
 
-### Add update functionality to PitStop
-The current version of PitStop only supports adding customers, vehicles and maintenance jobs. There is no way to update these. 
-
->This lab's assignment is: add support for updating the data of customers, vehicles and / or maintenance jobs.
-
 ### Add Inventory management
-During a maintenance job, a mechanic often uses products like: tires, windscreen-wipers, oil, oil-filters, etcetera. There is currently no way to support this in PitStop. 
+During a maintenance job, a mechanic often uses products like: tires, windscreen-wipers, oil, oil-filters, etcetera. There is currently no way to support this in Pitstop. In the context-map shown in the <a href="https://github.com/EdwinVW/pitstop/wiki/Domain%20description" target="_blank">domain description</a> on the Wiki, Inventory Management is shown (grayed out). Use this information in this assignment. 
 
->This lab's assignment is: add an *InventoryManagement* service to the solution that can be used to manage the products in stock. Also add the ability for a mechanic to add products that he or she used when completing a maintenance-job to the solution. For every product used, the inventory must be updated and the price of the products must be added to the bill that is sent to the customer. 
+>This lab's assignment is: add an *InventoryManagement* service to the solution that can be used to manage the products in stock. Also add the ability for a mechanic to add products that he or she uses during the execution of a maintenance-job. For every product used, the inventory must be updated and the price of the products must be added to the bill that is sent to the customer.
+
+### Add update functionality to Pitstop
+The current version of Pitstop only supports adding customers, vehicles and maintenance jobs. There is no way to update these. 
+
+>This lab's assignment is: add support for updating the data of customers, vehicles and / or maintenance jobs. 
