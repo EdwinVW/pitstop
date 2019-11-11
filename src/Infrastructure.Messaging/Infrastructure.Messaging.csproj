@@ -7,9 +7,11 @@
     <Version>2.2.0</Version>
     <AssemblyVersion>2.2.0.0</AssemblyVersion>
     <FileVersion>2.2.0.0</FileVersion>
+    <Title>Pitstop.Infrastructure.Messaging</Title>
     <Description>Infrastructure package for Pitstop sample application that contains helpers for interacting with the RabbitMQ message-broker used by the application.</Description>
     <PackageProjectUrl>https://github.com/EdwinVW/pitstop/tree/master/src/Infrastructure.Messaging</PackageProjectUrl>
-    <Authors></Authors>
+    <Authors>Edwin van Wijk</Authors>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

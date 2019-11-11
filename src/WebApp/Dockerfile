@@ -14,7 +14,7 @@ RUN npm install gulp -g
 
 # Copy necessary files and restore as distinct layer
 COPY *.csproj ./
-RUN dotnet restore -s https://api.nuget.org/v3/index.json -s https://www.myget.org/F/pitstop/api/v3/index.json
+RUN dotnet restore
 
 # Copy everything else and build
 COPY . ./
