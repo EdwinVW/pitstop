@@ -123,6 +123,15 @@ services:
     environment:
       - DOTNET_ENVIRONMENT=Production
 
+  customereventhandler:
+    image: pitstop/customereventhandler:1.0
+    build: CustomerEventHandler
+    container_name: CustomerEventHandler
+    depends_on:
+      - rabbitmq
+    environment:
+      - DOTNET_ENVIRONMENT=Production    
+
   webapp:
     image: pitstop/webapp:1.0
     build: WebApp
