@@ -1,0 +1,10 @@
+{
+    "profiles": {
+      "CustomerEventHandler": {
+        "commandName": "Project",
+        "environmentVariables": {
+          "PITSTOP_ENVIRONMENT": "Development"
+        }
+      }
+    }
+  }
