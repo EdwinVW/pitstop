@@ -1,8 +1,5 @@
-﻿using Pitstop.CustomerManagementAPI.Commands;
-using Pitstop.Infrastructure.Messaging;
+﻿using Pitstop.Infrastructure.Messaging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Pitstop.CustomerManagementAPI.Events
 {
