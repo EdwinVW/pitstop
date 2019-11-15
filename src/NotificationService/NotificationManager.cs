@@ -50,6 +50,9 @@ namespace Pitstop.NotificationService
                     case "CustomerRegistered":
                         await HandleAsync(messageObject.ToObject<CustomerRegistered>());
                         break;
+                    case "CustomerUpdated":
+                        await HandleAsync(messageObject.ToObject<CustomerUpdated>());
+                        break;
                     case "MaintenanceJobPlanned":
                         await HandleAsync(messageObject.ToObject<MaintenanceJobPlanned>());
                         break;
@@ -85,6 +88,22 @@ namespace Pitstop.NotificationService
                 customer.CustomerId, customer.Name, customer.TelephoneNumber, customer.EmailAddress);
 
             await _repo.RegisterCustomerAsync(customer);
+        }
+
+        private async Task HandleAsync(CustomerUpdated cu)
+        {
+            Customer customer = new Customer
+            {
+                CustomerId = cu.CustomerId,
+                Name = cu.Name,
+                TelephoneNumber = cu.TelephoneNumber,
+                EmailAddress = cu.EmailAddress
+            };
+
+            Log.Information("Customer profile updated: {Id}, {Name}, {TelephoneNumber}, {Email}",
+                customer.CustomerId, customer.Name, customer.TelephoneNumber, customer.EmailAddress);            
+
+            await _repo.UpdateCustomerAsync(customer);
         }
 
         private async Task HandleAsync(MaintenanceJobPlanned mjp)
