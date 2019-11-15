@@ -12,7 +12,7 @@ namespace Pitstop.NotificationService.Repositories
 {
     public class SqlServerNotificationRepository : INotificationRepository
     {
-        private string _connectionString;
+        private readonly string _connectionString;
 
         public SqlServerNotificationRepository(string connectionString)
         {
@@ -91,6 +91,20 @@ namespace Pitstop.NotificationService.Repositories
                 string sql =
                     "insert into Customer(CustomerId, Name, TelephoneNumber, EmailAddress) " +
                     "values(@CustomerId, @Name, @TelephoneNumber, @EmailAddress);";
+                await conn.ExecuteAsync(sql, customer);
+            }
+        }
+
+        public async Task UpdateCustomerAsync(Customer customer)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                var sql = "update Customer set ";
+                sql += "Name = @Name, ";
+                sql += "TelephoneNumber = @TelephoneNumber, ";
+                sql += "EmailAddress = @EmailAddress ";
+                sql += "where CustomerId = @CustomerId";
+
                 await conn.ExecuteAsync(sql, customer);
             }
         }
