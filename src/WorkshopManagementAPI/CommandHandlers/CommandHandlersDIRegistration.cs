@@ -8,6 +8,7 @@ namespace WorkshopManagementAPI.CommandHandlers
         {
             services.AddTransient<IPlanMaintenanceJobCommandHandler, PlanMaintenanceJobCommandHandler>();
             services.AddTransient<IFinishMaintenanceJobCommandHandler, FinishMaintenanceJobCommandHandler>();
+            services.AddTransient<IUpdateMaintenanceJobCommandHandler, UpdateMaintenanceJobCommandHandler>();
         }
     }
 }
