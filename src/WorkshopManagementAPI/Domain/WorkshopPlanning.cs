@@ -36,6 +36,13 @@ namespace Pitstop.WorkshopManagementAPI.Domain
             return planning;
         }
 
+        internal void UpdateMaintenanceJob(UpdateMaintenanceJob command)
+        {
+            // handle event
+            MaintenanceJobUpdated e = command.MapToMaintenanceJobPlanned();
+            RaiseEvent(e);
+        }
+
         public void PlanMaintenanceJob(PlanMaintenanceJob command)
         {
             // check business rules
@@ -86,6 +93,17 @@ namespace Pitstop.WorkshopManagementAPI.Domain
             Customer customer = new Customer(e.CustomerInfo.Id, e.CustomerInfo.Name, e.CustomerInfo.TelephoneNumber);
             Vehicle vehicle = new Vehicle(e.VehicleInfo.LicenseNumber, e.VehicleInfo.Brand, e.VehicleInfo.Type, customer.Id);
             job.Plan(e.JobId, e.StartTime, e.EndTime, vehicle, customer, e.Description);
+            Jobs.Add(job);
+        }
+
+        private void Handle(MaintenanceJobUpdated e)
+        {
+            MaintenanceJob job = new MaintenanceJob();
+            Customer customer = new Customer(e.CustomerInfo.Id, e.CustomerInfo.Name, e.CustomerInfo.TelephoneNumber);
+            Vehicle vehicle = new Vehicle(e.VehicleInfo.LicenseNumber, e.VehicleInfo.Brand, e.VehicleInfo.Type, customer.Id);
+            job.Plan(e.JobId, e.StartTime, e.EndTime, vehicle, customer, e.Description);
+            var oldJob = Jobs.First(o => o.Id == e.JobId);
+            Jobs.Remove(oldJob);
             Jobs.Add(job);
         }
 
