@@ -54,7 +54,7 @@ namespace Pitstop.Application.VehicleManagement.Controllers
                     await _dbContext.SaveChangesAsync();
 
                     // send event
-                    var e = VehicleRegistered.FromCommand(command);
+                    var e = Mappers.MapToVehicleRegistered(command);
                     await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
                     //return result
@@ -68,6 +68,42 @@ namespace Pitstop.Application.VehicleManagement.Controllers
                     "Try again, and if the problem persists " +
                     "see your system administrator.");
                 return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateAsync([FromRoute] string licenseNumber, [FromBody] UpdateVehicle command)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var existingVehicle = await _dbContext.Vehicles
+                        .FirstOrDefaultAsync(o => o.LicenseNumber == licenseNumber);
+
+                    if (existingVehicle == null)
+                        return NotFound();
+
+                    var updatedVehicle = command.MapToVehicle();
+
+                    _dbContext.Vehicles.Update(updatedVehicle);
+
+                    await _dbContext.SaveChangesAsync();
+
+                    var e = Mappers.MapToVehicleUpdated(command);
+                    await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
+
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. " +
+                      "Try again, and if the problem persists " +
+                      "see your system administrator.");
+                return StatusCode(StatusCodes.Status500InternalServerError);
+                throw;
             }
         }
     }
