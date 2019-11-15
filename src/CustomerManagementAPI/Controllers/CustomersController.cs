@@ -57,7 +57,7 @@ namespace Pitstop.Application.CustomerManagementAPI.Controllers
 
                     // send event
                     CustomerRegistered e = command.MapToCustomerRegistered();
-                    await _messagePublisher.PublishMessageAsync(e.MessageType, e , "");
+                    await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
                     // return result
                     return CreatedAtRoute("GetByCustomerId", new { customerId = customer.CustomerId }, customer);
@@ -69,6 +69,42 @@ namespace Pitstop.Application.CustomerManagementAPI.Controllers
                 ModelState.AddModelError("", "Unable to save changes. " +
                     "Try again, and if the problem persists " +
                     "see your system administrator.");
+                return StatusCode(StatusCodes.Status500InternalServerError);
+                throw;
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateAsync([FromRoute] string customerId, [FromBody] UpdateCustomer command)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var existingCustomer = await _dbContext.Customers
+                        .FirstOrDefaultAsync(o => o.CustomerId == customerId);
+
+                    if (existingCustomer == null)
+                        return NotFound();
+
+                    var updatedCustomer = command.MapToCustomer();
+
+                    _dbContext.Customers.Update(updatedCustomer);
+
+                    await _dbContext.SaveChangesAsync();
+
+                    var e = command.MapToCustomerUpdated();
+                    await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
+
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. " +
+                      "Try again, and if the problem persists " +
+                      "see your system administrator.");
                 return StatusCode(StatusCodes.Status500InternalServerError);
                 throw;
             }
