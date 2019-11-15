@@ -1,8 +1,5 @@
-﻿using Pitstop.Application.VehicleManagement.Commands;
-using Pitstop.Infrastructure.Messaging;
+﻿using Pitstop.Infrastructure.Messaging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Pitstop.Application.VehicleManagement.Events
 {
@@ -20,17 +17,6 @@ namespace Pitstop.Application.VehicleManagement.Events
             Brand = brand;
             Type = type;
             OwnerId = ownerId;
-        }
-
-        public static VehicleRegistered FromCommand(RegisterVehicle command)
-        {
-            return new VehicleRegistered(
-                Guid.NewGuid(),
-                command.LicenseNumber,
-                command.Brand,
-                command.Type,
-                command.OwnerId
-            );
         }
     }
 }
