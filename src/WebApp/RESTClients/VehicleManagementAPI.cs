@@ -49,5 +49,10 @@ namespace WebApp.RESTClients
         {
             await _restClient.RegisterVehicle(command);
         }
+
+        public async Task UpdateVehicle([AliasAs("licenseNumber")] string licenseNumber, UpdateVehicle command)
+        {
+            await _restClient.UpdateVehicle(licenseNumber, command);
+        }
     }
 }

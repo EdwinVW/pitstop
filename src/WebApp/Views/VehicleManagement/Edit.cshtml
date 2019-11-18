@@ -1,0 +1,36 @@
+﻿@model Pitstop.ViewModels.VehicleManagementEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Vehicle";
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<h3 id="PageTitle">Vehicle Management - Edit vehicle</h3>
+
+<form asp-controller="VehicleManagement" asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="Vehicle.LicenseNumber"></label>
+        <input asp-for="Vehicle.LicenseNumber" type="text" class="form-control" />
+        <span asp-validation-for="Vehicle.LicenseNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Vehicle.Brand"></label>
+        <input asp-for="Vehicle.Brand" type="text" class="form-control" />
+        <span asp-validation-for="Vehicle.Brand" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Vehicle.Type"></label>
+        <input asp-for="Vehicle.Type" type="text" class="form-control" />
+        <span asp-validation-for="Vehicle.Type" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Vehicle.OwnerId"></label>
+        <select asp-for="SelectedCustomerId" asp-items="Model.Customers" class="form-control"></select>
+        <span asp-validation-for="SelectedCustomerId" class="text-danger"></span>
+    </div>
+    <span><button id="SubmitButton" type="submit" class="btn btn-default">Save</button></span>
+    <span><a id="CancelButton" asp-action="Index" asp-controller="VehicleManagement" class="btn btn-default">Cancel</a></span>
+</form>

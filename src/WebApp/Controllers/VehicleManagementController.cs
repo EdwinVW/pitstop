@@ -58,6 +58,27 @@ namespace PitStop.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Edit(string licenseNumber)
+        {
+            return await _resiliencyHelper.ExecuteResilient(async () =>
+            {
+                // get customerlist
+                var customers = await _customerManagementAPI.GetCustomers();
+
+                Vehicle vehicle = await _vehicleManagementAPI.GetVehicleByLicenseNumber(licenseNumber);
+                Customer customer = await _customerManagementAPI.GetCustomerById(vehicle.OwnerId);
+
+                var model = new VehicleManagementEditViewModel
+                {
+                    Vehicle = vehicle,
+                    SelectedCustomerId = customer.CustomerId,
+                    Customers = customers.Select(c => new SelectListItem { Value = c.CustomerId, Text = c.Name })
+                };
+                return View(model);
+            }, View("Offline", new VehicleManagementOfflineViewModel()));
+        }
+
+        [HttpGet]
         public async Task<IActionResult> New()
         {
             return await _resiliencyHelper.ExecuteResilient(async () =>
@@ -89,6 +110,24 @@ namespace PitStop.Controllers
             else
             {
                 return View("New", inputModel);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([FromForm] VehicleManagementEditViewModel inputModel)
+        {
+            if (ModelState.IsValid)
+            {
+                return await _resiliencyHelper.ExecuteResilient(async () =>
+                {
+                    var command = inputModel.MapToUpdateVehicle();
+                    await _vehicleManagementAPI.UpdateVehicle(command.LicenseNumber, command);
+                    return RedirectToAction("Index");
+                }, View("Offline", new VehicleManagementOfflineViewModel()));
+            }
+            else
+            {
+                return View("Edit", inputModel);
             }
         }
 

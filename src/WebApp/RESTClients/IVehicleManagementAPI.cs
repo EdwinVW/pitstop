@@ -16,5 +16,8 @@ namespace WebApp.RESTClients
 
         [Post("/vehicles")]
         Task RegisterVehicle(RegisterVehicle command);
+
+        [Put("/vehicles/{licenseNumber}")]
+        Task UpdateVehicle([AliasAs("licenseNumber")] string licenseNumber, UpdateVehicle command);
     }
 }

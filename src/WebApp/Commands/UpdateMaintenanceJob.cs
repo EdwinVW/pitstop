@@ -3,7 +3,7 @@ using System;
 
 namespace WebApp.Commands
 {
-    public class PlanMaintenanceJob : Command
+    public class UpdateMaintenanceJob : Command
     {
         public readonly Guid JobId;
         public readonly DateTime StartTime;
@@ -12,7 +12,7 @@ namespace WebApp.Commands
         public readonly (string LicenseNumber, string Brand, string Type) VehicleInfo;
         public readonly string Description;
 
-        public PlanMaintenanceJob(Guid messageId, Guid jobId, DateTime startTime, DateTime endTime,
+        public UpdateMaintenanceJob(Guid messageId, Guid jobId, DateTime startTime, DateTime endTime,
             (string Id, string Name, string TelephoneNumber) customerInfo,
             (string LicenseNumber, string Brand, string Type) vehicleInfo,
             string description) : base(messageId)

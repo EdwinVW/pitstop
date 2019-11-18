@@ -1,5 +1,6 @@
 using System;
 using Pitstop.ViewModels;
+using Pitstop.ViewModels;
 using WebApp.Commands;
 
 namespace Pitstop.WebApp.Mappers
@@ -19,6 +20,14 @@ namespace Pitstop.WebApp.Mappers
         );
 
         public static RegisterVehicle MapToRegisterVehicle(this VehicleManagementNewViewModel source) => new RegisterVehicle(
+            Guid.NewGuid(),
+            source.Vehicle.LicenseNumber,
+            source.Vehicle.Brand,
+            source.Vehicle.Type,
+            source.SelectedCustomerId
+        );
+
+        public static UpdateVehicle MapToUpdateVehicle(this VehicleManagementEditViewModel source) => new UpdateVehicle(
             Guid.NewGuid(),
             source.Vehicle.LicenseNumber,
             source.Vehicle.Brand,
