@@ -38,6 +38,38 @@ namespace WorkshopManagement.UnitTests.DomainTests
         }
 
         [Fact]
+        public void Update_Should_Update_Existing_Job()
+        {
+            // arrange
+            MaintenanceJobBuilder maintenanceJobBuilder = new MaintenanceJobBuilder();
+            MaintenanceJob sut = maintenanceJobBuilder
+                .Build();
+
+            var description = "Description has been updated";
+
+            // act
+            sut.Update(sut.StartTime, sut.EndTime, sut.Vehicle, sut.Customer, description);
+
+            // assert
+            Assert.Equal(maintenanceJobBuilder.JobId, sut.Id);
+            Assert.Equal(maintenanceJobBuilder.StartTime, sut.StartTime);
+            Assert.Equal(maintenanceJobBuilder.EndTime, sut.EndTime);
+            Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Id, sut.Customer.Id);
+            Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Name, sut.Customer.Name);
+            Assert.Equal(maintenanceJobBuilder.CustomerBuilder.TelephoneNumber, sut.Customer.TelephoneNumber);
+            Assert.Equal(maintenanceJobBuilder.VehicleBuilder.LicenseNumber, sut.Vehicle.Id);
+            Assert.Equal(maintenanceJobBuilder.VehicleBuilder.Brand, sut.Vehicle.Brand);
+            Assert.Equal(maintenanceJobBuilder.VehicleBuilder.Type, sut.Vehicle.Type);
+            Assert.Equal(maintenanceJobBuilder.VehicleBuilder.OwnerId, sut.Vehicle.OwnerId);
+            Assert.Equal(description, sut.Description);
+            Assert.Null(sut.ActualStartTime);
+            Assert.Null(sut.ActualEndTime);
+            Assert.Null(sut.Notes);
+            Assert.Equal("Planned", sut.Status);
+        }
+
+
+        [Fact]
         public void Finish_Should_Finish_An_Existing_Job()
         {
             // arrange
