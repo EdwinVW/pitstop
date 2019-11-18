@@ -16,7 +16,7 @@ namespace Pitstop.WorkshopManagementAPI.Mappers
             source.Description
         );
 
-        public static MaintenanceJobUpdated MapToMaintenanceJobPlanned(this UpdateMaintenanceJob source) => new MaintenanceJobUpdated(
+        public static MaintenanceJobUpdated MapToMaintenanceJobUpdated(this UpdateMaintenanceJob source) => new MaintenanceJobUpdated(
             Guid.NewGuid(),
             source.JobId,
             source.StartTime,
