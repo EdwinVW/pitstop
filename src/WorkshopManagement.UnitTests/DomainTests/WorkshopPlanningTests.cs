@@ -75,6 +75,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
             Assert.Collection(events, item0 => Assert.IsAssignableFrom<MaintenanceJobPlanned>(item0));
         }
 
+
         [Fact]
         public void Plan_MaintenanceJob_That_Spans_Two_Days_Should_Throw_Exception()
         {
@@ -105,7 +106,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
         public void Planning_Too_Much_MaintenanceJobs_In_Parallel_Should_Throw_Exception()
         {
             // arrange
-            DateTime date = DateTime.Today;            
+            DateTime date = DateTime.Today;
             var initializingEvents = new Event[] {
                 new WorkshopPlanningCreatedEventBuilder().WithDate(date).Build()
             };
@@ -141,7 +142,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
         public void Plan_Two_MaintenanceJobs_In_Parallel_For_The_Same_Vehicle_Should_Throw_Exception()
         {
             // arrange
-            DateTime date = DateTime.Today;            
+            DateTime date = DateTime.Today;
             var initializingEvents = new Event[] {
                 new WorkshopPlanningCreatedEventBuilder().WithDate(date).Build()
             };
@@ -160,6 +161,167 @@ namespace WorkshopManagement.UnitTests.DomainTests
             Assert.Equal("Only 1 maintenance job can be executed on a vehicle during a certain time-slot.",
                 thrownException.Message);
         }
+
+
+        [Fact]
+        public void Update_MaintenanceJob_That_Spans_Two_Days_Should_Throw_Exception()
+        {
+            // arrange
+            var date = DateTime.Today;
+            var jobId = Guid.NewGuid();
+            var startTime = date.AddHours(8);
+            var endTime = date.AddHours(11);
+
+            var createdEvent = new WorkshopPlanningCreatedEventBuilder()
+                    .WithDate(date)
+                    .Build();
+
+            var plannedEvent = new MaintenanceJobPlannedEventBuilder()
+                    .WithStartTime(startTime)
+                    .WithEndTime(endTime)
+                    .WithJobId(jobId)
+                    .Build();
+
+            var initializingEvents = new Event[] {
+                createdEvent,
+                plannedEvent
+            };
+
+            var sut = new WorkshopPlanning(date, initializingEvents);
+
+            var command = new UpdateMaintenanceJobCommandBuilder()
+                .WithEvent(plannedEvent)
+                .WithChangedStartTime(startTime.AddDays(-1))
+                .Build();
+
+            // act
+            var thrownException =
+                Assert.Throws<BusinessRuleViolationException>(() => sut.UpdateMaintenanceJob(command));
+
+            // assert
+            Assert.Equal("Start-time and end-time of a Maintenance Job must be within a 1 day.",
+                thrownException.Message);
+        }
+
+        [Fact]
+        public void Updating_A_Job_That_Conflicts_With_MaintenanceJobs_In_Parallel_Should_Throw_Exception()
+        {
+            // arrange
+            var date = DateTime.Today;
+            var jobId = Guid.NewGuid();
+            var startTime = date.AddHours(12);
+            var endTime = date.AddHours(13);
+
+            var createdEvent = new WorkshopPlanningCreatedEventBuilder()
+                    .WithDate(date)
+                    .Build();
+            var plannedEvent1 = new MaintenanceJobPlannedEventBuilder()
+                    .Build();
+            var plannedEvent2 = new MaintenanceJobPlannedEventBuilder()
+                    .Build();
+            var plannedEvent3 = new MaintenanceJobPlannedEventBuilder()
+                    .Build();
+
+            var plannedEvent4 = new MaintenanceJobPlannedEventBuilder()
+                    .WithStartTime(startTime)
+                    .WithEndTime(endTime)
+                    .WithJobId(jobId)
+                    .Build();
+
+            var initializingEvents = new Event[] {
+                createdEvent,
+                plannedEvent1,
+                plannedEvent2,
+                plannedEvent3,
+                plannedEvent4
+            };
+
+            var sut = new WorkshopPlanning(date, initializingEvents);
+
+            var command = new UpdateMaintenanceJobCommandBuilder()
+                .WithEvent(plannedEvent4)
+                .WithChangedStartTime(plannedEvent1.StartTime)
+                .WithChangedEndTime(plannedEvent1.EndTime)
+                .Build();
+
+            // act
+            var thrownException = Assert.Throws<BusinessRuleViolationException>(() =>
+            {
+                sut.UpdateMaintenanceJob(command); // 4th job is updated to conflict with the 1st job
+            });
+
+            // assert
+            Assert.Equal("Maintenancejob overlaps with more than 3 other jobs.", thrownException.Message);
+        }
+
+        [Fact]
+        public void Updating_A_MaintenanceJobs_For_The_Same_Vehicle_with_Time_Conflict_Should_Throw_Exception()
+        {
+            // arrange
+            var date = DateTime.Today;
+            var jobId1 = Guid.NewGuid();
+            var jobId2 = Guid.NewGuid();
+            var jobId3 = Guid.NewGuid();
+            var startTime1 = date.AddHours(12);
+            var endTime1 = date.AddHours(13);
+            var startTime2 = date.AddHours(14);
+            var endTime2 = date.AddHours(15);
+            var startTime3 = date.AddHours(8);
+            var endTime3 = date.AddHours(11);
+
+            var vehicleBuilder = new VehicleBuilder();
+
+            var createdEvent = new WorkshopPlanningCreatedEventBuilder()
+                    .WithDate(date)
+                    .Build();
+
+            var plannedEvent1 = new MaintenanceJobPlannedEventBuilder()
+                    .WithStartTime(startTime1)
+                    .WithEndTime(endTime1)
+                    .WithJobId(jobId1)
+                    .WithVehicleBuilder(vehicleBuilder)
+                    .Build();
+
+            var plannedEvent2 = new MaintenanceJobPlannedEventBuilder()
+                    .WithStartTime(startTime2)
+                    .WithEndTime(endTime2)
+                    .WithJobId(jobId2)
+                    .WithVehicleBuilder(vehicleBuilder)
+                    .Build();
+
+            var plannedEvent3 = new MaintenanceJobPlannedEventBuilder()
+                    .WithStartTime(startTime3)
+                    .WithEndTime(endTime3)
+                    .WithJobId(jobId3)
+                    .WithVehicleBuilder(vehicleBuilder)
+                    .Build();
+
+            var initializingEvents = new Event[] {
+                createdEvent,
+                plannedEvent1,
+                plannedEvent2,
+                plannedEvent3
+            };
+
+            var sut = new WorkshopPlanning(date, initializingEvents);
+
+            var command = new UpdateMaintenanceJobCommandBuilder()
+                .WithEvent(plannedEvent3)
+                .WithChangedStartTime(plannedEvent1.StartTime)
+                .WithChangedEndTime(plannedEvent1.EndTime)
+                .Build();
+
+            // act
+            var thrownException = Assert.Throws<BusinessRuleViolationException>(() =>
+            {
+                sut.UpdateMaintenanceJob(command); // 4th job is updated to conflict with the 1st job
+            });
+
+            // assert
+            Assert.Equal("Only 1 maintenance job can be executed on a vehicle during a certain time-slot.",
+                thrownException.Message);
+        }
+
 
         [Fact]
         public void Finish_MaintenanceJob_Should_Finish_A_New_MaintenanceJob()

@@ -30,7 +30,13 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
         {
             MaintenanceJobBuilder.WithEndTime(endTime);
             return this;
-        }         
+        }
+
+        public MaintenanceJobPlannedEventBuilder WithVehicleBuilder(VehicleBuilder builder)
+        {
+            VehicleBuilder = builder;
+            return this;
+        }
 
         public MaintenanceJobPlanned Build()
         {
