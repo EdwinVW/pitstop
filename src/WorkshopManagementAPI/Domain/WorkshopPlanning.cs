@@ -39,7 +39,7 @@ namespace Pitstop.WorkshopManagementAPI.Domain
         internal void UpdateMaintenanceJob(UpdateMaintenanceJob command)
         {
             // handle event
-            MaintenanceJobUpdated e = command.MapToMaintenanceJobPlanned();
+            MaintenanceJobUpdated e = command.MapToMaintenanceJobUpdated();
             RaiseEvent(e);
         }
 
@@ -98,13 +98,10 @@ namespace Pitstop.WorkshopManagementAPI.Domain
 
         private void Handle(MaintenanceJobUpdated e)
         {
-            MaintenanceJob job = new MaintenanceJob();
+            MaintenanceJob job = Jobs.FirstOrDefault(j => j.Id == e.JobId);
             Customer customer = new Customer(e.CustomerInfo.Id, e.CustomerInfo.Name, e.CustomerInfo.TelephoneNumber);
             Vehicle vehicle = new Vehicle(e.VehicleInfo.LicenseNumber, e.VehicleInfo.Brand, e.VehicleInfo.Type, customer.Id);
-            job.Plan(e.JobId, e.StartTime, e.EndTime, vehicle, customer, e.Description);
-            var oldJob = Jobs.First(o => o.Id == e.JobId);
-            Jobs.Remove(oldJob);
-            Jobs.Add(job);
+            job.Update(e.StartTime, e.EndTime, vehicle, customer, e.Description);
         }
 
         private void Handle(MaintenanceJobFinished e)

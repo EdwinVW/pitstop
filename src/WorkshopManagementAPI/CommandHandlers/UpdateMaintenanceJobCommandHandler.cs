@@ -24,6 +24,9 @@ namespace WorkshopManagementAPI.CommandHandlers
             // get or create workshop-planning
             WorkshopPlanning planning = await planningRepository.GetWorkshopPlanningAsync(planningDate);
 
+            if (planning == null)
+                return null;
+
             // handle command
             planning.UpdateMaintenanceJob(command);
 

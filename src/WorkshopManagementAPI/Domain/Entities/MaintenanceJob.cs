@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Pitstop.WorkshopManagementAPI.Domain.Entities
 {
@@ -21,6 +18,15 @@ namespace Pitstop.WorkshopManagementAPI.Domain.Entities
         public void Plan(Guid id, DateTime startTime, DateTime endTime, Vehicle vehicle, Customer customer, string description)
         {
             Id = id;
+            StartTime = startTime;
+            EndTime = endTime;
+            Vehicle = vehicle;
+            Customer = customer;
+            Description = description;
+        }
+
+        public void Update(DateTime startTime, DateTime endTime, Vehicle vehicle, Customer customer, string description)
+        {
             StartTime = startTime;
             EndTime = endTime;
             Vehicle = vehicle;

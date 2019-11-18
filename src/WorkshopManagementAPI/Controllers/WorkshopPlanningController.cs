@@ -1,16 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Pitstop.WorkshopManagementAPI.Repositories;
-using System;
-using Pitstop.WorkshopManagementAPI.Domain;
-using System.Linq;
 using Pitstop.WorkshopManagementAPI.Commands;
+using Pitstop.WorkshopManagementAPI.Domain;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
 using Pitstop.WorkshopManagementAPI.Models;
-using WorkshopManagementAPI.CommandHandlers;
+using Pitstop.WorkshopManagementAPI.Repositories;
 using Serilog;
-using System.Globalization;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using WorkshopManagementAPI.CommandHandlers;
 
 namespace Pitstop.WorkshopManagementAPI.Controllers
 {
@@ -20,15 +19,18 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
         private readonly IWorkshopPlanningRepository _planningRepo;
         private readonly IPlanMaintenanceJobCommandHandler _planMaintenanceJobCommandHandler;
         private readonly IFinishMaintenanceJobCommandHandler _finishMaintenanceJobCommandHandler;
+        private readonly IUpdateMaintenanceJobCommandHandler updateMaintenanceJobCommandHandler;
 
         public WorkshopPlanningController(
             IWorkshopPlanningRepository planningRepo,
             IPlanMaintenanceJobCommandHandler planMaintenanceJobCommandHandler,
-            IFinishMaintenanceJobCommandHandler finishMaintenanceJobCommand)
+            IFinishMaintenanceJobCommandHandler finishMaintenanceJobCommand,
+            IUpdateMaintenanceJobCommandHandler updateMaintenanceJobCommandHandler)
         {
             _planningRepo = planningRepo;
             _planMaintenanceJobCommandHandler = planMaintenanceJobCommandHandler;
             _finishMaintenanceJobCommandHandler = finishMaintenanceJobCommand;
+            this.updateMaintenanceJobCommandHandler = updateMaintenanceJobCommandHandler;
         }
 
         [HttpGet]
@@ -110,6 +112,40 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
                     {
                         return StatusCode(StatusCodes.Status409Conflict, new BusinessRuleViolation { ErrorMessage = ex.Message });
                     }
+                }
+                return BadRequest();
+            }
+            catch (ConcurrencyException)
+            {
+                string errorMessage = "Unable to save changes. " +
+                    "Try again, and if the problem persists " +
+                    "see your system administrator.";
+                Log.Error(errorMessage);
+                ModelState.AddModelError("ErrorMessage", errorMessage);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+
+        [HttpPut]
+        [Route("{planningDate}/jobs/{jobId}")]
+        public async Task<IActionResult> UpdateMaintenanceJobAsync(DateTime planningDate, Guid jobId, [FromBody] UpdateMaintenanceJob command)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    // handle command
+                    WorkshopPlanning planning = await 
+                        updateMaintenanceJobCommandHandler.HandleCommandAsync(planningDate, command);
+
+                    // handle result    
+                    if (planning == null)
+                        return NotFound();
+
+                    // return result
+                    return Ok();
                 }
                 return BadRequest();
             }
