@@ -4,10 +4,10 @@ using Newtonsoft.Json.Linq;
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.WorkshopManagementEventHandler.DataAccess;
 using Pitstop.WorkshopManagementEventHandler.Events;
+using Pitstop.WorkshopManagementEventHandler.Mappers;
 using Pitstop.WorkshopManagementEventHandler.Model;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -56,11 +56,20 @@ namespace Pitstop.WorkshopManagementEventHandler
                     case "CustomerRegistered":
                         await HandleAsync(messageObject.ToObject<CustomerRegistered>());
                         break;
+                    case "CustomerUpdated":
+                        await HandleAsync(messageObject.ToObject<CustomerUpdated>());
+                        break;
                     case "VehicleRegistered":
                         await HandleAsync(messageObject.ToObject<VehicleRegistered>());
                         break;
+                    case "VehicleUpdated":
+                        await HandleAsync(messageObject.ToObject<VehicleUpdated>());
+                        break;
                     case "MaintenanceJobPlanned":
                         await HandleAsync(messageObject.ToObject<MaintenanceJobPlanned>());
+                        break;
+                    case "MaintenanceJobUpdated":
+                        await HandleAsync(messageObject.ToObject<MaintenanceJobUpdated>());
                         break;
                     case "MaintenanceJobFinished":
                         await HandleAsync(messageObject.ToObject<MaintenanceJobFinished>());
@@ -101,6 +110,27 @@ namespace Pitstop.WorkshopManagementEventHandler
             return true;
         }
 
+        private async Task<bool> HandleAsync(VehicleUpdated e)
+        {
+            Log.Information("Updated Vehicle: {LicenseNumber}, {Brand}, {Type}, Owner Id: {OwnerId}",
+                   e.LicenseNumber, e.Brand, e.Type, e.OwnerId);
+
+            try
+            {
+                var vehicle = e.ToEntity();
+
+                _dbContext.Vehicles.Update(vehicle);
+
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                Console.WriteLine($"Skipped updating vehicle with license number {e.LicenseNumber}.");
+            }
+
+            return true;
+        }
+
         private async Task<bool> HandleAsync(CustomerRegistered e)
         {
             Log.Information("Register Customer: {CustomerId}, {Name}, {TelephoneNumber}", 
@@ -121,7 +151,28 @@ namespace Pitstop.WorkshopManagementEventHandler
                 Log.Warning("Skipped adding customer with customer id {CustomerId}.", e.CustomerId);
             }
 
-            return true; 
+            return true;
+        }
+
+        private async Task<bool> HandleAsync(CustomerUpdated e)
+        {
+            Log.Information("Updated Customer: {CustomerId}, {Name}, {TelephoneNumber}",
+                e.CustomerId, e.Name, e.TelephoneNumber);
+
+            try
+            {
+                var customer = e.ToEntity();
+
+                _dbContext.Customers.Update(customer);
+
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                Log.Warning("Skipped adding customer with customer id {CustomerId}.", e.CustomerId);
+            }
+
+            return true;
         }
 
         private async Task<bool> HandleAsync(MaintenanceJobPlanned e)
@@ -167,6 +218,33 @@ namespace Pitstop.WorkshopManagementEventHandler
                     WorkshopPlanningDate = e.StartTime.Date,
                     Description = e.Description
                 });
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                Log.Warning("Skipped adding maintenance job with id {JobId}.", e.JobId);
+            }
+
+            return true;
+        }
+
+        private async Task<bool> HandleAsync(MaintenanceJobUpdated e)
+        {
+            Log.Information("Updated Maintenance Job: {JobId}, {StartTime}, {EndTime}, {CustomerName}, {LicenseNumber}",
+                  e.JobId, e.StartTime, e.EndTime, e.CustomerInfo.Name, e.VehicleInfo.LicenseNumber);
+
+            try
+            {
+                var customer = e.CustomerInfo.FromCustomerInfo();
+
+                var vehicle = e.VehicleInfo.FromVehicleInfo(customer.CustomerId);
+
+                var job = e.ToEntity(customer, vehicle);
+
+                // insert maintetancejob
+
+                _dbContext.MaintenanceJobs.Update(job);
+
                 await _dbContext.SaveChangesAsync();
             }
             catch (DbUpdateException)
