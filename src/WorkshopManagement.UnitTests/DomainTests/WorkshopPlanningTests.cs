@@ -75,7 +75,6 @@ namespace WorkshopManagement.UnitTests.DomainTests
             Assert.Collection(events, item0 => Assert.IsAssignableFrom<MaintenanceJobPlanned>(item0));
         }
 
-
         [Fact]
         public void Plan_MaintenanceJob_That_Spans_Two_Days_Should_Throw_Exception()
         {
@@ -161,7 +160,6 @@ namespace WorkshopManagement.UnitTests.DomainTests
             Assert.Equal("Only 1 maintenance job can be executed on a vehicle during a certain time-slot.",
                 thrownException.Message);
         }
-
 
         [Fact]
         public void Update_MaintenanceJob_That_Spans_Two_Days_Should_Throw_Exception()
@@ -321,7 +319,6 @@ namespace WorkshopManagement.UnitTests.DomainTests
             Assert.Equal("Only 1 maintenance job can be executed on a vehicle during a certain time-slot.",
                 thrownException.Message);
         }
-
 
         [Fact]
         public void Finish_MaintenanceJob_Should_Finish_A_New_MaintenanceJob()
