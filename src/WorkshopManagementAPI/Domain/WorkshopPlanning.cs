@@ -36,8 +36,13 @@ namespace Pitstop.WorkshopManagementAPI.Domain
             return planning;
         }
 
-        internal void UpdateMaintenanceJob(UpdateMaintenanceJob command)
+        public void UpdateMaintenanceJob(UpdateMaintenanceJob command)
         {
+            // check business rules
+            this.UpdatedMaintenanceJobShouldFallWithinOneBusinessDay(command);
+            this.NumberOfParallelMaintenanceJobsMustNotExceedAvailableWorkStations(command);
+            this.NumberOfParallelMaintenanceJobsOnAVehicleIsOne(command);
+
             // handle event
             MaintenanceJobUpdated e = command.MapToMaintenanceJobUpdated();
             RaiseEvent(e);

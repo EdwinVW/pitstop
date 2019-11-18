@@ -41,5 +41,38 @@ namespace Pitstop.WorkshopManagementAPI.Domain.BusinessRules
                 throw new BusinessRuleViolationException($"Only 1 maintenance job can be executed on a vehicle during a certain time-slot.");
             }
         }
+
+        public static void UpdatedMaintenanceJobShouldFallWithinOneBusinessDay(
+            this WorkshopPlanning planning, UpdateMaintenanceJob command)
+        {
+            if (command.StartTime.Date != command.EndTime.Date)
+            {
+                throw new BusinessRuleViolationException("Start-time and end-time of a Maintenance Job must be within a 1 day.");
+            }
+        }
+
+        public static void NumberOfParallelMaintenanceJobsMustNotExceedAvailableWorkStations(
+            this WorkshopPlanning planning, UpdateMaintenanceJob command)
+        {
+            if (planning.Jobs.Count(j =>
+                (j.Id != command.JobId) &&
+                ((j.StartTime >= command.StartTime && j.StartTime <= command.EndTime) ||
+                (j.EndTime >= command.StartTime && j.EndTime <= command.EndTime))) >= AVAILABLE_WORKSTATIONS)
+            {
+                throw new BusinessRuleViolationException($"Maintenancejob overlaps with more than {AVAILABLE_WORKSTATIONS} other jobs.");
+            }
+        }
+
+        public static void NumberOfParallelMaintenanceJobsOnAVehicleIsOne(
+            this WorkshopPlanning planning, UpdateMaintenanceJob command)
+        {
+            if (planning.Jobs.Any(j => j.Id != command.JobId &&
+                    j.Vehicle.Id == command.VehicleInfo.LicenseNumber &&
+                    (j.StartTime >= command.StartTime && j.StartTime <= command.EndTime ||
+                    j.EndTime >= command.StartTime && j.EndTime <= command.EndTime)))
+            {
+                throw new BusinessRuleViolationException($"Only 1 maintenance job can be executed on a vehicle during a certain time-slot.");
+            }
+        }
     }
 }
