@@ -4,7 +4,6 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Pitstop.Infrastructure.Messaging
@@ -14,14 +13,19 @@ namespace Pitstop.Infrastructure.Messaging
     /// </summary>
     public class RabbitMQMessagePublisher : IMessagePublisher
     {
-        private readonly string _host;
+        private readonly List<string> _hosts;
         private readonly string _username;
         private readonly string _password;
         private readonly string _exchange;
 
         public RabbitMQMessagePublisher(string host, string username, string password, string exchange)
+            : this(new List<string>() { host }, username, password, exchange)
         {
-            _host = host;
+        }
+
+        public RabbitMQMessagePublisher(IEnumerable<string> hosts, string username, string password, string exchange)
+        {
+            _hosts = new List<string>(hosts);
             _username = username;
             _password = password;
             _exchange = exchange;
@@ -41,8 +45,8 @@ namespace Pitstop.Infrastructure.Messaging
                     .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Log.Error("Error connecting to RabbitMQ. Retrying in 5 sec."); })
                     .Execute(() =>
                     {
-                        var factory = new ConnectionFactory() { HostName = _host, UserName = _username, Password = _password };
-                        using (var connection = factory.CreateConnection())
+                        var factory = new ConnectionFactory() { UserName = _username, Password = _password };
+                        using (var connection = factory.CreateConnection(_hosts))
                         {
                             using (var model = connection.CreateModel())
                             {

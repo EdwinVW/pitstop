@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>Pitstop.Infrastructure.Messaging</AssemblyName>
     <RootNamespace>Pitstop.Infrastructure.Messaging</RootNamespace>
-    <Version>2.2.0</Version>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <FileVersion>2.2.0.0</FileVersion>
+    <Version>2.3.0</Version>
+    <AssemblyVersion>2.3.0.0</AssemblyVersion>
+    <FileVersion>2.3.0.0</FileVersion>
     <Title>Pitstop.Infrastructure.Messaging</Title>
     <Description>Infrastructure package for Pitstop sample application that contains helpers for interacting with the RabbitMQ message-broker used by the application.</Description>
     <PackageProjectUrl>https://github.com/EdwinVW/pitstop/tree/master/src/Infrastructure.Messaging</PackageProjectUrl>
