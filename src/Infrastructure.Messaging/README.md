@@ -7,6 +7,9 @@ This library contains helper-classes for working with messaging within the Pitst
 - A helper class (_MessageSerializer_) for serializing and deserializing commands and events to and from JSON.
 
 ## Release notes
+### Version 2.3.0
+- Added overload for connecting to RabbitMQ clusters.
+
 ### Version 2.2.0
 - Upgraded project to target netstandard2.1.
 - Upgraded all dependencies to the latest version.
