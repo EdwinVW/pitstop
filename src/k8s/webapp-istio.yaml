@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: webpp
+    app: webapp
     system: pitstop
     version: "1.0"
   name: webapp
@@ -22,7 +22,7 @@ spec:
         traffic.sidecar.istio.io/includeOutboundIPRanges: '*'
       creationTimestamp: null
       labels:
-        app: webpp
+        app: webapp
         security.istio.io/tlsMode: istio
         system: pitstop
         version: "1.0"
@@ -47,7 +47,7 @@ spec:
         - --binaryPath
         - /usr/local/bin/envoy
         - --serviceCluster
-        - webpp.$(POD_NAMESPACE)
+        - webapp.$(POD_NAMESPACE)
         - --drainDuration
         - 45s
         - --parentShutdownDuration
@@ -110,7 +110,7 @@ spec:
           value: "7000"
         - name: ISTIO_METAJSON_LABELS
           value: |
-            {"app":"webpp","system":"pitstop","version":"1.0"}
+            {"app":"webapp","system":"pitstop","version":"1.0"}
         - name: ISTIO_META_WORKLOAD_NAME
           value: webapp
         - name: ISTIO_META_OWNER
@@ -209,7 +209,7 @@ spec:
     targetPort: 7000
   selector:
     system: pitstop
-    app: webpp
+    app: webapp
     version: "1.0"
 
 ---
