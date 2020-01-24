@@ -28,8 +28,8 @@ spec:
       - destination:
           host: customermanagementapi
           subset: v1
-        weight: 90
+        weight: 75
       - destination:
           host: customermanagementapi
           subset: v2
-        weight: 10
+        weight: 25
