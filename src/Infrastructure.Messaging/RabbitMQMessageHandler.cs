@@ -2,17 +2,16 @@
 using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using Newtonsoft.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Polly;
 using Serilog;
+using System.Collections.Generic;
 
 namespace Pitstop.Infrastructure.Messaging
 {
     public class RabbitMQMessageHandler : IMessageHandler
     {
-        private readonly string _host;
+        private readonly List<string> _hosts;
         private readonly string _username;
         private readonly string _password;
         private readonly string _exchange;
@@ -25,14 +24,19 @@ namespace Pitstop.Infrastructure.Messaging
         private IMessageHandlerCallback _callback;
 
         public RabbitMQMessageHandler(string host, string username, string password, string exchange, string queuename, string routingKey)
+            : this(new List<string>() { host }, username, password, exchange, queuename, routingKey)
         {
-            _host = host;
+        }
+
+        public RabbitMQMessageHandler(IEnumerable<string> hosts, string username, string password, string exchange, string queuename, string routingKey)
+        {
+            _hosts = new List<string>(hosts);
             _username = username;
             _password = password;
             _exchange = exchange;
             _queuename = queuename;
             _routingKey = routingKey;
-        }
+        }        
 
         public void Start(IMessageHandlerCallback callback)
         {
@@ -43,8 +47,8 @@ namespace Pitstop.Infrastructure.Messaging
                 .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Log.Error("Error connecting to RabbitMQ. Retrying in 5 sec."); })
                 .Execute(() =>
                 {
-                    var factory = new ConnectionFactory() { HostName = _host, UserName = _username, Password = _password, DispatchConsumersAsync = true };
-                    _connection = factory.CreateConnection();
+                    var factory = new ConnectionFactory() { UserName = _username, Password = _password, DispatchConsumersAsync = true };
+                    _connection = factory.CreateConnection(_hosts);
                     _model = _connection.CreateModel();
                     _model.ExchangeDeclare(_exchange, "fanout", durable: true, autoDelete: false);
                     _model.QueueDeclare(_queuename, durable: true, autoDelete: false, exclusive: false);

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     system: pitstop
-    app: webpp
+    app: webapp
     version: "1.0"
   name: webapp
   namespace: pitstop
@@ -13,7 +13,7 @@ spec:
     metadata:
       labels:
         system: pitstop
-        app: webpp
+        app: webapp
         version: "1.0"
     spec:
       containers:
@@ -46,6 +46,6 @@ spec:
     targetPort: 7000
   selector:
     system: pitstop
-    app: webpp
+    app: webapp
     version: "1.0"
 

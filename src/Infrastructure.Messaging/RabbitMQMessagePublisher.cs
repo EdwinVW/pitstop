@@ -4,7 +4,6 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Pitstop.Infrastructure.Messaging
@@ -12,19 +11,28 @@ namespace Pitstop.Infrastructure.Messaging
     /// <summary>
     /// RabbitMQ implementation of the MessagePublisher.
     /// </summary>
-    public class RabbitMQMessagePublisher : IMessagePublisher
+    public sealed class RabbitMQMessagePublisher : IMessagePublisher, IDisposable
     {
-        private readonly string _host;
+        private readonly List<string> _hosts;
         private readonly string _username;
         private readonly string _password;
         private readonly string _exchange;
+        private IConnection _connection;
+        private IModel _model;
 
         public RabbitMQMessagePublisher(string host, string username, string password, string exchange)
+            : this(new List<string>() { host }, username, password, exchange)
         {
-            _host = host;
+        }
+
+        public RabbitMQMessagePublisher(IEnumerable<string> hosts, string username, string password, string exchange)
+        {
+            _hosts = new List<string>(hosts);
             _username = username;
             _password = password;
             _exchange = exchange;
+
+            Connect();
         }
 
         /// <summary>
@@ -36,25 +44,41 @@ namespace Pitstop.Infrastructure.Messaging
         public Task PublishMessageAsync(string messageType, object message, string routingKey)
         {
             return Task.Run(() =>
-                Policy
-                    .Handle<Exception>()
-                    .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Log.Error("Error connecting to RabbitMQ. Retrying in 5 sec."); })
-                    .Execute(() =>
-                    {
-                        var factory = new ConnectionFactory() { HostName = _host, UserName = _username, Password = _password };
-                        using (var connection = factory.CreateConnection())
-                        {
-                            using (var model = connection.CreateModel())
-                            {
-                                model.ExchangeDeclare(_exchange, "fanout", durable: true, autoDelete: false);
-                                string data = MessageSerializer.Serialize(message);
-                                var body = Encoding.UTF8.GetBytes(data);
-                                IBasicProperties properties = model.CreateBasicProperties();
-                                properties.Headers = new Dictionary<string, object> { { "MessageType", messageType } };
-                                model.BasicPublish(_exchange, routingKey, properties, body);
-                            }
-                        }
-                    }));
+                {
+                    string data = MessageSerializer.Serialize(message);
+                    var body = Encoding.UTF8.GetBytes(data);
+                    IBasicProperties properties = _model.CreateBasicProperties();
+                    properties.Headers = new Dictionary<string, object> { { "MessageType", messageType } };
+                    _model.BasicPublish(_exchange, routingKey, properties, body);
+                });
+        }
+
+        private void Connect()
+        {
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Log.Error("Error connecting to RabbitMQ. Retrying in 5 sec."); })
+                .Execute(() =>
+                {
+                    var factory = new ConnectionFactory() { UserName = _username, Password = _password };
+                    factory.AutomaticRecoveryEnabled = true;
+                    _connection = factory.CreateConnection(_hosts);
+                    _model = _connection.CreateModel();
+                    _model.ExchangeDeclare(_exchange, "fanout", durable: true, autoDelete: false);
+                });
+        }
+
+        public void Dispose()
+        {
+            _model?.Dispose();
+            _model = null;
+            _connection?.Dispose();
+            _connection = null;
+        }        
+
+        ~RabbitMQMessagePublisher()
+        {
+            Dispose();
         }
     }
 }
