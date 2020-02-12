@@ -12,16 +12,17 @@ namespace WorkshopManagementAPI.Domain.ValueObjects
 
         private LicenseNumber(string licenseNumber) => _value = Value;
 
-        public static LicenseNumber Create(string licenseNumber) => new LicenseNumber(licenseNumber);
-
-        public static LicenseNumber CreateValid(string licenseNumber)
+        public static LicenseNumber Create(string value)
         {
-            if (!Regex.IsMatch(licenseNumber, NUMBER_PATTERN, RegexOptions.IgnoreCase))
+            if (!Regex.IsMatch(value, NUMBER_PATTERN, RegexOptions.IgnoreCase))
             {
                 throw new InvalidValueException("The specified license-number was not in the correct format.");
             }
-            return Create(licenseNumber);
+            return new LicenseNumber(value);
         }
+
+        public static LicenseNumber CreateWithoutValidation(string value) => 
+            new LicenseNumber(value);
 
         public override bool Equals(object obj)
         {
