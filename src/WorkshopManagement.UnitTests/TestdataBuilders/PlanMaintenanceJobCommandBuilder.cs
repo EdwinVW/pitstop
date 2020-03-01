@@ -1,6 +1,5 @@
 using System;
 using Pitstop.WorkshopManagementAPI.Commands;
-using Pitstop.WorkshopManagementAPI.Domain;
 
 namespace WorkshopManagement.UnitTests.TestdataBuilders
 {
@@ -42,7 +41,7 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
                 .Build();
 
             PlanMaintenanceJob command = new PlanMaintenanceJob(
-                Guid.NewGuid(), job.Id, job.StartTime, job.EndTime,
+                Guid.NewGuid(), job.Id, job.PlannedTimeslot.StartTime, job.PlannedTimeslot.EndTime,
                 (customer.Id, customer.Name, customer.TelephoneNumber),
                 (vehicle.Id, vehicle.Brand, vehicle.Type),
                 job.Description

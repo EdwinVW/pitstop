@@ -1,8 +1,8 @@
 using System;
 using Xunit;
-using Pitstop.WorkshopManagementAPI.Domain;
 using WorkshopManagement.UnitTests.TestdataBuilders;
 using Pitstop.WorkshopManagementAPI.Domain.Entities;
+using Pitstop.WorkshopManagementAPI.Domain.ValueObjects;
 
 namespace WorkshopManagement.UnitTests.DomainTests
 {
@@ -21,8 +21,8 @@ namespace WorkshopManagement.UnitTests.DomainTests
 
             // assert
             Assert.Equal(maintenanceJobBuilder.JobId, sut.Id);
-            Assert.Equal(maintenanceJobBuilder.StartTime, sut.StartTime);
-            Assert.Equal(maintenanceJobBuilder.EndTime, sut.EndTime);
+            Assert.Equal(maintenanceJobBuilder.StartTime, sut.PlannedTimeslot.StartTime);
+            Assert.Equal(maintenanceJobBuilder.EndTime, sut.PlannedTimeslot.EndTime);
             Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Id, sut.Customer.Id);
             Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Name, sut.Customer.Name);
             Assert.Equal(maintenanceJobBuilder.CustomerBuilder.TelephoneNumber, sut.Customer.TelephoneNumber);
@@ -31,8 +31,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
             Assert.Equal(maintenanceJobBuilder.VehicleBuilder.Type, sut.Vehicle.Type);
             Assert.Equal(maintenanceJobBuilder.VehicleBuilder.OwnerId, sut.Vehicle.OwnerId);
             Assert.Equal(maintenanceJobBuilder.Description, sut.Description);
-            Assert.Null(sut.ActualStartTime);
-            Assert.Null(sut.ActualEndTime);
+            Assert.Null(sut.ActualTimeslot);
             Assert.Null(sut.Notes);
             Assert.Equal("Planned", sut.Status);
         }
@@ -47,15 +46,16 @@ namespace WorkshopManagement.UnitTests.DomainTests
 
             DateTime actualStartTime = maintenanceJobBuilder.StartTime.AddMinutes(30);
             DateTime actualEndTime = maintenanceJobBuilder.EndTime.AddMinutes(15);
+            Timeslot actualTimeslot = Timeslot.Create(actualStartTime, actualEndTime);
             string notes = $"Mechanic notes {maintenanceJobBuilder.JobId}";
 
             // act
-            sut.Finish(actualStartTime, actualEndTime, notes);
+            sut.Finish(actualTimeslot, notes);
 
             // assert
             Assert.Equal(maintenanceJobBuilder.JobId, sut.Id);
-            Assert.Equal(maintenanceJobBuilder.StartTime, sut.StartTime);
-            Assert.Equal(maintenanceJobBuilder.EndTime, sut.EndTime);
+            Assert.Equal(maintenanceJobBuilder.StartTime, sut.PlannedTimeslot.StartTime);
+            Assert.Equal(maintenanceJobBuilder.EndTime, sut.PlannedTimeslot.EndTime);
             Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Id, sut.Customer.Id);
             Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Name, sut.Customer.Name);
             Assert.Equal(maintenanceJobBuilder.CustomerBuilder.TelephoneNumber, sut.Customer.TelephoneNumber);
@@ -64,8 +64,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
             Assert.Equal(maintenanceJobBuilder.VehicleBuilder.Type, sut.Vehicle.Type);
             Assert.Equal(maintenanceJobBuilder.VehicleBuilder.OwnerId, sut.Vehicle.OwnerId);
             Assert.Equal(maintenanceJobBuilder.Description, sut.Description);
-            Assert.Equal(actualStartTime, sut.ActualStartTime.Value);
-            Assert.Equal(actualEndTime, sut.ActualEndTime.Value);
+            Assert.Equal(actualTimeslot, sut.ActualTimeslot);
             Assert.Equal(notes, sut.Notes);
             Assert.Equal("Completed", sut.Status);
         }

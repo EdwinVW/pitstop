@@ -1,6 +1,7 @@
 using System;
 using Pitstop.WorkshopManagementAPI.Domain;
 using Pitstop.WorkshopManagementAPI.Domain.Entities;
+using Pitstop.WorkshopManagementAPI.Domain.ValueObjects;
 
 namespace WorkshopManagement.UnitTests.TestdataBuilders
 {
@@ -82,7 +83,8 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
             Vehicle vehicle = VehicleBuilder.Build();
 
             var job = new MaintenanceJob();
-            job.Plan(JobId, StartTime, EndTime, vehicle, customer, Description);
+            Timeslot plannedTimeslot = Timeslot.Create(StartTime, EndTime);
+            job.Plan(JobId, plannedTimeslot, vehicle, customer, Description);
             return job;
         }
 

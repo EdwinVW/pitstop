@@ -2,6 +2,7 @@ using System;
 using Xunit;
 using Xunit.Abstractions;
 using Pitstop.UITest.PageModel;
+using TestUtils;
 
 namespace Pitstop.UITest
 {
@@ -21,6 +22,7 @@ namespace Pitstop.UITest
             string testrunId = Guid.NewGuid().ToString("N");
             PitstopApp pitstop = new PitstopApp(testrunId, TestConstants.PitstopStartUrl);
             var homePage = pitstop.Start();
+            string licenseNumber = TestDataGenerators.GenerateRandomLicenseNumber();
 
             // act
             pitstop.Menu
@@ -40,9 +42,9 @@ namespace Pitstop.UITest
                 .RegisterVehicle()
                 .Cancel()
                 .RegisterVehicle()
-                .FillVehicleDetails($"Vehicle {testrunId}", "Testla", "Model T", $"TestCustomer {testrunId}")
+                .FillVehicleDetails(licenseNumber, "Testla", "Model T", $"TestCustomer {testrunId}")
                 .Submit()
-                .SelectVehicle($"Vehicle {testrunId}")
+                .SelectVehicle(licenseNumber)
                 .Back(); 
 
             pitstop.Menu
@@ -50,7 +52,7 @@ namespace Pitstop.UITest
                 .RegisterMaintenanceJob()
                 .Cancel()
                 .RegisterMaintenanceJob()
-                .FillJobDetails("08:00", "12:00", $"Job {testrunId}", $"Vehicle {testrunId}")
+                .FillJobDetails("08:00", "12:00", $"Job {testrunId}", licenseNumber)
                 .Submit()
                 .SelectMaintenanceJob($"Job {testrunId}")
                 .Back(); 

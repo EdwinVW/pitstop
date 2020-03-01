@@ -8,13 +8,11 @@ namespace Pitstop.WorkshopManagementAPI.Domain.ValueObjects
     public class WorkshopPlanningId : ValueObject
     {
         private const string DATE_FORMAT = "yyyy-MM-dd";
-        private string _id;
+        public string Value { get; private set; }
 
-        public string Value => _id;
-
-        public WorkshopPlanningId(DateTime date)
+        public static WorkshopPlanningId Create(DateTime date)
         {
-            _id = date.ToString(DATE_FORMAT);
+            return new WorkshopPlanningId { Value = date.ToString(DATE_FORMAT) };
         }
 
         protected override IEnumerable<object> GetAtomicValues()
@@ -23,7 +21,7 @@ namespace Pitstop.WorkshopManagementAPI.Domain.ValueObjects
         }
 
         public static implicit operator string(WorkshopPlanningId id) => id.Value;
-        public static implicit operator DateTime(WorkshopPlanningId id) => 
+        public static implicit operator DateTime(WorkshopPlanningId id) =>
             DateTime.ParseExact(id.Value, DATE_FORMAT, CultureInfo.InvariantCulture);
     }
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.WorkshopManagementAPI.Commands;
-using Pitstop.WorkshopManagementAPI.Domain;
 using WorkshopManagement.UnitTests.TestdataBuilders;
 using WorkshopManagementAPI.CommandHandlers;
 using Xunit;
@@ -10,6 +9,7 @@ using Moq;
 using Pitstop.WorkshopManagementAPI.Repositories;
 using System.Threading.Tasks;
 using System.Linq;
+using Pitstop.WorkshopManagementAPI.Domain.Entities;
 
 namespace WorkshopManagement.UnitTests.CommandHandlerTests
 {

@@ -2,7 +2,6 @@
 using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Domain.BusinessRules;
 using Pitstop.WorkshopManagementAPI.Domain.Core;
-using Pitstop.WorkshopManagementAPI.Domain.Entities;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
 using Pitstop.WorkshopManagementAPI.Domain.ValueObjects;
 using Pitstop.WorkshopManagementAPI.Events;
@@ -10,9 +9,8 @@ using Pitstop.WorkshopManagementAPI.Mappers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WorkshopManagementAPI.Domain.ValueObjects;
 
-namespace Pitstop.WorkshopManagementAPI.Domain
+namespace Pitstop.WorkshopManagementAPI.Domain.Entities
 {
     public class WorkshopPlanning : AggregateRoot<WorkshopPlanningId>
     {
@@ -21,9 +19,9 @@ namespace Pitstop.WorkshopManagementAPI.Domain
         /// </summary>
         public List<MaintenanceJob> Jobs { get; private set; }
 
-        public WorkshopPlanning(DateTime date) : base(new WorkshopPlanningId(date)) { }
+        public WorkshopPlanning(DateTime date) : base(WorkshopPlanningId.Create(date)) { }
 
-        public WorkshopPlanning(DateTime date, IEnumerable<Event> events) : base(new WorkshopPlanningId(date), events) { }
+        public WorkshopPlanning(DateTime date, IEnumerable<Event> events) : base(WorkshopPlanningId.Create(date), events) { }
 
         /// <summary>
         /// Creates a new instance of a workshop-planning for the specified date.
@@ -87,14 +85,16 @@ namespace Pitstop.WorkshopManagementAPI.Domain
             Customer customer = new Customer(e.CustomerInfo.Id, e.CustomerInfo.Name, e.CustomerInfo.TelephoneNumber);
             LicenseNumber licenseNumber = LicenseNumber.Create(e.VehicleInfo.LicenseNumber);
             Vehicle vehicle = new Vehicle(licenseNumber, e.VehicleInfo.Brand, e.VehicleInfo.Type, customer.Id);
-            job.Plan(e.JobId, e.StartTime, e.EndTime, vehicle, customer, e.Description);
+            Timeslot plannedTimeslot = Timeslot.Create(e.StartTime, e.EndTime);
+            job.Plan(e.JobId, plannedTimeslot, vehicle, customer, e.Description);
             Jobs.Add(job);
         }
 
         private void Handle(MaintenanceJobFinished e)
         {
             MaintenanceJob job = Jobs.FirstOrDefault(j => j.Id == e.JobId);
-            job.Finish(e.StartTime, e.EndTime, e.Notes);
+            Timeslot actualTimeslot = Timeslot.Create(e.StartTime, e.EndTime);
+            job.Finish(actualTimeslot, e.Notes);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Pitstop.WorkshopManagementAPI.Domain.Core;
-using WorkshopManagementAPI.Domain.ValueObjects;
+using Pitstop.WorkshopManagementAPI.Domain.ValueObjects;
 
 namespace Pitstop.WorkshopManagementAPI.Domain.Entities
 {

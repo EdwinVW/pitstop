@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.WorkshopManagementAPI.Commands;
-using Pitstop.WorkshopManagementAPI.Domain;
+using Pitstop.WorkshopManagementAPI.Domain.Entities;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
+using Pitstop.WorkshopManagementAPI.Domain.ValueObjects;
 using Pitstop.WorkshopManagementAPI.Events;
 using WorkshopManagement.UnitTests.TestdataBuilders;
 using Xunit;
@@ -60,8 +61,8 @@ namespace WorkshopManagement.UnitTests.DomainTests
                 item0 =>
                 {
                     Assert.Equal(command.JobId, item0.Id);
-                    Assert.Equal(command.StartTime, item0.StartTime);
-                    Assert.Equal(command.EndTime, item0.EndTime);
+                    Assert.Equal(command.StartTime, item0.PlannedTimeslot.StartTime);
+                    Assert.Equal(command.EndTime, item0.PlannedTimeslot.EndTime);
                     Assert.Equal(command.CustomerInfo.Id, item0.Customer.Id);
                     Assert.Equal(command.CustomerInfo.Name, item0.Customer.Name);
                     Assert.Equal(command.CustomerInfo.TelephoneNumber, item0.Customer.TelephoneNumber);
@@ -87,7 +88,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
 
             MaintenanceJobBuilder maintenanceJobBuilder = new MaintenanceJobBuilder();
             maintenanceJobBuilder
-                .WithStartTime(DateTime.Today.AddHours(-2)); // to make the job span 2 days
+                .WithStartTime(DateTime.Today.AddDays(-2)); // to make the job span multiple days
             PlanMaintenanceJob command = new PlanMaintenanceJobCommandBuilder()
                 .WithMaintenanceJobBuilder(maintenanceJobBuilder)
                 .Build();
@@ -99,7 +100,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
             // assert
             Assert.Equal("Start-time and end-time of a Maintenance Job must be within a 1 day.",
                 thrownException.Message);
-        }
+        }   
 
         [Fact]
         public void Planning_Too_Much_MaintenanceJobs_In_Parallel_Should_Throw_Exception()
@@ -162,7 +163,7 @@ namespace WorkshopManagement.UnitTests.DomainTests
         }
 
         [Fact]
-        public void Finish_MaintenanceJob_Should_Finish_A_New_MaintenanceJob()
+        public void Finish_MaintenanceJob_Should_Finish_An_Unfinished_MaintenanceJob()
         {
             // arrange
             DateTime date = DateTime.Today;
@@ -203,9 +204,10 @@ namespace WorkshopManagement.UnitTests.DomainTests
                 item0 =>
                 {
                     Assert.Equal(command.JobId, item0.Id);
-                    Assert.Equal(startTime, item0.StartTime);
-                    Assert.Equal(endTime, item0.EndTime);
-                    Assert.Equal(command.StartTime, item0.ActualStartTime);
+                    Assert.Equal(startTime, item0.PlannedTimeslot.StartTime);
+                    Assert.Equal(endTime, item0.PlannedTimeslot.EndTime);
+                    Assert.Equal(command.StartTime, item0.ActualTimeslot.StartTime);
+                    Assert.Equal(command.EndTime, item0.ActualTimeslot.EndTime);
                     Assert.Equal(command.Notes, item0.Notes);
                 }
             );

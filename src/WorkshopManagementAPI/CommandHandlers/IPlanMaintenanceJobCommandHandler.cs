@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Pitstop.Infrastructure.Messaging;
 using Pitstop.WorkshopManagementAPI.Commands;
-using Pitstop.WorkshopManagementAPI.Domain;
-using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
-using Pitstop.WorkshopManagementAPI.Repositories;
+using Pitstop.WorkshopManagementAPI.Domain.Entities;
 
 namespace WorkshopManagementAPI.CommandHandlers
 {

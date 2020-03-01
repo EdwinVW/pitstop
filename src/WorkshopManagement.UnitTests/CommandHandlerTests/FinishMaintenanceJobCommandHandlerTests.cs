@@ -1,17 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Pitstop.Infrastructure.Messaging;
-using Pitstop.WorkshopManagementAPI;
 using Pitstop.WorkshopManagementAPI.Commands;
-using Pitstop.WorkshopManagementAPI.Domain;
-using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
-using Pitstop.WorkshopManagementAPI.Events;
 using WorkshopManagement.UnitTests.TestdataBuilders;
 using WorkshopManagementAPI.CommandHandlers;
 using Xunit;
 using Moq;
 using Pitstop.WorkshopManagementAPI.Repositories;
 using System.Threading.Tasks;
+using Pitstop.WorkshopManagementAPI.Domain.Entities;
 
 namespace WorkshopManagement.UnitTests.CommandHandlerTests
 {

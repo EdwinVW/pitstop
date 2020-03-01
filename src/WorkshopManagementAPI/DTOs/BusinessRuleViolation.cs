@@ -1,4 +1,4 @@
-﻿namespace Pitstop.WorkshopManagementAPI.Models
+﻿namespace Pitstop.WorkshopManagementAPI.DTOs
 {
     public class BusinessRuleViolation
     {

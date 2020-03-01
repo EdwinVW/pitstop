@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Pitstop.WorkshopManagementAPI.Domain;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Dapper;
@@ -11,6 +10,7 @@ using Pitstop.Infrastructure.Messaging;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Converters;
 using System.Data.SqlClient;
+using Pitstop.WorkshopManagementAPI.Domain.Entities;
 
 namespace Pitstop.WorkshopManagementAPI.Repositories
 {

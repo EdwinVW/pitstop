@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Pitstop.WorkshopManagementAPI.Repositories;
 using System;
-using Pitstop.WorkshopManagementAPI.Domain;
 using System.Linq;
 using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
-using Pitstop.WorkshopManagementAPI.Models;
+using Pitstop.WorkshopManagementAPI.DTOs;
 using WorkshopManagementAPI.CommandHandlers;
 using Serilog;
-using System.Globalization;
+using Pitstop.WorkshopManagementAPI.Domain.Entities;
+using Pitstop.WorkshopManagementAPI.Mappers;
 
 namespace Pitstop.WorkshopManagementAPI.Controllers
 {
@@ -43,7 +43,8 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
                     return NotFound();
                 }
 
-                return Ok(planning);
+                WorkshopPlanningDTO dto = planning.MapToDTO();
+                return Ok(dto);
             }
             catch (Exception ex)
             {
@@ -72,7 +73,7 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
                     {
                         return NotFound();
                     }
-                    return Ok(job);
+                    return Ok(job.MapToDTO());
                 }
                 catch (Exception ex)
                 {
@@ -104,7 +105,7 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
                         }
 
                         // return result
-                        return CreatedAtRoute("GetByDate", new { planningDate = planning.Id }, planning);
+                        return CreatedAtRoute("GetByDate", new { planningDate = planning.Id }, planning.MapToDTO());
                     }
                     catch (BusinessRuleViolationException ex)
                     {

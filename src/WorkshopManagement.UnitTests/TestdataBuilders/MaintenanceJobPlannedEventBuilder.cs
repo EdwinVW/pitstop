@@ -47,7 +47,7 @@ namespace WorkshopManagement.UnitTests.TestdataBuilders
                 .Build();
 
             MaintenanceJobPlanned e = new MaintenanceJobPlanned(
-                Guid.NewGuid(), job.Id, job.StartTime, job.EndTime,
+                Guid.NewGuid(), job.Id, job.PlannedTimeslot.StartTime, job.PlannedTimeslot.EndTime,
                 (customer.Id, customer.Name, customer.TelephoneNumber),
                 (vehicle.Id, vehicle.Brand, vehicle.Type),
                 job.Description

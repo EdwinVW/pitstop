@@ -3,24 +3,12 @@ using System.Linq;
 
 namespace WorkshopManagementAPI.Domain.Core
 {
+    /// <summary>
+    /// Represents a ValueObject in the domain (DDD).
+    /// </summary>
+    /// <remarks>In a real-world project, this class should be shared over domains in a NuGet package.</remarks>
     public abstract class ValueObject
     {
-        protected static bool EqualOperator(ValueObject left, ValueObject right)
-        {
-            if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
-            {
-                return false;
-            }
-            return ReferenceEquals(left, null) || left.Equals(right);
-        }
-
-        protected static bool NotEqualOperator(ValueObject left, ValueObject right)
-        {
-            return !(EqualOperator(left, right));
-        }
-
-        protected abstract IEnumerable<object> GetAtomicValues();
-
         public override bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != GetType())
@@ -57,12 +45,28 @@ namespace WorkshopManagementAPI.Domain.Core
 
         public static bool operator == (ValueObject left, ValueObject right)
         {
-            return Equals(left, right);
+            return EqualOperator(left, right);
         } 
 
         public static bool operator != (ValueObject left, ValueObject right)
         {
-            return !Equals(left, right);
+            return NotEqualOperator(left, right);
         }         
+
+        protected static bool EqualOperator(ValueObject left, ValueObject right)
+        {
+            if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
+            {
+                return false;
+            }
+            return ReferenceEquals(left, null) || left.Equals(right);
+        }
+
+        protected static bool NotEqualOperator(ValueObject left, ValueObject right)
+        {
+            return !(EqualOperator(left, right));
+        }
+
+        protected abstract IEnumerable<object> GetAtomicValues();
     }
 }

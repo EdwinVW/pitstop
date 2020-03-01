@@ -1,8 +1,7 @@
 ﻿using Pitstop.Infrastructure.Messaging;
-using Pitstop.WorkshopManagementAPI.Domain;
+using Pitstop.WorkshopManagementAPI.Domain.Entities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pitstop.WorkshopManagementAPI.Repositories
