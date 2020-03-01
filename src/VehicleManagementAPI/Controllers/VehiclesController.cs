@@ -8,12 +8,15 @@ using Pitstop.Infrastructure.Messaging;
 using Pitstop.Application.VehicleManagement.Events;
 using Pitstop.Application.VehicleManagement.Commands;
 using Pitstop.VehicleManagementAPI.Mappers;
+using System.Text.RegularExpressions;
 
 namespace Pitstop.Application.VehicleManagement.Controllers
 {
+
     [Route("/api/[controller]")]
     public class VehiclesController : Controller
     {
+        private const string NUMBER_PATTERN = @"^((\d{1,3}|[a-z]{1,3})-){2}(\d{1,3}|[a-z]{1,3})$";
         IMessagePublisher _messagePublisher;
         VehicleManagementDBContext _dbContext;
 
@@ -48,6 +51,12 @@ namespace Pitstop.Application.VehicleManagement.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    // check invariants
+                    if (!Regex.IsMatch(command.LicenseNumber, NUMBER_PATTERN, RegexOptions.IgnoreCase))
+                    {
+                        return BadRequest($"The specified license-number '{command.LicenseNumber}' was not in the correct format.");
+                    }
+
                     // insert vehicle
                     Vehicle vehicle = command.MapToVehicle();
                     _dbContext.Vehicles.Add(vehicle);

@@ -10,6 +10,7 @@ using Pitstop.WorkshopManagementAPI.Mappers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WorkshopManagementAPI.Domain.ValueObjects;
 
 namespace Pitstop.WorkshopManagementAPI.Domain
 {
@@ -84,7 +85,8 @@ namespace Pitstop.WorkshopManagementAPI.Domain
         {
             MaintenanceJob job = new MaintenanceJob();
             Customer customer = new Customer(e.CustomerInfo.Id, e.CustomerInfo.Name, e.CustomerInfo.TelephoneNumber);
-            Vehicle vehicle = new Vehicle(e.VehicleInfo.LicenseNumber, e.VehicleInfo.Brand, e.VehicleInfo.Type, customer.Id);
+            LicenseNumber licenseNumber = LicenseNumber.Create(e.VehicleInfo.LicenseNumber);
+            Vehicle vehicle = new Vehicle(licenseNumber, e.VehicleInfo.Brand, e.VehicleInfo.Type, customer.Id);
             job.Plan(e.JobId, e.StartTime, e.EndTime, vehicle, customer, e.Description);
             Jobs.Add(job);
         }

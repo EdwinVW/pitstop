@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using WorkshopManagementAPI.Domain.Core;
 
 namespace Pitstop.WorkshopManagementAPI.Domain.ValueObjects
 {
-    public class WorkshopPlanningId
+    public class WorkshopPlanningId : ValueObject
     {
         private const string DATE_FORMAT = "yyyy-MM-dd";
         private string _id;
@@ -15,19 +17,9 @@ namespace Pitstop.WorkshopManagementAPI.Domain.ValueObjects
             _id = date.ToString(DATE_FORMAT);
         }
 
-        public override bool Equals(object obj)
+        protected override IEnumerable<object> GetAtomicValues()
         {
-            if (obj == null || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return string.Equals(this.Value, ((WorkshopPlanningId)obj).Value);
-        }
-        
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
+            yield return Value;
         }
 
         public static implicit operator string(WorkshopPlanningId id) => id.Value;

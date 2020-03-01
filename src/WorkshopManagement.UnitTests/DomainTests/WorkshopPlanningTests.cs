@@ -116,11 +116,11 @@ namespace WorkshopManagement.UnitTests.DomainTests
                 .WithVehicleBuilder(vehicleBuilder);
 
             PlanMaintenanceJob command1 = commandBuilder.Build();
-            vehicleBuilder.WithLicenseNumber(Guid.NewGuid().ToString());
+            vehicleBuilder.WithRandomLicenseNumber();
             PlanMaintenanceJob command2 = commandBuilder.Build();
-            vehicleBuilder.WithLicenseNumber(Guid.NewGuid().ToString());
+            vehicleBuilder.WithRandomLicenseNumber();
             PlanMaintenanceJob command3 = commandBuilder.Build();
-            vehicleBuilder.WithLicenseNumber(Guid.NewGuid().ToString());
+            vehicleBuilder.WithRandomLicenseNumber();
             PlanMaintenanceJob command4 = commandBuilder.Build();
 
             // act
