@@ -43,8 +43,7 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
                     return NotFound();
                 }
 
-                WorkshopPlanningDTO dto = planning.MapToDTO();
-                return Ok(dto);
+                return Ok(planning.MapToDTO());
             }
             catch (Exception ex)
             {
