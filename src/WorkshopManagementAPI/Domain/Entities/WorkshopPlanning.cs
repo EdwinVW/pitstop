@@ -38,9 +38,9 @@ namespace Pitstop.WorkshopManagementAPI.Domain.Entities
         public void PlanMaintenanceJob(PlanMaintenanceJob command)
         {
             // check business rules
-            this.PlannedMaintenanceJobShouldFallWithinOneBusinessDay(command);
+            command.PlannedMaintenanceJobShouldFallWithinOneBusinessDay();
             this.NumberOfParallelMaintenanceJobsMustNotExceedAvailableWorkStations(command);
-            this.NumberOfParallelMaintenanceJobsOnAVehicleIsOne(command);
+            this.NumberOfParallelMaintenanceJobsOnAVehicleMustNotExceedOne(command);
 
             // handle event
             MaintenanceJobPlanned e = command.MapToMaintenanceJobPlanned();

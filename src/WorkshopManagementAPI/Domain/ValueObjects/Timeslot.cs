@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
 using WorkshopManagementAPI.Domain.Core;
 
@@ -31,6 +32,22 @@ namespace Pitstop.WorkshopManagementAPI.Domain.ValueObjects
         {
             ValidateInput(StartTime, endTime);
             return Timeslot.Create(StartTime, endTime);
+        }
+
+        public bool IsWithinOneDay()
+        {
+            return (StartTime.Date == EndTime.Date);
+        }
+
+        public bool OverlapsWith(DateTime startTime, DateTime endTime)
+        {
+            return this.OverlapsWith(Timeslot.Create(startTime, endTime));
+        }
+
+        public bool OverlapsWith(Timeslot other)
+        {
+            return (StartTime > other.StartTime && StartTime <= other.EndTime ||
+                    EndTime >= other.StartTime && EndTime <= other.EndTime);
         }
 
         private static void ValidateInput(DateTime startTime, DateTime endTime)
