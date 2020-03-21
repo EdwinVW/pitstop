@@ -1,11 +1,11 @@
 ﻿using System;
+using Pitstop.WorkshopManagementAPI.Domain.Core;
 using Pitstop.WorkshopManagementAPI.Domain.ValueObjects;
 
 namespace Pitstop.WorkshopManagementAPI.Domain.Entities
 {
-    public class MaintenanceJob
+    public class MaintenanceJob : Entity<Guid>
     {
-        public Guid Id { get; private set; }
         public Timeslot PlannedTimeslot { get; private set; }
         public Vehicle Vehicle { get; private set; }
         public Customer Customer { get; private set; }
@@ -14,9 +14,13 @@ namespace Pitstop.WorkshopManagementAPI.Domain.Entities
         public string Notes { get; private set; }
         public string Status => (ActualTimeslot == null) ? "Planned" : "Completed";
 
-        public void Plan(Guid id, Timeslot timeslot, Vehicle vehicle, Customer customer, string description)
+        public MaintenanceJob(Guid id) : base(id)
         {
-            Id = id;
+
+        } 
+
+        public void Plan(Timeslot timeslot, Vehicle vehicle, Customer customer, string description)
+        {
             PlannedTimeslot = timeslot;
             Vehicle = vehicle;
             Customer = customer;
