@@ -16,7 +16,7 @@ spec:
     metadata:
       annotations:
         sidecar.istio.io/interceptionMode: REDIRECT
-        sidecar.istio.io/status: '{"version":"612b89ee7fc4d43b232ad46b2bcfabf2aa465234c90d6f4a9ed05744657f3c8e","initContainers":["istio-init"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-certs"],"imagePullSecrets":null}'
+        sidecar.istio.io/status: '{"version":"8f7046dff394dd0cb963b4b2943725bfe4b49889cb4423b4293adccb4f916476","initContainers":["istio-init"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-certs"],"imagePullSecrets":null}'
         traffic.sidecar.istio.io/excludeInboundPorts: "15020"
         traffic.sidecar.istio.io/includeInboundPorts: "5000"
         traffic.sidecar.istio.io/includeOutboundIPRanges: '*'
@@ -68,8 +68,6 @@ spec:
         - NONE
         - --statusPort
         - "15020"
-        - --applicationPorts
-        - "5000"
         env:
         - name: POD_NAME
           valueFrom:
@@ -94,6 +92,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.serviceAccountName
+        - name: ISTIO_AUTO_MTLS_ENABLED
+          value: "true"
         - name: ISTIO_META_POD_NAME
           valueFrom:
             fieldRef:
@@ -106,8 +106,6 @@ spec:
           value: "false"
         - name: ISTIO_META_INTERCEPTION_MODE
           value: REDIRECT
-        - name: ISTIO_META_INCLUDE_INBOUND_PORTS
-          value: "5000"
         - name: ISTIO_METAJSON_LABELS
           value: |
             {"app":"vehiclemanagementapi","system":"pitstop","version":"1.0"}
@@ -115,7 +113,7 @@ spec:
           value: vehiclemanagementapi
         - name: ISTIO_META_OWNER
           value: kubernetes://apis/extensions/v1beta1/namespaces/pitstop/deployments/vehiclemanagementapi
-        image: docker.io/istio/proxyv2:1.4.2
+        image: docker.io/istio/proxyv2:1.5.1
         imagePullPolicy: IfNotPresent
         name: istio-proxy
         ports:
@@ -137,7 +135,14 @@ spec:
             cpu: 100m
             memory: 128Mi
         securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
           readOnlyRootFilesystem: true
+          runAsGroup: 1337
+          runAsNonRoot: true
           runAsUser: 1337
         volumeMounts:
         - mountPath: /etc/istio/proxy
@@ -164,7 +169,7 @@ spec:
         - '*'
         - -d
         - "15020"
-        image: docker.io/istio/proxyv2:1.4.2
+        image: docker.io/istio/proxyv2:1.5.1
         imagePullPolicy: IfNotPresent
         name: istio-init
         resources:
@@ -175,9 +180,16 @@ spec:
             cpu: 10m
             memory: 10Mi
         securityContext:
+          allowPrivilegeEscalation: false
           capabilities:
             add:
             - NET_ADMIN
+            - NET_RAW
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsGroup: 0
           runAsNonRoot: false
           runAsUser: 0
       restartPolicy: Always
