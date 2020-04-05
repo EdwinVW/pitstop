@@ -1,7 +1,6 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: customermanagementapi
     system: pitstop
@@ -11,12 +10,10 @@ metadata:
 spec:
   replicas: 1
   selector: null
-  strategy: {}
   template:
     metadata:
       annotations:
         linkerd.io/inject: enabled
-      creationTimestamp: null
       labels:
         app: customermanagementapi
         system: pitstop
@@ -31,7 +28,5 @@ spec:
         name: customermanagementapi
         ports:
         - containerPort: 5100
-        resources: {}
       restartPolicy: Always
-status: {}
 ---

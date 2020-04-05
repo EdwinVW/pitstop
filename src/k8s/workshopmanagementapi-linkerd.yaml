@@ -1,7 +1,6 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: workshopmanagementapi
     system: pitstop
@@ -11,12 +10,10 @@ metadata:
 spec:
   replicas: 1
   selector: null
-  strategy: {}
   template:
     metadata:
       annotations:
         linkerd.io/inject: enabled
-      creationTimestamp: null
       labels:
         app: workshopmanagementapi
         system: pitstop
@@ -31,9 +28,7 @@ spec:
         name: workshopmanagementapi
         ports:
         - containerPort: 5200
-        resources: {}
       restartPolicy: Always
-status: {}
 ---
 
 apiVersion: v1
