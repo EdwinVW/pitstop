@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - env:
-        - name: PITSTOP_ENVIRONMENT
+        - name: DOTNET_ENVIRONMENT
           value: Production
         image: pitstop/workshopmanagementeventhandler:1.0
         imagePullPolicy: IfNotPresent

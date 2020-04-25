@@ -10,6 +10,7 @@ using Serilog;
 using Microsoft.Extensions.HealthChecks;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Hosting;
+using Pitstop.Infrastructure.Messaging.Configuration;
 
 namespace Pitstop.Application.VehicleManagement
 {
@@ -25,16 +26,12 @@ namespace Pitstop.Application.VehicleManagement
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // add DBContext classes
+            // add DBContext
             var sqlConnectionString = _configuration.GetConnectionString("VehicleManagementCN");
             services.AddDbContext<VehicleManagementDBContext>(options => options.UseSqlServer(sqlConnectionString));
 
-            // add messagepublisher classes
-            var configSection = _configuration.GetSection("RabbitMQ");
-            string host = configSection["Host"];
-            string userName = configSection["UserName"];
-            string password = configSection["Password"];
-            services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
+            // add messagepublisher
+            services.UseRabbitMQMessagePublisher(_configuration);
 
             // Add framework services.
             services

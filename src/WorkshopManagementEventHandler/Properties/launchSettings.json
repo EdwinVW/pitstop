@@ -3,7 +3,7 @@
     "WorkshopManagementEventHandler": {
       "commandName": "Project",
       "environmentVariables": {
-        "PITSTOP_ENVIRONMENT": "Development"
+        "DOTNET_ENVIRONMENT": "Development"
       }
     }
   }

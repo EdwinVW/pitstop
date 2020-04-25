@@ -32,6 +32,14 @@ namespace Pitstop.Infrastructure.Messaging
             _password = password;
             _exchange = exchange;
 
+            var logMessage = new StringBuilder();
+            logMessage.AppendLine("Create RabbitMQ message-publisher instance using config:");
+            logMessage.AppendLine($" - Hosts: {string.Join(',', _hosts.ToArray())}");
+            logMessage.AppendLine($" - UserName: {_username}");
+            logMessage.AppendLine($" - Password: {new string('*', _password.Length)}");
+            logMessage.Append($" - Exchange: {_exchange}");
+            Log.Information(logMessage.ToString());
+
             Connect();
         }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Polly;
 using Serilog;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Pitstop.Infrastructure.Messaging
 {
@@ -36,6 +37,16 @@ namespace Pitstop.Infrastructure.Messaging
             _exchange = exchange;
             _queuename = queuename;
             _routingKey = routingKey;
+
+            var logMessage = new StringBuilder();
+            logMessage.AppendLine("Create RabbitMQ message-handler instance using config:");
+            logMessage.AppendLine($" - Hosts: {string.Join(',', _hosts.ToArray())}");
+            logMessage.AppendLine($" - UserName: {_username}");
+            logMessage.AppendLine($" - Password: {new string('*', _password.Length)}");
+            logMessage.AppendLine($" - Exchange: {_exchange}");
+            logMessage.AppendLine($" - Queue: {_queuename}");
+            logMessage.Append($" - RoutingKey: {_routingKey}");
+            Log.Information(logMessage.ToString());
         }        
 
         public void Start(IMessageHandlerCallback callback)
@@ -80,7 +91,7 @@ namespace Pitstop.Infrastructure.Messaging
             string messageType = Encoding.UTF8.GetString((byte[])ea.BasicProperties.Headers["MessageType"]);
 
             // get body
-            string body = Encoding.UTF8.GetString(ea.Body);
+            string body = Encoding.UTF8.GetString(ea.Body.ToArray());
 
             // call callback to handle the message
             return _callback.HandleMessageAsync(messageType, body);

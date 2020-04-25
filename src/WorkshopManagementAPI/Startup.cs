@@ -10,6 +10,7 @@ using Microsoft.Extensions.HealthChecks;
 using WorkshopManagementAPI.CommandHandlers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Pitstop.Infrastructure.Messaging.Configuration;
 
 namespace Pitstop.WorkshopManagementAPI
 {
@@ -25,7 +26,7 @@ namespace Pitstop.WorkshopManagementAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // add repo classes
+            // add repo
             var eventStoreConnectionString = _configuration.GetConnectionString("EventStoreCN");
             services.AddTransient<IWorkshopPlanningRepository>((sp) => 
                 new SqlServerWorkshopPlanningRepository(eventStoreConnectionString));
@@ -34,12 +35,8 @@ namespace Pitstop.WorkshopManagementAPI
             services.AddTransient<IVehicleRepository>((sp) => new SqlServerRefDataRepository(workshopManagementConnectionString));
             services.AddTransient<ICustomerRepository>((sp) => new SqlServerRefDataRepository(workshopManagementConnectionString));
 
-            // add messagepublisher classes
-            var configSection = _configuration.GetSection("RabbitMQ");
-            string host = configSection["Host"];
-            string userName = configSection["UserName"];
-            string password = configSection["Password"];
-            services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
+            // add messagepublisher
+            services.UseRabbitMQMessagePublisher(_configuration);
 
             // add commandhandlers
             services.AddCommandHandlers();

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pitstop.Infrastructure.Messaging;
+using Pitstop.Infrastructure.Messaging.Configuration;
 using Pitstop.WorkshopManagementEventHandler.DataAccess;
 using Polly;
 using Serilog;
@@ -30,7 +31,7 @@ namespace Pitstop.WorkshopManagementEventHandler
                     configHost.AddJsonFile("hostsettings.json", optional: true);
                     configHost.AddJsonFile($"appsettings.json", optional: false);
                     configHost.AddEnvironmentVariables();
-                    configHost.AddEnvironmentVariables("PITSTOP_");
+                    configHost.AddEnvironmentVariables("DOTNET_");
                     configHost.AddCommandLine(args);
                 })
                 .ConfigureAppConfiguration((hostContext, config) =>
@@ -39,14 +40,7 @@ namespace Pitstop.WorkshopManagementEventHandler
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddTransient<IMessageHandler>((svc) =>
-                    {
-                        var rabbitMQConfigSection = hostContext.Configuration.GetSection("RabbitMQ");
-                        string rabbitMQHost = rabbitMQConfigSection["Host"];
-                        string rabbitMQUserName = rabbitMQConfigSection["UserName"];
-                        string rabbitMQPassword = rabbitMQConfigSection["Password"];
-                        return new RabbitMQMessageHandler(rabbitMQHost, rabbitMQUserName, rabbitMQPassword, "Pitstop", "WorkshopManagement", ""); ;
-                    });
+                    services.UseRabbitMQMessageHandler(hostContext.Configuration);
 
                     services.AddTransient<WorkshopManagementDBContext>((svc) =>
                     {

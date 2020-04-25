@@ -1,12 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Threading.Tasks;
+using Pitstop.Infrastructure.Messaging.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Pitstop.Infrastructure.Messaging;
 using Serilog;
-using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace AuditlogService
 {
@@ -21,29 +17,9 @@ namespace AuditlogService
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
             var hostBuilder = Host.CreateDefaultBuilder(args)
-                .ConfigureHostConfiguration(configHost =>
-                {
-                    configHost.SetBasePath(Directory.GetCurrentDirectory());
-                    configHost.AddJsonFile("hostsettings.json", optional: true);
-                    configHost.AddJsonFile($"appsettings.json", optional: false);
-                    configHost.AddEnvironmentVariables();
-                    configHost.AddEnvironmentVariables("PITSTOP_");
-                    configHost.AddCommandLine(args);
-                })
-                .ConfigureAppConfiguration((hostContext, config) =>
-                {
-                    config.AddJsonFile($"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: false);
-                })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddTransient<IMessageHandler>((svc) =>
-                    {
-                        var rabbitMQConfigSection = hostContext.Configuration.GetSection("RabbitMQ");
-                        string rabbitMQHost = rabbitMQConfigSection["Host"];
-                        string rabbitMQUserName = rabbitMQConfigSection["UserName"];
-                        string rabbitMQPassword = rabbitMQConfigSection["Password"];
-                        return new RabbitMQMessageHandler(rabbitMQHost, rabbitMQUserName, rabbitMQPassword, "Pitstop", "Auditlog", ""); ;
-                    });
+                    services.UseRabbitMQMessageHandler(hostContext.Configuration);
 
                     services.AddTransient<AuditlogManagerConfig>((svc) =>
                     {
