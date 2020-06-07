@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   creationTimestamp: null
@@ -10,19 +10,24 @@ metadata:
   namespace: pitstop
 spec:
   replicas: 1
-  selector: null
+  selector:
+    matchLabels:
+      app: webapp
+      system: pitstop
+      version: "1.0"
   strategy: {}
   template:
     metadata:
       annotations:
         sidecar.istio.io/interceptionMode: REDIRECT
-        sidecar.istio.io/status: '{"version":"8f7046dff394dd0cb963b4b2943725bfe4b49889cb4423b4293adccb4f916476","initContainers":["istio-init"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-certs"],"imagePullSecrets":null}'
+        sidecar.istio.io/status: '{"version":"d36ff46d2def0caba37f639f09514b17c4e80078f749a46aae84439790d2b560","initContainers":["istio-init"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-data","istio-podinfo","istiod-ca-cert"],"imagePullSecrets":null}'
         traffic.sidecar.istio.io/excludeInboundPorts: "15020"
         traffic.sidecar.istio.io/includeInboundPorts: "7000"
         traffic.sidecar.istio.io/includeOutboundIPRanges: '*'
       creationTimestamp: null
       labels:
         app: webapp
+        istio.io/rev: ""
         security.istio.io/tlsMode: istio
         system: pitstop
         version: "1.0"
@@ -42,44 +47,24 @@ spec:
         - sidecar
         - --domain
         - $(POD_NAMESPACE).svc.cluster.local
-        - --configPath
-        - /etc/istio/proxy
-        - --binaryPath
-        - /usr/local/bin/envoy
         - --serviceCluster
         - webapp.$(POD_NAMESPACE)
-        - --drainDuration
-        - 45s
-        - --parentShutdownDuration
-        - 1m0s
-        - --discoveryAddress
-        - istio-pilot.istio-system:15010
-        - --zipkinAddress
-        - zipkin.istio-system:9411
-        - --dnsRefreshRate
-        - 300s
-        - --connectTimeout
-        - 10s
-        - --proxyAdminPort
-        - "15000"
+        - --proxyLogLevel=warning
+        - --proxyComponentLogLevel=misc:error
+        - --trust-domain=cluster.local
         - --concurrency
         - "2"
-        - --controlPlaneAuthPolicy
-        - NONE
-        - --statusPort
-        - "15020"
         env:
+        - name: JWT_POLICY
+          value: first-party-jwt
+        - name: PILOT_CERT_PROVIDER
+          value: istiod
+        - name: CA_ADDR
+          value: istiod.istio-system.svc:15012
         - name: POD_NAME
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-        - name: ISTIO_META_POD_PORTS
-          value: |-
-            [
-                {"containerPort":7000}
-            ]
-        - name: ISTIO_META_CLUSTER_ID
-          value: Kubernetes
         - name: POD_NAMESPACE
           valueFrom:
             fieldRef:
@@ -92,29 +77,46 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.serviceAccountName
-        - name: ISTIO_AUTO_MTLS_ENABLED
-          value: "true"
-        - name: ISTIO_META_POD_NAME
+        - name: HOST_IP
           valueFrom:
             fieldRef:
-              fieldPath: metadata.name
-        - name: ISTIO_META_CONFIG_NAMESPACE
+              fieldPath: status.hostIP
+        - name: CANONICAL_SERVICE
           valueFrom:
             fieldRef:
-              fieldPath: metadata.namespace
-        - name: SDS_ENABLED
-          value: "false"
+              fieldPath: metadata.labels['service.istio.io/canonical-name']
+        - name: CANONICAL_REVISION
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['service.istio.io/canonical-revision']
+        - name: PROXY_CONFIG
+          value: |
+            {"proxyMetadata":{"DNS_AGENT":""}}
+        - name: ISTIO_META_POD_PORTS
+          value: |-
+            [
+                {"containerPort":7000}
+            ]
+        - name: ISTIO_META_APP_CONTAINERS
+          value: |-
+            [
+                webapp
+            ]
+        - name: ISTIO_META_CLUSTER_ID
+          value: Kubernetes
         - name: ISTIO_META_INTERCEPTION_MODE
           value: REDIRECT
-        - name: ISTIO_METAJSON_LABELS
-          value: |
-            {"app":"webapp","system":"pitstop","version":"1.0"}
         - name: ISTIO_META_WORKLOAD_NAME
           value: webapp
         - name: ISTIO_META_OWNER
-          value: kubernetes://apis/extensions/v1beta1/namespaces/pitstop/deployments/webapp
-        image: docker.io/istio/proxyv2:1.5.1
-        imagePullPolicy: IfNotPresent
+          value: kubernetes://apis/apps/v1/namespaces/pitstop/deployments/webapp
+        - name: ISTIO_META_MESH_ID
+          value: cluster.local
+        - name: DNS_AGENT
+        - name: ISTIO_KUBE_APP_PROBERS
+          value: '{}'
+        image: docker.io/istio/proxyv2:1.6.1
+        imagePullPolicy: Always
         name: istio-proxy
         ports:
         - containerPort: 15090
@@ -124,7 +126,7 @@ spec:
           failureThreshold: 30
           httpGet:
             path: /healthz/ready
-            port: 15020
+            port: 15021
           initialDelaySeconds: 1
           periodSeconds: 2
         resources:
@@ -132,8 +134,8 @@ spec:
             cpu: "2"
             memory: 1Gi
           requests:
-            cpu: 100m
-            memory: 128Mi
+            cpu: 10m
+            memory: 40Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -145,13 +147,16 @@ spec:
           runAsNonRoot: true
           runAsUser: 1337
         volumeMounts:
+        - mountPath: /var/run/secrets/istio
+          name: istiod-ca-cert
+        - mountPath: /var/lib/istio/data
+          name: istio-data
         - mountPath: /etc/istio/proxy
           name: istio-envoy
-        - mountPath: /etc/certs/
-          name: istio-certs
-          readOnly: true
+        - mountPath: /etc/istio/pod
+          name: istio-podinfo
       initContainers:
-      - command:
+      - args:
         - istio-iptables
         - -p
         - "15001"
@@ -168,9 +173,11 @@ spec:
         - -b
         - '*'
         - -d
-        - "15020"
-        image: docker.io/istio/proxyv2:1.5.1
-        imagePullPolicy: IfNotPresent
+        - 15090,15021,15020
+        env:
+        - name: DNS_AGENT
+        image: docker.io/istio/proxyv2:1.6.1
+        imagePullPolicy: Always
         name: istio-init
         resources:
           limits:
@@ -193,14 +200,26 @@ spec:
           runAsNonRoot: false
           runAsUser: 0
       restartPolicy: Always
+      securityContext:
+        fsGroup: 1337
       volumes:
       - emptyDir:
           medium: Memory
         name: istio-envoy
-      - name: istio-certs
-        secret:
-          optional: true
-          secretName: istio.default
+      - emptyDir: {}
+        name: istio-data
+      - downwardAPI:
+          items:
+          - fieldRef:
+              fieldPath: metadata.labels
+            path: labels
+          - fieldRef:
+              fieldPath: metadata.annotations
+            path: annotations
+        name: istio-podinfo
+      - configMap:
+          name: istio-ca-root-cert
+        name: istiod-ca-cert
 status: {}
 ---
 

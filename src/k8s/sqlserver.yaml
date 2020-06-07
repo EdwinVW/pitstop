@@ -1,14 +1,17 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     system: pitstop
     app: sqlserver
-    version: v1
   name: sqlserver
   namespace: pitstop
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      system: pitstop
+      app: sqlserver
   strategy:
     type: Recreate
   template:
@@ -16,7 +19,6 @@ spec:
       labels:
         system: pitstop
         app: sqlserver
-        version: v1
     spec:
       containers:
       - env:
@@ -41,7 +43,6 @@ metadata:
   labels:
     system: pitstop
     app: sqlserver
-    version: v1
   name: sqlserver
   namespace: pitstop
 spec:
@@ -54,4 +55,3 @@ spec:
   selector:
     system: pitstop
     app: sqlserver
-    version: v1
