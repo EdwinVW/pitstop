@@ -14,19 +14,20 @@ namespace Pitstop.Infrastructure.Messaging.Configuration
         private static string _exchange;
         private static string _queue;
         private static string _routingKey;
+        private static string _port;
 
         public static void UseRabbitMQMessageHandler(this IServiceCollection services, IConfiguration config)
         {
             GetRabbitMQSettings(config, "RabbitMQHandler");
             services.AddTransient<IMessageHandler>(_ => new RabbitMQMessageHandler(
-                _host, _userName, _password, _exchange, _queue, _routingKey));
+                _host, _userName, _password, _exchange, _queue, _routingKey, _port));
         }
 
         public static void UseRabbitMQMessagePublisher(this IServiceCollection services, IConfiguration config)
         {
             GetRabbitMQSettings(config, "RabbitMQPublisher");
             services.AddTransient<IMessagePublisher>(_ => new RabbitMQMessagePublisher(
-                _host, _userName, _password, _exchange));
+                _host, _userName, _password, _exchange, _port));
         }        
 
         private static void GetRabbitMQSettings(IConfiguration config, string sectionName)
@@ -45,6 +46,16 @@ namespace Pitstop.Infrastructure.Messaging.Configuration
             {
                 valid = false;
                 errors.Add("Required config-setting 'Host' not found.");
+            }
+
+            _port = configSection["Port"];
+            if(!string.IsNullOrEmpty(_port))
+            {
+                if(!int.TryParse(_port, out int result))
+                {
+                    valid = false;
+                    errors.Add("Unable to parse config-setting 'Port' into an integer.");
+                }
             }
 
             _userName = configSection["UserName"];
