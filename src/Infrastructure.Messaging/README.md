@@ -7,6 +7,10 @@ This library contains helper-classes for working with messaging within the Pitst
 - A helper class (_MessageSerializer_) for serializing and deserializing commands and events to and from JSON.
 
 ## Release notes
+
+### Version 2.7.1
+- Upgraded all NuGet references to the latest version.
+
 ### Version 2.7.0
 - Added support for specifying the RabbitMQ port.
 

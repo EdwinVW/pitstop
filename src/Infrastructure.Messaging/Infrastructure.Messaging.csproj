@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>Pitstop.Infrastructure.Messaging</AssemblyName>
     <RootNamespace>Pitstop.Infrastructure.Messaging</RootNamespace>
-    <Version>2.7.0</Version>
+    <Version>2.7.1</Version>
     <AssemblyVersion>2.7.0.0</AssemblyVersion>
     <FileVersion>2.7.0.0</FileVersion>
     <Title>Pitstop.Infrastructure.Messaging</Title>
@@ -15,11 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.3"/>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.3"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.5"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.5"/>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="RabbitMQ.Client" Version="6.0.0" />
-    <PackageReference Include="Polly" Version="7.2.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.1.0" />
+    <PackageReference Include="Polly" Version="7.2.1" />
     <PackageReference Include="Serilog" Version="2.9.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
