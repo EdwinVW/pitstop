@@ -6,42 +6,49 @@ using System.Threading.Tasks;
 using Polly;
 using Serilog;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Pitstop.Infrastructure.Messaging
 {
     public class RabbitMQMessageHandler : IMessageHandler
     {
+        private const int DEFAULT_PORT = 5672;
         private readonly List<string> _hosts;
         private readonly string _username;
         private readonly string _password;
         private readonly string _exchange;
         private readonly string _queuename;
         private readonly string _routingKey;
-        private readonly string _port = "5672";
+        private readonly int _port;
         private IConnection _connection;
         private IModel _model;
         private AsyncEventingBasicConsumer _consumer;
         private string _consumerTag;
         private IMessageHandlerCallback _callback;
 
-        public RabbitMQMessageHandler(string host, string username, string password, string exchange, string queuename, string routingKey, string port)
+        public RabbitMQMessageHandler(string host, string username, string password, string exchange, string queuename, string routingKey)
+            : this(host, username, password, exchange, queuename, routingKey, DEFAULT_PORT)
+        {
+        }
+
+        public RabbitMQMessageHandler(string host, string username, string password, string exchange, string queuename, string routingKey, int port)
             : this(new List<string>() { host }, username, password, exchange, queuename, routingKey, port)
         {
         }
 
-        public RabbitMQMessageHandler(IEnumerable<string> hosts, string username, string password, string exchange, string queuename, string routingKey, string port)
+        public RabbitMQMessageHandler(IEnumerable<string> hosts, string username, string password, string exchange, string queuename, string routingKey)
+            : this(hosts, username, password, exchange, queuename, routingKey, DEFAULT_PORT)
+        {
+        }
+
+        public RabbitMQMessageHandler(IEnumerable<string> hosts, string username, string password, string exchange, string queuename, string routingKey, int port)
         {
             _hosts = new List<string>(hosts);
+            _port = port;
             _username = username;
             _password = password;
             _exchange = exchange;
             _queuename = queuename;
             _routingKey = routingKey;
-
-
-            if (!string.IsNullOrEmpty(port))
-                _port = port;
 
             var logMessage = new StringBuilder();
             logMessage.AppendLine("Create RabbitMQ message-handler instance using config:");
@@ -64,8 +71,7 @@ namespace Pitstop.Infrastructure.Messaging
                 .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Log.Error("Error connecting to RabbitMQ. Retrying in 5 sec."); })
                 .Execute(() =>
                 {
-                    int port = int.Parse(_port);
-                    var factory = new ConnectionFactory() { UserName = _username, Password = _password, DispatchConsumersAsync = true, Port = port };
+                    var factory = new ConnectionFactory() { UserName = _username, Password = _password, DispatchConsumersAsync = true, Port = _port };
                     _connection = factory.CreateConnection(_hosts);
                     _model = _connection.CreateModel();
                     _model.ExchangeDeclare(_exchange, "fanout", durable: true, autoDelete: false);
