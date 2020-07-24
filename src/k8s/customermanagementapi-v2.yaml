@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    system: pitstop
     app: customermanagementapi
     version: "2.0"
   name: customermanagementapi-v2
@@ -11,13 +10,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      system: pitstop
       app: customermanagementapi
       version: "2.0"
   template:
     metadata:
       labels:
-        system: pitstop
         app: customermanagementapi
         version: "2.0"
     spec:

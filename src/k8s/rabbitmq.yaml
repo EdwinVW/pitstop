@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    system: pitstop
     app: rabbitmq
     version: v1
   name: rabbitmq
@@ -11,14 +10,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      system: pitstop
       app: rabbitmq
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        system: pitstop
         app: rabbitmq
     spec:
       containers:
@@ -41,7 +38,6 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    system: pitstop
     app: rabbitmq
   name: rabbitmq
   namespace: pitstop
@@ -56,5 +52,4 @@ spec:
     port: 5672
     targetPort: 5672
   selector:
-    system: pitstop
     app: rabbitmq

@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    system: pitstop
     app: webapp
     version: "1.0"
   name: webapp
@@ -11,13 +10,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      system: pitstop
       app: webapp
       version: "1.0"
   template:
     metadata:
       labels:
-        system: pitstop
         app: webapp
         version: "1.0"
     spec:
@@ -38,9 +35,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    system: pitstop
     app: webapp
-    version: "1.0"
   name: webapp
   namespace: pitstop
 spec:
@@ -50,7 +45,5 @@ spec:
     port: 7000
     targetPort: 7000
   selector:
-    system: pitstop
     app: webapp
-    version: "1.0"
 

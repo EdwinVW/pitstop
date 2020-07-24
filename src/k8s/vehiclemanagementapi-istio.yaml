@@ -4,7 +4,6 @@ metadata:
   creationTimestamp: null
   labels:
     app: vehiclemanagementapi
-    system: pitstop
     version: "1.0"
   name: vehiclemanagementapi
   namespace: pitstop
@@ -13,14 +12,13 @@ spec:
   selector:
     matchLabels:
       app: vehiclemanagementapi
-      system: pitstop
       version: "1.0"
   strategy: {}
   template:
     metadata:
       annotations:
         sidecar.istio.io/interceptionMode: REDIRECT
-        sidecar.istio.io/status: '{"version":"d36ff46d2def0caba37f639f09514b17c4e80078f749a46aae84439790d2b560","initContainers":["istio-init"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-data","istio-podinfo","istiod-ca-cert"],"imagePullSecrets":null}'
+        sidecar.istio.io/status: '{"version":"ed4e6e8ed4ffa03fe7d5b9d2c27cc8c478625ade64be2859cae3da0db9e5ee2e","initContainers":["istio-init"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-data","istio-podinfo","istiod-ca-cert"],"imagePullSecrets":null}'
         traffic.sidecar.istio.io/excludeInboundPorts: "15020"
         traffic.sidecar.istio.io/includeInboundPorts: "5000"
         traffic.sidecar.istio.io/includeOutboundIPRanges: '*'
@@ -29,7 +27,6 @@ spec:
         app: vehiclemanagementapi
         istio.io/rev: ""
         security.istio.io/tlsMode: istio
-        system: pitstop
         version: "1.0"
     spec:
       containers:
@@ -115,7 +112,7 @@ spec:
         - name: DNS_AGENT
         - name: ISTIO_KUBE_APP_PROBERS
           value: '{}'
-        image: docker.io/istio/proxyv2:1.6.1
+        image: docker.io/istio/proxyv2:1.6.5
         imagePullPolicy: Always
         name: istio-proxy
         ports:
@@ -176,7 +173,7 @@ spec:
         - 15090,15021,15020
         env:
         - name: DNS_AGENT
-        image: docker.io/istio/proxyv2:1.6.1
+        image: docker.io/istio/proxyv2:1.6.5
         imagePullPolicy: Always
         name: istio-init
         resources:
@@ -227,9 +224,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    system: pitstop
     app: vehiclemanagementapi
-    version: "1.0"
   name: vehiclemanagementapi
   namespace: pitstop
 spec:
@@ -240,8 +235,6 @@ spec:
     targetPort: 5000
     nodePort: 30006
   selector:
-    system: pitstop
     app: vehiclemanagementapi
-    version: "1.0"
 
 ---

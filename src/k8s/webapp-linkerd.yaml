@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   labels:
     app: webapp
-    system: pitstop
     version: "1.0"
   name: webapp
   namespace: pitstop
@@ -16,7 +15,6 @@ spec:
         linkerd.io/inject: enabled
       labels:
         app: webapp
-        system: pitstop
         version: "1.0"
     spec:
       containers:
@@ -35,9 +33,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    system: pitstop
     app: webapp
-    version: "1.0"
   name: webapp
   namespace: pitstop
 spec:
@@ -47,8 +43,6 @@ spec:
     port: 7000
     targetPort: 7000
   selector:
-    system: pitstop
     app: webapp
-    version: "1.0"
 
 ---

@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    system: pitstop
     app: timeservice
     version: "1.0"
   name: timeservice
@@ -11,13 +10,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      system: pitstop
       app: timeservice
       version: "1.0"
   template:
     metadata:
       labels:
-        system: pitstop
         app: timeservice
         version: "1.0"
     spec:

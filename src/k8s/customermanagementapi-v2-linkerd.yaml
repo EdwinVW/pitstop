@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   labels:
     app: customermanagementapi
-    system: pitstop
     version: "2.0"
   name: customermanagementapi-v2
   namespace: pitstop
@@ -16,7 +15,6 @@ spec:
         linkerd.io/inject: enabled
       labels:
         app: customermanagementapi
-        system: pitstop
         version: "2.0"
     spec:
       containers:
