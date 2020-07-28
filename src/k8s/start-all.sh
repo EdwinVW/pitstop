@@ -4,11 +4,18 @@
 # If started with argument --istio, the solution is started with the Istio service-mesh.
 # If started with argument --linkerd, the solution is started with the Linkerd service-mesh.
 
+# create namespace
+kubectl apply -f ./pitstop-namespace.yaml
+
 MESHPOSTFIX=''
 
 if [ "$1" = "--istio" ]
 then
     MESHPOSTFIX='-istio'
+
+    # configure istio side-car injection
+    ./disable-default-istio-injection.sh
+    kubectl label --overwrite namespace pitstop istio-injection=enabled
 fi
 
 if [ "$1" = "--linkerd" ]
@@ -17,7 +24,6 @@ then
 fi
 
 kubectl apply \
-    -f ./pitstop-namespace.yaml \
     -f ./rabbitmq.yaml \
     -f ./logserver.yaml \
     -f ./sqlserver.yaml \

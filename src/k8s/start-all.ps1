@@ -12,16 +12,23 @@ if ($istio -and $linkerd) {
     return
 }
 
+# create namespace
+kubectl apply -f ./pitstop-namespace.yaml
+
 $meshPostfix = ''
 if ($istio) {
     $meshPostfix = '-istio'
+
+    # configure istio side-car injection
+    & "./disable-default-istio-injection.ps1"
+    kubectl label --overwrite namespace pitstop istio-injection=enabled
 }
+
 if ($linkerd) {
     $meshPostfix = '-linkerd'
 }
 
 kubectl apply `
-    -f ./pitstop-namespace.yaml `
     -f ./rabbitmq.yaml `
     -f ./logserver.yaml `
     -f ./sqlserver.yaml `
