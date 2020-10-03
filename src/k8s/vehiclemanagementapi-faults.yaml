@@ -1,4 +1,4 @@
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: vehiclemanagementapi
@@ -9,10 +9,9 @@ spec:
   http:
   - fault:
       abort:
-        percentage: 
-          value: 25
         httpStatus: 500
+        percentage:
+          value: 25
     route:
       - destination:
           host: vehiclemanagementapi
-

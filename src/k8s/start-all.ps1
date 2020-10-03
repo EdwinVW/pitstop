@@ -1,4 +1,4 @@
-# If started without argument, the solution is started without service-mesh. 
+# If started without argument, the solution is started without service-mesh.
 # If started with argument -istio, the solution is started with the Istio service-mesh.
 # If started with argument -linkerd, the solution is started with the Linkerd service-mesh.
 
@@ -12,16 +12,12 @@ if ($istio -and $linkerd) {
     return
 }
 
-# create namespace
-kubectl apply -f ./pitstop-namespace.yaml
-
 $meshPostfix = ''
 if ($istio) {
     $meshPostfix = '-istio'
 
-    # configure istio side-car injection
+    # disable global istio side-car injection (only for annotated pods)
     & "./disable-default-istio-injection.ps1"
-    kubectl label --overwrite namespace pitstop istio-injection=enabled
 }
 
 if ($linkerd) {
@@ -29,6 +25,7 @@ if ($linkerd) {
 }
 
 kubectl apply `
+    -f ./pitstop-namespace$meshPostfix.yaml `
     -f ./rabbitmq.yaml `
     -f ./logserver.yaml `
     -f ./sqlserver.yaml `

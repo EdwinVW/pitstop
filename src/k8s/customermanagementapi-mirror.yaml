@@ -32,3 +32,4 @@ spec:
       mirror:
         host: customermanagementapi
         subset: v2
+      mirror_percent: 100
