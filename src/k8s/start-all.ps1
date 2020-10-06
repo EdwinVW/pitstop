@@ -1,27 +1,44 @@
-# If started without argument, the solution is started without service-mesh.
+# If started with argument -nomesh, the solution is started without service-mesh.
 # If started with argument -istio, the solution is started with the Istio service-mesh.
 # If started with argument -linkerd, the solution is started with the Linkerd service-mesh.
 
 param (
+    [switch]$nomesh = $false,
     [switch]$istio = $false,
     [switch]$linkerd = $false
 )
 
-if ($istio -and $linkerd) {
-    echo "Error: You can specify only 1 mesh implementation."
+if (-not $nomesh -and -not $istio -and -not $linkerd)
+{
+    echo "Error: You must specify how to start Pitstop:"
+    echo "  start-all.ps1 < -nomesh | -istio | -linkerd >."
     return
 }
 
 $meshPostfix = ''
-if ($istio) {
-    $meshPostfix = '-istio'
+if (-not $nomesh)
+{
+    if ($istio -and $linkerd) {
+        echo "Error: You can specify only 1 mesh implementation."
+        return
+    }
 
-    # disable global istio side-car injection (only for annotated pods)
-    & "./disable-default-istio-injection.ps1"
+    if ($istio) {
+        $meshPostfix = '-istio'
+        echo "Starting Pitstop wit Istio service mesh."
+
+        # disable global istio side-car injection (only for annotated pods)
+        & "./disable-default-istio-injection.ps1"
+    }
+
+    if ($linkerd) {
+        $meshPostfix = '-linkerd'
+        echo "Starting Pitstop wit Linkerd service mesh."
+    }
 }
-
-if ($linkerd) {
-    $meshPostfix = '-linkerd'
+else
+{
+    echo "Starting Pitstop without service mesh."
 }
 
 kubectl apply `
