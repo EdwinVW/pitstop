@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>Pitstop.Infrastructure.Messaging</AssemblyName>
     <RootNamespace>Pitstop.Infrastructure.Messaging</RootNamespace>
-    <Version>2.7.1</Version>
-    <AssemblyVersion>2.7.0.0</AssemblyVersion>
-    <FileVersion>2.7.0.0</FileVersion>
+    <Version>3.0.0</Version>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
     <Title>Pitstop.Infrastructure.Messaging</Title>
     <Description>Infrastructure package for Pitstop sample application that contains helpers for interacting with the RabbitMQ message-broker used by the application.</Description>
     <PackageProjectUrl>https://github.com/EdwinVW/pitstop/tree/master/src/Infrastructure.Messaging</PackageProjectUrl>
@@ -15,12 +15,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.5"/>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.5"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0"/>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="RabbitMQ.Client" Version="6.1.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
     <PackageReference Include="Polly" Version="7.2.1" />
-    <PackageReference Include="Serilog" Version="2.9.0" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 

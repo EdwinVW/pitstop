@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TestUtils
+namespace Pitstop.TestUtils
 {
     public static class TestDataGenerators
     {

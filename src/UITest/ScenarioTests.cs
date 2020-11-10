@@ -2,7 +2,7 @@ using System;
 using Xunit;
 using Xunit.Abstractions;
 using Pitstop.UITest.PageModel;
-using TestUtils;
+using Pitstop.TestUtils;
 
 namespace Pitstop.UITest
 {
