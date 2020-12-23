@@ -21,12 +21,12 @@ namespace Pitstop.WorkshopManagementAPI.Domain.Core
         private bool IsReplaying { get; set; } = false;
                 
         /// <summary>
-        /// The original version of the aggregate after replaying all events in the event-store.
+        /// The current version after handling any commands.
         /// </summary>
         public int Version { get; private set; }
 
         /// <summary>
-        /// The current version after handling any commands.
+        /// The original version of the aggregate after replaying all events in the event-store.
         /// </summary>
         public int OriginalVersion { get; private set; }
 
