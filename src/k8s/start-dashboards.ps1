@@ -7,5 +7,10 @@ start-job -name IstioGrafanaDB -scriptblock {
 }
 
 start-job -name IstioKialiDB -scriptblock {
-    kubectl -n istio-system port-forward svc/kiali 20001:20001
+    kubectl -n istio-system port-forward svc/kiali 20001
+}
+
+start-job -name IstioJaegerDB -scriptblock {
+    $podName = kubectl get pods -n istio-system --selector=app=jaeger -o=jsonpath='{.items..metadata.name}'
+    kubectl -n istio-system port-forward pod/$podName 16686
 }
