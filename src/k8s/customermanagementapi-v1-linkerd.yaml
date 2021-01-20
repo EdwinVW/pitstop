@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -8,7 +8,10 @@ metadata:
   namespace: pitstop
 spec:
   replicas: 1
-  selector: null
+  selector:
+    matchLabels:
+      app: customermanagementapi
+      version: "1.0"
   template:
     metadata:
       annotations:
