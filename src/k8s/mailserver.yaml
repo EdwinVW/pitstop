@@ -19,7 +19,7 @@ spec:
         version: v1
     spec:
       containers:
-      - image: djfarrelly/maildev
+      - image: maildev/maildev
         imagePullPolicy: IfNotPresent
         name: mailserver
         ports:
