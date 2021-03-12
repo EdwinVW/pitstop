@@ -24,7 +24,7 @@ spec:
           value: DEBmbwkSrzy9D1T9cJfa
         - name: RABBITMQ_DEFAULT_USER
           value: rabbitmquser
-        image: rabbitmq:3-management
+        image: rabbitmq:3-management-alpine
         imagePullPolicy: IfNotPresent
         name: rabbitmq
         ports:
