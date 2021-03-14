@@ -31,7 +31,6 @@ spec:
         - containerPort: 7000
       restartPolicy: Always
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -40,12 +39,11 @@ metadata:
   name: webapp
   namespace: pitstop
 spec:
-  type: LoadBalancer
   ports:
   - name: "7000"
     port: 7000
     targetPort: 7000
   selector:
     app: webapp
-
+  type: LoadBalancer
 ---

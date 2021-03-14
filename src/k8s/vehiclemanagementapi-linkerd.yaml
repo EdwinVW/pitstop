@@ -31,7 +31,6 @@ spec:
         - containerPort: 5000
       restartPolicy: Always
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -40,13 +39,12 @@ metadata:
   name: vehiclemanagementapi
   namespace: pitstop
 spec:
-  type: NodePort
   ports:
-  - name: "http-5000"
+  - name: http-5000
+    nodePort: 30006
     port: 5000
     targetPort: 5000
-    nodePort: 30006
   selector:
     app: vehiclemanagementapi
-
+  type: NodePort
 ---

@@ -8,7 +8,7 @@ metadata:
   namespace: pitstop
 spec:
   replicas: 1
-  selector: 
+  selector:
     matchLabels:
       app: workshopmanagementapi
       version: "1.0"
@@ -31,7 +31,6 @@ spec:
         - containerPort: 5200
       restartPolicy: Always
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -40,12 +39,12 @@ metadata:
   name: workshopmanagementapi
   namespace: pitstop
 spec:
-  type: NodePort
   ports:
-  - name: "http-5200"
+  - name: http-5200
+    nodePort: 30007
     port: 5200
     targetPort: 5200
-    nodePort: 30007
   selector:
     app: workshopmanagementapi
+  type: NodePort
 ---
