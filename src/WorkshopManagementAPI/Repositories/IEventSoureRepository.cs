@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Pitstop.WorkshopManagementAPI.Repositories
 {
-    public interface IWorkshopPlanningRepository
+    public interface IEventSourceRepository<T>
     {
         void EnsureDatabase();
-        Task<WorkshopPlanning> GetWorkshopPlanningAsync(DateTime date);
-        Task SaveWorkshopPlanningAsync(string planningId, int originalVersion, int newVersion, IEnumerable<Event> newEvents);
+        Task<T> GetByIdAsync(string id);
+        Task SaveAsync(string id, int originalVersion, int newVersion, IEnumerable<Event> newEvents);
     }
 }

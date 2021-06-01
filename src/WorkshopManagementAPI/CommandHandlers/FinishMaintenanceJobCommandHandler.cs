@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.WorkshopManagementAPI.Commands;
 using Pitstop.WorkshopManagementAPI.Domain.Entities;
+using Pitstop.WorkshopManagementAPI.Domain.ValueObjects;
 using Pitstop.WorkshopManagementAPI.Repositories;
 
 namespace WorkshopManagementAPI.CommandHandlers
@@ -11,9 +12,9 @@ namespace WorkshopManagementAPI.CommandHandlers
     public class FinishMaintenanceJobCommandHandler : IFinishMaintenanceJobCommandHandler
     {
         IMessagePublisher _messagePublisher;
-        IWorkshopPlanningRepository _planningRepo;
+        IEventSourceRepository<WorkshopPlanning> _planningRepo;
 
-        public FinishMaintenanceJobCommandHandler(IMessagePublisher messagePublisher, IWorkshopPlanningRepository planningRepo)
+        public FinishMaintenanceJobCommandHandler(IMessagePublisher messagePublisher, IEventSourceRepository<WorkshopPlanning> planningRepo)
         {
             _messagePublisher = messagePublisher;
             _planningRepo = planningRepo;
@@ -22,7 +23,8 @@ namespace WorkshopManagementAPI.CommandHandlers
         public async Task<WorkshopPlanning> HandleCommandAsync(DateTime planningDate, FinishMaintenanceJob command)
         {
             // get planning
-            WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
+            var aggregateId = WorkshopPlanningId.Create(planningDate);
+            var planning = await _planningRepo.GetByIdAsync(aggregateId);
             if (planning == null)
             {
                 return null;
@@ -33,7 +35,7 @@ namespace WorkshopManagementAPI.CommandHandlers
 
             // persist
             IEnumerable<Event> events = planning.GetEvents();
-            await _planningRepo.SaveWorkshopPlanningAsync(
+            await _planningRepo.SaveAsync(
                 planning.Id, planning.OriginalVersion, planning.Version, events);
 
             // publish event

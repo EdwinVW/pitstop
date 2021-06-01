@@ -11,18 +11,19 @@ using WorkshopManagementAPI.CommandHandlers;
 using Serilog;
 using Pitstop.WorkshopManagementAPI.Domain.Entities;
 using Pitstop.WorkshopManagementAPI.Mappers;
+using Pitstop.WorkshopManagementAPI.Domain.ValueObjects;
 
 namespace Pitstop.WorkshopManagementAPI.Controllers
 {
     [Route("/api/[controller]")]
     public class WorkshopPlanningController : Controller
     {
-        private readonly IWorkshopPlanningRepository _planningRepo;
+        private readonly IEventSourceRepository<WorkshopPlanning> _planningRepo;
         private readonly IPlanMaintenanceJobCommandHandler _planMaintenanceJobCommandHandler;
         private readonly IFinishMaintenanceJobCommandHandler _finishMaintenanceJobCommandHandler;
 
         public WorkshopPlanningController(
-            IWorkshopPlanningRepository planningRepo,
+            IEventSourceRepository<WorkshopPlanning> planningRepo,
             IPlanMaintenanceJobCommandHandler planMaintenanceJobCommandHandler,
             IFinishMaintenanceJobCommandHandler finishMaintenanceJobCommand)
         {
@@ -37,7 +38,8 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
         {
             try
             {
-                var planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
+                var aggregateId = WorkshopPlanningId.Create(planningDate);
+                var planning = await _planningRepo.GetByIdAsync(aggregateId);
                 if (planning == null)
                 {
                     return NotFound();
@@ -61,7 +63,8 @@ namespace Pitstop.WorkshopManagementAPI.Controllers
                 try
                 {
                     // get planning
-                    WorkshopPlanning planning = await _planningRepo.GetWorkshopPlanningAsync(planningDate);
+                    var aggregateId = WorkshopPlanningId.Create(planningDate);
+                    var planning = await _planningRepo.GetByIdAsync(aggregateId);
                     if (planning == null || planning.Jobs == null)
                     {
                         return NotFound();

@@ -19,7 +19,12 @@ namespace WebApp.RESTClients
         {
             string apiHostAndPort = config.GetSection("APIServiceLocations").GetValue<string>("VehicleManagementAPI");
             httpClient.BaseAddress = new Uri($"http://{apiHostAndPort}/api");
-            _restClient = RestService.For<IVehicleManagementAPI>(httpClient);
+            _restClient = RestService.For<IVehicleManagementAPI>(
+                httpClient,
+                new RefitSettings
+                {
+                    ContentSerializer = new NewtonsoftJsonContentSerializer()
+                });
         }
 
         public async Task<List<Vehicle>> GetVehicles()

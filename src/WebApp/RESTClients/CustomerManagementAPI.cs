@@ -15,11 +15,16 @@ namespace WebApp.RESTClients
     {
         private ICustomerManagementAPI _restClient;
 
-        public  CustomerManagementAPI(IConfiguration config, HttpClient httpClient)
+        public CustomerManagementAPI(IConfiguration config, HttpClient httpClient)
         {
             string apiHostAndPort = config.GetSection("APIServiceLocations").GetValue<string>("CustomerManagementAPI");
             httpClient.BaseAddress = new Uri($"http://{apiHostAndPort}/api");
-            _restClient = RestService.For<ICustomerManagementAPI>(httpClient);
+            _restClient = RestService.For<ICustomerManagementAPI>(
+                httpClient,
+                new RefitSettings
+                {
+                    ContentSerializer = new NewtonsoftJsonContentSerializer()
+                });
         }
 
         public async Task<List<Customer>> GetCustomers()

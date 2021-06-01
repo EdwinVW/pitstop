@@ -21,8 +21,9 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
         {
             // arrange
             DateTime date = DateTime.Today;
-            var initializingEvents = new Event[] { 
-                new WorkshopPlanningCreatedEventBuilder().WithDate(date).Build() 
+            string workshopPlanningId = date.ToString("yyy-MM-dd");
+            var initializingEvents = new Event[] {
+                new WorkshopPlanningCreatedEventBuilder().WithDate(date).Build()
             };
             WorkshopPlanning planning = new WorkshopPlanning(date, initializingEvents);
 
@@ -30,14 +31,15 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
                 .Build();
 
             Mock<IMessagePublisher> messagePublisherMock = new Mock<IMessagePublisher>();
-            Mock<IWorkshopPlanningRepository> repoMock = new Mock<IWorkshopPlanningRepository>();
+            Mock<IEventSourceRepository<WorkshopPlanning>> repoMock =
+                new Mock<IEventSourceRepository<WorkshopPlanning>>();
 
             repoMock
-                .Setup(m => m.GetWorkshopPlanningAsync(It.Is<DateTime>(p => p == date)))
+                .Setup(m => m.GetByIdAsync(It.Is<string>(p => p == workshopPlanningId)))
                 .Returns(Task.FromResult(planning));
 
             repoMock
-                .Setup(m => m.SaveWorkshopPlanningAsync(
+                .Setup(m => m.SaveAsync(
                     It.Is<string>(p => p == planning.Id),
                     It.Is<int>(p => p == 1),
                     It.Is<int>(p => p == 2),
@@ -52,19 +54,19 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
                     ""))
                 .Returns(Task.CompletedTask);
 
-            PlanMaintenanceJobCommandHandler sut = 
+            PlanMaintenanceJobCommandHandler sut =
                 new PlanMaintenanceJobCommandHandler(messagePublisherMock.Object, repoMock.Object);
 
             // act
             WorkshopPlanning result = await sut.HandleCommandAsync(date, command);
-            
+
             // assert
             messagePublisherMock.VerifyAll();
             messagePublisherMock.VerifyNoOtherCalls();
             repoMock.VerifyAll();
             repoMock.VerifyNoOtherCalls();
             Assert.IsAssignableFrom<WorkshopPlanning>(result);
-        }        
+        }
 
         [Fact]
         public async void Given_A_Non_Existing_Job_The_Handler_Should_Return_Null()
@@ -76,19 +78,20 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
                 .Build();
 
             Mock<IMessagePublisher> messagePublisherMock = new Mock<IMessagePublisher>();
-            Mock<IWorkshopPlanningRepository> repoMock = new Mock<IWorkshopPlanningRepository>();
+            Mock<IEventSourceRepository<WorkshopPlanning>> repoMock =
+                new Mock<IEventSourceRepository<WorkshopPlanning>>();
 
             repoMock
-                .Setup(m => m.GetWorkshopPlanningAsync(It.Is<DateTime>(p => p == date)))
+                .Setup(m => m.GetByIdAsync(It.Is<string>(p => p == workshopPlanningId)))
                 .Returns(Task.FromResult<WorkshopPlanning>(null));
 
             repoMock
-                .Setup(m => m.SaveWorkshopPlanningAsync(
+                .Setup(m => m.SaveAsync(
                     It.Is<string>(p => p == workshopPlanningId),
                     It.Is<int>(p => p == 0),
                     It.Is<int>(p => p == 2),
-                    It.Is<IEnumerable<Event>>(p =>  
-                        p.First().MessageType == "WorkshopPlanningCreated" && 
+                    It.Is<IEnumerable<Event>>(p =>
+                        p.First().MessageType == "WorkshopPlanningCreated" &&
                         p.Last().MessageType == "MaintenanceJobPlanned")
                 ))
                 .Returns(Task.CompletedTask);
@@ -107,17 +110,18 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
                     ""))
                 .Returns(Task.CompletedTask);
 
-            PlanMaintenanceJobCommandHandler sut = 
+            PlanMaintenanceJobCommandHandler sut =
                 new PlanMaintenanceJobCommandHandler(messagePublisherMock.Object, repoMock.Object);
 
             // act
             WorkshopPlanning result = await sut.HandleCommandAsync(date, command);
-            
+
             // assert
             messagePublisherMock.VerifyAll();
             messagePublisherMock.VerifyNoOtherCalls();
             repoMock.VerifyAll();
             repoMock.VerifyNoOtherCalls();
-            Assert.IsAssignableFrom<WorkshopPlanning>(result);        }            
+            Assert.IsAssignableFrom<WorkshopPlanning>(result);
+        }
     }
 }
