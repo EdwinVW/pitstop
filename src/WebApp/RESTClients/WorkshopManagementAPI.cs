@@ -19,7 +19,12 @@ namespace WebApp.RESTClients
         {
             string apiHostAndPort = config.GetSection("APIServiceLocations").GetValue<string>("WorkshopManagementAPI");
             httpClient.BaseAddress = new Uri($"http://{apiHostAndPort}/api");
-            _restClient = RestService.For<IWorkshopManagementAPI>(httpClient);
+            _restClient = RestService.For<IWorkshopManagementAPI>(
+                httpClient,
+                new RefitSettings
+                {
+                    ContentSerializer = new NewtonsoftJsonContentSerializer()
+                });
         }
 
         public async Task<WorkshopPlanning> GetWorkshopPlanning(string planningDate)
