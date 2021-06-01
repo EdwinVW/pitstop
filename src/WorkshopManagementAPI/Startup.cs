@@ -11,6 +11,7 @@ using WorkshopManagementAPI.CommandHandlers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Pitstop.Infrastructure.Messaging.Configuration;
+using Pitstop.WorkshopManagementAPI.Domain.Entities;
 
 namespace Pitstop.WorkshopManagementAPI
 {
@@ -28,8 +29,8 @@ namespace Pitstop.WorkshopManagementAPI
         {
             // add repo
             var eventStoreConnectionString = _configuration.GetConnectionString("EventStoreCN");
-            services.AddTransient<IWorkshopPlanningRepository>((sp) => 
-                new SqlServerWorkshopPlanningRepository(eventStoreConnectionString));
+            services.AddTransient<IEventSourceRepository<WorkshopPlanning>>((sp) => 
+                new SqlServerWorkshopPlanningEventSourceRepository(eventStoreConnectionString));
 
             var workshopManagementConnectionString = _configuration.GetConnectionString("WorkshopManagementCN");
             services.AddTransient<IVehicleRepository>((sp) => new SqlServerRefDataRepository(workshopManagementConnectionString));
@@ -61,7 +62,7 @@ namespace Pitstop.WorkshopManagementAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, IWorkshopPlanningRepository workshopPlanningRepo)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, IEventSourceRepository<WorkshopPlanning> workshopPlanningRepo)
         {
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)

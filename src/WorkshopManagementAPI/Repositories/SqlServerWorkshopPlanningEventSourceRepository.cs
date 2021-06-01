@@ -11,16 +11,17 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Converters;
 using System.Data.SqlClient;
 using Pitstop.WorkshopManagementAPI.Domain.Entities;
+using System.Globalization;
 
 namespace Pitstop.WorkshopManagementAPI.Repositories
 {
-    public class SqlServerWorkshopPlanningRepository : IWorkshopPlanningRepository
+    public class SqlServerWorkshopPlanningEventSourceRepository : IEventSourceRepository<WorkshopPlanning>
     {
         private static readonly JsonSerializerSettings _serializerSettings;
         private static readonly Dictionary<DateTime, string> _store = new Dictionary<DateTime, string>();
         private string _connectionString;
 
-        static SqlServerWorkshopPlanningRepository()
+        static SqlServerWorkshopPlanningEventSourceRepository()
         {
             _serializerSettings = new JsonSerializerSettings();
             _serializerSettings.Formatting = Formatting.Indented;
@@ -30,12 +31,12 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
             });
         }
 
-        public SqlServerWorkshopPlanningRepository(string connectionString)
+        public SqlServerWorkshopPlanningEventSourceRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public async Task<WorkshopPlanning> GetWorkshopPlanningAsync(DateTime date)
+        public async Task<WorkshopPlanning> GetByIdAsync(string aggregateId)
         {
             WorkshopPlanning planning = null;
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -50,7 +51,7 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                  var aggregate = await conn
                         .QuerySingleOrDefaultAsync<Aggregate>(
                             "select * from WorkshopPlanning where Id = @Id", 
-                            new { Id = date.ToString("yyyy-MM-dd") });
+                            new { Id = aggregateId });
                 
                 if (aggregate == null)
                 {
@@ -61,19 +62,19 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                 IEnumerable<AggregateEvent> aggregateEvents = await conn
                     .QueryAsync<AggregateEvent>(
                         "select * from WorkshopPlanningEvent where Id = @Id order by [Version];",
-                        new { Id = date.ToString("yyyy-MM-dd") });
+                        new { Id = aggregateId });
             
                 List<Event> events = new List<Event>();
                 foreach (var aggregateEvent in aggregateEvents)
                 {
                     events.Add(DeserializeEventData(aggregateEvent.MessageType, aggregateEvent.EventData));
                 }
-                planning = new WorkshopPlanning(date, events);
+                planning = new WorkshopPlanning(DateTime.ParseExact(aggregateId, "yyyy-MM-dd", CultureInfo.InvariantCulture), events);
             }
             return planning;
         }
 
-        public async Task SaveWorkshopPlanningAsync(string planningId, int originalVersion, int newVersion, IEnumerable<Event> newEvents)
+        public async Task SaveAsync(string aggregateId, int originalVersion, int newVersion, IEnumerable<Event> newEvents)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -91,7 +92,7 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                     var aggregate = await conn
                         .QuerySingleOrDefaultAsync<Aggregate>(
                             "select * from WorkshopPlanning where Id = @Id", 
-                            new { Id = planningId },
+                            new { Id = aggregateId },
                             transaction);
 
                     if (aggregate != null)
@@ -103,7 +104,7 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                               where [Id] = @Id
                               and [CurrentVersion] = @CurrentVersion;",
                             new { 
-                                Id = planningId, 
+                                Id = aggregateId, 
                                 NewVersion = newVersion,
                                 CurrentVersion = originalVersion
                             },
@@ -114,7 +115,7 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                         // insert new aggregate
                         affectedRows = await conn.ExecuteAsync(
                             "insert WorkshopPlanning ([Id], [CurrentVersion]) values (@Id, @CurrentVersion)",
-                            new { Id = planningId, CurrentVersion = newVersion },
+                            new { Id = aggregateId, CurrentVersion = newVersion },
                             transaction);
                     }
 
@@ -134,7 +135,7 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
                             @"insert WorkshopPlanningEvent ([Id], [Version], [Timestamp], [MessageType], [EventData])
                               values (@Id, @NewVersion, @Timestamp, @MessageType,@EventData);",
                             new { 
-                                Id = planningId, 
+                                Id = aggregateId, 
                                 NewVersion = eventVersion,
                                 Timestamp = DateTime.Now,
                                 MessageType = e.MessageType,

@@ -45,14 +45,15 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
                 .Build();
 
             Mock<IMessagePublisher> messagePublisherMock = new Mock<IMessagePublisher>();
-            Mock<IWorkshopPlanningRepository> repoMock = new Mock<IWorkshopPlanningRepository>();
+            Mock<IEventSourceRepository<WorkshopPlanning>> repoMock = 
+                new Mock<IEventSourceRepository<WorkshopPlanning>>();
 
             repoMock
-                .Setup(m => m.GetWorkshopPlanningAsync(It.Is<DateTime>(p => p == date)))
+                .Setup(m => m.GetByIdAsync(It.Is<string>(p => p == workshopPlanningId)))
                 .Returns(Task.FromResult(planning));
 
             repoMock
-                .Setup(m => m.SaveWorkshopPlanningAsync(
+                .Setup(m => m.SaveAsync(
                     It.Is<string>(p => p == planning.Id),
                     It.Is<int>(p => p == 2),
                     It.Is<int>(p => p == 3),
@@ -85,6 +86,7 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
         {
             // arrange
             DateTime date = DateTime.Today;
+            string workshopPlanningId = date.ToString("yyyy-MM-dd");
             Guid jobId = Guid.NewGuid();
             DateTime actualStartTime = date.AddHours(9);
             DateTime actualEndTime = date.AddHours(12);
@@ -95,10 +97,11 @@ namespace WorkshopManagement.UnitTests.CommandHandlerTests
                 .Build();
 
             Mock<IMessagePublisher> messagePublisherMock = new Mock<IMessagePublisher>();
-            Mock<IWorkshopPlanningRepository> repoMock = new Mock<IWorkshopPlanningRepository>();
+            Mock<IEventSourceRepository<WorkshopPlanning>> repoMock = 
+                new Mock<IEventSourceRepository<WorkshopPlanning>>();
 
             repoMock
-                .Setup(m => m.GetWorkshopPlanningAsync(It.Is<DateTime>(p => p == date)))
+                .Setup(m => m.GetByIdAsync(It.Is<string>(p => p == workshopPlanningId)))
                 .Returns(Task.FromResult<WorkshopPlanning>(null));
 
             FinishMaintenanceJobCommandHandler sut = 
