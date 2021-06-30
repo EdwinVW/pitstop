@@ -25,7 +25,7 @@ spec:
           value: Developer
         - name: SA_PASSWORD
           value: 8jkGh47hnDw89Haq8LN2
-        image: microsoft/mssql-server-linux:latest
+        image: mcr.microsoft.com/mssql/server:2019-latest
         imagePullPolicy: IfNotPresent
         name: sqlserver
         ports:
