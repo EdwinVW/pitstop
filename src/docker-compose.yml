@@ -14,7 +14,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=DEBmbwkSrzy9D1T9cJfa
       
   sqlserver:
-    image: microsoft/mssql-server-linux:latest
+    image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: sqlserver
     volumes:
       - sqlserverdata:/var/opt/mssql 
