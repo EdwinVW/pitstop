@@ -36,14 +36,15 @@ namespace Pitstop.NotificationService.Repositories
 
                 // create database
                 string sql =
-                    "IF DB_ID('Notification') IS NULL CREATE DATABASE Notification;";
+                    "IF NOT EXISTS(SELECT * FROM master.sys.databases WHERE name='Notification') CREATE DATABASE Notification;";
 
                 await conn.ExecuteAsync(sql);
+            }
 
-                // create tables
-                conn.ChangeDatabase("Notification");
-
-                sql = "IF OBJECT_ID('Customer') IS NULL " +
+            // create tables
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string sql = "IF OBJECT_ID('Customer') IS NULL " +
                       "CREATE TABLE Customer (" +
                       "  CustomerId varchar(50) NOT NULL," +
                       "  Name varchar(50) NOT NULL," +

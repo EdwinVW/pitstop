@@ -155,20 +155,22 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
             using (SqlConnection conn = new SqlConnection(_connectionString.Replace("WorkshopManagementEventStore", "master")))
             {
                 Console.WriteLine("Ensure database exists");
-                
+
                 Policy
                     .Handle<Exception>()
-                    .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) => 
+                    .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) =>
                         { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
                     .Execute(() => conn.Open());
 
                 // create database
-                string sql = "if DB_ID('WorkshopManagementEventStore') IS NULL CREATE DATABASE WorkshopManagementEventStore;";
+                string sql = "IF NOT EXISTS(SELECT * FROM master.sys.databases WHERE name='WorkshopManagementEventStore') CREATE DATABASE WorkshopManagementEventStore;";
                 conn.Execute(sql);
+            }
 
-                // create tables
-                conn.ChangeDatabase("WorkshopManagementEventStore");
-                sql = @" 
+            // create tables
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string sql = @" 
                     if OBJECT_ID('WorkshopPlanning') IS NULL 
                     CREATE TABLE WorkshopPlanning (
                         [Id] varchar(50) NOT NULL,

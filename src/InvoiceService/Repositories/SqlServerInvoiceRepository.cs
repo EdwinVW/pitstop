@@ -37,14 +37,14 @@ namespace Pitstop.InvoiceService.Repositories
 
                 // create database
                 string sql =
-                    "IF DB_ID('Invoicing') IS NULL CREATE DATABASE Invoicing;";
+                    "IF NOT EXISTS(SELECT * FROM master.sys.databases WHERE name='Invoicing') CREATE DATABASE Invoicing;";
 
                 await conn.ExecuteAsync(sql);
+            }
 
-                // create tables
-                conn.ChangeDatabase("Invoicing");
-
-                sql = "IF OBJECT_ID('Customer') IS NULL " +
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string sql = "IF OBJECT_ID('Customer') IS NULL " +
                       "CREATE TABLE Customer (" +
                       "  CustomerId varchar(50) NOT NULL," +
                       "  Name varchar(50) NOT NULL," +
