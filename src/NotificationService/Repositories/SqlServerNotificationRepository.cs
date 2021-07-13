@@ -24,45 +24,8 @@ namespace Pitstop.NotificationService.Repositories
             Policy
             .Handle<Exception>()
             .WaitAndRetryAsync(10, r => TimeSpan.FromSeconds(10), (ex, ts) => { Log.Error("Error connecting to DB. Retrying in 10 sec."); })
-            .ExecuteAsync(InitializeDB)
+            .ExecuteAsync(InitializeDBAsync)
             .Wait();
-        }
-
-        private async Task InitializeDB()
-        {
-            using (SqlConnection conn = new SqlConnection(_connectionString.Replace("Notification", "master")))
-            {
-                await conn.OpenAsync();
-
-                // create database
-                string sql =
-                    "IF NOT EXISTS(SELECT * FROM master.sys.databases WHERE name='Notification') CREATE DATABASE Notification;";
-
-                await conn.ExecuteAsync(sql);
-            }
-
-            // create tables
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                string sql = "IF OBJECT_ID('Customer') IS NULL " +
-                      "CREATE TABLE Customer (" +
-                      "  CustomerId varchar(50) NOT NULL," +
-                      "  Name varchar(50) NOT NULL," +
-                      "  TelephoneNumber varchar(50)," +
-                      "  EmailAddress varchar(50)," +
-                      "  PRIMARY KEY(CustomerId));" +
-
-                      "IF OBJECT_ID('MaintenanceJob') IS NULL " +
-                      "CREATE TABLE MaintenanceJob (" +
-                      "  JobId varchar(50) NOT NULL," +
-                      "  LicenseNumber varchar(50) NOT NULL," +
-                      "  CustomerId varchar(50) NOT NULL," +
-                      "  StartTime datetime2 NOT NULL," +
-                      "  Description varchar(250) NOT NULL," +
-                      "  PRIMARY KEY(JobId));";
-
-                await conn.ExecuteAsync(sql);
-            }
         }
 
         public async Task<Customer> GetCustomerAsync(string customerId)
@@ -116,5 +79,45 @@ namespace Pitstop.NotificationService.Repositories
                 await conn.ExecuteAsync(sql, jobIds.Select(j => new { JobId = j }));
             }
         }
+
+        private async Task InitializeDBAsync()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString.Replace("Notification", "master")))
+            {
+                await conn.OpenAsync();
+
+                // create database
+                string sql =
+                    "IF NOT EXISTS(SELECT * FROM master.sys.databases WHERE name='Notification') CREATE DATABASE Notification;";
+
+                await conn.ExecuteAsync(sql);
+            }
+
+            // create tables
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                // create tables
+                string sql = "IF OBJECT_ID('Customer') IS NULL " +
+                      "CREATE TABLE Customer (" +
+                      "  CustomerId varchar(50) NOT NULL," +
+                      "  Name varchar(50) NOT NULL," +
+                      "  TelephoneNumber varchar(50)," +
+                      "  EmailAddress varchar(50)," +
+                      "  PRIMARY KEY(CustomerId));" +
+
+                      "IF OBJECT_ID('MaintenanceJob') IS NULL " +
+                      "CREATE TABLE MaintenanceJob (" +
+                      "  JobId varchar(50) NOT NULL," +
+                      "  LicenseNumber varchar(50) NOT NULL," +
+                      "  CustomerId varchar(50) NOT NULL," +
+                      "  StartTime datetime2 NOT NULL," +
+                      "  Description varchar(250) NOT NULL," +
+                      "  PRIMARY KEY(JobId));";
+
+                await conn.ExecuteAsync(sql);
+            }
+        }        
     }
 }

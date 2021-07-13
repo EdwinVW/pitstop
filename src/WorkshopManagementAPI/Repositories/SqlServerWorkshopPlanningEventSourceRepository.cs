@@ -12,6 +12,7 @@ using Newtonsoft.Json.Converters;
 using System.Data.SqlClient;
 using Pitstop.WorkshopManagementAPI.Domain.Entities;
 using System.Globalization;
+using Serilog;
 
 namespace Pitstop.WorkshopManagementAPI.Repositories
 {
@@ -34,6 +35,15 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
         public SqlServerWorkshopPlanningEventSourceRepository(string connectionString)
         {
             _connectionString = connectionString;
+
+            // init db
+            Log.Information("Initialize Database");
+
+            Policy
+            .Handle<Exception>()
+            .WaitAndRetryAsync(10, r => TimeSpan.FromSeconds(10), (ex, ts) => { Log.Error("Error connecting to DB. Retrying in 10 sec."); })
+            .ExecuteAsync(InitializeDatabaseAsync)
+            .Wait();
         }
 
         public async Task<WorkshopPlanning> GetByIdAsync(string aggregateId)
@@ -149,18 +159,12 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
             }
         }
 
-        public void EnsureDatabase()
+        private async Task InitializeDatabaseAsync()
         {
             // init db
             using (SqlConnection conn = new SqlConnection(_connectionString.Replace("WorkshopManagementEventStore", "master")))
             {
-                Console.WriteLine("Ensure database exists");
-
-                Policy
-                    .Handle<Exception>()
-                    .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) =>
-                        { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
-                    .Execute(() => conn.Open());
+                await conn.OpenAsync();
 
                 // create database
                 string sql = "IF NOT EXISTS(SELECT * FROM master.sys.databases WHERE name='WorkshopManagementEventStore') CREATE DATABASE WorkshopManagementEventStore;";
@@ -170,6 +174,8 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
             // create tables
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+                await conn.OpenAsync();
+
                 string sql = @" 
                     if OBJECT_ID('WorkshopPlanning') IS NULL 
                     CREATE TABLE WorkshopPlanning (
