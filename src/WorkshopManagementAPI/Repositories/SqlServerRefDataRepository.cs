@@ -114,6 +114,6 @@ namespace Pitstop.WorkshopManagementAPI.Repositories
 
             // rethrow original exception without poluting the stacktrace
             ExceptionDispatchInfo.Capture(ex).Throw();
-        }        
+        }
     }
 }

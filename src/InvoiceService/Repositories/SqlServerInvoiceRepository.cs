@@ -25,58 +25,8 @@ namespace Pitstop.InvoiceService.Repositories
             Policy
             .Handle<Exception>()
             .WaitAndRetryAsync(10, r => TimeSpan.FromSeconds(10), (ex, ts) => { Log.Error("Error connecting to DB. Retrying in 10 sec."); })
-            .ExecuteAsync(InitializeDB)
+            .ExecuteAsync(InitializeDBAsync)
             .Wait();
-        }
-
-        private async Task InitializeDB()
-        {
-            using (SqlConnection conn = new SqlConnection(_connectionString.Replace("Invoicing", "master")))
-            {
-                await conn.OpenAsync();
-
-                // create database
-                string sql =
-                    "IF DB_ID('Invoicing') IS NULL CREATE DATABASE Invoicing;";
-
-                await conn.ExecuteAsync(sql);
-
-                // create tables
-                conn.ChangeDatabase("Invoicing");
-
-                sql = "IF OBJECT_ID('Customer') IS NULL " +
-                      "CREATE TABLE Customer (" +
-                      "  CustomerId varchar(50) NOT NULL," +
-                      "  Name varchar(50) NOT NULL," +
-                      "  Address varchar(50)," +
-                      "  PostalCode varchar(50)," +
-                      "  City varchar(50)," +
-                      "  PRIMARY KEY(CustomerId));" +
-
-                      "IF OBJECT_ID('MaintenanceJob') IS NULL " +
-                      "CREATE TABLE MaintenanceJob (" +
-                      "  JobId varchar(50) NOT NULL," +
-                      "  LicenseNumber varchar(50) NOT NULL," +
-                      "  CustomerId varchar(50) NOT NULL," +
-                      "  Description varchar(250) NOT NULL," +
-                      "  StartTime datetime2 NULL," +
-                      "  EndTime datetime2 NULL," +
-                      "  Finished bit NOT NULL," +
-                      "  InvoiceSent bit NOT NULL," +
-                      "  PRIMARY KEY(JobId));" +
-
-                      "IF OBJECT_ID('Invoice') IS NULL " +
-                      "CREATE TABLE Invoice (" +
-                      "  InvoiceId varchar(50) NOT NULL," +
-                      "  InvoiceDate datetime2 NOT NULL," +
-                      "  CustomerId varchar(50) NOT NULL," +
-                      "  Amount decimal(5,2) NOT NULL," +
-                      "  Specification text," +
-                      "  JobIds varchar(250)," +
-                      "  PRIMARY KEY(InvoiceId));";
-
-                await conn.ExecuteAsync(sql);
-            }
         }
 
         public async Task<Customer> GetCustomerAsync(string customerId)
@@ -155,5 +105,58 @@ namespace Pitstop.InvoiceService.Repositories
                 await conn.ExecuteAsync(sql, jobIds);
             }
         }
+
+        private async Task InitializeDBAsync()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString.Replace("Invoicing", "master")))
+            {
+                await conn.OpenAsync();
+
+                // create database
+                string sql =
+                    "IF NOT EXISTS(SELECT * FROM master.sys.databases WHERE name='Invoicing') CREATE DATABASE Invoicing;";
+
+                await conn.ExecuteAsync(sql);
+            }
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                // create tables
+                string sql = "IF OBJECT_ID('Customer') IS NULL " +
+                      "CREATE TABLE Customer (" +
+                      "  CustomerId varchar(50) NOT NULL," +
+                      "  Name varchar(50) NOT NULL," +
+                      "  Address varchar(50)," +
+                      "  PostalCode varchar(50)," +
+                      "  City varchar(50)," +
+                      "  PRIMARY KEY(CustomerId));" +
+
+                      "IF OBJECT_ID('MaintenanceJob') IS NULL " +
+                      "CREATE TABLE MaintenanceJob (" +
+                      "  JobId varchar(50) NOT NULL," +
+                      "  LicenseNumber varchar(50) NOT NULL," +
+                      "  CustomerId varchar(50) NOT NULL," +
+                      "  Description varchar(250) NOT NULL," +
+                      "  StartTime datetime2 NULL," +
+                      "  EndTime datetime2 NULL," +
+                      "  Finished bit NOT NULL," +
+                      "  InvoiceSent bit NOT NULL," +
+                      "  PRIMARY KEY(JobId));" +
+
+                      "IF OBJECT_ID('Invoice') IS NULL " +
+                      "CREATE TABLE Invoice (" +
+                      "  InvoiceId varchar(50) NOT NULL," +
+                      "  InvoiceDate datetime2 NOT NULL," +
+                      "  CustomerId varchar(50) NOT NULL," +
+                      "  Amount decimal(5,2) NOT NULL," +
+                      "  Specification text," +
+                      "  JobIds varchar(250)," +
+                      "  PRIMARY KEY(InvoiceId));";
+
+                await conn.ExecuteAsync(sql);
+            }
+        }        
     }
 }

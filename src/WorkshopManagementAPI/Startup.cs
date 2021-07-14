@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Pitstop.Infrastructure.Messaging;
 using Pitstop.WorkshopManagementAPI.Repositories;
 using Serilog;
 using Microsoft.Extensions.HealthChecks;
@@ -81,9 +80,6 @@ namespace Pitstop.WorkshopManagementAPI
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WorkshopManagement API - v1");
             });
-
-            // initialize database
-            workshopPlanningRepo.EnsureDatabase();
         }     
     }
 }
