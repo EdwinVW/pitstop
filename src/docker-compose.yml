@@ -2,7 +2,7 @@ version: '3'
 services:
 
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: rabbitmq:3.8.19-management-alpine
     container_name: rabbitmq
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq
