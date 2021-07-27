@@ -6,12 +6,12 @@ services:
     container_name: rabbitmq
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq
+      - "./rabbitmq:/etc/pitstop/"
     ports:
       - "15672:15672"
       - "5672:5672"
     environment:
-      - RABBITMQ_DEFAULT_USER=rabbitmquser
-      - RABBITMQ_DEFAULT_PASS=DEBmbwkSrzy9D1T9cJfa
+      - RABBITMQ_CONFIG_FILE=/etc/pitstop/rabbitmq.conf
       
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest

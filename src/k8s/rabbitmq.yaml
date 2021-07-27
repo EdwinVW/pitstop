@@ -1,3 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rqconfigmap
+  namespace: pitstop
+data:
+  rabbitmq.conf: |
+    default_user = rabbitmquser
+    default_pass = DEBmbwkSrzy9D1T9cJfa
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,17 +32,23 @@ spec:
     spec:
       containers:
       - env:
-        - name: RABBITMQ_DEFAULT_PASS
-          value: DEBmbwkSrzy9D1T9cJfa
-        - name: RABBITMQ_DEFAULT_USER
-          value: rabbitmquser
+        - name: RABBITMQ_CONFIG_FILE
+          value: /etc/pitstop/rabbitmq.conf
         image: rabbitmq:3-management-alpine
         imagePullPolicy: IfNotPresent
         name: rabbitmq
         ports:
         - containerPort: 15672
         - containerPort: 5672
+        volumeMounts:
+        - name: rqconfig
+          mountPath: "/etc/pitstop"
+          readOnly: true
       restartPolicy: Always
+      volumes:
+      - name: rqconfig
+        configMap:
+          name: rqconfigmap
 
 ---
 
