@@ -25,7 +25,7 @@ if (-not $nomesh)
 
     if ($istio) {
         $meshPostfix = '-istio'
-        echo "Starting Pitstop wit Istio service mesh."
+        echo "Starting Pitstop with Istio service mesh."
 
         # disable global istio side-car injection (only for annotated pods)
         & "./disable-default-istio-injection.ps1"
@@ -33,7 +33,7 @@ if (-not $nomesh)
 
     if ($linkerd) {
         $meshPostfix = '-linkerd'
-        echo "Starting Pitstop wit Linkerd service mesh."
+        echo "Starting Pitstop with Linkerd service mesh."
     }
 }
 else
