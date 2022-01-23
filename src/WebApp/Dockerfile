@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:6.0-bullseye-slim AS build-env
 WORKDIR /app
 
 # Install node
@@ -23,7 +23,8 @@ RUN gulp default
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+#FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-bullseye-slim
 COPY --from=build-env /app/out .
 
 # Expose ports
@@ -32,4 +33,4 @@ ENV ASPNETCORE_URLS http://*:7000
 HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:7000/hc || exit 1
 
 # Start
-ENTRYPOINT ["dotnet", "WebApp.dll"]
+ENTRYPOINT ["dotnet", "Pitstop.WebApp.dll"]

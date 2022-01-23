@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Pitstop.WebApp.Models;
 
-namespace Pitstop.Models
+public class WorkshopPlanning
 {
-    public class WorkshopPlanning
-    {
-        public DateTime Date { get; set; }
-        public List<MaintenanceJob> Jobs { get; set; }
-    }
+    public DateTime Date { get; set; }
+    public List<MaintenanceJob> Jobs { get; set; }
 }

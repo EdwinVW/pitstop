@@ -1,13 +1,6 @@
-﻿using Pitstop.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿namespace Pitstop.WebApp.ViewModels;
 
-namespace Pitstop.ViewModels
+public class VehicleManagementViewModel
 {
-    public class VehicleManagementViewModel
-    {
-        public IEnumerable<Vehicle> Vehicles { get; set; }
-    }
+    public IEnumerable<Vehicle> Vehicles { get; set; }
 }

@@ -1,9 +1,6 @@
-﻿using Pitstop.Models;
+﻿namespace Pitstop.WebApp.ViewModels;
 
-namespace Pitstop.ViewModels
+public class CustomerManagementDetailsViewModel
 {
-    public class CustomerManagementDetailsViewModel
-    {
-        public Customer Customer { get; set; }
-    }
+    public Customer Customer { get; set; }
 }

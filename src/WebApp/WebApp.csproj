@@ -1,23 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>    <LangVersion>8.0</LangVersion>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>Pitstop.WebApp</AssemblyName>
+    <RootNamespace>Pitstop.WebApp</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.6" />  
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.1" />  
     <PackageReference Include="Microsoft.AspNetCore.HealthChecks" Version="1.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-    <PackageReference Include="Pitstop.Infrastructure.Messaging" Version="3.0.1" />
-    <PackageReference Include="Polly" Version="7.2.2" />
-    <PackageReference Include="Refit" Version="6.0.38" />
-    <PackageReference Include="Refit.HttpClientFactory" Version="6.0.38" />
-    <PackageReference Include="Refit.Newtonsoft.Json" Version="6.0.38" />
+    <PackageReference Include="Pitstop.Infrastructure.Messaging" Version="3.0.2" />
+    <PackageReference Include="Polly" Version="7.2.3" />
+    <PackageReference Include="Refit" Version="6.1.15" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="6.1.15" />
+    <PackageReference Include="Refit.Newtonsoft.Json" Version="6.1.15" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
-    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Serilog.Sinks.Seq" Version="5.0.1" />    
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1" />    
   </ItemGroup>
 
   <ItemGroup>

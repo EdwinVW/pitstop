@@ -1,20 +1,13 @@
-﻿using Pitstop.Models;
-using Refit;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using WebApp.Commands;
+﻿namespace WebApp.RESTClients;
 
-namespace WebApp.RESTClients
+public interface IVehicleManagementAPI
 {
-    public interface IVehicleManagementAPI
-    {
-        [Get("/vehicles")]
-        Task<List<Vehicle>> GetVehicles();
+    [Get("/vehicles")]
+    Task<List<Vehicle>> GetVehicles();
 
-        [Get("/vehicles/{id}")]
-        Task<Vehicle> GetVehicleByLicenseNumber([AliasAs("id")] string licenseNumber);
+    [Get("/vehicles/{id}")]
+    Task<Vehicle> GetVehicleByLicenseNumber([AliasAs("id")] string licenseNumber);
 
-        [Post("/vehicles")]
-        Task RegisterVehicle(RegisterVehicle command);
-    }
+    [Post("/vehicles")]
+    Task RegisterVehicle(RegisterVehicle command);
 }

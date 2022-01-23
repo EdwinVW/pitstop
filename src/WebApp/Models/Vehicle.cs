@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿namespace Pitstop.WebApp.Models;
 
-namespace Pitstop.Models
+public class Vehicle
 {
-    public class Vehicle
-    {
-        [Required]
-        [Display(Name = "License number")]
-        [RegularExpression(@"^((\d{1,3}|[a-zA-Z]{1,3})-){2}(\d{1,3}|[a-zA-Z]{1,3})$", ErrorMessage = "LicenseNumber is not in a valid format.")]
-        public string LicenseNumber { get; set; }
+    [Required]
+    [Display(Name = "License number")]
+    [RegularExpression(@"^((\d{1,3}|[a-zA-Z]{1,3})-){2}(\d{1,3}|[a-zA-Z]{1,3})$", ErrorMessage = "LicenseNumber is not in a valid format.")]
+    public string LicenseNumber { get; set; }
 
-        [Required]
-        [Display(Name = "Brand")]
-        public string Brand { get; set; }
+    [Required]
+    [Display(Name = "Brand")]
+    public string Brand { get; set; }
 
-        [Required]
-        [Display(Name = "Type")]
-        public string Type { get; set; }
+    [Required]
+    [Display(Name = "Type")]
+    public string Type { get; set; }
 
-        [Display(Name = "Owner")]
-        public string OwnerId { get; set; }
-    }
+    [Display(Name = "Owner")]
+    public string OwnerId { get; set; }
 }
