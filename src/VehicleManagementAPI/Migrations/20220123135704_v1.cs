@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Pitstop.Application.VehicleManagement.Migrations
+#nullable disable
+
+namespace Pitstop.VehicleManagementAPI.DataAccess
 {
     public partial class v1 : Migration
     {
@@ -12,11 +12,10 @@ namespace Pitstop.Application.VehicleManagement.Migrations
                 name: "Vehicle",
                 columns: table => new
                 {
-                    LicenseNumber = table.Column<string>(nullable: false),
-                    Brand = table.Column<string>(nullable: true),
-                    LastUpdateTimestamp = table.Column<DateTimeOffset>(nullable: false),
-                    OwnerId = table.Column<string>(nullable: true),
-                    Type = table.Column<string>(nullable: true)
+                    LicenseNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Brand = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OwnerId = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

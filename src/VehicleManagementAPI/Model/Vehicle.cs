@@ -1,10 +1,9 @@
-﻿namespace Pitstop.Application.VehicleManagement.Model
+﻿namespace Pitstop.VehicleManagement.Model;
+
+public class Vehicle
 {
-    public class Vehicle
-    {
-        public string LicenseNumber { get; set; }
-        public string Brand { get; set; }
-        public string Type { get; set; }
-        public string OwnerId { get; set; }
-    }
+    public string LicenseNumber { get; set; }
+    public string Brand { get; set; }
+    public string Type { get; set; }
+    public string OwnerId { get; set; }
 }
