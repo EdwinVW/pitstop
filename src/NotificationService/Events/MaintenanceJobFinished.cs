@@ -1,16 +1,12 @@
-﻿using Pitstop.Infrastructure.Messaging;
-using System;
+﻿namespace Pitstop.NotificationService.Events;
 
-namespace Pitstop.NotificationService.Events
+public class MaintenanceJobFinished : Event
 {
-    public class MaintenanceJobFinished : Event
-    {
-        public readonly string JobId;
+    public readonly string JobId;
 
-        public MaintenanceJobFinished(Guid messageId, string jobId) : 
-            base(messageId)
-        {
-            JobId = jobId;
-        }
+    public MaintenanceJobFinished(Guid messageId, string jobId) :
+        base(messageId)
+    {
+        JobId = jobId;
     }
 }
