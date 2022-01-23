@@ -1,6 +1,5 @@
-﻿namespace Pitstop.ViewModels
+﻿namespace Pitstop.WebApp.ViewModels;
+
+public class VehicleManagementOfflineViewModel
 {
-    public class VehicleManagementOfflineViewModel
-    {
-    }
 }

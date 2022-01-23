@@ -1,4 +1,4 @@
-﻿namespace Pitstop.ViewModels
+﻿namespace Pitstop.WebApp.ViewModels
 {
     public class WorkshopManagementOfflineViewModel
     {

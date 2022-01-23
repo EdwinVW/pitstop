@@ -1,7 +1,6 @@
-﻿namespace Pitstop.WorkshopManagementAPI.DTOs
+﻿namespace Pitstop.WorkshopManagementAPI.DTOs;
+
+public class BusinessRuleViolation
 {
-    public class BusinessRuleViolation
-    {
-        public string ErrorMessage { get; set; }
-    }
+    public string ErrorMessage { get; set; }
 }

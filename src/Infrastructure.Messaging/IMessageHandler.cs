@@ -1,8 +1,7 @@
-﻿namespace Pitstop.Infrastructure.Messaging
+﻿namespace Pitstop.Infrastructure.Messaging;
+
+public interface IMessageHandler
 {
-    public interface IMessageHandler
-    {
-        void Start(IMessageHandlerCallback callback);
-        void Stop();
-    }
+    void Start(IMessageHandlerCallback callback);
+    void Stop();
 }

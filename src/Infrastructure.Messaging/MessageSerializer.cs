@@ -1,48 +1,42 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
+﻿namespace Pitstop.Infrastructure.Messaging;
 
-namespace Pitstop.Infrastructure.Messaging
+/// <summary>
+/// Serializer used for all messages.
+/// </summary>
+public static class MessageSerializer
 {
+    private static JsonSerializerSettings _serializerSettings;
+
     /// <summary>
-    /// Serializer used for all messages.
+    /// Constructor.
     /// </summary>
-    public static class MessageSerializer
+    static MessageSerializer()
     {
-        private static JsonSerializerSettings _serializerSettings;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        static MessageSerializer()
+        _serializerSettings = new JsonSerializerSettings()
         {
-            _serializerSettings = new JsonSerializerSettings()
-            {
-                DateFormatHandling = DateFormatHandling.IsoDateFormat
-            };
-            _serializerSettings.Converters.Add(new StringEnumConverter 
-            { 
-                NamingStrategy = new CamelCaseNamingStrategy()
-            });
-        }
-
-        /// <summary>
-        /// Serialize an object to a JSON string.
-        /// </summary>
-        /// <param name="value">The value to serialize.</param>
-        public static string Serialize(object value)
+            DateFormatHandling = DateFormatHandling.IsoDateFormat
+        };
+        _serializerSettings.Converters.Add(new StringEnumConverter
         {
-            return JsonConvert.SerializeObject(value, _serializerSettings);
-        }
+            NamingStrategy = new CamelCaseNamingStrategy()
+        });
+    }
 
-        /// <summary>
-        /// Deserialize JSON to an object.
-        /// </summary>
-        /// <param name="value">The JSON data to deserialize.</param>
-        public static JObject Deserialize(string value)
-        {
-            return JsonConvert.DeserializeObject<JObject>(value, _serializerSettings);
-        }
+    /// <summary>
+    /// Serialize an object to a JSON string.
+    /// </summary>
+    /// <param name="value">The value to serialize.</param>
+    public static string Serialize(object value)
+    {
+        return JsonConvert.SerializeObject(value, _serializerSettings);
+    }
+
+    /// <summary>
+    /// Deserialize JSON to an object.
+    /// </summary>
+    /// <param name="value">The JSON data to deserialize.</param>
+    public static JObject Deserialize(string value)
+    {
+        return JsonConvert.DeserializeObject<JObject>(value, _serializerSettings);
     }
 }

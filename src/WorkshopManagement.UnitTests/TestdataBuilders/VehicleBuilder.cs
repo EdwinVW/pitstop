@@ -1,69 +1,63 @@
-using System;
-using Pitstop.WorkshopManagementAPI.Domain.Entities;
-using Pitstop.TestUtils;
-using Pitstop.WorkshopManagementAPI.Domain.ValueObjects;
+namespace Pitstop.WorkshopManagement.UnitTests.TestdataBuilders;
 
-namespace WorkshopManagement.UnitTests.TestdataBuilders
+public class VehicleBuilder
 {
-    public class VehicleBuilder
+    private Random _rnd;
+
+    public LicenseNumber LicenseNumber { get; private set; }
+    public string Brand { get; private set; }
+    public string Type { get; private set; }
+    public string OwnerId { get; private set; }
+
+    public VehicleBuilder()
     {
-        private Random _rnd;
+        _rnd = new Random();
+        SetDefaults();
+    }
 
-        public LicenseNumber LicenseNumber { get; private set; }
-        public string Brand { get; private set; }
-        public string Type { get; private set; }
-        public string OwnerId { get; private set; }
+    public VehicleBuilder WithLicenseNumber(string licenseNumber)
+    {
+        LicenseNumber = LicenseNumber.Create(licenseNumber);
+        return this;
+    }
 
-        public VehicleBuilder()
+    public VehicleBuilder WithRandomLicenseNumber()
+    {
+        LicenseNumber = LicenseNumber.Create(TestDataGenerators.GenerateRandomLicenseNumber());
+        return this;
+    }
+
+    public VehicleBuilder WithBrand(string brand)
+    {
+        Brand = brand;
+        return this;
+    }
+
+    public VehicleBuilder WithType(string type)
+    {
+        Type = type;
+        return this;
+    }
+
+    public VehicleBuilder WithOwnerId(string ownerId)
+    {
+        OwnerId = ownerId;
+        return this;
+    }
+
+    public Vehicle Build()
+    {
+        if (string.IsNullOrEmpty(OwnerId))
         {
-            _rnd = new Random();
-            SetDefaults();
+            throw new InvalidOperationException("You must specify an owner id using the 'WithOwnerId' method.");
         }
+        return new Vehicle(LicenseNumber, Brand, Type, OwnerId);
+    }
 
-        public VehicleBuilder WithLicenseNumber(string licenseNumber)
-        {
-            LicenseNumber = LicenseNumber.Create(licenseNumber);
-            return this;
-        }
-
-        public VehicleBuilder WithRandomLicenseNumber()
-        {
-            LicenseNumber = LicenseNumber.Create(TestDataGenerators.GenerateRandomLicenseNumber());
-            return this;
-        }        
-
-        public VehicleBuilder WithBrand(string brand)
-        {
-            Brand = brand;
-            return this;
-        }
-
-        public VehicleBuilder WithType(string type)
-        {
-            Type = type;
-            return this;
-        }
-
-        public VehicleBuilder WithOwnerId(string ownerId)
-        {
-            OwnerId = ownerId;
-            return this;
-        }
-
-        public Vehicle Build()
-        {
-            if (string.IsNullOrEmpty(OwnerId))
-            {
-                throw new InvalidOperationException("You must specify an owner id using the 'WithOwnerId' method.");
-            }
-            return new Vehicle(LicenseNumber, Brand, Type, OwnerId);
-        }
-
-        private void SetDefaults()
-        {
-            LicenseNumber = LicenseNumber.Create(TestDataGenerators.GenerateRandomLicenseNumber());
-            Brand = "Volkswagen";
-            Type = "Tiguan";
-        }
+    private void SetDefaults()
+    {
+        LicenseNumber = LicenseNumber.Create(TestDataGenerators.GenerateRandomLicenseNumber());
+        Brand = "Volkswagen";
+        Type = "Tiguan";
     }
 }

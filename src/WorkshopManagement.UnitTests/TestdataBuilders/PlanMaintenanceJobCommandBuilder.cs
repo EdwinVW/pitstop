@@ -1,60 +1,56 @@
-using System;
-using Pitstop.WorkshopManagementAPI.Commands;
+namespace Pitstop.WorkshopManagement.UnitTests.TestdataBuilders;
 
-namespace WorkshopManagement.UnitTests.TestdataBuilders
+public class PlanMaintenanceJobCommandBuilder
 {
-    public class PlanMaintenanceJobCommandBuilder
+    public MaintenanceJobBuilder MaintenanceJobBuilder { get; private set; }
+    public CustomerBuilder CustomerBuilder { get; private set; }
+    public VehicleBuilder VehicleBuilder { get; private set; }
+
+    public PlanMaintenanceJobCommandBuilder()
     {
-        public MaintenanceJobBuilder MaintenanceJobBuilder { get; private set; }
-        public CustomerBuilder CustomerBuilder { get; private set; }
-        public VehicleBuilder VehicleBuilder { get; private set; }
+        SetDefaults();
+    }
 
-        public PlanMaintenanceJobCommandBuilder()
-        {
-            SetDefaults();
-        }
+    public PlanMaintenanceJobCommandBuilder WithMaintenanceJobBuilder(MaintenanceJobBuilder maintenanceJobBuilder)
+    {
+        MaintenanceJobBuilder = maintenanceJobBuilder;
+        return this;
+    }
 
-        public PlanMaintenanceJobCommandBuilder WithMaintenanceJobBuilder(MaintenanceJobBuilder maintenanceJobBuilder)
-        {
-            MaintenanceJobBuilder = maintenanceJobBuilder;
-            return this;
-        }
+    public PlanMaintenanceJobCommandBuilder WithVehicleBuilder(VehicleBuilder vehicleBuilder)
+    {
+        VehicleBuilder = vehicleBuilder;
+        return this;
+    }
 
-        public PlanMaintenanceJobCommandBuilder WithVehicleBuilder(VehicleBuilder vehicleBuilder)
-        {
-            VehicleBuilder = vehicleBuilder;
-            return this;
-        }
+    public PlanMaintenanceJob Build()
+    {
+        var customer = CustomerBuilder
+           .Build();
 
-        public PlanMaintenanceJob Build()
-        {
-             var customer = CustomerBuilder
-                .Build();
-            
-            var vehicle = VehicleBuilder
-                .WithOwnerId(customer.Id)
-                .Build();
-            
-            var job = MaintenanceJobBuilder
-                .WithCustomer(customer)
-                .WithVehicle(vehicle)
-                .Build();
+        var vehicle = VehicleBuilder
+            .WithOwnerId(customer.Id)
+            .Build();
 
-            PlanMaintenanceJob command = new PlanMaintenanceJob(
-                Guid.NewGuid(), job.Id, job.PlannedTimeslot.StartTime, job.PlannedTimeslot.EndTime,
-                (customer.Id, customer.Name, customer.TelephoneNumber),
-                (vehicle.Id, vehicle.Brand, vehicle.Type),
-                job.Description
-            );
+        var job = MaintenanceJobBuilder
+            .WithCustomer(customer)
+            .WithVehicle(vehicle)
+            .Build();
 
-            return command;
-        }
+        PlanMaintenanceJob command = new PlanMaintenanceJob(
+            Guid.NewGuid(), job.Id, job.PlannedTimeslot.StartTime, job.PlannedTimeslot.EndTime,
+            (customer.Id, customer.Name, customer.TelephoneNumber),
+            (vehicle.Id, vehicle.Brand, vehicle.Type),
+            job.Description
+        );
 
-        private void SetDefaults()
-        {
-            CustomerBuilder = new CustomerBuilder();
-            VehicleBuilder = new VehicleBuilder();
-            MaintenanceJobBuilder = new MaintenanceJobBuilder();
-        }
+        return command;
+    }
+
+    private void SetDefaults()
+    {
+        CustomerBuilder = new CustomerBuilder();
+        VehicleBuilder = new VehicleBuilder();
+        MaintenanceJobBuilder = new MaintenanceJobBuilder();
     }
 }

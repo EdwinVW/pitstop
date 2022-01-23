@@ -1,12 +1,6 @@
-using System;
-using System.Threading.Tasks;
-using Pitstop.WorkshopManagementAPI.Commands;
-using Pitstop.WorkshopManagementAPI.Domain.Entities;
+namespace Pitstop.WorkshopManagementAPI.CommandHandlers;
 
-namespace WorkshopManagementAPI.CommandHandlers
+public interface IFinishMaintenanceJobCommandHandler
 {
-    public interface IFinishMaintenanceJobCommandHandler
-    {
-        Task<WorkshopPlanning> HandleCommandAsync(DateTime planningDate, FinishMaintenanceJob command);
-    }
+    Task<WorkshopPlanning> HandleCommandAsync(DateTime planningDate, FinishMaintenanceJob command);
 }

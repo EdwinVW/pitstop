@@ -1,29 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿namespace PitStop.Controllers;
 
-namespace PitStop.Controllers
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    [HttpGet]
+    public IActionResult Index()
     {
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
+    }
 
-        [HttpGet]
-        public IActionResult About()
-        {
-            return View();
-        }
+    [HttpGet]
+    public IActionResult About()
+    {
+        return View();
+    }
 
-        [HttpGet]
-        public IActionResult Error()
-        {
-            return View();
-        }
+    [HttpGet]
+    public IActionResult Error()
+    {
+        return View();
     }
 }

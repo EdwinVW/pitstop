@@ -1,42 +1,23 @@
-﻿using System.Threading.Tasks;
-using Pitstop.Infrastructure.Messaging.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Serilog;
-
-namespace AuditlogService
-{
-    class Program
+﻿IHost host = Host
+    .CreateDefaultBuilder(args)
+    .ConfigureServices((hostContext, services) =>
     {
-        public static async Task Main(string[] args)
+        services.UseRabbitMQMessageHandler(hostContext.Configuration);
+
+        services.AddTransient<AuditlogManagerConfig>((svc) =>
         {
-            var host = CreateHostBuilder(args).Build();
-            await host.RunAsync();
-        }
+            var auditlogConfigSection = hostContext.Configuration.GetSection("Auditlog");
+            string logPath = auditlogConfigSection["path"];
+            return new AuditlogManagerConfig { LogPath = logPath };
+        });
 
-        private static IHostBuilder CreateHostBuilder(string[] args)
-        {
-            var hostBuilder = Host.CreateDefaultBuilder(args)
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.UseRabbitMQMessageHandler(hostContext.Configuration);
+        services.AddHostedService<AuditLogWorker>();
+    })
+    .UseSerilog((hostContext, loggerConfiguration) =>
+    {
+        loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration);
+    })
+    .UseConsoleLifetime()
+    .Build();
 
-                    services.AddTransient<AuditlogManagerConfig>((svc) =>
-                    {
-                        var auditlogConfigSection = hostContext.Configuration.GetSection("Auditlog");
-                        string logPath = auditlogConfigSection["path"];
-                        return new AuditlogManagerConfig { LogPath = logPath };
-                    });
-
-                    services.AddHostedService<AuditLogManager>();
-                })
-                .UseSerilog((hostContext, loggerConfiguration) =>
-                {
-                    loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration);
-                })
-                .UseConsoleLifetime();
-                
-            return hostBuilder;
-        }
-    }
-}
+await host.RunAsync();

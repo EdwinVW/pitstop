@@ -1,15 +1,11 @@
-using System;
-using Pitstop.Infrastructure.Messaging;
+namespace Pitstop.WebApp.Commands;
 
-namespace WebApp.Commands
+public class RegisterPlanning : Command
 {
-    public class RegisterPlanning : Command
-    {
-        public readonly DateTime PlanningDate;
+    public readonly DateTime PlanningDate;
 
-        public RegisterPlanning(Guid messageId, DateTime planningDate) : base(messageId)
-        {
-            PlanningDate = planningDate;
-        }
+    public RegisterPlanning(Guid messageId, DateTime planningDate) : base(messageId)
+    {
+        PlanningDate = planningDate;
     }
 }

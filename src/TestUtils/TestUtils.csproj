@@ -1,7 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>    
+    <AssemblyName>Pitstop.TestUtils</AssemblyName>
+    <RootNamespace>Pitstop.TestUtils</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>    
   </PropertyGroup>
 
 </Project>

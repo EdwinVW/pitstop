@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿namespace Pitstop.WebApp.Models;
 
-namespace WebApp.Models
+public class BusinessRuleViolation
 {
-    public class BusinessRuleViolation
-    {
-        public string ErrorMessage { get; set; }
-    }
+    public string ErrorMessage { get; set; }
 }
