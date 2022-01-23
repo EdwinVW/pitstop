@@ -1,33 +1,28 @@
-using System;
-using Pitstop.WorkshopManagementAPI.Events;
-using Pitstop.WorkshopManagementAPI.Domain;
+namespace Pitstop.WorkshopManagement.UnitTests.TestdataBuilders;
 
-namespace WorkshopManagement.UnitTests.TestdataBuilders
+public class WorkshopPlanningCreatedEventBuilder
 {
-    public class WorkshopPlanningCreatedEventBuilder
+    public DateTime Date { get; private set; }
+
+    public WorkshopPlanningCreatedEventBuilder()
     {
-        public DateTime Date { get; private set; }
+        SetDefaults();
+    }
 
-        public WorkshopPlanningCreatedEventBuilder()
-        {
-            SetDefaults();
-        }
+    public WorkshopPlanningCreatedEventBuilder WithDate(DateTime date)
+    {
+        Date = date;
+        return this;
+    }
 
-        public WorkshopPlanningCreatedEventBuilder WithDate(DateTime date)
-        {
-            Date = date;
-            return this;
-        }
+    public WorkshopPlanningCreated Build()
+    {
+        WorkshopPlanningCreated e = new WorkshopPlanningCreated(Guid.NewGuid(), Date);
+        return e;
+    }
 
-        public WorkshopPlanningCreated Build()
-        {
-            WorkshopPlanningCreated e = new WorkshopPlanningCreated(Guid.NewGuid(), Date);
-            return e;
-        }
-
-        private void SetDefaults()
-        {
-            Date = DateTime.Today;
-        }        
+    private void SetDefaults()
+    {
+        Date = DateTime.Today;
     }
 }
