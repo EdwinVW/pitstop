@@ -1,51 +1,41 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Pitstop.Infrastructure.Messaging;
-using Pitstop.WorkshopManagementAPI.Commands;
-using Pitstop.WorkshopManagementAPI.Domain.Entities;
-using Pitstop.WorkshopManagementAPI.Domain.ValueObjects;
-using Pitstop.WorkshopManagementAPI.Repositories;
+namespace Pitstop.WorkshopManagementAPI.CommandHandlers;
 
-namespace WorkshopManagementAPI.CommandHandlers
+public class FinishMaintenanceJobCommandHandler : IFinishMaintenanceJobCommandHandler
 {
-    public class FinishMaintenanceJobCommandHandler : IFinishMaintenanceJobCommandHandler
+    IMessagePublisher _messagePublisher;
+    IEventSourceRepository<WorkshopPlanning> _planningRepo;
+
+    public FinishMaintenanceJobCommandHandler(IMessagePublisher messagePublisher, IEventSourceRepository<WorkshopPlanning> planningRepo)
     {
-        IMessagePublisher _messagePublisher;
-        IEventSourceRepository<WorkshopPlanning> _planningRepo;
+        _messagePublisher = messagePublisher;
+        _planningRepo = planningRepo;
+    }
 
-        public FinishMaintenanceJobCommandHandler(IMessagePublisher messagePublisher, IEventSourceRepository<WorkshopPlanning> planningRepo)
+    public async Task<WorkshopPlanning> HandleCommandAsync(DateTime planningDate, FinishMaintenanceJob command)
+    {
+        // get planning
+        var aggregateId = WorkshopPlanningId.Create(planningDate);
+        var planning = await _planningRepo.GetByIdAsync(aggregateId);
+        if (planning == null)
         {
-            _messagePublisher = messagePublisher;
-            _planningRepo = planningRepo;
+            return null;
         }
 
-        public async Task<WorkshopPlanning> HandleCommandAsync(DateTime planningDate, FinishMaintenanceJob command)
+        // handle command
+        planning.FinishMaintenanceJob(command);
+
+        // persist
+        IEnumerable<Event> events = planning.GetEvents();
+        await _planningRepo.SaveAsync(
+            planning.Id, planning.OriginalVersion, planning.Version, events);
+
+        // publish event
+        foreach (var e in events)
         {
-            // get planning
-            var aggregateId = WorkshopPlanningId.Create(planningDate);
-            var planning = await _planningRepo.GetByIdAsync(aggregateId);
-            if (planning == null)
-            {
-                return null;
-            }
-
-            // handle command
-            planning.FinishMaintenanceJob(command);
-
-            // persist
-            IEnumerable<Event> events = planning.GetEvents();
-            await _planningRepo.SaveAsync(
-                planning.Id, planning.OriginalVersion, planning.Version, events);
-
-            // publish event
-            foreach (var e in events)
-            {
-                await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
-            }
-
-            // return result
-            return planning;
+            await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
         }
+
+        // return result
+        return planning;
     }
 }

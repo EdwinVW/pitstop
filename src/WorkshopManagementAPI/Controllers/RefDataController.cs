@@ -1,57 +1,52 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Pitstop.WorkshopManagementAPI.Repositories;
+﻿namespace Pitstop.WorkshopManagementAPI.Controllers;
 
-namespace Pitstop.WorkshopManagementAPI.Controllers
+[Route("/api/[controller]")]
+public class RefDataController : Controller
 {
-    [Route("/api/[controller]")]
-    public class RefDataController : Controller
+    ICustomerRepository _customerRepo;
+    IVehicleRepository _vehicleRepo;
+
+    public RefDataController(ICustomerRepository customerRepo, IVehicleRepository vehicleRepo)
     {
-        ICustomerRepository _customerRepo;
-        IVehicleRepository _vehicleRepo;
+        _customerRepo = customerRepo;
+        _vehicleRepo = vehicleRepo;
+    }
 
-        public RefDataController(ICustomerRepository customerRepo, IVehicleRepository vehicleRepo)
-        {
-            _customerRepo = customerRepo;
-            _vehicleRepo = vehicleRepo;
-        }
+    [HttpGet]
+    [Route("customers")]
+    public async Task<IActionResult> GetCustomers()
+    {
+        return Ok(await _customerRepo.GetCustomersAsync());
+    }
 
-        [HttpGet]
-        [Route("customers")]
-        public async Task<IActionResult> GetCustomers()
+    [HttpGet]
+    [Route("customers/{customerId}")]
+    public async Task<IActionResult> GetCustomerByCustomerId(string customerId)
+    {
+        var customer = await _customerRepo.GetCustomerAsync(customerId);
+        if (customer == null)
         {
-            return Ok(await _customerRepo.GetCustomersAsync());
+            return NotFound();
         }
+        return Ok(customer);
+    }
 
-        [HttpGet]
-        [Route("customers/{customerId}")]
-        public async Task<IActionResult> GetCustomerByCustomerId(string customerId)
-        {
-            var customer = await _customerRepo.GetCustomerAsync(customerId);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-            return Ok(customer);
-        }
+    [HttpGet]
+    [Route("vehicles")]
+    public async Task<IActionResult> GetVehicles()
+    {
+        return Ok(await _vehicleRepo.GetVehiclesAsync());
+    }
 
-        [HttpGet]
-        [Route("vehicles")]
-        public async Task<IActionResult> GetVehicles()
+    [HttpGet]
+    [Route("vehicles/{licenseNumber}")]
+    public async Task<IActionResult> GetVehicleByLicenseNumber(string licenseNumber)
+    {
+        var vehicle = await _vehicleRepo.GetVehicleAsync(licenseNumber);
+        if (vehicle == null)
         {
-            return Ok(await _vehicleRepo.GetVehiclesAsync());
+            return NotFound();
         }
-
-        [HttpGet]
-        [Route("vehicles/{licenseNumber}")]
-        public async Task<IActionResult> GetVehicleByLicenseNumber(string licenseNumber)
-        {
-            var vehicle = await _vehicleRepo.GetVehicleAsync(licenseNumber);
-            if (vehicle == null)
-            {
-                return NotFound();
-            }
-            return Ok(vehicle);
-        }
+        return Ok(vehicle);
     }
 }

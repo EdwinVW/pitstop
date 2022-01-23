@@ -1,27 +1,20 @@
-using System;
-using Pitstop.WorkshopManagementAPI.Commands;
-using Pitstop.WorkshopManagementAPI.Domain.Entities;
-using Pitstop.WorkshopManagementAPI.Domain.Exceptions;
-using Pitstop.WorkshopManagementAPI.Domain.ValueObjects;
+namespace Pitstop.WorkshopManagementAPI.Domain.BusinessRules;
 
-namespace Pitstop.WorkshopManagementAPI.Domain.BusinessRules
+public static class MaintenanceJobRules
 {
-    public static class MaintenanceJobRules
+    public static void PlannedMaintenanceJobShouldFallWithinOneBusinessDay(this PlanMaintenanceJob command)
     {
-        public static void PlannedMaintenanceJobShouldFallWithinOneBusinessDay(this PlanMaintenanceJob command)
+        if (!Timeslot.Create(command.StartTime, command.EndTime).IsWithinOneDay())
         {
-            if (!Timeslot.Create(command.StartTime, command.EndTime).IsWithinOneDay())
-            {
-                throw new BusinessRuleViolationException("Start-time and end-time of a Maintenance Job must be within a 1 day.");
-            }
+            throw new BusinessRuleViolationException("Start-time and end-time of a Maintenance Job must be within a 1 day.");
         }
+    }
 
-        public static void FinishedMaintenanceJobCanNotBeFinished(this MaintenanceJob job)
+    public static void FinishedMaintenanceJobCanNotBeFinished(this MaintenanceJob job)
+    {
+        if (job.Status == "Completed")
         {
-            if (job.Status == "Completed")
-            {
-                throw new BusinessRuleViolationException($"An already finished job can not be finished.");
-            }
+            throw new BusinessRuleViolationException($"An already finished job can not be finished.");
         }
     }
 }

@@ -1,15 +1,9 @@
-﻿using Pitstop.WorkshopManagementAPI.Repositories.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿namespace Pitstop.WorkshopManagementAPI.Repositories;
 
-namespace Pitstop.WorkshopManagementAPI.Repositories
+using Pitstop.WorkshopManagementAPI.Repositories.Model;
+
+public interface ICustomerRepository
 {
-    public interface ICustomerRepository
-    {
-        Task<IEnumerable<Customer>> GetCustomersAsync();
-        Task<Customer> GetCustomerAsync(string customerId);
-
-    }
+    Task<IEnumerable<Customer>> GetCustomersAsync();
+    Task<Customer> GetCustomerAsync(string customerId);
 }
