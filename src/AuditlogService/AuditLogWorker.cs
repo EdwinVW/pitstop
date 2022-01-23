@@ -5,7 +5,7 @@ public class AuditLogWorker : IHostedService, IMessageHandlerCallback
     IMessageHandler _messageHandler;
     private string _logPath;
 
-    public AuditLogWorker(IMessageHandler messageHandler, AuditlogManagerConfig config)
+    public AuditLogWorker(IMessageHandler messageHandler, AuditlogWorkerConfig config)
     {
         _messageHandler = messageHandler;
         _logPath = config.LogPath;

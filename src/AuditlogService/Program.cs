@@ -4,11 +4,11 @@
     {
         services.UseRabbitMQMessageHandler(hostContext.Configuration);
 
-        services.AddTransient<AuditlogManagerConfig>((svc) =>
+        services.AddTransient<AuditlogWorkerConfig>((svc) =>
         {
             var auditlogConfigSection = hostContext.Configuration.GetSection("Auditlog");
             string logPath = auditlogConfigSection["path"];
-            return new AuditlogManagerConfig { LogPath = logPath };
+            return new AuditlogWorkerConfig { LogPath = logPath };
         });
 
         services.AddHostedService<AuditLogWorker>();
