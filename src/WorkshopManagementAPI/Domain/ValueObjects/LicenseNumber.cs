@@ -10,7 +10,7 @@ public class LicenseNumber : ValueObject
     {
         if (!Regex.IsMatch(value, NUMBER_PATTERN, RegexOptions.IgnoreCase))
         {
-            throw new InvalidValueException($"The specified license-number '{value}' was not in the correct format.");
+            throw new InvalidValueException($"The specified license-number '{value}' is not in the correct format.");
         }
         return new LicenseNumber { Value = value };
     }

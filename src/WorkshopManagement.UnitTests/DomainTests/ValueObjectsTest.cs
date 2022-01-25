@@ -13,7 +13,7 @@ public class ValueObjectsTest
             Assert.Throws<InvalidValueException>(() => LicenseNumber.Create(licenseNumber));
 
         // assert
-        Assert.Equal($"The specified license-number '{licenseNumber}' was not in the correct format.",
+        Assert.Equal($"The specified license-number '{licenseNumber}' is not in the correct format.",
             thrownException.Message);
     }
 
