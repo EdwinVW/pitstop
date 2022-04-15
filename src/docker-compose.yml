@@ -29,8 +29,8 @@ services:
     image: maildev/maildev
     container_name: mailserver
     ports:
-      - "25:25"
-      - "4000:80"
+      - "25:1025"
+      - "4000:1080"
 
   logserver:
     image: datalust/seq:latest
