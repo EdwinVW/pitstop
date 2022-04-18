@@ -26,11 +26,11 @@ services:
       - SA_PASSWORD=8jkGh47hnDw89Haq8LN2
 
   mailserver:
-    image: maildev/maildev
+    image: maildev/maildev:1.1.0
     container_name: mailserver
     ports:
-      - "25:1025"
-      - "4000:1080"
+      - "25:25"
+      - "4000:80"
 
   logserver:
     image: datalust/seq:latest

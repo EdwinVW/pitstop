@@ -19,7 +19,7 @@ spec:
         version: v1
     spec:
       containers:
-      - image: maildev/maildev
+      - image: maildev/maildev:1.1.0
         imagePullPolicy: IfNotPresent
         name: mailserver
         ports:
@@ -42,10 +42,10 @@ spec:
   ports:
   - name: "smtp"
     port: 25
-    targetPort: 1025
+    targetPort: 25
   - name: "web"
     port: 4000
-    targetPort: 1080
+    targetPort: 80
     nodePort: 30002
   selector:
     app: mailserver
