@@ -13,6 +13,7 @@
     <PackageProjectUrl>https://github.com/EdwinVW/pitstop/tree/master/src/Infrastructure.Messaging</PackageProjectUrl>
     <Authors>Edwin van Wijk</Authors>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
   </PropertyGroup>
 
   <ItemGroup>
