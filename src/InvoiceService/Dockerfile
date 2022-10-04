@@ -11,6 +11,7 @@ RUN dotnet publish -c Release -o out
 
 # Build runtime image
 FROM pitstop-dotnet-runtime-base:1.0
+WORKDIR /app
 COPY --from=build-env /app/out .
 
 # Start

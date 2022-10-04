@@ -1,4 +1,16 @@
 #!/bin/bash
+
+# If started with argument --no-cache, the images are built without cache.
+
+NOCACHE=''
+
+if [ "$1" = "--no-cache" ]
+then
+    NOCACHE='--no-cache'
+
+    echo "Building images without cache."
+fi
+
 docker volume create --name=sqlserverdata
 docker volume create --name=rabbitmqdata
 
@@ -13,4 +25,4 @@ docker build -t pitstop-dotnet-aspnet-base:1.0 . -f dotnet-aspnet-base-dockerfil
 
 # Rebuild all the services that have changes
 # If you want to (re)build only a specific service, go to the src folder and execute `docker-compose build <servicename-lowercase>`
-docker-compose build --force-rm
+docker-compose build $NOCACHE
