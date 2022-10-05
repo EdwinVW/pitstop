@@ -12,16 +12,16 @@ services:
       - "5672:5672"
     environment:
       - RABBITMQ_CONFIG_FILE=/etc/pitstop/rabbitmq.conf
-      
+
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/azure-sql-edge
     container_name: sqlserver
     volumes:
-      - sqlserverdata:/var/opt/mssql 
+      - sqlserverdata:/var/opt/mssql
     ports:
       - "1434:1433"
     environment:
-      - ACCEPT_EULA=Y 
+      - ACCEPT_EULA=Y
       - MSSQL_PID=Developer
       - SA_PASSWORD=8jkGh47hnDw89Haq8LN2
 
@@ -38,7 +38,7 @@ services:
     ports:
       - "5341:80"
     environment:
-      - ACCEPT_EULA=Y 
+      - ACCEPT_EULA=Y
 
   vehiclemanagementapi:
     image: pitstop/vehiclemanagementapi:1.0
@@ -132,12 +132,12 @@ services:
       - vehiclemanagementapi
       - workshopmanagementapi
     ports:
-      - "7000:7000"
+      - "7005:7005"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
 
 volumes:
   sqlserverdata:
-    external: true    
+    external: true
   rabbitmqdata:
     external: true

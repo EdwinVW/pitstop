@@ -26,7 +26,7 @@ spec:
         imagePullPolicy: IfNotPresent
         name: webapp
         ports:
-        - containerPort: 7000
+        - containerPort: 7005
       restartPolicy: Always
 
 ---
@@ -41,9 +41,9 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - name: "7000"
-    port: 7000
-    targetPort: 7000
+  - name: "7005"
+    port: 7005
+    targetPort: 7005
   selector:
     app: webapp
 
