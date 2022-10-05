@@ -7,7 +7,7 @@
       "sslPort": 0
     },
     "iisExpress": {
-      "applicationUrl": "http://localhost:7000",
+      "applicationUrl": "http://localhost:7005",
       "sslPort": 0
     }
   },
@@ -15,11 +15,11 @@
     "PitStop": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:7000",
+      "launchUrl": "http://localhost:7005",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:7000"
+      "applicationUrl": "http://localhost:7005"
     },
     "IIS Express": {
       "commandName": "IISExpress",
