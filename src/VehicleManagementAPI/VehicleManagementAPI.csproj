@@ -19,7 +19,6 @@
     <PackageReference Include="Microsoft.AspNetCore.HealthChecks" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
     <PackageReference Include="Pitstop.Infrastructure.Messaging" />
-    <PackageReference Include="Serilog.Enrichers.Environment" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Serilog.Settings.Configuration" />
