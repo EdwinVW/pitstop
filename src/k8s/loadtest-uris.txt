@@ -1,3 +1,4 @@
+http://localhost:7005/
 http://localhost:7005/CustomerManagement
 http://localhost:7005/VehicleManagement
 http://localhost:7005/WorkshopManagement
