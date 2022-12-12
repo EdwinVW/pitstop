@@ -5,9 +5,9 @@
     <AssemblyName>Pitstop.Infrastructure.Messaging</AssemblyName>
     <RootNamespace>Pitstop.Infrastructure.Messaging</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>3.0.2</Version>
-    <AssemblyVersion>3.0.2.0</AssemblyVersion>
-    <FileVersion>3.0.2.0</FileVersion>
+    <Version>3.0.3</Version>
+    <AssemblyVersion>3.0.3.0</AssemblyVersion>
+    <FileVersion>3.0.3.0</FileVersion>
     <Title>Pitstop.Infrastructure.Messaging</Title>
     <Description>Infrastructure package for Pitstop sample application that contains helpers for interacting with the RabbitMQ message-broker used by the application.</Description>
     <PackageProjectUrl>https://github.com/EdwinVW/pitstop/tree/master/src/Infrastructure.Messaging</PackageProjectUrl>
@@ -19,11 +19,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0"/>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0"/>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="RabbitMQ.Client" Version="6.2.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
     <PackageReference Include="Polly" Version="7.2.3" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="Serilog" Version="2.12.0" />
   </ItemGroup>
 
 </Project>
