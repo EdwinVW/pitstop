@@ -8,7 +8,7 @@ public class PlanMaintenanceJobCommandHandlerTests
     {
         // arrange
         DateTime date = DateTime.Today;
-        string workshopPlanningId = date.ToString("yyy-MM-dd");
+        string workshopPlanningId = date.ToString("yyyy-MM-dd");
         var initializingEvents = new Event[] {
                 new WorkshopPlanningCreatedEventBuilder().WithDate(date).Build()
             };
@@ -60,7 +60,7 @@ public class PlanMaintenanceJobCommandHandlerTests
     {
         // arrange
         DateTime date = DateTime.Today;
-        string workshopPlanningId = date.ToString("yyy-MM-dd");
+        string workshopPlanningId = date.ToString("yyyy-MM-dd");
         PlanMaintenanceJob command = new PlanMaintenanceJobCommandBuilder()
             .Build();
 
