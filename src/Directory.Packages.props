@@ -31,6 +31,7 @@
     <PackageVersion Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="5.2.2" />     
     <PackageVersion Include="Pitstop.Infrastructure.Messaging" Version="3.0.3" />
+    <PackageVersion Include="Yarp.ReverseProxy" Version="2.0.0" />
   </ItemGroup>
 </Project>
 

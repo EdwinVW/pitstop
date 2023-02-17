@@ -1,4 +1,5 @@
 #!/bin/bash
+docker push pitstop/apigateway:1.0
 docker push pitstop/customermanagementapi:1.0
 docker push pitstop/customermanagementapi:2.0
 docker push pitstop/webapp:1.0

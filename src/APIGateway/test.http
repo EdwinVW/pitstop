@@ -1,0 +1,9 @@
+GET http://localhost:6000/CustomerManagementAPI/api/Customers
+
+###
+
+GET http://localhost:6000/VehicleManagementAPI/api/Vehicles
+
+###
+
+GET http://localhost:6000/WorkshopManagementAPI/api/WorkshopPlanning/{{$localDatetime 'YYYY-MM-DD'}}

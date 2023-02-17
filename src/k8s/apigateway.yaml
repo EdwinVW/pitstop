@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: apigateway
+    version: "1.0"
+  name: apigateway
+  namespace: pitstop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        app: apigateway
+        version: "1.0"
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+        image: pitstop/apigateway:1.0
+        imagePullPolicy: IfNotPresent
+        name: apigateway
+        ports:
+        - containerPort: 6000
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: apigateway
+  name: apigateway
+  namespace: pitstop
+spec:
+  type: NodePort
+  ports:
+  - name: "http-6000"
+    port: 6000
+    targetPort: 6000
+    nodePort: 30008
+  selector:
+    app: apigateway

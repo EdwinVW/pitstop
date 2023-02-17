@@ -40,6 +40,14 @@ services:
     environment:
       - ACCEPT_EULA=Y
 
+  apigateway:
+    image: pitstop/apigateway:1.0
+    build: APIGateway
+    ports:
+      - "6000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
   vehiclemanagementapi:
     image: pitstop/vehiclemanagementapi:1.0
     build: VehicleManagementAPI
