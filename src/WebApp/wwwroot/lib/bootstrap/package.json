@@ -99,9 +99,9 @@
   "devDependencies": {
     "@babel/cli": "7.0.0-beta.52",
     "@babel/core": "7.20.7",
-    "@babel/preset-env": "7.0.0-beta.52",
+    "@babel/preset-env": "7.23.2",
     "autoprefixer": "^10.4.16",
-    "babel-eslint": "^8.2.5",
+    "babel-eslint": "^10.1.0",
     "babel-plugin-istanbul": "^4.1.6",
     "broken-link-checker": "^0.7.8",
     "bundlesize": "^0.18.1",
