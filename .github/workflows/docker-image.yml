@@ -18,7 +18,7 @@ jobs:
        - name: Build Docker Image
          run:  | 
            docker build . --file ./src/dotnet-aspnet-base-dockerfile --tag pitstop-dotnet-aspnet-base:1.0
-           docker build . --file ./src/CustomerManagementAPI/Dockerfile --tag customermanagementapi:$(date +%s)
+           docker build . --file ./src/CustomerManagementAPI/Dockerfile --tag customermanagementapi:$(date +%s) --pull=false
        
 
           
