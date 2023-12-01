@@ -4,17 +4,12 @@ on:
   workflow_dispatch
   
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./src/CustomerManagementAPI
-
-  build:
-
-    runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag CustomerManagementAPI:$(date +%s)
+       - uses: actions/checkout@v3
+       - name: Build the Docker image
+         run: docker build . --file Dockerfile --tag CustomerManagementAPI:$(date +%s)
