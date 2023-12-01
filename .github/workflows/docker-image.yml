@@ -6,9 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./src/CustomerManagementAPI
+    
     steps:
        - uses: actions/checkout@v3
        - name: Docker Hub Login
@@ -19,8 +17,8 @@ jobs:
 
        - name: Build Docker Image
          run:  | 
-           docker build . --file ./src/pitstop-dotnet-aspnet-base --tag pitstop-dotnet-aspnet-base:1.0
-           docker build . --file Dockerfile --tag customermanagementapi:$(date +%s)
+           docker build . --file ./src/dotnet-aspnet-base-dockerfile --tag pitstop-dotnet-aspnet-base:1.0
+           docker build . --file ./src/CustomerManagementAPI/Dockerfile --tag customermanagementapi:$(date +%s)
        
 
           
