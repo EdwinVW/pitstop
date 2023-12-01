@@ -14,8 +14,8 @@ jobs:
        - name: Docker Hub Login
          uses: docker/login-action@v3
          with:
-          username: ${{ secrets.dockerhub_username }}
-          password: ${{ secrets.dockerhub_password }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
        - name: Build Docker Image   
          run: docker build . --file Dockerfile --tag customermanagementapi:$(date +%s)
