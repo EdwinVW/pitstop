@@ -17,8 +17,10 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-       - name: Build Docker Image   
-         run: docker build . --file Dockerfile --tag customermanagementapi:$(date +%s)
+       - name: Build Docker Image
+         run:  | 
+           docker build . --file ./src/pitstop-dotnet-aspnet-base --tag pitstop-dotnet-aspnet-base:1.0
+           docker build . --file Dockerfile --tag customermanagementapi:$(date +%s)
        
 
           
