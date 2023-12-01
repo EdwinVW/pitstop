@@ -11,5 +11,15 @@ jobs:
         working-directory: ./src/CustomerManagementAPI
     steps:
        - uses: actions/checkout@v3
-       - name: Build the Docker image
+       - name: Docker Hub Login
+         uses: docker/login-action@v3
+         with:
+          username: ${{ secrets.cokerhub_username }}
+          password: ${{ secrets.dockerhub_password }
+
+       - name: Build Docker Image   
          run: docker build . --file Dockerfile --tag customermanagementapi:$(date +%s)
+       
+
+          
+         
