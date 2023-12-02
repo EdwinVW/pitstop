@@ -5,7 +5,7 @@ on:
   
 jobs:
   call-docker-build-push-ci:
-    uses: pitstop/.github/workflows/actions/docker-build-push.yml@main
+    uses: pitstop/.github/workflows/actions/docker-build-push-ci.yml@main
     with:
      service-name: InvoiceService
      docker-image-name: pitstop-invoice-service
