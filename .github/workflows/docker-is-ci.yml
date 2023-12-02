@@ -9,6 +9,8 @@ jobs:
     with:
      service-name: InvoiceService
      docker-image-name: pitstop-invoice-service
+     docker-username: ${{ secrets.DOCKER_USERNAME }}
+     docker-token: ${{ secrets.DOCKER_PASSWORD }}
 
     
     
