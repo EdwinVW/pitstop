@@ -7,7 +7,7 @@ jobs:
   call-docker-build-push-ci:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
-     service-name: AuditLogService
+     service-name: AuditlogService
      docker-image-name: pitstop-audit-log-service
     secrets: inherit
 
