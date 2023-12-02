@@ -1,13 +1,13 @@
 name: docker-build-push-ci
-inputs:
-  service-name:
-    description: 'folder name of service'
-    required: true
-  docker-image-name:
-    description: 'name of docker image'
+
 
 on:
-  workflow_dispatch
+  workflow_call:
+    inputs:
+      service-name:  
+        required: true
+      docker-image-name:
+        required: true
   
 jobs:
   build:
