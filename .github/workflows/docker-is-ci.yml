@@ -18,4 +18,4 @@ jobs:
        - name: Build Docker Image
          run:  | 
            docker build . --file ./src/InvoiceService/Dockerfile --tag adamoctoclose/pitstop-invoice-service:1.0
-           docker push adamoctoclose/pitstop-invoice-service-api:1.0
+           docker push adamoctoclose/pitstop-invoice-service:1.0
