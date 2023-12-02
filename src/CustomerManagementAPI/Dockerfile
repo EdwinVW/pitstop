@@ -10,7 +10,7 @@ COPY . ./
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM adamotoclosepitstop-dotnet-aspnet-base:1.0
+FROM adamotoclose/pitstop-dotnet-aspnet-base:1.0
 WORKDIR /app
 COPY --from=build-env /app/out .
 
