@@ -1,18 +1,18 @@
-FROM pitstop-dotnet-sdk-base:1.0 AS build-env
+FROM adamoctoclose/pitstop-dotnet-sdk-base:1.0 AS build-env
 WORKDIR /app
 
 # Copy necessary files and restore as distinct layer
-COPY *.csproj ./
+COPY . .
+WORKDIR "/app/src/InvoiceService"
 RUN dotnet restore
 
 # Copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
+RUN dotnet publish "./InvoiceService" -c Release -o /app/publish
 
 # Build runtime image
-FROM pitstop-dotnet-runtime-base:1.0
+FROM adamoctoclose/pitstop-dotnet-runtime-base:1.0
 WORKDIR /app
-COPY --from=build-env /app/out .
+COPY --from=build-env /app/publish .
 
 # Start
 ENTRYPOINT ["dotnet", "Pitstop.InvoiceService.dll"]
