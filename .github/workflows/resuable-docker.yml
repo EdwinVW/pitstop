@@ -1,0 +1,29 @@
+name: docker-build-push-ci
+
+
+on:
+  workflow_call:
+    inputs:
+      service-name:  
+        required: true
+        type: string
+      docker-image-name:
+        required: true
+        type: string
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+       - uses: actions/checkout@v3
+       - name: Docker Hub Login
+         uses: docker/login-action@v3
+         with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+       - name: Build Docker Image
+         run:  | 
+           docker build . --file ./src/${{ inputs.service-name }}/Dockerfile --tag adamoctoclose/${{ inputs.docker-image-name }}:1.0
+           docker push adamoctoclose/${{ inputs.docker-image-name }}:1.0
