@@ -1,18 +1,26 @@
-name: Docker Image CI
+name: Docker Builds Base CI
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
+  workflow_dispatch
+  
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
+    
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+       - uses: actions/checkout@v3
+       - name: Docker Hub Login
+         uses: docker/login-action@v3
+         with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+       - name: Build Docker Image
+         run:  | 
+           docker build . --file ./src/dotnet-aspnet-base-dockerfile --tag adamoctoclose/pitstop-dotnet-aspnet-base:1.0
+           docker build . --file ./src/dotnet-runtime-base-dockerfile --tag adamoctoclose/pitstop-dotnet-runtime-base:1.0
+           docker build . --file ./src/dotnet-sdk-base-dockerfile --tag adamoctoclose/pitstop-dotnet-sdk-base:1.0
+           docker push adamoctoclose/pitstop-dotnet-aspnet-base:1.0
+           docker push adamoctoclose/pitstop-dotnet-runtime-base:1.0
+           docker push adamoctoclose/pitstop-dotnet-sdk-base:1.0
+       
