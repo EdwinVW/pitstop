@@ -20,9 +20,9 @@ jobs:
            docker build . --file ./src/dotnet-aspnet-base-dockerfile --tag adamoctoclose/pitstop-dotnet-aspnet-base:1.0
            docker build . --file ./src/dotnet-runtime-base-dockerfile --tag adamoctoclose/pitstop-dotnet-runtime-base:1.0
            docker build . --file ./src/dotnet-sdk-base-dockerfile --tag adamoctoclose/pitstop-dotnet-sdk-base:1.0
-           docker push adamoctoclose/pitstop-dotnet-sdk-base:1.0
-           docker push adamoctoclose/pitstop-dotnet-runtime-base:1.0
            docker push adamoctoclose/pitstop-dotnet-aspnet-base:1.0
+           docker push adamoctoclose/pitstop-dotnet-runtime-base:1.0
+           docker push adamoctoclose/pitstop-dotnet-sdk-base:1.0
            
        
 
