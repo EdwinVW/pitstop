@@ -5,7 +5,7 @@ on:
   
 jobs:
   call-docker-build-push-ci:
-    uses: pitstop/.github/workflows/reusable-docker.yml@main
+    uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
      service-name: InvoiceService
      docker-image-name: pitstop-invoice-service
