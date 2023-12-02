@@ -7,7 +7,6 @@ WORKDIR "/app/src/CustomerManagementAPI"
 RUN dotnet restore
 
 # Copy everything else and build
-COPY . ./
 RUN dotnet publish "./CustomerManagementAPI.csproj" -c Release -o /app/publish
 
 
