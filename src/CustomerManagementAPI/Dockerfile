@@ -2,7 +2,7 @@ FROM adamoctoclose/pitstop-dotnet-sdk-base:1.0 AS build-env
 WORKDIR /source
 
 # Copy necessary files and restore as distinct layer
-COPY ./CustomerManagementAPI.csproj .
+COPY . ./
 RUN dotnet restore
 
 # Copy everything else and build
