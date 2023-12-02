@@ -3,11 +3,11 @@ WORKDIR /app
 
 # Copy necessary files and restore as distinct layer
 COPY . .
-WORKDIR "/app/src/AuditLogService"
+WORKDIR "/app/src/AuditlogService"
 RUN dotnet restore
 
 # Copy everything else and build
-RUN dotnet publish "./AuditLogService.csproj" -c Release -o /app/publish
+RUN dotnet publish "./AuditlogService.csproj" -c Release -o /app/publish
 
 # Build runtime image
 FROM adamoctoclose/pitstop-dotnet-runtime-base:1.0
