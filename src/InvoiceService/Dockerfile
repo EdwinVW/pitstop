@@ -7,7 +7,7 @@ WORKDIR "/app/src/InvoiceService"
 RUN dotnet restore
 
 # Copy everything else and build
-RUN dotnet publish "./InvoiceService" -c Release -o /app/publish
+RUN dotnet publish "./InvoiceService.csproj" -c Release -o /app/publish
 
 # Build runtime image
 FROM adamoctoclose/pitstop-dotnet-runtime-base:1.0
