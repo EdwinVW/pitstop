@@ -1,4 +1,4 @@
-name: Docker Customer Management API CI
+name: Docker Audit Log Service CI
 
 on:
   workflow_dispatch
@@ -7,10 +7,10 @@ jobs:
   call-docker-build-push-ci:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
-     service-name: CustomerManagementAPI
-     docker-image-name: pitstop-customer-management-api
+     service-name: AuditLogService
+     docker-image-name: pitstop-audit-log-service
     secrets: inherit
-       
 
-          
-         
+    
+    
+      
