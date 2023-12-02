@@ -13,7 +13,7 @@ RUN dotnet publish "./CustomerManagementAPI.csproj" -c Release -o /app/publish
 # Build runtime image
 FROM adamoctoclose/pitstop-dotnet-aspnet-base:1.0
 WORKDIR /app
-COPY --from=build-env /app/out .
+COPY --from=build-env /app/publish .
 
 # Expose ports
 EXPOSE 5100/tcp
