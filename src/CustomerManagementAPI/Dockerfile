@@ -8,7 +8,8 @@ RUN dotnet restore
 
 # Copy everything else and build
 COPY . ./
-RUN dotnet publish -c Release -o out
+RUN dotnet publish "./CustomerManagementAPI.csproj" -c Release -o /app/publish
+
 
 # Build runtime image
 FROM adamoctoclose/pitstop-dotnet-aspnet-base:1.0
