@@ -17,7 +17,7 @@ jobs:
 
        - name: Build Docker Image
          run:  | 
-           docker build . --file ./src/dotnet-aspnet-base-dockerfile --tag pitstop-dotnet-aspnet-base:1.0
+           docker build . --file ./src/dotnet-aspnet-base-dockerfile --tag adamoctoclose/pitstop-dotnet-aspnet-base:1.0
            docker push adamoctoclose/pitstop-dotnet-aspnet-base:1.0
            
        
