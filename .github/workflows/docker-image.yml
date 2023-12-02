@@ -17,6 +17,8 @@ jobs:
 
        - name: Build Docker Image
          run:  | 
+           docker volume create --name=sqlserverdata
+           docker volume create --name=rabbitmqdata
            docker build . --file ./src/pitstop-dotnet-sdk-base:1.0 --tag adamoctoclose/pitstop-dotnet-sdk-base:1.0
            docker build . --file ./src/pitstop-dotnet-runtime-base:1.0 --tag adamoctoclose/pitstop-dotnet-runtime-base:1.0
            docker build . --file ./src/dotnet-aspnet-base-dockerfile --tag adamoctoclose/pitstop-dotnet-aspnet-base:1.0
