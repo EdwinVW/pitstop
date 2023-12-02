@@ -1,4 +1,4 @@
-name: docker-build-push-ci
+name: Reusable Docker
 
 
 on:
