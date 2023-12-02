@@ -23,7 +23,8 @@ jobs:
            docker push adamoctoclose/pitstop-dotnet-aspnet-base:1.0
            docker push adamoctoclose/pitstop-dotnet-runtime-base:1.0
            docker push adamoctoclose/pitstop-dotnet-sdk-base:1.0
-           
+           docker build . --file ./src/CustomerManagementAPI/Dockerfile --tag adamoctoclose/pitstop-customer-management-api:1.0
+           docker push adamoctoclose/pitstop-customer-management-api:1.0
        
 
           
