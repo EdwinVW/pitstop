@@ -32,3 +32,4 @@ jobs:
          run:  | 
            docker build . --file ./src/${{ inputs.service-name }}/Dockerfile --tag adamoctoclose/${{ inputs.docker-image-name }}:${{ steps.version.outputs.version }}.${{ github.run_id }}
            docker push adamoctoclose/${{ inputs.docker-image-name }}:${{ steps.version.outputs.version }}.${{ github.run_id }}
+           docker push adamoctoclose/${{ inputs.docker-image-name }}:latest
