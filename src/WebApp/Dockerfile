@@ -15,15 +15,14 @@ RUN apt-get install nodejs -y
 RUN npm install --global gulp-cli
 
 # Copy necessary files and restore as distinct layer
-COPY . .
-WORKDIR "/app/src/WebApp"
+COPY *.csproj ./
 RUN dotnet restore
 
 # Copy everything else and build
-COPY . .
+COPY . ./
 RUN npm install
 RUN gulp default
-RUN dotnet publish "./WebApp.csproj" -c Release -o /app/publish
+RUN dotnet publish -c Release -o /app/publish
 
 # Build runtime image
 FROM adamoctoclose/pitstop-dotnet-aspnet-base:1.0
