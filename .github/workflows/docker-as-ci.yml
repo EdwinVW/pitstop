@@ -4,13 +4,58 @@ on:
   workflow_dispatch
   
 jobs:
-  call-docker-build-push-ci:
+  call-docker-build-push-as:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
      service-name: AuditlogService
      docker-image-name: pitstop-audit-log-service
     secrets: inherit
-
-    
-    
-      
+  call-docker-build-push-cm:
+    uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
+    with:
+      service-name: CustomerManagementAPI
+      docker-image-name: pitstop-customer-management-api
+    secrets: inherit
+  call-docker-build-push-is:
+    uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
+    with:
+      service-name: InvoiceService
+      docker-image-name: pitstop-invoice-service
+    secrets: inherit
+  call-docker-build-push-ns:
+    uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
+    with:
+      service-name: NotificationService
+      docker-image-name: pitstop-notification-service
+    secrets: inherit
+  call-docker-build-push-ts:
+    uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
+    with:
+      service-name: TimeService
+      docker-image-name: pitstop-time-service
+    secrets: inherit
+  call-docker-build-push-vm-api:
+    uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
+    with:
+      service-name: VehicleManagementAPI
+      docker-image-name: pitstop-vehicle-management-api
+    secrets: inherit
+  call-docker-build-push-web-app:
+    uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
+    with:
+      service-name: WebApp
+      docker-image-name: pitstop-web-app
+    secrets: inherit
+  call-docker-build-wm-api:
+    uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
+    with:
+      service-name: WorkshopManagementAPI
+      docker-image-name: pitstop-workshop-management-api
+    secrets: inherit
+  call-docker-build-wm-eh:
+    uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
+    with:
+      service-name: WorkshopManagementEventHandler
+      docker-image-name: pitstop-workshop-management-event-handler
+    secrets: inherit
+  

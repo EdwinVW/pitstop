@@ -15,19 +15,20 @@ RUN apt-get install nodejs -y
 RUN npm install --global gulp-cli
 
 # Copy necessary files and restore as distinct layer
-COPY *.csproj ./
+COPY . .
+WORKDIR "/app/src/WebApp"
 RUN dotnet restore
 
 # Copy everything else and build
 COPY . ./
 RUN npm install
 RUN gulp default
-RUN dotnet publish -c Release -o out
+RUN dotnet publish "/app/src/WebApp.csproj" -c Release -o /app/publish
 
 # Build runtime image
 FROM pitstop-dotnet-aspnet-base:1.0
 WORKDIR /app
-COPY --from=build-env /app/out .
+COPY --from=build-env /app/publish .
 
 # Expose ports
 EXPOSE 7005/tcp
