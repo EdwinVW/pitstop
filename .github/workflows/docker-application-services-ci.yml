@@ -1,4 +1,4 @@
-name: Docker Audit Log Service CI
+name: Docker Application Services CI
 
 on:
   workflow_dispatch
