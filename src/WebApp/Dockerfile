@@ -20,10 +20,10 @@ WORKDIR "/app/src/WebApp"
 RUN dotnet restore
 
 # Copy everything else and build
-COPY . ./
+COPY . .
 RUN npm install
 RUN gulp default
-RUN dotnet publish "WebApp.csproj" -c Release -o /app/publish
+RUN dotnet publish "./WebApp.csproj" -c Release -o /app/publish
 
 # Build runtime image
 FROM adamoctoclose/pitstop-dotnet-aspnet-base:1.0
