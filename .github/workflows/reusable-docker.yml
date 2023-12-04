@@ -29,6 +29,7 @@ jobs:
          run: echo "version=$(date +'%Y.%m')" >> $GITHUB_OUTPUT
 
        - name: Build Docker Image
+         working-directory: ${{ inputs.service-name }}
          run:  | 
-           docker build . --file ./src/${{ inputs.service-name }}/Dockerfile --tag adamoctoclose/${{ inputs.docker-image-name }}:${{ steps.version.outputs.version }}.${{ github.run_number }}
+           docker build --tag adamoctoclose/${{ inputs.docker-image-name }}:${{ steps.version.outputs.version }}.${{ github.run_number }} .
            docker push adamoctoclose/${{ inputs.docker-image-name }}:${{ steps.version.outputs.version }}.${{ github.run_number }}
