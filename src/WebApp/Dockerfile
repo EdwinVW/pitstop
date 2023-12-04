@@ -22,12 +22,12 @@ RUN dotnet restore
 COPY . ./
 RUN npm install
 RUN gulp default
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish -c Release -o out
 
 # Build runtime image
 FROM adamoctoclose/pitstop-dotnet-aspnet-base:1.0
 WORKDIR /app
-COPY --from=build-env /app/publish .
+COPY --from=build-env /app/out .
 
 # Expose ports
 EXPOSE 7005/tcp
