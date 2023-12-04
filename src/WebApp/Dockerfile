@@ -23,7 +23,7 @@ RUN dotnet restore
 COPY . ./
 RUN npm install
 RUN gulp default
-RUN dotnet publish "/app/src/WebApp.csproj" -c Release -o /app/src/publish
+RUN dotnet publish "WebApppp.csproj" -c Release -o /app/src/publish
 
 # Build runtime image
 FROM adamoctoclose/pitstop-dotnet-aspnet-base:1.0
