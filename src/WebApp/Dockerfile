@@ -23,7 +23,7 @@ RUN dotnet restore
 COPY . ./
 RUN npm install
 RUN gulp default
-RUN dotnet publish "./WebApp.csproj" -c Release -o /app/publish
+RUN dotnet publish "WebApp.csproj" -c Release -o /app/publish
 
 # Build runtime image
 FROM adamoctoclose/pitstop-dotnet-aspnet-base:1.0
@@ -37,3 +37,6 @@ HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail htt
 
 # Start
 ENTRYPOINT ["dotnet", "Pitstop.WebApp.dll"]
+
+
+
