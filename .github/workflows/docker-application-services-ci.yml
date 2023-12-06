@@ -77,8 +77,8 @@ jobs:
       uses: OctopusDeploy/run-runbook-action@v3.0.3
       with:
         project: Administration
-        Runbook: Create Feature Branch Tenant
-        Environment: sync
+        runbook: Create Feature Branch Tenant
+        environments: sync
         variables: Pitstop.Orhestration.Feature.Branch:${{ steps.extract_branch.outputs.branch }}
       
     
