@@ -78,7 +78,7 @@ jobs:
       with:
         project: Administration
         Runbook: Create Feature Branch Tenant
-        variables: Pitstop.Orhestration.Feature.Branch:${{ steps.extract_branch.outputs.branch }
+        variables: Pitstop.Orhestration.Feature.Branch:${{ steps.extract_branch.outputs.branch }}
       
     
   
