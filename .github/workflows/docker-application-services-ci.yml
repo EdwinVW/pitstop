@@ -10,62 +10,80 @@ env:
   
   
 jobs:
-  call-docker-build-push-as:
+ changes:
+    runs-on: ubuntu-latest
+    outputs:
+      src: ${{ steps.changes.outputs.src }}
+      infra: ${{ steps.changes.outputs.infra }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          auditlogservice:
+            - 'AuditlogService/**'
+          customermanagmentapi:
+            - 'CustomerManagmentAPI/**'
+
+ call-docker-build-push-as:
+    needs: changes
+    if: ${{ needs.changes.outputs.src == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
      service-name: AuditlogService
      docker-image-name: pitstop-audit-log-service
     secrets: inherit
-  call-docker-build-push-cm:
+ call-docker-build-push-cm:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: CustomerManagementAPI
       docker-image-name: pitstop-customer-management-api
     secrets: inherit
-  call-docker-build-push-is:
+ call-docker-build-push-is:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: InvoiceService
       docker-image-name: pitstop-invoice-service
     secrets: inherit
-  call-docker-build-push-ns:
+ call-docker-build-push-ns:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: NotificationService
       docker-image-name: pitstop-notification-service
     secrets: inherit
-  call-docker-build-push-ts:
+ call-docker-build-push-ts:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: TimeService
       docker-image-name: pitstop-time-service
     secrets: inherit
-  call-docker-build-push-vm-api:
+ call-docker-build-push-vm-api:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: VehicleManagementAPI
       docker-image-name: pitstop-vehicle-management-api
     secrets: inherit
-  call-docker-build-push-web-app:
+ call-docker-build-push-web-app:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WebApp
       docker-image-name: pitstop-web-app
     secrets: inherit
-  call-docker-build-wm-api:
+ call-docker-build-wm-api:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementAPI
       docker-image-name: pitstop-workshop-management-api
     secrets: inherit
-  call-docker-build-wm-eh:
+ call-docker-build-wm-eh:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementEventHandler
       docker-image-name: pitstop-workshop-management-event-handler
     secrets: inherit
     
-  deploy-feature-branch:
+ deploy-feature-branch:
     runs-on: ubuntu-latest
     needs: [call-docker-build-push-as,call-docker-build-push-cm,call-docker-build-push-is,call-docker-build-push-ns,call-docker-build-push-ts,call-docker-build-push-vm-api,call-docker-build-push-web-app,call-docker-build-wm-api,call-docker-build-wm-eh]
     steps:
