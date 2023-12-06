@@ -6,7 +6,7 @@ on:
 env:
   OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
   OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
-  OCTOPUS_SPACE: ${{ OCTOPUS_SPACE }}
+  OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE }}
   
   
 jobs:
@@ -67,7 +67,7 @@ jobs:
     
   deploy-feature-branch:
     runs-on: ubuntu-latest
-    needs: [call-docker-build-push-as,call-docker-build-push-cm]
+    needs: [call-docker-build-push-as,call-docker-build-push-cm,call-docker-build-push-is,call-docker-build-push-ns,call-docker-build-push-ts,call-docker-build-push-vm-api,call-docker-build-push-web-app,call-docker-build-wm-api,call-docker-build-wm-eh]
     steps:
     - name: Extract branch name
       id: extract_branch
