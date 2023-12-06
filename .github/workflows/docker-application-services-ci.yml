@@ -13,7 +13,7 @@ jobs:
  changes:
     runs-on: ubuntu-latest
     outputs:
-      src: ${{ steps.changes.outputs.src }}
+      auditlogservice: ${{ steps.changes.outputs.auditlogservice }}
       infra: ${{ steps.changes.outputs.infra }}
     steps:
     - uses: actions/checkout@v3
@@ -28,7 +28,7 @@ jobs:
 
  call-docker-build-push-as:
     needs: changes
-    if: ${{ needs.changes.outputs.src == 'true' }}
+    if: ${{ needs.changes.outputs.auditlogservice == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
      service-name: AuditlogService
