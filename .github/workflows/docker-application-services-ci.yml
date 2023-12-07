@@ -10,30 +10,24 @@ env:
   
   
 jobs:
- changes:
-    runs-on: ubuntu-latest
-    outputs:
-      auditlogservice: ${{ steps.changes.outputs.auditlogservice }}
-      infra: ${{ steps.changes.outputs.infra }}
-    steps:
-    - uses: actions/checkout@v3
-    - uses: dorny/paths-filter@v2
-      id: changes
-      with:
-        filters: |
-          auditlogservice:
-            - 'AuditlogService/**'
-          customermanagmentapi:
-            - 'CustomerManagmentAPI/**'
 
  call-docker-build-push-as:
-    needs: changes
-    if: ${{ needs.changes.outputs.auditlogservice == 'true' }}
-    uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
-    with:
-     service-name: AuditlogService
-     docker-image-name: pitstop-audit-log-service
-    secrets: inherit
+   runs-on: Ubtunti
+   steps:
+     - name: Build Docker Imagge
+       uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
+       with:
+         service-name: AuditlogService
+         docker-image-name: pitstop-audit-log-service
+         secrets: inherit
+
+     - name: Create Octopus Release
+       uses: OctopusDeploy/create-release-action@v3.0.5
+       with:
+         project: test
+         
+
+
  call-docker-build-push-cm:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
