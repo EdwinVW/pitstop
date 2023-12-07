@@ -9,7 +9,10 @@ on:
         type: string
       docker-image-name:
         required: true
-        type: string  
+        type: string
+      docker-image-version:
+        required: true
+        type: string
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,12 +27,8 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-       - name: Create Version Number
-         id: version
-         run: echo "version=$(date +'%Y.%m')" >> $GITHUB_OUTPUT
-
        - name: Build Docker Image
          working-directory: src/${{ inputs.service-name }}
          run:  | 
-           docker build --tag adamoctoclose/${{ inputs.docker-image-name }}:${{ steps.version.outputs.version }}.${{ github.run_number }} .
-           docker push adamoctoclose/${{ inputs.docker-image-name }}:${{ steps.version.outputs.version }}.${{ github.run_number }}
+           docker build --tag adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }} .
+           docker push adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}
