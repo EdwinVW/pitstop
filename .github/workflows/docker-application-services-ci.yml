@@ -35,22 +35,11 @@ jobs:
         variables: Pitstop.Orhestration.Feature.Branch:${{ steps.extract_branch.outputs.branch }}
 
  call-docker-build-push-as:
-   runs-on: ubuntu-latest
-   steps:
-     - name: Build Docker Imagge
-       uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
-       with:
-         service-name: AuditlogService
-         docker-image-name: pitstop-audit-log-service
-         secrets: inherit
-
-     - name: Create Octopus Release
-       uses: OctopusDeploy/create-release-action@v3.0.5
-       with:
-         project: pitstop-audit-log-service
-         release_number: ${{needs.create-version-number.outputs.version}}
-         
-
+    uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
+    with:
+      service-name: AuditlogService
+      docker-image-name: pitstop-audit-log-service
+    secrets: inherit
 
  call-docker-build-push-cm:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
