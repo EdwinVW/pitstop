@@ -11,8 +11,16 @@ env:
   
 jobs:
 
+ create-version-number:
+   runs-on: ubuntu-latest
+   outputs:
+     version: ${{ steps.version.outputs.version }}
+   steps:
+       - id: version
+         run: echo "version=$(date +'%Y.%m'.${{ github.run_number }})" >> $GITHUB_OUTPUT
+
  call-docker-build-push-as:
-   runs-on: Ubtunti
+   runs-on: ubuntu-latest
    steps:
      - name: Build Docker Imagge
        uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
@@ -24,7 +32,8 @@ jobs:
      - name: Create Octopus Release
        uses: OctopusDeploy/create-release-action@v3.0.5
        with:
-         project: test
+         project: pitstop-audit-log-service
+         release_number: ${{needs.create-version-number.outputs.version}}
          
 
 
