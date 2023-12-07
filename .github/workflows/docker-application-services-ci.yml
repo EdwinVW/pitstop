@@ -39,72 +39,65 @@ jobs:
     with:
       service-name: AuditlogService
       docker-image-name: pitstop-audit-log-service
+      docker-image-version:: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
 
  call-docker-build-push-cm:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: CustomerManagementAPI
-      docker-image-name: pitstop-customer-management-api
+      docker-image-name: pitstop-customer-management-
+      docker-image-version:: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-is:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: InvoiceService
       docker-image-name: pitstop-invoice-service
+      docker-image-version:: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-ns:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: NotificationService
       docker-image-name: pitstop-notification-service
+      docker-image-version:: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-ts:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: TimeService
       docker-image-name: pitstop-time-service
+      docker-image-version:: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-vm-api:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: VehicleManagementAPI
       docker-image-name: pitstop-vehicle-management-api
+      docker-image-version:: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-web-app:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WebApp
       docker-image-name: pitstop-web-app
+      docker-image-version:: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-wm-api:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementAPI
       docker-image-name: pitstop-workshop-management-api
+      docker-image-version:: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-wm-eh:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementEventHandler
       docker-image-name: pitstop-workshop-management-event-handler
+      docker-image-version:: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
-    
- deploy-feature-branch:
-    runs-on: ubuntu-latest
-    needs: [call-docker-build-push-as,call-docker-build-push-cm,call-docker-build-push-is,call-docker-build-push-ns,call-docker-build-push-ts,call-docker-build-push-vm-api,call-docker-build-push-web-app,call-docker-build-wm-api,call-docker-build-wm-eh]
-    steps:
-    - name: Extract branch name
-      id: extract_branch
-      shell: bash
-      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-    - name: Create Feature Tenant
-      uses: OctopusDeploy/run-runbook-action@v3.0.3
-      with:
-        project: Administration
-        runbook: Create Feature Branch Tenant
-        environments: sync
-        variables: Pitstop.Orhestration.Feature.Branch:${{ steps.extract_branch.outputs.branch }}
       
     
   
