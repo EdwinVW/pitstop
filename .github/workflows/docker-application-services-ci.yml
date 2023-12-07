@@ -39,7 +39,7 @@ jobs:
     with:
       service-name: AuditlogService
       docker-image-name: pitstop-audit-log-service
-      docker-image-version:: ${{needs.create-version-number.outputs.version}}
+      docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
 
  call-docker-build-push-cm:
@@ -47,56 +47,56 @@ jobs:
     with:
       service-name: CustomerManagementAPI
       docker-image-name: pitstop-customer-management-
-      docker-image-version:: ${{needs.create-version-number.outputs.version}}
+      docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-is:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: InvoiceService
       docker-image-name: pitstop-invoice-service
-      docker-image-version:: ${{needs.create-version-number.outputs.version}}
+      docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-ns:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: NotificationService
       docker-image-name: pitstop-notification-service
-      docker-image-version:: ${{needs.create-version-number.outputs.version}}
+      docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-ts:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: TimeService
       docker-image-name: pitstop-time-service
-      docker-image-version:: ${{needs.create-version-number.outputs.version}}
+      docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-vm-api:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: VehicleManagementAPI
       docker-image-name: pitstop-vehicle-management-api
-      docker-image-version:: ${{needs.create-version-number.outputs.version}}
+      docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-web-app:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WebApp
       docker-image-name: pitstop-web-app
-      docker-image-version:: ${{needs.create-version-number.outputs.version}}
+      docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-wm-api:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementAPI
       docker-image-name: pitstop-workshop-management-api
-      docker-image-version:: ${{needs.create-version-number.outputs.version}}
+      docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-wm-eh:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementEventHandler
       docker-image-name: pitstop-workshop-management-event-handler
-      docker-image-version:: ${{needs.create-version-number.outputs.version}}
+      docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
       
     
