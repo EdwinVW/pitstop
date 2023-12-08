@@ -38,6 +38,7 @@ jobs:
         variables: Pitstop.Orhestration.Feature.Branch:${{ steps.extract_branch.outputs.branch }}
 
  call-docker-build-push-as:
+    needs: [create-version-number]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: AuditlogService
