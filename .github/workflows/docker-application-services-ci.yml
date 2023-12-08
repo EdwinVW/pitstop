@@ -13,13 +13,14 @@ jobs:
 
  create-version-number:
    runs-on: ubuntu-latest
-   outputs:
-     version: ${{ steps.version.outputs.version }}
    steps:
        - id: version
          run: echo "version=$(date +'%Y.%m')" >> "$GITHUB_OUTPUT"
+   outputs:
+     version: ${{ steps.version.outputs.version }}
          
  create-feature-branch:
+    needs: [create-version-number]
     runs-on: ubuntu-latest
     steps:
     - name: Extract branch name
