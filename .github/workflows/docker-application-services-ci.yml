@@ -17,7 +17,7 @@ jobs:
      version: ${{ steps.version.outputs.version }}
    steps:
        - id: version
-         run: echo "version=$(date +'%Y.%m')" >> $GITHUB_OUTPUT
+         run: echo "version=$(date +'%Y.%m')" >> "$GITHUB_OUTPUT"
          
  create-feature-branch:
     runs-on: ubuntu-latest
@@ -26,7 +26,7 @@ jobs:
       id: extract_branch
       shell: bash
       run: |
-        echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
         echo "${{needs.create-version-number.outputs.version}}"
     - name: Create Feature Tenant
       uses: OctopusDeploy/run-runbook-action@v3.0.3
