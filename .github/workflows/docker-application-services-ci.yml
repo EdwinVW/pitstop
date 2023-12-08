@@ -14,7 +14,7 @@ jobs:
  create-version-number:
    runs-on: ubuntu-latest
    outputs:
-     version: ${{ steps.version.outputs.version }}.${{ github.run_number }}
+     version: ${{ steps.version.outputs.version }}
    steps:
        - id: version
          run: echo "version=$(date +'%Y.%m')" >> $GITHUB_OUTPUT
