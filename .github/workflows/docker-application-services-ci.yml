@@ -51,7 +51,7 @@ jobs:
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: CustomerManagementAPI
-      docker-image-name: pitstop-customer-management-
+      docker-image-name: pitstop-customer-management-api
       docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-is:
