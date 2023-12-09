@@ -17,7 +17,7 @@ jobs:
        - id: version
          run: echo "version=$(date +'%Y.%m')" >> "$GITHUB_OUTPUT"
    outputs:
-     version: ${{ steps.version.outputs.version }}
+     version: ${{ steps.version.outputs.version }}.${{ github.run_id }}
          
  create-feature-branch:
     needs: [create-version-number]
