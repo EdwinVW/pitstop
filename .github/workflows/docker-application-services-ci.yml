@@ -38,7 +38,7 @@ jobs:
         variables: Pitstop.Orhestration.Feature.Branch:${{ steps.extract_branch.outputs.branch }}
 
  call-docker-build-push-as:
-    needs: [create-feature-branch]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: AuditlogService
@@ -47,7 +47,7 @@ jobs:
     secrets: inherit
 
  call-docker-build-push-cm:
-    needs: [create-feature-branch]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: CustomerManagementAPI
@@ -55,7 +55,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-is:
-    needs: [create-feature-branch]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: InvoiceService
@@ -63,7 +63,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-ns:
-    needs: [create-feature-branch]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: NotificationService
@@ -71,7 +71,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-ts:
-    needs: [create-feature-branch]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: TimeService
@@ -79,7 +79,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-vm-api:
-    needs: [create-feature-branch]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: VehicleManagementAPI
@@ -87,7 +87,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-push-web-app:
-    needs: [create-feature-branch]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WebApp
@@ -95,7 +95,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-wm-api:
-    needs: [create-feature-branch]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementAPI
@@ -103,7 +103,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
     secrets: inherit
  call-docker-build-wm-eh:
-    needs: [create-feature-branch]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementEventHandler
