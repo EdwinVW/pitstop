@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: logserver
+    version: v1
+  name: logserver
+  namespace: pitstop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logserver
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: logserver
+        version: v1
+    spec:
+      containers:
+      - env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        image: datalust/seq:latest
+        imagePullPolicy: IfNotPresent
+        name: logserver
+        ports:
+        - containerPort: 80
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: logserver
+    version: v1
+  name: logserver
+  namespace: pitstop
+spec:
+  type: NodePort
+  ports:
+  - name: "http-5341"
+    port: 5341
+    targetPort: 80
+    nodePort: 30003
+  selector:
+    app: logserver
+    version: v1

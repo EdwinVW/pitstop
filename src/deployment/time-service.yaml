@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: timeservice
+    version: "1.0"
+  name: timeservice
+  namespace: pitstop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timeservice
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        app: timeservice
+        version: "1.0"
+    spec:
+      containers:
+      - env:
+        - name: DOTNET_ENVIRONMENT
+          value: Production
+        image: pitstop/timeservice:1.0
+        imagePullPolicy: IfNotPresent
+        name: timeservice
+      restartPolicy: Always

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mailserver
+    version: v1
+  name: mailserver
+  namespace: pitstop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mailserver
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: mailserver
+        version: v1
+    spec:
+      containers:
+      - image: maildev/maildev:1.1.0
+        imagePullPolicy: IfNotPresent
+        name: mailserver
+        ports:
+        - containerPort: 25
+        - containerPort: 80
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mailserver
+    version: v1
+  name: mailserver
+  namespace: pitstop
+spec:
+  type: NodePort
+  ports:
+  - name: "smtp"
+    port: 25
+    targetPort: 25
+  - name: "web"
+    port: 4000
+    targetPort: 80
+    nodePort: 30002
+  selector:
+    app: mailserver
+    version: v1

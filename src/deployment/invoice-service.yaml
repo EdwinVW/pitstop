@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: invoiceservice
+    version: "1.0"
+  name: invoiceservice
+  namespace: pitstop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: invoiceservice
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        app: invoiceservice
+        version: "1.0"
+    spec:
+      containers:
+      - env:
+        - name: DOTNET_ENVIRONMENT
+          value: Production
+        image: pitstop/invoiceservice:1.0
+        imagePullPolicy: IfNotPresent
+        name: invoiceservice
+      restartPolicy: Always

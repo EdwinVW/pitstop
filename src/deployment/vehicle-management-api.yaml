@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: vehiclemanagementapi
+    version: "1.0"
+  name: vehiclemanagementapi
+  namespace: pitstop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vehiclemanagementapi
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        app: vehiclemanagementapi
+        version: "1.0"
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+        image: pitstop/vehiclemanagementapi:1.0
+        imagePullPolicy: IfNotPresent
+        name: vehiclemanagementapi
+        ports:
+        - containerPort: 5000
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: vehiclemanagementapi
+  name: vehiclemanagementapi
+  namespace: pitstop
+spec:
+  type: NodePort
+  ports:
+  - name: "http-5000"
+    port: 5000
+    targetPort: 5000
+    nodePort: 30006
+  selector:
+    app: vehiclemanagementapi
+

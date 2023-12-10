@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: workshopmanagementeventhandler
+    version: "1.0"
+  name: workshopmanagementeventhandler
+  namespace: pitstop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workshopmanagementeventhandler
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        app: workshopmanagementeventhandler
+        version: "1.0"
+    spec:
+      containers:
+      - env:
+        - name: DOTNET_ENVIRONMENT
+          value: Production
+        image: pitstop/workshopmanagementeventhandler:1.0
+        imagePullPolicy: IfNotPresent
+        name: workshopmanagementeventhandler
+      restartPolicy: Always

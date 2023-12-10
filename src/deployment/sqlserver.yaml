@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sqlserver
+  name: sqlserver
+  namespace: pitstop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqlserver
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sqlserver
+    spec:
+      containers:
+      - env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: MSSQL_PID
+          value: Developer
+        - name: SA_PASSWORD
+          value: 8jkGh47hnDw89Haq8LN2
+        image: mcr.microsoft.com/azure-sql-edge
+        imagePullPolicy: IfNotPresent
+        name: sqlserver
+        ports:
+        - containerPort: 1433
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sqlserver
+  name: sqlserver
+  namespace: pitstop
+spec:
+  type: NodePort
+  ports:
+  - name: "tds"
+    port: 1433
+    targetPort: 1433
+    nodePort: 30000
+  selector:
+    app: sqlserver

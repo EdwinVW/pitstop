@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: webapp
+    version: "1.0"
+  name: webapp
+  namespace: pitstop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        app: webapp
+        version: "1.0"
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+        image: pitstop/webapp:1.0
+        imagePullPolicy: IfNotPresent
+        name: webapp
+        ports:
+        - containerPort: 7005
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: webapp
+  name: webapp
+  namespace: pitstop
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "7005"
+    port: 7005
+    targetPort: 7005
+  selector:
+    app: webapp
+

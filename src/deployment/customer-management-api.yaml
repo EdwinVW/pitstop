@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: customermanagementapi
+    version: "2.0"
+  name: customermanagementapi-v2
+  namespace: pitstop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customermanagementapi
+      version: "2.0"
+  template:
+    metadata:
+      labels:
+        app: customermanagementapi
+        version: "2.0"
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+        image: pitstop/customermanagementapi:2.0
+        imagePullPolicy: IfNotPresent
+        name: customermanagementapi
+        ports:
+        - containerPort: 5100
+      restartPolicy: Always
