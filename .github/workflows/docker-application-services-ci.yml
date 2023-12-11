@@ -34,7 +34,7 @@ jobs:
       with:
         project: Administration
         runbook: Create Feature Branch Tenant
-        environments: sync
+        environments: development
         variables: Pitstop.Orhestration.Feature.Branch:${{ steps.extract_branch.outputs.branch }}
 
  call-docker-build-push-as:
