@@ -26,7 +26,7 @@ spec:
         imagePullPolicy: IfNotPresent
         name: #{Octopus.Project.Name}
         ports:
-        - containerPort: 7005
+        - containerPort: 8080
       restartPolicy: Always
 
 ---
@@ -41,9 +41,9 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - name: "7005"
-    port: 7005
-    targetPort: 7005
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
   selector:
     app: #{Octopus.Project.Name}
     version: #{Octopus.Release.Number}
