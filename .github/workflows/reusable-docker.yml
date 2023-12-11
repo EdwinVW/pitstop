@@ -13,6 +13,9 @@ on:
       docker-image-version:
         required: true
         type: string
+      feature-branch-name:
+        required: true
+        type: string
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,3 +35,19 @@ jobs:
          run:  | 
            docker build --tag adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }} .
            docker push adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}
+
+       - name: Create Octopus Release
+         uses: OctopusDeploy/create-release-action@v3
+         with: 
+            project: ${{ inputs.docker-image-name }}
+            release_number: ${{ inputs.docker-image-version }}
+
+       - name: Deploy Octopus Release
+         uses: OctopusDeploy/deploy-release-tenanted-action@v3
+         with: 
+             project: ${{ inputs.docker-image-name }}
+             release_number: ${{ inputs.docker-image-version }}
+             environment: Development
+             tenants: ${{ inputs.feature-branch-name }}
+
+
