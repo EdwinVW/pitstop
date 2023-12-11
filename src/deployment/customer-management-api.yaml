@@ -3,9 +3,9 @@ kind: Deployment
 metadata:
   labels:
     app: #{Octopus.Project.Name}
-    version: "2.0"
+    version: #{Octopus.Release.Number}
   name: #{Octopus.Project.Name}
-  namespace: pitstop
+  namespace: #{Project.Pitstop.Namespace}
 spec:
   replicas: 1
   selector:
