@@ -41,7 +41,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: "http-5200"
+  - name: "workshopmanagementapi"
     port: 5200
     targetPort: 5200
   selector:
