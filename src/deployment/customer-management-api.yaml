@@ -25,6 +25,4 @@ spec:
         image: #{Project.Pitstop.Image}
         imagePullPolicy: IfNotPresent
         name: #{Octopus.Project.Name}
-        ports:
-        - containerPort: 5100
       restartPolicy: Always
