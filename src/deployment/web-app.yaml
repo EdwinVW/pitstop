@@ -46,4 +46,5 @@ spec:
     targetPort: 7005
   selector:
     app: #{Octopus.Project.Name}
+    version: #{Octopus.Release.Number}
 
