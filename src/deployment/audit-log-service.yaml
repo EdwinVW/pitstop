@@ -22,7 +22,7 @@ spec:
       - env:
         - name: DOTNET_ENVIRONMENT
           value: Production
-        image: adamclose/pitstop-audit-logs-service:#{Octopus.Release.Number}
+        image: adamclose/pitstop-audit-log-service:#{Octopus.Release.Number}
         imagePullPolicy: IfNotPresent
         name: #{Octopus.Project.Name}
       restartPolicy: Always
