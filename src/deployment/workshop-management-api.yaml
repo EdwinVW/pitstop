@@ -39,11 +39,10 @@ metadata:
   name: #{Octopus.Project.Name}
   namespace: #{Project.Pitstop.Namespace}
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
   - name: "http-5200"
     port: 5200
     targetPort: 5200
-    nodePort: 30007
   selector:
     app: #{Octopus.Project.Name}
