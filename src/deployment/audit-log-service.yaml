@@ -22,7 +22,7 @@ spec:
       - env:
         - name: DOTNET_ENVIRONMENT
           value: Production
-        image: #{Project.Pitstop.image}
+        image: #{Project.Pitstop.Image}
         imagePullPolicy: IfNotPresent
         name: #{Octopus.Project.Name}
       restartPolicy: Always
