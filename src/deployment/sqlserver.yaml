@@ -42,11 +42,11 @@ metadata:
   name: sqlserver
   namespace: #{Project.Pitstop.Namespace}
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
   - name: "tds"
     port: 1433
     targetPort: 1433
-    nodePort: 30000
+    
   selector:
     app: sqlserver

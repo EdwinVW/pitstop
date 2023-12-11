@@ -38,15 +38,15 @@ metadata:
   name: mailserver
   namespace: #{Project.Pitstop.Namespace}
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
   - name: "smtp"
     port: 25
-    targetPort: 25
+
   - name: "web"
     port: 4000
     targetPort: 80
-    nodePort: 30002
+
   selector:
     app: mailserver
     version: v1

@@ -1,4 +1,4 @@
-name: Docker Application Services CI
+name: Feature Application Services CI
 
 on:
   workflow_dispatch
