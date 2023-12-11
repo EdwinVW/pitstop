@@ -16,6 +16,11 @@ on:
       feature-branch-name:
         required: true
         type: string
+env:
+  OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
+  OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
+  OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE }}
+  
 jobs:
   build:
     runs-on: ubuntu-latest
