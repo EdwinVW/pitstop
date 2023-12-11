@@ -2,28 +2,28 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: auditlogservice
-    version: "1.0"
-  name: auditlogservice
-  namespace: pitstop
+    app: #{Octopus.Project.Name}
+    version: #{Octopus.Release.Number}
+  name: #{Octopus.Project.Name}
+  namespace: #{Project.Pitstop.Namespace}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auditlogservice
-      version: "1.0"
+      app: #{Octopus.Project.Name}
+      version: #{Octopus.Release.Number}
   template:
     metadata:
       labels:
-        app: auditlogservice
-        version: "1.0"
+        app: #{Octopus.Project.Name}
+        version: #{Octopus.Release.Number}
     spec:
       containers:
       - env:
         - name: DOTNET_ENVIRONMENT
           value: Production
-        image: pitstop/auditlogservice:1.0
+        image: adamclose/pitstop-audit-logs-service:#{Octopus.Release.Number}
         imagePullPolicy: IfNotPresent
-        name: auditlogservice
+        name: #{Octopus.Project.Name}
       restartPolicy: Always
 
