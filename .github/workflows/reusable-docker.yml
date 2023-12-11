@@ -46,6 +46,7 @@ jobs:
          with: 
             project: ${{ inputs.docker-image-name }}
             release_number: ${{ inputs.docker-image-version }}
+            channel: Development
 
        - name: Deploy Octopus Release
          uses: OctopusDeploy/deploy-release-tenanted-action@v3
@@ -54,5 +55,4 @@ jobs:
              release_number: ${{ inputs.docker-image-version }}
              environment: Development
              tenants: ${{ inputs.feature-branch-name }}
-
-
+            
