@@ -26,3 +26,21 @@ spec:
         imagePullPolicy: IfNotPresent
         name: #{Octopus.Project.Name}
       restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: #{Octopus.Project.Name}
+  name: #{Octopus.Project.Name}
+  namespace: #{Project.Pitstop.Namespace}
+spec:
+  type: ClusterIP
+  ports:
+  - name: "http-5200"
+    port: 5100
+    targetPort: 5100
+  selector:
+    app: #{Octopus.Project.Name}
