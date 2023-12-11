@@ -5,7 +5,7 @@ metadata:
     app: mailserver
     version: v1
   name: mailserver
-  namespace: pitstop
+  namespace: #{Project.Pitstop.Namespace}
 spec:
   replicas: 1
   selector:
@@ -36,7 +36,7 @@ metadata:
     app: mailserver
     version: v1
   name: mailserver
-  namespace: pitstop
+  namespace: #{Project.Pitstop.Namespace}
 spec:
   type: NodePort
   ports:

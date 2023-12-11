@@ -2,29 +2,29 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: vehiclemanagementapi
-    version: "1.0"
-  name: vehiclemanagementapi
-  namespace: pitstop
+    app: #{Octopus.Project.Name}
+    version: #{Octopus.Release.Number}
+  name: #{Octopus.Project.Name}
+  namespace: #{Project.Pitstop.Namespace}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: vehiclemanagementapi
-      version: "1.0"
+      app: #{Octopus.Project.Name}
+      version: #{Octopus.Release.Number}
   template:
     metadata:
       labels:
-        app: vehiclemanagementapi
-        version: "1.0"
+        app: #{Octopus.Project.Name}
+        version: #{Octopus.Release.Number}
     spec:
       containers:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: pitstop/vehiclemanagementapi:1.0
+        image: #{Project.Pitstop.Image}
         imagePullPolicy: IfNotPresent
-        name: vehiclemanagementapi
+        name: #{Octopus.Project.Name}
         ports:
         - containerPort: 5000
       restartPolicy: Always
@@ -35,9 +35,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: vehiclemanagementapi
-  name: vehiclemanagementapi
-  namespace: pitstop
+    app: #{Octopus.Project.Name}
+  name: #{Octopus.Project.Name}
+  namespace: #{Project.Pitstop.Namespace}
 spec:
   type: NodePort
   ports:
@@ -46,5 +46,5 @@ spec:
     targetPort: 5000
     nodePort: 30006
   selector:
-    app: vehiclemanagementapi
+    app: #{Octopus.Project.Name}
 

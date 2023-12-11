@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: rqconfigmap
-  namespace: pitstop
+  namespace: #{Project.Pitstop.Namespace}
 data:
   rabbitmq.conf: |
     default_user = rabbitmquser
@@ -17,7 +17,7 @@ metadata:
     app: rabbitmq
     version: v1
   name: rabbitmq
-  namespace: pitstop
+  namespace: #{Project.Pitstop.Namespace}
 spec:
   replicas: 1
   selector:
@@ -58,7 +58,7 @@ metadata:
   labels:
     app: rabbitmq
   name: rabbitmq
-  namespace: pitstop
+  namespace: #{Project.Pitstop.Namespace}
 spec:
   type: NodePort
   ports:

@@ -2,27 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: timeservice
-    version: "1.0"
-  name: timeservice
-  namespace: pitstop
+    app: #{Octopus.Project.Name}
+    version: #{Octopus.Release.Number}
+  name: #{Octopus.Project.Name}
+  namespace: #{Project.Pitstop.Namespace}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: timeservice
-      version: "1.0"
+      app: #{Octopus.Project.Name}
+      version: #{Octopus.Release.Number}
   template:
     metadata:
       labels:
-        app: timeservice
-        version: "1.0"
+        app: #{Octopus.Project.Name}
+        version: #{Octopus.Release.Number}
     spec:
       containers:
       - env:
         - name: DOTNET_ENVIRONMENT
           value: Production
-        image: pitstop/timeservice:1.0
+        image: #{Project.Pitstop.Image}
         imagePullPolicy: IfNotPresent
-        name: timeservice
+        name: #{Octopus.Project.Name}
       restartPolicy: Always

@@ -2,29 +2,29 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: customermanagementapi
+    app: #{Octopus.Project.Name}
     version: "2.0"
-  name: customermanagementapi-v2
+  name: #{Octopus.Project.Name}
   namespace: pitstop
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: customermanagementapi
-      version: "2.0"
+      app: #{Octopus.Project.Name}
+      version: #{Octopus.Release.Number}
   template:
     metadata:
       labels:
-        app: customermanagementapi
-        version: "2.0"
+        app: #{Octopus.Project.Name}
+        version: #{Octopus.Release.Number}
     spec:
       containers:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: pitstop/customermanagementapi:2.0
+        image: #{Project.Pitstop.Image}
         imagePullPolicy: IfNotPresent
-        name: customermanagementapi
+        name: #{Octopus.Project.Name}
         ports:
         - containerPort: 5100
       restartPolicy: Always

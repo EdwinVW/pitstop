@@ -5,7 +5,7 @@ metadata:
     app: logserver
     version: v1
   name: logserver
-  namespace: pitstop
+  namespace: #{Project.Pitstop.Namespace}
 spec:
   replicas: 1
   selector:
@@ -38,7 +38,7 @@ metadata:
     app: logserver
     version: v1
   name: logserver
-  namespace: pitstop
+  namespace: #{Project.Pitstop.Namespace}
 spec:
   type: NodePort
   ports:
