@@ -41,7 +41,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: "http-5000"
+  - name: "vehiclemanagementapi"
     port: 5000
     targetPort: 5000
   selector:
