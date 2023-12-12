@@ -11,6 +11,22 @@ env:
   
 jobs:
 
+ changes:
+    runs-on: ubuntu-latest
+    outputs:
+      src: ${{ steps.changes.outputs.src }}
+      infra: ${{ steps.changes.outputs.infra }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          src:
+            - 'src/**'
+          infra:
+            - 'infra/**'          
+
  create-version-number:
    runs-on: ubuntu-latest
    steps:
@@ -20,7 +36,8 @@ jobs:
      version: ${{ steps.version.outputs.version }}.${{ github.run_number }}
          
  call-docker-build-push-as:
-    needs: [create-version-number]
+    needs: [create-version-number,changes]
+    if: ${{ needs.changes.outputs.src == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: AuditlogService
