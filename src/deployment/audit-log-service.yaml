@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   labels:
     app: #{Octopus.Project.Name}
-    version: #{Octopus.Release.Number}
   name: #{Octopus.Project.Name}
   namespace: #{Project.Pitstop.Namespace}
 spec:
@@ -11,12 +10,10 @@ spec:
   selector:
     matchLabels:
       app: #{Octopus.Project.Name}
-      version: #{Octopus.Release.Number}
   template:
     metadata:
       labels:
         app: #{Octopus.Project.Name}
-        version: #{Octopus.Release.Number}
     spec:
       containers:
       - env:
