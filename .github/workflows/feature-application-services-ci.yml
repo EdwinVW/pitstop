@@ -14,9 +14,11 @@ jobs:
    runs-on: ubuntu-latest
    steps:
        - id: version
-         run: echo "version=$(date +'%Y.%m')" >> "$GITHUB_OUTPUT"
+         run: |
+           echo "version=$(date +'%Y.%m')" >> "$GITHUB_OUTPUT"
+           echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
    outputs:
-     version: ${{ steps.version.outputs.version }}.${{ github.run_number }}
+     version: ${{ steps.version.outputs.version }}.${{ github.run_number }}-${{ steps.branch.outputs.branch }}
 
  call-docker-build-push-as:
     needs: [create-version-number]
