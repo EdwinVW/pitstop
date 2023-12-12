@@ -30,9 +30,9 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 # Expose ports
-EXPOSE 7005/tcp
-ENV ASPNETCORE_URLS http://*:7005
-HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:7005/hc || exit 1
+EXPOSE 80/tcp
+ENV ASPNETCORE_URLS http://*:80
+HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:80/hc || exit 1
 
 # Start
 ENTRYPOINT ["dotnet", "Pitstop.WebApp.dll"]

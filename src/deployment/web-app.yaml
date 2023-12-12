@@ -23,7 +23,7 @@ spec:
         imagePullPolicy: IfNotPresent
         name: #{Octopus.Project.Name}
         ports:
-        - containerPort: 8080
+        - containerPort: 80
       restartPolicy: Always
 
 ---
