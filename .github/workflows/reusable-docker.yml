@@ -45,13 +45,13 @@ jobs:
          uses: OctopusDeploy/create-release-action@v3
          with: 
             project: ${{ inputs.docker-image-name }}
-            release_number: ${{ inputs.docker-image-version }}
+            release_number: ${{ inputs.docker-image-version }}-${{ inputs.feature-branch-name }}
             channel: Development
 
        - name: Deploy Octopus Release
          uses: OctopusDeploy/deploy-release-action@v3.0.4
          with: 
              project: ${{ inputs.docker-image-name }}
-             release_number: ${{ inputs.docker-image-version }}
+             release_number: ${{ inputs.docker-image-version }}-${{ inputs.feature-branch-name }}
              environments: Development
             
