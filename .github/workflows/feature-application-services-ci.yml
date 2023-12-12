@@ -10,6 +10,25 @@ env:
   
 jobs:
 
+ create-feature-branch:
+    needs: [create-version-number]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Extract branch name
+      id: branch
+      shell: bash
+      run: |
+        echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
+    - name: Create Feature Tenant
+      uses: OctopusDeploy/run-runbook-action@v3.0.3
+      with:
+        project: Administration
+        runbook: Create Feature Branch Tenant
+        environments: development
+        variables: Pitstop.Orhestration.Feature.Branch:${{ steps.branch.outputs.branch }}
+    outputs:
+        branch: ${{ steps.branch.outputs.branch }}
+
  create-version-number:
    runs-on: ubuntu-latest
    steps:
