@@ -19,6 +19,9 @@ spec:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
+        - name: ASPNETCORE_URLS
+          value: http://+:80
+        
         image: #{Project.Pitstop.Image}
         imagePullPolicy: IfNotPresent
         name: #{Octopus.Project.Name}
