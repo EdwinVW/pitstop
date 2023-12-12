@@ -53,5 +53,5 @@ jobs:
          with: 
              project: ${{ inputs.docker-image-name }}
              release_number: ${{ inputs.docker-image-version }}
-             environment: Development
+             environments: Development
             
