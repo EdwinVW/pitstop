@@ -36,7 +36,7 @@ kind: Service
 metadata:
   labels:
     app: #{Octopus.Project.Name}
-  name: #{Octopus.Project.Name}
+  name: #{Octopus.Project.Name}-lb
   namespace: #{Project.Pitstop.Namespace}
 spec:
   type: LoadBalancer
