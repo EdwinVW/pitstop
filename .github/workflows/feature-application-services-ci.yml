@@ -8,7 +8,6 @@ env:
   OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
   OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE }}
   
-  
 jobs:
 
  create-version-number:
@@ -18,28 +17,9 @@ jobs:
          run: echo "version=$(date +'%Y.%m')" >> "$GITHUB_OUTPUT"
    outputs:
      version: ${{ steps.version.outputs.version }}.${{ github.run_number }}
-         
- create-feature-branch:
-    needs: [create-version-number]
-    runs-on: ubuntu-latest
-    steps:
-    - name: Extract branch name
-      id: branch
-      shell: bash
-      run: |
-        echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
-    - name: Create Feature Tenant
-      uses: OctopusDeploy/run-runbook-action@v3.0.3
-      with:
-        project: Administration
-        runbook: Create Feature Branch Tenant
-        environments: development
-        variables: Pitstop.Orhestration.Feature.Branch:${{ steps.branch.outputs.branch }}
-    outputs:
-        branch: ${{ steps.branch.outputs.branch }}
 
  call-docker-build-push-as:
-    needs: [create-version-number,create-feature-branch]
+    needs: [create-version-number]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: AuditlogService
@@ -49,7 +29,7 @@ jobs:
     secrets: inherit
 
  call-docker-build-push-cm:
-    needs: [create-version-number,create-feature-branch]
+    needs: [create-version-number]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: CustomerManagementAPI
@@ -58,7 +38,7 @@ jobs:
       feature-branch-name: ${{needs.create-feature-branch.outputs.branch}}
     secrets: inherit
  call-docker-build-push-is:
-    needs: [create-version-number,create-feature-branch]
+    needs: [create-version-number]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: InvoiceService
@@ -67,7 +47,7 @@ jobs:
       feature-branch-name: ${{needs.create-feature-branch.outputs.branch}}
     secrets: inherit
  call-docker-build-push-ns:
-    needs: [create-version-number,create-feature-branch]
+    needs: [create-version-number]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: NotificationService
@@ -76,7 +56,7 @@ jobs:
       feature-branch-name: ${{needs.create-feature-branch.outputs.branch}}
     secrets: inherit
  call-docker-build-push-ts:
-    needs: [create-version-number,create-feature-branch]
+    needs: [create-version-number]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: TimeService
@@ -85,7 +65,7 @@ jobs:
       feature-branch-name: ${{needs.create-feature-branch.outputs.branch}}
     secrets: inherit
  call-docker-build-push-vm-api:
-    needs: [create-version-number,create-feature-branch]
+    needs: [create-version-number]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: VehicleManagementAPI
@@ -94,7 +74,7 @@ jobs:
       feature-branch-name: ${{needs.create-feature-branch.outputs.branch}}
     secrets: inherit
  call-docker-build-push-web-app:
-    needs: [create-version-number,create-feature-branch]
+    needs: [create-version-number]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WebApp
@@ -103,7 +83,7 @@ jobs:
       feature-branch-name: ${{needs.create-feature-branch.outputs.branch}}
     secrets: inherit
  call-docker-build-wm-api:
-    needs: [create-version-number,create-feature-branch]
+    needs: [create-version-number]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementAPI
@@ -112,7 +92,7 @@ jobs:
       feature-branch-name: ${{needs.create-feature-branch.outputs.branch}}
     secrets: inherit
  call-docker-build-wm-eh:
-    needs: [create-version-number,create-feature-branch]
+    needs: [create-version-number]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementEventHandler
