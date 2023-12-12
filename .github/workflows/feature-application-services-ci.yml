@@ -18,7 +18,7 @@ jobs:
            echo "version=$(date +'%Y.%m')" >> "$GITHUB_OUTPUT"
            echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
    outputs:
-     version: ${{ steps.version.outputs.version }}.${{ github.run_number }}-${{ steps.version.outputs.branch }}
+     version: ${{ steps.version.outputs.version }}.${{ github.run_number }}-${{ steps.branch.outputs.version }}
 
  call-docker-build-push-as:
     needs: [create-version-number]
