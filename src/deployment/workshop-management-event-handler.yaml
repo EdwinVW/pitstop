@@ -13,7 +13,7 @@ spec:
   template:
     metadata:
       labels:
-        app: #{Octopus.Project.Name}}
+        app: #{Octopus.Project.Name}
     spec:
       containers:
       - env:
