@@ -16,6 +16,9 @@ on:
       feature-branch-name:
         required: false
         type: string
+      environment-name:
+        required: false
+        type: string
 env:
   OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
   OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
@@ -53,6 +56,6 @@ jobs:
          with: 
              project: ${{ inputs.docker-image-name }}
              release_number: ${{ inputs.docker-image-version }}-${{ inputs.feature-branch-name }}
-             environments: Development
+             environments: ${{ inputs.environemnt-name }}
              variables: Project.Pitstop.Branch:${{ inputs.feature-branch-name }}
             
