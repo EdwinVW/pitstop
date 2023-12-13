@@ -2,8 +2,11 @@ name: Feature Application Services CI
 
 on:
   push:
-    branches:
-      - 'feature/**
+    branches:    
+      - '*'         # matches every branch that doesn't contain a '/'
+      - '*/*'       # matches every branch containing a single '/'
+      - '**'        # matches every branch
+      - '!main'   # excludes master
 
 env:
   OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
