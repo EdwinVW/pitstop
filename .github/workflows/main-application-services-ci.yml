@@ -14,44 +14,53 @@ jobs:
  changes:
     runs-on: ubuntu-latest
     outputs:
-      src: ${{ steps.changes.outputs.src }}
-      infra: ${{ steps.changes.outputs.infra }}
+      audit-log-service: ${{ steps.changes.outputs.audit-log-service }}
+      customer-management-api: ${{ steps.changes.outputs.customer-management-api }}
     steps:
     - uses: actions/checkout@v3
     - uses: dorny/paths-filter@v2
       id: changes
       with:
         filters: |
-          src:
-            - 'src/**'
-          infra:
-            - 'infra/**'          
+          audit-log-service:
+            - 'audit-log-service/**'
+          customer-management-api:
+            - 'customer-management-api/**'          
 
  create-version-number:
-   runs-on: ubuntu-latest
-   steps:
-       - id: version
-         run: echo "version=$(date +'%Y.%m')" >> "$GITHUB_OUTPUT"
-   outputs:
-     version: ${{ steps.version.outputs.version }}.${{ github.run_number }}
+    needs: [changes]
+    runs-on: ubuntu-latest
+    steps:
+      - id: version
+        run: echo "version=$(date +'%Y.%m')" >> "$GITHUB_OUTPUT"
+      - id: branch
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
+    outputs:
+        version: ${{ steps.version.outputs.version }}.${{ github.run_number }}
+        branch: ${{ steps.branch.outputs.branch }}
          
  call-docker-build-push-as:
     needs: [create-version-number,changes]
-    if: ${{ needs.changes.outputs.src == 'true' }}
+    if: ${{ needs.changes.outputs.audit-log-service == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: AuditlogService
       docker-image-name: pitstop-audit-log-service
       docker-image-version: ${{needs.create-version-number.outputs.version}}
+      environment-name: test
+      channel-name: Default
     secrets: inherit
 
  call-docker-build-push-cm:
-    needs: [create-version-number]
+    needs: [create-version-number, changes]
+    if: ${{ needs.changes.outputs.customer-management-api == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: CustomerManagementAPI
       docker-image-name: pitstop-customer-management-api
       docker-image-version: ${{needs.create-version-number.outputs.version}}
+      environment-name: test
+      channel-name: Default
     secrets: inherit
  call-docker-build-push-is:
     needs: [create-version-number]
@@ -60,6 +69,8 @@ jobs:
       service-name: InvoiceService
       docker-image-name: pitstop-invoice-service
       docker-image-version: ${{needs.create-version-number.outputs.version}}
+      environment-name: test
+      channel-name: Default
     secrets: inherit
  call-docker-build-push-ns:
     needs: [create-version-number]
@@ -68,6 +79,8 @@ jobs:
       service-name: NotificationService
       docker-image-name: pitstop-notification-service
       docker-image-version: ${{needs.create-version-number.outputs.version}}
+      environment-name: test
+      channel-name: Default
     secrets: inherit
  call-docker-build-push-ts:
     needs: [create-version-number]
@@ -76,6 +89,8 @@ jobs:
       service-name: TimeService
       docker-image-name: pitstop-time-service
       docker-image-version: ${{needs.create-version-number.outputs.version}}
+      environment-name: test
+      channel-name: Default
     secrets: inherit
  call-docker-build-push-vm-api:
     needs: [create-version-number]
@@ -84,6 +99,8 @@ jobs:
       service-name: VehicleManagementAPI
       docker-image-name: pitstop-vehicle-management-api
       docker-image-version: ${{needs.create-version-number.outputs.version}}
+      environment-name: test
+      channel-name: Default
     secrets: inherit
  call-docker-build-push-web-app:
     needs: [create-version-number]
@@ -92,6 +109,8 @@ jobs:
       service-name: WebApp
       docker-image-name: pitstop-web-app
       docker-image-version: ${{needs.create-version-number.outputs.version}}
+      environment-name: test
+      channel-name: Default
     secrets: inherit
  call-docker-build-wm-api:
     needs: [create-version-number]
@@ -100,6 +119,8 @@ jobs:
       service-name: WorkshopManagementAPI
       docker-image-name: pitstop-workshop-management-api
       docker-image-version: ${{needs.create-version-number.outputs.version}}
+      environment-name: test
+      channel-name: Default
     secrets: inherit
  call-docker-build-wm-eh:
     needs: [create-version-number]
@@ -108,6 +129,8 @@ jobs:
       service-name: WorkshopManagementEventHandler
       docker-image-name: pitstop-workshop-management-event-handler
       docker-image-version: ${{needs.create-version-number.outputs.version}}
+      environment-name: test
+      channel-name: Default
     secrets: inherit
       
     
