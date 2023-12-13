@@ -54,4 +54,5 @@ jobs:
              project: ${{ inputs.docker-image-name }}
              release_number: ${{ inputs.docker-image-version }}-${{ inputs.feature-branch-name }}
              environments: Development
+             variables: Project.Pitstop.Branch:${{ inputs.feature-branch-name }}
             
