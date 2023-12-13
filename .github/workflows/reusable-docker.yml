@@ -48,7 +48,7 @@ jobs:
          uses: OctopusDeploy/create-release-action@v3
          with: 
             project: ${{ inputs.docker-image-name }}
-            release_number: ${{ inputs.docker-image-version }}-${{ inputs.feature-branch-name }}
+            release_number: ${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }}
             channel: Development
 
        - name: Deploy Octopus Release
@@ -56,6 +56,6 @@ jobs:
          with: 
              project: ${{ inputs.docker-image-name }}
              release_number: ${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }}
-             environments: ${{ inputs.environemnt-name }}
+             environments: ${{ inputs.environment-name }}
              variables: Project.Pitstop.Branch:${{ inputs.feature-branch-name }}
             
