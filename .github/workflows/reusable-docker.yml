@@ -61,4 +61,12 @@ jobs:
              release_number: ${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }}
              environments: ${{ inputs.environment-name }}
              variables: Project.Pitstop.Branch:${{ inputs.feature-branch-name }}
+      
+       - name: Create Production Octopus Release
+         if: ${{ inputs.environment-name == 'test' }}
+         uses: OctopusDeploy/create-release-action@v3
+         with: 
+            project: _Orchestration
+            release_number: ${{ inputs.docker-image-version }}
+            channel: Default
             
