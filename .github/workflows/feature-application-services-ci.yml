@@ -51,6 +51,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
       feature-branch-name: -${{needs.create-version-number.outputs.branch}}
       environment-name: Development
+      channel-name: Development
     secrets: inherit
 
  call-docker-build-push-cm:
@@ -62,6 +63,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
       feature-branch-name: -${{needs.create-version-number.outputs.branch}}
       environment-name: Development
+      channel-name: Development
     secrets: inherit
  call-docker-build-push-is:
     needs: [create-version-number]
@@ -72,6 +74,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
       feature-branch-name: -${{needs.create-version-number.outputs.branch}}
       environment-name: Development
+      channel-name: Development
     secrets: inherit
  call-docker-build-push-ns:
     needs: [create-version-number]
@@ -82,6 +85,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
       feature-branch-name: -${{needs.create-version-number.outputs.branch}}
       environment-name: Development
+      channel-name: Development
     secrets: inherit
  call-docker-build-push-ts:
     needs: [create-version-number]
@@ -92,6 +96,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
       feature-branch-name: -${{needs.create-version-number.outputs.branch}}
       environment-name: Development
+      channel-name: Development
     secrets: inherit
  call-docker-build-push-vm-api:
     needs: [create-version-number]
@@ -102,6 +107,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
       feature-branch-name: -${{needs.create-version-number.outputs.branch}}
       environment-name: Development
+      channel-name: Development
     secrets: inherit
  call-docker-build-push-web-app:
     needs: [create-version-number]
@@ -112,6 +118,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
       feature-branch-name: -${{needs.create-version-number.outputs.branch}}
       environment-name: Development
+      channel-name: Development
     secrets: inherit
  call-docker-build-wm-api:
     needs: [create-version-number]
@@ -122,6 +129,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
       feature-branch-name: -${{needs.create-version-number.outputs.branch}}
       environment-name: Development
+      channel-name: Development
     secrets: inherit
  call-docker-build-wm-eh:
     needs: [create-version-number]
@@ -132,6 +140,7 @@ jobs:
       docker-image-version: ${{needs.create-version-number.outputs.version}}
       feature-branch-name: -${{needs.create-version-number.outputs.branch}}
       environment-name: Development
+      channel-name: Development
     secrets: inherit
       
     
