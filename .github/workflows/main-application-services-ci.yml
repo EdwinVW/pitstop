@@ -28,7 +28,7 @@ jobs:
  changes:
     runs-on: ubuntu-latest
     outputs:
-      AuditLogService: ${{ steps.changes.outputs.audit-log-Service }}
+      audit-log-service: ${{ steps.changes.outputs.audit-log-Service }}
       customer-management-api: ${{ steps.changes.outputs.customer-management-api }}
       invoice-service: ${{ steps.changes.outputs.invoice-service }}
       notification-service: ${{ steps.changes.outputs.notification-service }}
