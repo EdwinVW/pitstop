@@ -14,8 +14,17 @@ jobs:
  changes:
     runs-on: ubuntu-latest
     outputs:
+
       audit-log-service: ${{ steps.changes.outputs.audit-log-service }}
       customer-management-api: ${{ steps.changes.outputs.customer-management-api }}
+      invoice-service: ${{ steps.changes.outputs.invoice-service }}
+      notification-service: ${{ steps.changes.outputs.notification-service }}
+      time-service: ${{ steps.changes.outputs.time-service }}
+      vehicle-management-api: ${{ steps.changes.outputs.vehicle-management-api }}
+      web-app: ${{ steps.changes.outputs.web-app }}
+      workshop-management-api: ${{ steps.changes.outputs.workshop-management-api }}
+      workshop-management-event-handler: ${{ steps.changes.outputs.workshop-management-event-handler }}
+
     steps:
     - uses: actions/checkout@v3
     - uses: dorny/paths-filter@v2
@@ -25,7 +34,22 @@ jobs:
           audit-log-service:
             - 'audit-log-service/**'
           customer-management-api:
-            - 'customer-management-api/**'          
+            - 'customer-management-api/**'
+          invoice-service:
+            - 'invoice-service/**'
+          notification-service:
+            - 'notification-service/**'        
+          time-service:
+            - 'time-service/**'     
+          vehicle-management-api:
+            - 'vehicle-management-api/**' 
+          web-app:
+            - 'web-app/**'
+          workshop-management-api:
+            - 'workshop-management-api.yaml/**'
+          workshop-management-event-handler:
+            - 'workshop-management-event-handler/**'
+            
 
  create-version-number:
     needs: [changes]
@@ -63,7 +87,8 @@ jobs:
       channel-name: Default
     secrets: inherit
  call-docker-build-push-is:
-    needs: [create-version-number]
+    needs: [create-version-number,changes]
+    if: ${{ needs.changes.outputs.invoice-service == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: InvoiceService
@@ -73,7 +98,8 @@ jobs:
       channel-name: Default
     secrets: inherit
  call-docker-build-push-ns:
-    needs: [create-version-number]
+    needs: [create-version-number,changes]
+    if: ${{ needs.changes.outputs.pitstop-notification-service == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: NotificationService
@@ -83,7 +109,8 @@ jobs:
       channel-name: Default
     secrets: inherit
  call-docker-build-push-ts:
-    needs: [create-version-number]
+    needs: [create-version-number,changes]
+    if: ${{ needs.changes.outputs.pitstop-time-service == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: TimeService
@@ -93,7 +120,8 @@ jobs:
       channel-name: Default
     secrets: inherit
  call-docker-build-push-vm-api:
-    needs: [create-version-number]
+    needs: [create-version-number,changes]
+    if: ${{ needs.changes.outputs.pitstop-vehicle-management-api == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: VehicleManagementAPI
@@ -103,7 +131,8 @@ jobs:
       channel-name: Default
     secrets: inherit
  call-docker-build-push-web-app:
-    needs: [create-version-number]
+    needs: [create-version-number,changes]
+    if: ${{ needs.changes.outputs.pitstop-web-app == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WebApp
@@ -113,7 +142,8 @@ jobs:
       channel-name: Default
     secrets: inherit
  call-docker-build-wm-api:
-    needs: [create-version-number]
+    needs: [create-version-number,changes]
+    if: ${{ needs.changes.outputs.pitstop-workshop-management-api == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementAPI
@@ -123,7 +153,8 @@ jobs:
       channel-name: Default
     secrets: inherit
  call-docker-build-wm-eh:
-    needs: [create-version-number]
+    needs: [create-version-number,changes]
+    if: ${{ needs.changes.outputs.pitstop-workshop-management-event-handler == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementEventHandler
