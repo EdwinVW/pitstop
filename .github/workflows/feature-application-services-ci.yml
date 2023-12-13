@@ -1,7 +1,9 @@
 name: Feature Application Services CI
 
 on:
-  workflow_dispatch
+  push:
+    branches:
+      - 'feature/**
 
 env:
   OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
