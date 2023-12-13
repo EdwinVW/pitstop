@@ -13,6 +13,18 @@ env:
   
 jobs:
 
+ create-version-number:
+    runs-on: ubuntu-latest
+    steps:
+      - id: version
+        run: echo "version=$(date +'%Y.%m')" >> "$GITHUB_OUTPUT"
+      - id: branch
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
+    outputs:
+        version: ${{ steps.version.outputs.version }}.${{ github.run_number }}
+        branch: ${{ steps.branch.outputs.branch }}
+
+
  changes:
     runs-on: ubuntu-latest
     outputs:
@@ -51,17 +63,7 @@ jobs:
             - 'workshop-management-event-handler/**'
             
 
- create-version-number:
-    needs: [changes]
-    runs-on: ubuntu-latest
-    steps:
-      - id: version
-        run: echo "version=$(date +'%Y.%m')" >> "$GITHUB_OUTPUT"
-      - id: branch
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> "$GITHUB_OUTPUT"
-    outputs:
-        version: ${{ steps.version.outputs.version }}.${{ github.run_number }}
-        branch: ${{ steps.branch.outputs.branch }}
+
          
  call-docker-build-push-as:
     needs: [create-version-number,changes]
