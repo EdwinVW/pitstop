@@ -48,7 +48,7 @@ jobs:
 
 
  call-docker-build-push-as:
-    needs: [create-version-number]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: AuditlogService
@@ -60,7 +60,7 @@ jobs:
     secrets: inherit
 
  call-docker-build-push-cm:
-    needs: [create-version-number]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: CustomerManagementAPI
@@ -71,7 +71,7 @@ jobs:
       channel-name: Development
     secrets: inherit
  call-docker-build-push-is:
-    needs: [create-version-number]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: InvoiceService
@@ -82,7 +82,7 @@ jobs:
       channel-name: Development
     secrets: inherit
  call-docker-build-push-ns:
-    needs: [create-version-number]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: NotificationService
@@ -93,7 +93,7 @@ jobs:
       channel-name: Development
     secrets: inherit
  call-docker-build-push-ts:
-    needs: [create-version-number]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: TimeService
@@ -104,7 +104,7 @@ jobs:
       channel-name: Development
     secrets: inherit
  call-docker-build-push-vm-api:
-    needs: [create-version-number]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: VehicleManagementAPI
@@ -115,7 +115,7 @@ jobs:
       channel-name: Development
     secrets: inherit
  call-docker-build-push-web-app:
-    needs: [create-version-number]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WebApp
@@ -126,7 +126,7 @@ jobs:
       channel-name: Development
     secrets: inherit
  call-docker-build-wm-api:
-    needs: [create-version-number]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementAPI
@@ -137,7 +137,7 @@ jobs:
       channel-name: Development
     secrets: inherit
  call-docker-build-wm-eh:
-    needs: [create-version-number]
+    needs: [create-version-number,create-feature-branch]
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementEventHandler
