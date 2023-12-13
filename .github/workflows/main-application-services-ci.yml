@@ -2,8 +2,8 @@ name: Main Application Services CI
 
 on:
   push:
-    paths:
-    - 'scr/**'
+    branches:
+    - main
     
 env:
   OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
@@ -16,7 +16,6 @@ jobs:
  changes:
     runs-on: ubuntu-latest
     outputs:
-
       audit-log-service: ${{ steps.changes.outputs.audit-log-service }}
       customer-management-api: ${{ steps.changes.outputs.customer-management-api }}
       invoice-service: ${{ steps.changes.outputs.invoice-service }}
@@ -26,7 +25,6 @@ jobs:
       web-app: ${{ steps.changes.outputs.web-app }}
       workshop-management-api: ${{ steps.changes.outputs.workshop-management-api }}
       workshop-management-event-handler: ${{ steps.changes.outputs.workshop-management-event-handler }}
-
     steps:
     - uses: actions/checkout@v3
     - uses: dorny/paths-filter@v2
