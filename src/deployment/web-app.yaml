@@ -31,21 +31,6 @@ spec:
 
 ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: #{Octopus.Project.Name}-cluster-ip-service
-  namespace: #{Project.Pitstop.Namespace}
-spec:
-  type: ClusterIP
-  selector:
-    component: #{Octopus.Project.Name}
-  ports:
-    - port: 80
-      targetPort: 80
-      name: http-port
-
----
 
 apiVersion: v1
 kind: Service
@@ -57,7 +42,7 @@ spec:
     component: #{Octopus.Project.Name}
   ports:
     - port: 80
-      targetPort: 80
+      targetPort: 5000
       name: http-port
   type: LoadBalancer
 
