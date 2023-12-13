@@ -34,16 +34,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: #{Octopus.Project.Name}
-  name: #{Octopus.Project.Name}-lb
-  namespace: #{Project.Pitstop.Namespace}
+  name: web-loadbalancer
 spec:
-  type: LoadBalancer
-  ports:
-  - name: "80"
-    port: 80
-    targetPort: 80
   selector:
-    app: #{Octopus.Project.Name}
+    component: #{Octopus.Project.Name}
+  ports:
+    - port: 5000
+      targetPort: 5000
+      name: http-port
+    - port: 5001
+      targetPort: 5001
+      name: https-port
+  type: LoadBalancer
 
