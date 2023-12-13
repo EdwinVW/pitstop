@@ -41,8 +41,8 @@ jobs:
        - name: Build Docker Image
          working-directory: src/${{ inputs.service-name }}
          run:  | 
-           docker build --tag adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}-${{ inputs.feature-branch-name }} .
-           docker push adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}-${{ inputs.feature-branch-name }}
+           docker build --tag adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }} .
+           docker push adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }}
 
        - name: Create Octopus Release
          uses: OctopusDeploy/create-release-action@v3
@@ -55,7 +55,7 @@ jobs:
          uses: OctopusDeploy/deploy-release-action@v3.0.4
          with: 
              project: ${{ inputs.docker-image-name }}
-             release_number: ${{ inputs.docker-image-version }}-${{ inputs.feature-branch-name }}
+             release_number: ${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }}
              environments: ${{ inputs.environemnt-name }}
              variables: Project.Pitstop.Branch:${{ inputs.feature-branch-name }}
             
