@@ -38,8 +38,8 @@ jobs:
        - name: Build Docker Image
          working-directory: src/${{ inputs.service-name }}
          run:  | 
-           docker build --tag adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }} .
-           docker push adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}
+           docker build --tag adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}-${{ inputs.feature-branch-name }} .
+           docker push adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}-${{ inputs.feature-branch-name }}
 
        - name: Create Octopus Release
          uses: OctopusDeploy/create-release-action@v3
