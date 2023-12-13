@@ -29,14 +29,14 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       AuditLogService: ${{ steps.changes.outputs.AuditLogService }}
-      customer-management-api: ${{ steps.changes.outputs.customer-management-api }}
-      invoice-service: ${{ steps.changes.outputs.invoice-service }}
-      notification-service: ${{ steps.changes.outputs.notification-service }}
-      time-service: ${{ steps.changes.outputs.time-service }}
-      vehicle-management-api: ${{ steps.changes.outputs.vehicle-management-api }}
-      web-app: ${{ steps.changes.outputs.web-app }}
-      workshop-management-api: ${{ steps.changes.outputs.workshop-management-api }}
-      workshop-management-event-handler: ${{ steps.changes.outputs.workshop-management-event-handler }}
+      CustomerManagementAPI: ${{ steps.changes.outputs.CustomerManagementAPI }}
+      InvoiceService: ${{ steps.changes.outputs.InvoiceService }}
+      NotificationService: ${{ steps.changes.outputs.NotificationService }}
+      TimeService: ${{ steps.changes.outputs.TimeService }}
+      VehicleManagementAPI: ${{ steps.changes.outputs.VehicleManagementAPI }}
+      WebApp: ${{ steps.changes.outputs.WebApp }}
+      WorkshopManagementAPI: ${{ steps.changes.outputs.WorkshopManagementAPI }}
+      WorkshopManagementEventHandler: ${{ steps.changes.outputs.WorkshopManagementEventHandler }}
     steps:
     - uses: actions/checkout@v3
     - uses: dorny/paths-filter@v2
@@ -45,6 +45,22 @@ jobs:
         filters: |
           AuditLogService:
             - './src/AuditlogService/**'
+          CustomerManagementAPI:
+            - './src/CustomerManagementAPI/**'
+          InvoiceService:
+            - './src/InvoiceService/**'
+          NotificationService:
+            - './src/NotificationService/**'
+          TimeService:
+            - './src/TimeService/**'
+          VehicleManagementAPI:
+            - './src/VehicleManagementAPI/**'
+          WebApp:
+            - './src/WebApp/**'
+          WorkshopManagementAPI:
+            - './src/WorkshopManagementAPI/**'
+          WorkshopManagementEventHandler:
+            - './src/WorkshopManagementEventHandler/**'
 
 
          
@@ -62,7 +78,7 @@ jobs:
 
  call-docker-build-push-cm:
     needs: [create-version-number,changes]
-    if: ${{ needs.changes.outputs.customer-management-api == 'true' }}
+    if: ${{ needs.changes.outputs.CustomerManagementAPI == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: CustomerManagementAPI
@@ -73,7 +89,7 @@ jobs:
     secrets: inherit
  call-docker-build-push-is:
     needs: [create-version-number,changes]
-    if: ${{ needs.changes.outputs.invoice-service == 'true' }}
+    if: ${{ needs.changes.outputs.InvoiceService == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: InvoiceService
@@ -84,7 +100,7 @@ jobs:
     secrets: inherit
  call-docker-build-push-ns:
     needs: [create-version-number,changes]
-    if: ${{ needs.changes.outputs.pitstop-notification-service == 'true' }}
+    if: ${{ needs.changes.outputs.NotificationService == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: NotificationService
@@ -95,7 +111,7 @@ jobs:
     secrets: inherit
  call-docker-build-push-ts:
     needs: [create-version-number,changes]
-    if: ${{ needs.changes.outputs.pitstop-time-service == 'true' }}
+    if: ${{ needs.changes.outputs.TimeService == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: TimeService
@@ -106,7 +122,7 @@ jobs:
     secrets: inherit
  call-docker-build-push-vm-api:
     needs: [create-version-number,changes]
-    if: ${{ needs.changes.outputs.pitstop-vehicle-management-api == 'true' }}
+    if: ${{ needs.changes.outputs.VehicleManagementAPI == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: VehicleManagementAPI
@@ -117,7 +133,7 @@ jobs:
     secrets: inherit
  call-docker-build-push-web-app:
     needs: [create-version-number,changes]
-    if: ${{ needs.changes.outputs.pitstop-web-app == 'true' }}
+    if: ${{ needs.changes.outputs.WebApp == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WebApp
@@ -128,7 +144,7 @@ jobs:
     secrets: inherit
  call-docker-build-wm-api:
     needs: [create-version-number,changes]
-    if: ${{ needs.changes.outputs.pitstop-workshop-management-api == 'true' }}
+    if: ${{ needs.changes.outputs.WorkshopManagementAPI == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementAPI
@@ -139,7 +155,7 @@ jobs:
     secrets: inherit
  call-docker-build-wm-eh:
     needs: [create-version-number,changes]
-    if: ${{ needs.changes.outputs.pitstop-workshop-management-event-handler == 'true' }}
+    if: ${{ needs.changes.outputs.WorkshopManagementEventHandler == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: WorkshopManagementEventHandler
