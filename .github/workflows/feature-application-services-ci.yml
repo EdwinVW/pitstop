@@ -49,7 +49,7 @@ jobs:
       service-name: AuditlogService
       docker-image-name: pitstop-audit-log-service
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      feature-branch-name: ${{needs.create-version-number.outputs.branch}}
+      feature-branch-name: -${{needs.create-version-number.outputs.branch}}
     secrets: inherit
 
  call-docker-build-push-cm:
@@ -59,7 +59,7 @@ jobs:
       service-name: CustomerManagementAPI
       docker-image-name: pitstop-customer-management-api
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      feature-branch-name: ${{needs.create-version-number.outputs.branch}}
+      feature-branch-name: -${{needs.create-version-number.outputs.branch}}
     secrets: inherit
  call-docker-build-push-is:
     needs: [create-version-number]
@@ -68,7 +68,7 @@ jobs:
       service-name: InvoiceService
       docker-image-name: pitstop-invoice-service
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      feature-branch-name: ${{needs.create-version-number.outputs.branch}}
+      feature-branch-name: -${{needs.create-version-number.outputs.branch}}
     secrets: inherit
  call-docker-build-push-ns:
     needs: [create-version-number]
@@ -77,7 +77,7 @@ jobs:
       service-name: NotificationService
       docker-image-name: pitstop-notification-service
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      feature-branch-name: ${{needs.create-version-number.outputs.branch}}
+      feature-branch-name: -${{needs.create-version-number.outputs.branch}}
     secrets: inherit
  call-docker-build-push-ts:
     needs: [create-version-number]
@@ -86,7 +86,7 @@ jobs:
       service-name: TimeService
       docker-image-name: pitstop-time-service
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      feature-branch-name: ${{needs.create-version-number.outputs.branch}}
+      feature-branch-name: -${{needs.create-version-number.outputs.branch}}
     secrets: inherit
  call-docker-build-push-vm-api:
     needs: [create-version-number]
@@ -95,7 +95,7 @@ jobs:
       service-name: VehicleManagementAPI
       docker-image-name: pitstop-vehicle-management-api
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      feature-branch-name: ${{needs.create-version-number.outputs.branch}}
+      feature-branch-name: -${{needs.create-version-number.outputs.branch}}
     secrets: inherit
  call-docker-build-push-web-app:
     needs: [create-version-number]
@@ -104,7 +104,7 @@ jobs:
       service-name: WebApp
       docker-image-name: pitstop-web-app
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      feature-branch-name: ${{needs.create-version-number.outputs.branch}}
+      feature-branch-name: -${{needs.create-version-number.outputs.branch}}
     secrets: inherit
  call-docker-build-wm-api:
     needs: [create-version-number]
@@ -113,7 +113,7 @@ jobs:
       service-name: WorkshopManagementAPI
       docker-image-name: pitstop-workshop-management-api
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      feature-branch-name: ${{needs.create-version-number.outputs.branch}}
+      feature-branch-name: -${{needs.create-version-number.outputs.branch}}
     secrets: inherit
  call-docker-build-wm-eh:
     needs: [create-version-number]
@@ -122,7 +122,7 @@ jobs:
       service-name: WorkshopManagementEventHandler
       docker-image-name: pitstop-workshop-management-event-handler
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      feature-branch-name: ${{needs.create-version-number.outputs.branch}}
+      feature-branch-name: -${{needs.create-version-number.outputs.branch}}
     secrets: inherit
       
     
