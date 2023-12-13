@@ -16,7 +16,7 @@ jobs:
  changes:
     runs-on: ubuntu-latest
     outputs:
-      audit-log-service: ${{ steps.changes.outputs.audit-log-service }}
+      audit-log-service: ${{ steps.changes.outputs.AuditLogService }}
       customer-management-api: ${{ steps.changes.outputs.customer-management-api }}
       invoice-service: ${{ steps.changes.outputs.invoice-service }}
       notification-service: ${{ steps.changes.outputs.notification-service }}
@@ -31,7 +31,7 @@ jobs:
       id: changes
       with:
         filters: |
-          audit-log-service:
+          AuditLogService:
             - 'src/AuditLogService/**'
           customer-management-api:
             - 'customer-management-api/**'
@@ -65,7 +65,7 @@ jobs:
          
  call-docker-build-push-as:
     needs: [create-version-number,changes]
-    if: ${{ needs.changes.outputs.audit-log-service == 'true' }}
+    if: ${{ needs.changes.outputs.AuditLogService == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
       service-name: AuditlogService
