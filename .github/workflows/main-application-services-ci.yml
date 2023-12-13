@@ -1,8 +1,10 @@
 name: Main Application Services CI
 
 on:
-  workflow_dispatch
-
+  push:
+    paths:
+    - 'scr/**'
+    
 env:
   OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
   OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
@@ -32,7 +34,7 @@ jobs:
       with:
         filters: |
           audit-log-service:
-            - 'src/AuditLogService/**'
+            - 'AuditLogService/**'
           customer-management-api:
             - 'customer-management-api/**'
           invoice-service:
@@ -76,7 +78,7 @@ jobs:
     secrets: inherit
 
  call-docker-build-push-cm:
-    needs: [create-version-number, changes]
+    needs: [create-version-number,changes]
     if: ${{ needs.changes.outputs.customer-management-api == 'true' }}
     uses: adamoctoclose/pitstop/.github/workflows/reusable-docker.yml@main
     with:
