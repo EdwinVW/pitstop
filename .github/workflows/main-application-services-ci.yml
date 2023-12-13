@@ -32,7 +32,7 @@ jobs:
       with:
         filters: |
           audit-log-service:
-            - 'AuditLogService/**'
+            - 'src/AuditLogService/**'
           customer-management-api:
             - 'customer-management-api/**'
           invoice-service:
