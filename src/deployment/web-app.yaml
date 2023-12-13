@@ -31,6 +31,20 @@ spec:
 
 ---
 
+apiVersion: v1
+kind: Service
+metadata:
+  name: #{Octopus.Project.Name}-web-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: #{Octopus.Project.Name}
+  ports:
+    - port: 5000
+      targetPort: 5000
+      name: http-port
+
+---
 
 apiVersion: v1
 kind: Service
