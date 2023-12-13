@@ -31,7 +31,7 @@ jobs:
       service-name: AuditlogService
       docker-image-name: pitstop-audit-log-service
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      environment-name: test
+      environment-name: production
       channel-name: Default
     secrets: inherit
 
@@ -42,7 +42,7 @@ jobs:
       service-name: CustomerManagementAPI
       docker-image-name: pitstop-customer-management-api
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      environment-name: test
+      environment-name: production
       channel-name: Default
     secrets: inherit
  call-docker-build-push-is:
@@ -52,7 +52,7 @@ jobs:
       service-name: InvoiceService
       docker-image-name: pitstop-invoice-service
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      environment-name: test
+      environment-name: production
       channel-name: Default
     secrets: inherit
  call-docker-build-push-ns:
@@ -62,7 +62,7 @@ jobs:
       service-name: NotificationService
       docker-image-name: pitstop-notification-service
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      environment-name: test
+      environment-name: production
       channel-name: Default
     secrets: inherit
  call-docker-build-push-ts:
@@ -72,7 +72,7 @@ jobs:
       service-name: TimeService
       docker-image-name: pitstop-time-service
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      environment-name: test
+      environment-name: production
       channel-name: Default
     secrets: inherit
  call-docker-build-push-vm-api:
@@ -83,7 +83,7 @@ jobs:
       service-name: VehicleManagementAPI
       docker-image-name: pitstop-vehicle-management-api
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      environment-name: test
+      environment-name: production
       channel-name: Default
     secrets: inherit
  call-docker-build-push-web-app:
@@ -93,7 +93,7 @@ jobs:
       service-name: WebApp
       docker-image-name: pitstop-web-app
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      environment-name: test
+      environment-name: production
       channel-name: Default
     secrets: inherit
  call-docker-build-wm-api:
@@ -103,7 +103,7 @@ jobs:
       service-name: WorkshopManagementAPI
       docker-image-name: pitstop-workshop-management-api
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      environment-name: test
+      environment-name: production
       channel-name: Default
     secrets: inherit
  call-docker-build-wm-eh:
@@ -113,7 +113,7 @@ jobs:
       service-name: WorkshopManagementEventHandler
       docker-image-name: pitstop-workshop-management-event-handler
       docker-image-version: ${{needs.create-version-number.outputs.version}}
-      environment-name: test
+      environment-name: production
       channel-name: Default
     secrets: inherit
       
