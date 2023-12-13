@@ -9,7 +9,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: #{Octopus.Project.Name}
+      component: #{Octopus.Project.Name}
   template:
     metadata:
       labels:
