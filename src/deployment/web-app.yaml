@@ -26,7 +26,7 @@ spec:
         imagePullPolicy: IfNotPresent
         name: #{Octopus.Project.Name}
         ports:
-        - containerPort: 5000
+        - containerPort: 7000
       restartPolicy: Always
 
 ---
@@ -40,8 +40,8 @@ spec:
   selector:
     component: #{Octopus.Project.Name}
   ports:
-    - port: 5000
-      targetPort: 5000
+    - port: 7000
+      targetPort: 7000
       name: http-port
 
 ---
@@ -56,7 +56,7 @@ spec:
     component: #{Octopus.Project.Name}
   ports:
     - port: 80
-      targetPort: 5000
+      targetPort: 7000
       name: http-port
   type: LoadBalancer
 
