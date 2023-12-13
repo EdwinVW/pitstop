@@ -28,7 +28,7 @@ jobs:
  changes:
     runs-on: ubuntu-latest
     outputs:
-      audit-log-service: ${{ steps.changes.outputs.audit-log-Service }}
+      audit-log-service: ${{ steps.changes.outputs.audit-log-service }}
       customer-management-api: ${{ steps.changes.outputs.customer-management-api }}
       invoice-service: ${{ steps.changes.outputs.invoice-service }}
       notification-service: ${{ steps.changes.outputs.notification-service }}
@@ -43,8 +43,8 @@ jobs:
       id: changes
       with:
         filters: |
-         audit-log-Service:
-            - '/src/AuditLogService/**'
+         audit-log-service:
+            - './src/AuditLogService/**'
 
 
          
