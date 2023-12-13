@@ -44,7 +44,7 @@ jobs:
       with:
         filters: |
          audit-log-Service:
-            - './src/AuditLogService/**'
+            - '/src/AuditLogService/**'
 
 
          
