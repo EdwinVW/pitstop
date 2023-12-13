@@ -45,22 +45,6 @@ jobs:
         filters: |
           AuditLogService:
             - 'src/AuditLogService/**'
-          customer-management-api:
-            - 'customer-management-api/**'
-          invoice-service:
-            - 'invoice-service/**'
-          notification-service:
-            - 'notification-service/**'        
-          time-service:
-            - 'time-service/**'     
-          vehicle-management-api:
-            - 'vehicle-management-api/**' 
-          web-app:
-            - 'web-app/**'
-          workshop-management-api:
-            - 'workshop-management-api.yaml/**'
-          workshop-management-event-handler:
-            - 'workshop-management-event-handler/**'
             
 
 
