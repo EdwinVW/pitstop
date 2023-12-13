@@ -19,6 +19,9 @@ on:
       environment-name:
         required: false
         type: string
+      channel-name:
+        required: false
+        type: string
 env:
   OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
   OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
@@ -49,7 +52,7 @@ jobs:
          with: 
             project: ${{ inputs.docker-image-name }}
             release_number: ${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }}
-            channel: Development
+            channel: ${{ inputs.channel-name }}
 
        - name: Deploy Octopus Release
          uses: OctopusDeploy/deploy-release-action@v3.0.4
