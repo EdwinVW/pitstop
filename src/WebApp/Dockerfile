@@ -30,7 +30,7 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 # Expose ports
-EXPOSE 80/tcp
+EXPOSE 5000/tcp
 ENV ASPNETCORE_URLS http://*:80
 HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:80/hc || exit 1
 
