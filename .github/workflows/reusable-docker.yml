@@ -53,6 +53,13 @@ jobs:
             project: ${{ inputs.docker-image-name }}
             release_number: ${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }}
             channel: ${{ inputs.channel-name }}
+        
+       
+       - name: Create Build Information
+         uses: OctopusDeploy/push-build-information-action@v3.0.1
+         with: 
+            packages: ${{ inputs.docker-image-name }}
+            branch: ${{ inputs.feature-branch-name }} 
 
        - name: Deploy Octopus Release
          uses: OctopusDeploy/deploy-release-action@v3.0.4
