@@ -60,6 +60,7 @@ jobs:
          with: 
             packages: ${{ inputs.docker-image-name }}
             branch: ${{ inputs.feature-branch-name }} 
+            version: ${{ inputs.docker-image-version }}
 
        - name: Deploy Octopus Release
          uses: OctopusDeploy/deploy-release-action@v3.0.4
