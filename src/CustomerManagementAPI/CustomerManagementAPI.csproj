@@ -20,10 +20,9 @@
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
     <PackageReference Include="Pitstop.Infrastructure.Messaging" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
-    <PackageReference Include="Serilog.AspNetCore" />
-    <PackageReference Include="Serilog.Settings.Configuration" />
-    <PackageReference Include="Serilog.Enrichers.Environment" />
-    <PackageReference Include="Serilog.Sinks.Console" />
-    <PackageReference Include="Serilog.Sinks.Seq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ServiceDefaults\ServiceDefaults.csproj" />
   </ItemGroup>
 </Project>

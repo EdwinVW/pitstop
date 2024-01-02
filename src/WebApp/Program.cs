@@ -1,14 +1,11 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using ServiceDefaults;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 //builder.UseKestrel();
 builder.Host.UseContentRoot(Directory.GetCurrentDirectory());
-
-// setup logging
-builder.Host.UseSerilog((context, logContext) => 
-    logContext
-        .ReadFrom.Configuration(builder.Configuration)
-        .Enrich.WithMachineName()
-);
 
 // Add framework services
 builder.Services

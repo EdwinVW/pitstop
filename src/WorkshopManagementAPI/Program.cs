@@ -1,11 +1,8 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using ServiceDefaults;
 
-// setup logging
-builder.Host.UseSerilog((context, logContext) => 
-    logContext
-        .ReadFrom.Configuration(builder.Configuration)
-        .Enrich.WithMachineName()
-);
+var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 // add repo
 var eventStoreConnectionString = builder.Configuration.GetConnectionString("EventStoreCN");
