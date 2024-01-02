@@ -7,7 +7,7 @@ public class WorkshopManagementAPI : IWorkshopManagementAPI
     public WorkshopManagementAPI(IConfiguration config, HttpClient httpClient)
     {
         string apiHostAndPort = config.GetSection("APIServiceLocations").GetValue<string>("WorkshopManagementAPI");
-        httpClient.BaseAddress = new Uri($"http://{apiHostAndPort}/api");
+        httpClient.BaseAddress = new Uri($"http://{apiHostAndPort}");
         _restClient = RestService.For<IWorkshopManagementAPI>(
             httpClient,
             new RefitSettings

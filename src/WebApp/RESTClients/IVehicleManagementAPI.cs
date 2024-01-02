@@ -2,12 +2,12 @@
 
 public interface IVehicleManagementAPI
 {
-    [Get("/vehicles")]
+    [Get("/api/vehicles")]
     Task<List<Vehicle>> GetVehicles();
 
-    [Get("/vehicles/{id}")]
+    [Get("/api/vehicles/{id}")]
     Task<Vehicle> GetVehicleByLicenseNumber([AliasAs("id")] string licenseNumber);
 
-    [Post("/vehicles")]
+    [Post("/api/vehicles")]
     Task RegisterVehicle(RegisterVehicle command);
 }
