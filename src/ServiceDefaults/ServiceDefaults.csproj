@@ -20,6 +20,7 @@
 		<PackageReference Include="Serilog.Settings.Configuration" Version="8.0.1-dev-00561" />
 		<PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.0-dev-00806" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+		<PackageReference Include="Serilog.Sinks.OpenTelemetry" Version="1.2.0" />
 		<PackageReference Include="Serilog.Sinks.Seq" Version="7.0.0-dev-00276" />
 		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.7.0-alpha.1" />
 		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.7.0-alpha.1" />

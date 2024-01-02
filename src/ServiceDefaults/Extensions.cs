@@ -18,7 +18,13 @@ public static class Extensions
     {
         builder.Services.AddSerilog(configure =>
         {
-            configure.ReadFrom.Configuration(builder.Configuration).Enrich.WithMachineName();
+            var endpoint = Environment.GetEnvironmentVariable("OTEL_EXPORTER_OTLP_ENDPOINT");
+            
+            configure.ReadFrom.Configuration(builder.Configuration).Enrich.WithMachineName().WriteTo.OpenTelemetry(options =>
+            {
+                options.ResourceAttributes = GetOtelResourceAttributes();
+                options.Endpoint = endpoint ?? "http://localhost:4317";
+            });
         });
 
         // Make the service observable by default.
@@ -124,4 +130,24 @@ public static class Extensions
             "Microsoft.AspNetCore.Hosting",
             "Microsoft.AspNetCore.Server.Kestrel",
             "System.Net.Http");
+
+    private static Dictionary<string, object> GetOtelResourceAttributes()
+    {
+        var otelResourceAttributes = new Dictionary<string, object>();
+        var resourceAttributeKeyValuePairs = (Environment.GetEnvironmentVariable("OTEL_RESOURCE_ATTRIBUTES") ?? "").Split(";");
+
+        foreach(var keyValuePair in resourceAttributeKeyValuePairs)
+        {
+            var parts = keyValuePair.Split("=");
+
+            if (parts.Length == 2)
+            {
+                otelResourceAttributes.Add(parts[0], parts[1]);
+            }
+        }
+
+        otelResourceAttributes.Add("service.name", Environment.GetEnvironmentVariable("OTEL_SERVICE_NAME") ?? "unknown");
+
+        return otelResourceAttributes;
+    }
 }
