@@ -2,13 +2,13 @@
 
 public class EventHandlerWorker : IHostedService, IMessageHandlerCallback
 {
-    WorkshopManagementDBContext _dbContext;
+    private IServiceProvider _serviceProvider;
     IMessageHandler _messageHandler;
 
-    public EventHandlerWorker(IMessageHandler messageHandler, WorkshopManagementDBContext dbContext)
+    public EventHandlerWorker(IMessageHandler messageHandler, IServiceProvider serviceProvider)
     {
         _messageHandler = messageHandler;
-        _dbContext = dbContext;
+        _serviceProvider = serviceProvider;
     }
 
     public void Start()
@@ -66,19 +66,23 @@ public class EventHandlerWorker : IHostedService, IMessageHandlerCallback
 
     private async Task<bool> HandleAsync(VehicleRegistered e)
     {
+        using var scope = _serviceProvider.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<WorkshopManagementDBContext>();
+
         Log.Information("Register Vehicle: {LicenseNumber}, {Brand}, {Type}, Owner Id: {OwnerId}",
             e.LicenseNumber, e.Brand, e.Type, e.OwnerId);
 
         try
         {
-            await _dbContext.Vehicles.AddAsync(new Vehicle
+            await dbContext.Vehicles.AddAsync(new Vehicle
             {
                 LicenseNumber = e.LicenseNumber,
                 Brand = e.Brand,
                 Type = e.Type,
                 OwnerId = e.OwnerId
             });
-            await _dbContext.SaveChangesAsync();
+
+            await dbContext.SaveChangesAsync();
         }
         catch (DbUpdateException)
         {
@@ -90,18 +94,22 @@ public class EventHandlerWorker : IHostedService, IMessageHandlerCallback
 
     private async Task<bool> HandleAsync(CustomerRegistered e)
     {
+        using var scope = _serviceProvider.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<WorkshopManagementDBContext>();
+
         Log.Information("Register Customer: {CustomerId}, {Name}, {TelephoneNumber}",
             e.CustomerId, e.Name, e.TelephoneNumber);
 
         try
         {
-            await _dbContext.Customers.AddAsync(new Customer
+            await dbContext.Customers.AddAsync(new Customer
             {
                 CustomerId = e.CustomerId,
                 Name = e.Name,
                 TelephoneNumber = e.TelephoneNumber
             });
-            await _dbContext.SaveChangesAsync();
+
+            await dbContext.SaveChangesAsync();
         }
         catch (DbUpdateException)
         {
@@ -113,13 +121,17 @@ public class EventHandlerWorker : IHostedService, IMessageHandlerCallback
 
     private async Task<bool> HandleAsync(MaintenanceJobPlanned e)
     {
+        using var scope = _serviceProvider.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<WorkshopManagementDBContext>();
+
         Log.Information("Register Maintenance Job: {JobId}, {StartTime}, {EndTime}, {CustomerName}, {LicenseNumber}",
             e.JobId, e.StartTime, e.EndTime, e.CustomerInfo.Name, e.VehicleInfo.LicenseNumber);
 
         try
         {
             // determine customer
-            Customer customer = await _dbContext.Customers.FirstOrDefaultAsync(c => c.CustomerId == e.CustomerInfo.Id);
+            Customer customer = await dbContext.Customers.FirstOrDefaultAsync(c => c.CustomerId == e.CustomerInfo.Id);
+
             if (customer == null)
             {
                 customer = new Customer
@@ -131,7 +143,8 @@ public class EventHandlerWorker : IHostedService, IMessageHandlerCallback
             }
 
             // determine vehicle
-            Vehicle vehicle = await _dbContext.Vehicles.FirstOrDefaultAsync(v => v.LicenseNumber == e.VehicleInfo.LicenseNumber);
+            Vehicle vehicle = await dbContext.Vehicles.FirstOrDefaultAsync(v => v.LicenseNumber == e.VehicleInfo.LicenseNumber);
+
             if (vehicle == null)
             {
                 vehicle = new Vehicle
@@ -144,7 +157,7 @@ public class EventHandlerWorker : IHostedService, IMessageHandlerCallback
             }
 
             // insert maintetancejob
-            await _dbContext.MaintenanceJobs.AddAsync(new MaintenanceJob
+            await dbContext.MaintenanceJobs.AddAsync(new MaintenanceJob
             {
                 Id = e.JobId,
                 StartTime = e.StartTime,
@@ -154,7 +167,8 @@ public class EventHandlerWorker : IHostedService, IMessageHandlerCallback
                 WorkshopPlanningDate = e.StartTime.Date,
                 Description = e.Description
             });
-            await _dbContext.SaveChangesAsync();
+
+            await dbContext.SaveChangesAsync();
         }
         catch (DbUpdateException)
         {
@@ -166,17 +180,22 @@ public class EventHandlerWorker : IHostedService, IMessageHandlerCallback
 
     private async Task<bool> HandleAsync(MaintenanceJobFinished e)
     {
+        using var scope = _serviceProvider.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<WorkshopManagementDBContext>();
+
         Log.Information("Finish Maintenance job: {JobId}, {ActualStartTime}, {EndTime}",
             e.JobId, e.StartTime, e.EndTime);
 
         try
         {
             // insert maintetancejob
-            var job = await _dbContext.MaintenanceJobs.FirstOrDefaultAsync(j => j.Id == e.JobId);
+            var job = await dbContext.MaintenanceJobs.FirstOrDefaultAsync(j => j.Id == e.JobId);
+            
             job.ActualStartTime = e.StartTime;
             job.ActualEndTime = e.EndTime;
             job.Notes = e.Notes;
-            await _dbContext.SaveChangesAsync();
+
+            await dbContext.SaveChangesAsync();
         }
         catch (DbUpdateException)
         {

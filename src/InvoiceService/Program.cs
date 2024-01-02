@@ -3,12 +3,13 @@
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
+builder.AddSqlServerClient("Invoicing");
 
 builder.Services.UseRabbitMQMessageHandler(builder.Configuration);
 
 builder.Services.AddTransient<IInvoiceRepository>((svc) =>
 {
-    var sqlConnectionString = builder.Configuration.GetConnectionString("InvoiceServiceCN");
+    var sqlConnectionString = builder.Configuration.GetConnectionString("Invoicing");
     return new SqlServerInvoiceRepository(sqlConnectionString);
 });
 
@@ -25,4 +26,5 @@ builder.Services.AddTransient<IEmailCommunicator>((svc) =>
 builder.Services.AddHostedService<InvoiceWorker>();
 
 var host = builder.Build();
+
 await host.RunAsync();

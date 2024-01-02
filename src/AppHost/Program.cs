@@ -1,14 +1,43 @@
-﻿var builder = DistributedApplication.CreateBuilder(args);
+﻿using Dapper;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System.Data.SqlClient;
+
+var builder = DistributedApplication.CreateBuilder(args);
+
+var databaseServer = builder.AddSqlServerContainer("pitstop_database");
+var customerManagementDb = databaseServer.AddDatabase("CustomerManagement");
+var eventStoreDb = databaseServer.AddDatabase("EventStore");
+var invoicingDb = databaseServer.AddDatabase("Invoicing");
+var notificationDb = databaseServer.AddDatabase("Notifications");
+var vehicleManagementDb = databaseServer.AddDatabase("VehicleManagement");
+var workshopManagementDb = databaseServer.AddDatabase("WorkshopManagement");
+
+builder.AddProject<Projects.Pitstop_AuditlogService>("AuditLogService");
+
+builder.AddProject<Projects.Pitstop_CustomerManagementAPI>("CustomerManagementAPI")
+    .WithReference(customerManagementDb);
+
+builder.AddProject<Projects.Pitstop_InvoiceService>("InvoiceService")
+    .WithReference(invoicingDb);
+
+builder.AddProject<Projects.Pitstop_NotificationService>("NotificationService")
+    .WithReference(notificationDb);
+
+builder.AddProject<Projects.Pitstop_TimeService>("TimeService");
+
+builder.AddProject<Projects.Pitstop_VehicleManagementAPI>("VehicleManagementAPI")
+    .WithReference(vehicleManagementDb);
+
+builder.AddProject<Projects.Pitstop_WebApp>("WebApp");
+
+builder.AddProject<Projects.Pitstop_WorkshopManagementAPI>("WorkshopManagementAPI")
+    .WithReference(eventStoreDb)
+    .WithReference(workshopManagementDb);
+
+builder.AddProject<Projects.Pitstop_WorkshopManagementEventHandler>("WorkshopManagementEventHandler")
+    .WithReference(workshopManagementDb);
 
 
-builder.AddProject<Projects.Pitstop_AuditlogService>("auditlogservice");
-builder.AddProject<Projects.Pitstop_CustomerManagementAPI>("customermanagementapi");
-builder.AddProject<Projects.Pitstop_InvoiceService>("invoiceservice");
-builder.AddProject<Projects.Pitstop_NotificationService>("notificationservice");
-builder.AddProject<Projects.Pitstop_TimeService>("timerservice");
-builder.AddProject<Projects.Pitstop_VehicleManagementAPI>("vehiclemanagementapi");
-builder.AddProject<Projects.Pitstop_WebApp>("webapp");
-builder.AddProject<Projects.Pitstop_WorkshopManagementAPI>("workshopmanagementapi");
-builder.AddProject<Projects.Pitstop_WorkshopManagementEventHandler>("workshopmanagementeventhandler");
-
-builder.Build().Run();
+var host = builder.Build();
+await host.RunAsync();

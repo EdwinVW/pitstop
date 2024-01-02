@@ -1,17 +1,23 @@
-﻿using ServiceDefaults;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.DependencyInjection;
+using ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+builder.AddKeyedSqlServerClient("EventStore");
+builder.AddKeyedSqlServerClient("WorkshopManagement");
+
 // add repo
-var eventStoreConnectionString = builder.Configuration.GetConnectionString("EventStoreCN");
-builder.Services.AddTransient<IEventSourceRepository<WorkshopPlanning>>((sp) => 
+var eventStoreConnectionString = builder.Configuration.GetConnectionString("EventStore");
+builder.Services.AddTransient<IEventSourceRepository<WorkshopPlanning>>((sp) =>
     new SqlServerWorkshopPlanningEventSourceRepository(eventStoreConnectionString));
 
-var workshopManagementConnectionString = builder.Configuration.GetConnectionString("WorkshopManagementCN");
+var workshopManagementConnectionString = builder.Configuration.GetConnectionString("WorkshopManagement");
 builder.Services.AddTransient<IVehicleRepository>((sp) => new SqlServerRefDataRepository(workshopManagementConnectionString));
 builder.Services.AddTransient<ICustomerRepository>((sp) => new SqlServerRefDataRepository(workshopManagementConnectionString));
+
 
 // add messagepublisher
 builder.Services.UseRabbitMQMessagePublisher(builder.Configuration);
@@ -31,9 +37,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Add health checks
-builder.Services.AddHealthChecks()
-    .AddSqlServer(eventStoreConnectionString, name: "EventStoreHC")
-    .AddSqlServer(workshopManagementConnectionString, name: "WorkshopManagementStoreHC");
+builder.Services.AddHealthChecks();
 
 // Setup MVC
 builder.Services.AddControllers();

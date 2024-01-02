@@ -3,10 +3,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-
-// add DBContext
-var sqlConnectionString = builder.Configuration.GetConnectionString("CustomerManagementCN");
-builder.Services.AddDbContext<CustomerManagementDBContext>(options => options.UseSqlServer(sqlConnectionString));
+builder.AddSqlServerDbContext<CustomerManagementDBContext>("customermanagement");
 
 // add messagepublisher
 builder.Services.UseRabbitMQMessagePublisher(builder.Configuration);
@@ -23,8 +20,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Add health checks
-builder.Services.AddHealthChecks()
-    .AddDbContextCheck<CustomerManagementDBContext>();
+builder.Services.AddHealthChecks();
 
 // setup MVC
 builder.Services.AddControllers();
@@ -49,14 +45,13 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "CustomerManagement API - v1");
 });
 
-// auto migrate db
-using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
-{
-    scope.ServiceProvider.GetService<CustomerManagementDBContext>().MigrateDB();
-}
-
 app.UseHealthChecks("/hc");
 
 app.MapControllers();
+
+using var scope = app.Services.CreateScope();
+using var dbContext = scope.ServiceProvider.GetRequiredService<CustomerManagementDBContext>();
+
+await dbContext.Database.MigrateAsync();
 
 app.Run();

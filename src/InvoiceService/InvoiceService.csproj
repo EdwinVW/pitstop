@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Microsoft.Data.SqlClient" />
     <PackageReference Include="Dapper" />
     <PackageReference Include="System.Data.SqlClient" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
