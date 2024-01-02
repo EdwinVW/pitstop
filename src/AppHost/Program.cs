@@ -16,6 +16,7 @@ var workshopManagementDb = databaseServer.AddDatabase("WorkshopManagement");
 builder.AddProject<Projects.Pitstop_AuditlogService>("AuditLogService");
 
 builder.AddProject<Projects.Pitstop_CustomerManagementAPI>("CustomerManagementAPI")
+    .WithLaunchProfile("CustomerManagementAPI")
     .WithReference(customerManagementDb);
 
 builder.AddProject<Projects.Pitstop_InvoiceService>("InvoiceService")
@@ -27,11 +28,13 @@ builder.AddProject<Projects.Pitstop_NotificationService>("NotificationService")
 builder.AddProject<Projects.Pitstop_TimeService>("TimeService");
 
 builder.AddProject<Projects.Pitstop_VehicleManagementAPI>("VehicleManagementAPI")
+    .WithLaunchProfile("VehicleManagementAPI")
     .WithReference(vehicleManagementDb);
 
 builder.AddProject<Projects.Pitstop_WebApp>("WebApp");
 
 builder.AddProject<Projects.Pitstop_WorkshopManagementAPI>("WorkshopManagementAPI")
+    .WithLaunchProfile("WorkshopManagementAPI")
     .WithReference(eventStoreDb)
     .WithReference(workshopManagementDb);
 

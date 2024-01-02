@@ -34,11 +34,9 @@ else
 }
 
 app.UseMvc();
-//app.UseDefaultFiles();
 app.UseStaticFiles();
 
-
-app.UseHealthChecks("/hc");
+app.MapDefaultEndpoints();
 
 app.UseMvc(routes =>
 {

@@ -36,9 +36,6 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo  { Title = "WorkshopManagement API", Version = "v1" });
 });
 
-// Add health checks
-builder.Services.AddHealthChecks();
-
 // Setup MVC
 builder.Services.AddControllers();
 
@@ -62,8 +59,7 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "WorkshopManagement API - v1");
 });
 
-app.UseHealthChecks("/hc");
-
+app.MapDefaultEndpoints();
 app.MapControllers();
 
 app.Run();

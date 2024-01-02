@@ -44,7 +44,7 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "CustomerManagement API - v1");
 });
 
-app.UseHealthChecks("/hc");
+app.MapDefaultEndpoints();
 
 app.MapControllers();
 
