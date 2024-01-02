@@ -1,17 +1,17 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceDefaults;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
-builder.AddSqlServerClient("Notifications");
+builder.AddSqlServerClient("Notification");
 
 builder.Services.UseRabbitMQMessageHandler(builder.Configuration);
 
 builder.Services.AddTransient<INotificationRepository>((svc) =>
 {
-    var sqlConnectionString = builder.Configuration.GetConnectionString("Notifications");
+    var sqlConnectionString = builder.Configuration.GetConnectionString("Notification");
     return new SqlServerNotificationRepository(sqlConnectionString);
 });
 

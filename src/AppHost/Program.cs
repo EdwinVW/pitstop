@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Data.SqlClient;
@@ -9,7 +9,7 @@ var databaseServer = builder.AddSqlServerContainer("pitstop_database");
 var customerManagementDb = databaseServer.AddDatabase("CustomerManagement");
 var eventStoreDb = databaseServer.AddDatabase("EventStore");
 var invoicingDb = databaseServer.AddDatabase("Invoicing");
-var notificationDb = databaseServer.AddDatabase("Notifications");
+var notificationDb = databaseServer.AddDatabase("Notification");
 var vehicleManagementDb = databaseServer.AddDatabase("VehicleManagement");
 var workshopManagementDb = databaseServer.AddDatabase("WorkshopManagement");
 
