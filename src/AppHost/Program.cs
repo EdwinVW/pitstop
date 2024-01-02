@@ -1,4 +1,4 @@
-using Aspire.Hosting;
+﻿using Aspire.Hosting;
 using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,7 +21,8 @@ var workshopManagementDb = databaseServer.AddDatabase("WorkshopManagement");
 
 builder.AddProject<Projects.Pitstop_AuditlogService>("AuditLogService");
 
-builder.AddProject<Projects.Pitstop_CustomerManagementAPI>("CustomerManagementAPI")
+var customerManagementApi = builder
+    .AddProject<Projects.Pitstop_CustomerManagementAPI>("CustomerManagementAPI")
     .WithLaunchProfile("CustomerManagementAPI")
     .WithReference(customerManagementDb);
 
@@ -33,19 +34,24 @@ builder.AddProject<Projects.Pitstop_NotificationService>("NotificationService")
 
 builder.AddProject<Projects.Pitstop_TimeService>("TimeService");
 
-builder.AddProject<Projects.Pitstop_VehicleManagementAPI>("VehicleManagementAPI")
+var vehicleManagementApi = builder
+    .AddProject<Projects.Pitstop_VehicleManagementAPI>("VehicleManagementAPI")
     .WithLaunchProfile("VehicleManagementAPI")
     .WithReference(vehicleManagementDb);
 
-builder.AddProject<Projects.Pitstop_WebApp>("WebApp");
-
-builder.AddProject<Projects.Pitstop_WorkshopManagementAPI>("WorkshopManagementAPI")
+var workshopManagementApi = builder
+    .AddProject<Projects.Pitstop_WorkshopManagementAPI>("WorkshopManagementAPI")
     .WithLaunchProfile("WorkshopManagementAPI")
-    .WithReference(eventStoreDb)
+    .WithReference(workshopManagementEventStoreDb)
     .WithReference(workshopManagementDb);
 
 builder.AddProject<Projects.Pitstop_WorkshopManagementEventHandler>("WorkshopManagementEventHandler")
     .WithReference(workshopManagementDb);
+
+builder.AddProject<Projects.Pitstop_WebApp>("WebApp")
+    .WithReference(workshopManagementApi)
+    .WithReference(vehicleManagementApi)
+    .WithReference(customerManagementApi);
 
 
 var host = builder.Build();

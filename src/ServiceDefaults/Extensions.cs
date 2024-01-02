@@ -21,9 +21,21 @@ public static class Extensions
             configure.ReadFrom.Configuration(builder.Configuration).Enrich.WithMachineName();
         });
 
+        // Make the service observable by default.
         builder.ConfigureOpenTelemetry();
         builder.AddDefaultHealthChecks();
         
+        // Make sure we have service discovery and resilience handling enabled for all HTTP clients.
+        // The discovery helps to find the right service instance by name.
+        // Resiliences makes things more robust by retrying failed requests.
+        builder.Services.AddServiceDiscovery();
+
+        builder.Services.ConfigureHttpClientDefaults(http =>
+        {
+            http.AddStandardResilienceHandler();
+            http.UseServiceDiscovery();
+        });
+
         return builder;
     }
 

@@ -1,4 +1,4 @@
-using ServiceDefaults;
+﻿using ServiceDefaults;
 
 var builder = Host.CreateApplicationBuilder(args);
 
