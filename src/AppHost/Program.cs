@@ -1,9 +1,15 @@
+﻿using Aspire.Hosting;
 using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Data.SqlClient;
 
 var builder = DistributedApplication.CreateBuilder(args);
+
+// Use a RabbitMQ container for local development.
+// The custom settings here are required to help with the integration into existing code.
+var rabbitMqContainer = builder.AddRabbitMQContainer("RabbitMQ", port: 5672, password: "DEBmbwkSrzy9D1T9cJfa")
+    .WithEnvironment("RABBITMQ_DEFAULT_USER", "rabbitmquser");
 
 var databaseServer = builder.AddSqlServerContainer("pitstop_database");
 var customerManagementDb = databaseServer.AddDatabase("CustomerManagement");
