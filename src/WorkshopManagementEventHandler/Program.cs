@@ -1,9 +1,9 @@
-﻿using ServiceDefaults;
+using ServiceDefaults;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
-builder.AddSqlServerDbContext<WorkshopManagementDBContext>("workshopmanagement");
+builder.AddSqlServerDbContext<WorkshopManagementDBContext>("WorkshopManagement");
 
 builder.Services.UseRabbitMQMessageHandler(builder.Configuration);
 

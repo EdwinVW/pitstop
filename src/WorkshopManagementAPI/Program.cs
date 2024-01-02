@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceDefaults;
 
@@ -6,11 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.AddKeyedSqlServerClient("EventStore");
+builder.AddKeyedSqlServerClient("WorkshopManagementEventStore");
 builder.AddKeyedSqlServerClient("WorkshopManagement");
 
 // add repo
-var eventStoreConnectionString = builder.Configuration.GetConnectionString("EventStore");
+var eventStoreConnectionString = builder.Configuration.GetConnectionString("WorkshopManagementEventStore");
 builder.Services.AddTransient<IEventSourceRepository<WorkshopPlanning>>((sp) =>
     new SqlServerWorkshopPlanningEventSourceRepository(eventStoreConnectionString));
 

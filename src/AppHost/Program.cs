@@ -1,4 +1,4 @@
-﻿using Aspire.Hosting;
+using Aspire.Hosting;
 using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,7 +13,7 @@ var rabbitMqContainer = builder.AddRabbitMQContainer("RabbitMQ", port: 5672, pas
 
 var databaseServer = builder.AddSqlServerContainer("pitstop_database");
 var customerManagementDb = databaseServer.AddDatabase("CustomerManagement");
-var eventStoreDb = databaseServer.AddDatabase("EventStore");
+var workshopManagementEventStoreDb = databaseServer.AddDatabase("WorkshopManagementEventStore");
 var invoicingDb = databaseServer.AddDatabase("Invoicing");
 var notificationDb = databaseServer.AddDatabase("Notification");
 var vehicleManagementDb = databaseServer.AddDatabase("VehicleManagement");
