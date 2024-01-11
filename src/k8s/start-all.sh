@@ -39,7 +39,7 @@ kubectl apply \
     -f ./pitstop-namespace$MESHPOSTFIX.yaml \
     -f ./rabbitmq.yaml \
     -f ./logserver.yaml \
-    -f ./sqlserver.yaml \
+    -f ./sqlserver$MESHPOSTFIX.yaml \
     -f ./mailserver.yaml \
     -f ./invoiceservice.yaml \
     -f ./timeservice.yaml \

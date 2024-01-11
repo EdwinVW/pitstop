@@ -45,7 +45,7 @@ kubectl apply `
     -f ./pitstop-namespace$meshPostfix.yaml `
     -f ./rabbitmq.yaml `
     -f ./logserver.yaml `
-    -f ./sqlserver.yaml `
+    -f ./sqlserver$meshPostfix.yaml `
     -f ./mailserver.yaml `
     -f ./invoiceservice.yaml `
     -f ./timeservice.yaml `
