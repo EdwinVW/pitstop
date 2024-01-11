@@ -14,4 +14,4 @@ spec:
     nodePort: 30005
   selector:
     app: customermanagementapi
-    version: "1.0"
+    #version: "1.0"

@@ -6,5 +6,5 @@
 
 kubectl get cm istio-sidecar-injector -o yaml -n istio-system | \
   sed -e '0,/policy: enabled/ s/policy: enabled/policy: disabled/' | \
-  kubectl apply -f -
+  kubectl apply -n istio-system -f -
 
