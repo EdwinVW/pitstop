@@ -1,6 +1,6 @@
 #!/bin/bash
 
-$ISTIO_VERSION = "1.20"
+$ISTIO_VERSION="1.20"
 
 kubectl delete -f https://raw.githubusercontent.com/istio/istio/release-$ISTIO_VERSION/samples/addons/prometheus.yaml
 kubectl delete -f https://raw.githubusercontent.com/istio/istio/release-$ISTIO_VERSION/samples/addons/grafana.yaml
