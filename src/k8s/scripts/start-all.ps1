@@ -28,7 +28,7 @@ if (-not $nomesh)
         echo "Starting Pitstop with Istio service mesh."
 
         # disable global istio side-car injection (only for annotated pods)
-        & "./disable-default-istio-injection.ps1"
+        & "../istio/disable-default-istio-injection.ps1"
     }
 
     if ($linkerd) {
@@ -42,18 +42,18 @@ else
 }
 
 kubectl apply `
-    -f ./pitstop-namespace$meshPostfix.yaml `
-    -f ./rabbitmq.yaml `
-    -f ./logserver.yaml `
-    -f ./sqlserver$meshPostfix.yaml `
-    -f ./mailserver.yaml `
-    -f ./invoiceservice.yaml `
-    -f ./timeservice.yaml `
-    -f ./notificationservice.yaml `
-    -f ./workshopmanagementeventhandler.yaml `
-    -f ./auditlogservice.yaml `
-    -f ./customermanagementapi-v1$meshPostfix.yaml `
-    -f ./customermanagementapi-svc.yaml `
-    -f ./vehiclemanagementapi$meshPostfix.yaml `
-    -f ./workshopmanagementapi$meshPostfix.yaml `
-    -f ./webapp$meshPostfix.yaml
+    -f ../pitstop-namespace$meshPostfix.yaml `
+    -f ../rabbitmq.yaml `
+    -f ../logserver.yaml `
+    -f ../sqlserver$meshPostfix.yaml `
+    -f ../mailserver.yaml `
+    -f ../invoiceservice.yaml `
+    -f ../timeservice.yaml `
+    -f ../notificationservice.yaml `
+    -f ../workshopmanagementeventhandler.yaml `
+    -f ../auditlogservice.yaml `
+    -f ../customermanagementapi-v1$meshPostfix.yaml `
+    -f ../customermanagementapi-svc.yaml `
+    -f ../vehiclemanagementapi$meshPostfix.yaml `
+    -f ../workshopmanagementapi$meshPostfix.yaml `
+    -f ../webapp$meshPostfix.yaml
