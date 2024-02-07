@@ -63,11 +63,12 @@ jobs:
             version: ${{ inputs.docker-image-version }}
 
        - name: Deploy Octopus Release
-         uses: OctopusDeploy/deploy-release-action@v3.0.4
+         uses: OctopusDeploy/deploy-release-tenanted-action@v3.0.3
          with: 
              project: ${{ inputs.docker-image-name }}
              release_number: ${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }}
-             environments: ${{ inputs.environment-name }}
+             environment: ${{ inputs.environment-name }}
+             tenants: _Internal
              variables: Project.Pitstop.Branch:${{ inputs.feature-branch-name }}
       
        - name: Create Production Octopus Release
