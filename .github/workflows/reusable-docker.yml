@@ -68,7 +68,7 @@ jobs:
              project: ${{ inputs.docker-image-name }}
              release_number: ${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }}
              environment: ${{ inputs.environment-name }}
-             tenants: _Internal
+             tenants: internal
              variables: Project.Pitstop.Branch:${{ inputs.feature-branch-name }}
       
        - name: Create Production Octopus Release
