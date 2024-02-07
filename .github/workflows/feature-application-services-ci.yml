@@ -41,7 +41,7 @@ jobs:
         project: Administration
         runbook: Create Feature Branch Tenant
         environments: development
-        tenants: _Internal
+        tenants: _internal
         variables: Pitstop.Orhestration.Feature.Branch:${{ steps.branch.outputs.branch }}
     outputs:
         branch: ${{ steps.branch.outputs.branch }}
