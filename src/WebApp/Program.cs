@@ -40,7 +40,6 @@ app.UseMvc();
 //app.UseDefaultFiles();
 app.UseStaticFiles();
 
-
 app.UseHealthChecks("/hc");
 
 app.UseMvc(routes =>
