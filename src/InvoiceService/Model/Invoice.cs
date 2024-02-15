@@ -8,4 +8,5 @@ public class Invoice
     public decimal Amount { get; set; }
     public string Specification { get; set; }
     public string JobIds { get; set; }
+    public string LoyaltyNumber {get; set;}
 }
