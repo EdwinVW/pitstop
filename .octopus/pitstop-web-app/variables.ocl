@@ -1,0 +1,3 @@
+variable "spec:template:spec:containers:0:env:1:value" {
+    value "http://+:7000" {}
+}
