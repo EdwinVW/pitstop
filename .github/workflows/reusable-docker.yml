@@ -53,6 +53,7 @@ jobs:
             project: ${{ inputs.docker-image-name }}
             release_number: ${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }}
             channel: ${{ inputs.channel-name }}
+            git_ref: main
         
        
        - name: Create Build Information
@@ -78,4 +79,5 @@ jobs:
             project: _Orchestration
             release_number: ${{ inputs.docker-image-version }}
             channel: Default
+            git_ref: main
             
