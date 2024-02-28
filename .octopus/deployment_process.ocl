@@ -1,0 +1,346 @@
+step "create-name-space-clone-1" {
+    name = "Create Name Space"
+    properties = {
+        Octopus.Action.TargetRoles = "demo-k8s-cluster"
+    }
+
+    action {
+        action_type = "Octopus.KubernetesRunScript"
+        environments = ["test", "production"]
+        properties = {
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                kubectl create namespace #{Project.Pitstop.Namespace}
+                
+                # Get existing namespaces
+                Write-Host "Retrieving namespaces ..."
+                $namespaces = (kubectl get namespaces -o JSON | ConvertFrom-Json)
+                
+                # Check to see if namespace exists
+                if ($null -eq ($namespaces.Items | Where-Object {$_.metadata.name -eq $OctopusParameters["Project.Pitstop.Namespace"]}))
+                {
+                	# Create the namespace
+                    Write-Host "Namespace #{Project.Pitstop.Namespace} doesn't exist, creating ..."
+                    kubectl create namespace $OctopusParameters["Project.Pitstop.Namespace"]
+                }
+                else
+                {
+                	Write-Host "Namespace #{Project.Pitstop.Namespace} already exists, moving on ..."
+                }
+                EOT
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+            OctopusUseBundledTooling = "False"
+        }
+        worker_pool = "hosted-ubuntu"
+
+        container {
+            feed = "docker-hub"
+            image = "octopusdeploy/worker-tools:6.1.1-ubuntu.22.04"
+        }
+    }
+}
+
+step "deploy-pitstop-audit-log-service" {
+    name = "Deploy Pitstop Audit Log Service"
+
+    action {
+        properties = {
+            ChildProject.Api.Key = "#{Global.Octopus.ApiKey}"
+            ChildProject.CancelDeployment.Seconds = "1800"
+            ChildProject.Deployment.FutureTime = "N/A"
+            ChildProject.Deployment.IgnoreSpecificMachineMismatch = "No"
+            ChildProject.DeploymentMode.Value = "Promote"
+            ChildProject.Destination.EnvironmentName = "#{Octopus.Environment.Name}"
+            ChildProject.EnableEnhancedLogging.Value = "No"
+            ChildProject.ManualIntervention.EnvironmentToUse = "#{Octopus.Environment.Name}"
+            ChildProject.ManualIntervention.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.ManualInterventions.UseApprovalsFromParent = "Yes"
+            ChildProject.Project.Name = "pitstop-audit-log-service"
+            ChildProject.RefreshVariableSnapShots.Option = "No"
+            ChildProject.Release.NotFoundError = "Warning"
+            ChildProject.ReleaseNotes.SaveAsArtifact = "No"
+            ChildProject.SourceEnvironment.Name = "Test"
+            ChildProject.Space.Name = "#{Octopus.Space.Name}"
+            ChildProject.Target.MachineNames = "N/A"
+            ChildProject.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.WaitForFinish.Value = "Yes"
+            ChildProject.Web.ServerUrl = "#{Global.Octopus.ServerUrl}"
+            ChildProject.WhatIf.Value = "No"
+            Octopus.Action.Template.Id = "ActionTemplates-2921"
+            Octopus.Action.Template.Version = "29"
+        }
+        worker_pool = "hosted-windows"
+    }
+}
+
+step "deploy-pitstop-customer-management-api" {
+    name = "Deploy Pitstop Customer Management API"
+    start_trigger = "StartWithPrevious"
+
+    action {
+        properties = {
+            ChildProject.Api.Key = "#{Global.Octopus.ApiKey}"
+            ChildProject.CancelDeployment.Seconds = "1800"
+            ChildProject.Deployment.FutureTime = "N/A"
+            ChildProject.Deployment.IgnoreSpecificMachineMismatch = "No"
+            ChildProject.DeploymentMode.Value = "Promote"
+            ChildProject.Destination.EnvironmentName = "#{Octopus.Environment.Name}"
+            ChildProject.EnableEnhancedLogging.Value = "No"
+            ChildProject.ManualIntervention.EnvironmentToUse = "#{Octopus.Environment.Name}"
+            ChildProject.ManualIntervention.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.ManualInterventions.UseApprovalsFromParent = "Yes"
+            ChildProject.Project.Name = "pitstop-customer-management-api"
+            ChildProject.RefreshVariableSnapShots.Option = "No"
+            ChildProject.Release.NotFoundError = "Warning"
+            ChildProject.ReleaseNotes.SaveAsArtifact = "No"
+            ChildProject.SourceEnvironment.Name = "Test"
+            ChildProject.Space.Name = "#{Octopus.Space.Name}"
+            ChildProject.Target.MachineNames = "N/A"
+            ChildProject.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.WaitForFinish.Value = "Yes"
+            ChildProject.Web.ServerUrl = "#{Global.Octopus.ServerUrl}"
+            ChildProject.WhatIf.Value = "No"
+            Octopus.Action.Template.Id = "ActionTemplates-2921"
+            Octopus.Action.Template.Version = "29"
+        }
+        worker_pool = "hosted-windows"
+    }
+}
+
+step "deploy-pitstop-invoice-service" {
+    name = "Deploy Pitstop Invoice Service"
+    start_trigger = "StartWithPrevious"
+
+    action {
+        properties = {
+            ChildProject.Api.Key = "#{Global.Octopus.ApiKey}"
+            ChildProject.CancelDeployment.Seconds = "1800"
+            ChildProject.Deployment.FutureTime = "N/A"
+            ChildProject.Deployment.IgnoreSpecificMachineMismatch = "No"
+            ChildProject.DeploymentMode.Value = "Promote"
+            ChildProject.Destination.EnvironmentName = "#{Octopus.Environment.Name}"
+            ChildProject.EnableEnhancedLogging.Value = "No"
+            ChildProject.ManualIntervention.EnvironmentToUse = "#{Octopus.Environment.Name}"
+            ChildProject.ManualIntervention.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.ManualInterventions.UseApprovalsFromParent = "Yes"
+            ChildProject.Project.Name = "pitstop-invoice-service"
+            ChildProject.RefreshVariableSnapShots.Option = "No"
+            ChildProject.Release.NotFoundError = "Warning"
+            ChildProject.ReleaseNotes.SaveAsArtifact = "No"
+            ChildProject.SourceEnvironment.Name = "Test"
+            ChildProject.Space.Name = "#{Octopus.Space.Name}"
+            ChildProject.Target.MachineNames = "N/A"
+            ChildProject.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.WaitForFinish.Value = "Yes"
+            ChildProject.Web.ServerUrl = "#{Global.Octopus.ServerUrl}"
+            ChildProject.WhatIf.Value = "No"
+            Octopus.Action.Template.Id = "ActionTemplates-2921"
+            Octopus.Action.Template.Version = "29"
+        }
+        worker_pool = "hosted-windows"
+    }
+}
+
+step "deploy-pitstop-notification-service" {
+    name = "Deploy Pitstop Notification Service"
+    start_trigger = "StartWithPrevious"
+
+    action {
+        properties = {
+            ChildProject.Api.Key = "#{Global.Octopus.ApiKey}"
+            ChildProject.CancelDeployment.Seconds = "1800"
+            ChildProject.Deployment.FutureTime = "N/A"
+            ChildProject.Deployment.IgnoreSpecificMachineMismatch = "No"
+            ChildProject.DeploymentMode.Value = "Promote"
+            ChildProject.Destination.EnvironmentName = "#{Octopus.Environment.Name}"
+            ChildProject.EnableEnhancedLogging.Value = "No"
+            ChildProject.ManualIntervention.EnvironmentToUse = "#{Octopus.Environment.Name}"
+            ChildProject.ManualIntervention.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.ManualInterventions.UseApprovalsFromParent = "Yes"
+            ChildProject.Project.Name = "pitstop-notification-service"
+            ChildProject.RefreshVariableSnapShots.Option = "No"
+            ChildProject.Release.NotFoundError = "Warning"
+            ChildProject.ReleaseNotes.SaveAsArtifact = "No"
+            ChildProject.SourceEnvironment.Name = "Test"
+            ChildProject.Space.Name = "#{Octopus.Space.Name}"
+            ChildProject.Target.MachineNames = "N/A"
+            ChildProject.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.WaitForFinish.Value = "Yes"
+            ChildProject.Web.ServerUrl = "#{Global.Octopus.ServerUrl}"
+            ChildProject.WhatIf.Value = "No"
+            Octopus.Action.Template.Id = "ActionTemplates-2921"
+            Octopus.Action.Template.Version = "29"
+        }
+        worker_pool = "hosted-windows"
+    }
+}
+
+step "deploy-pitstop-time-service" {
+    name = "Deploy Pitstop Time Service"
+    start_trigger = "StartWithPrevious"
+
+    action {
+        properties = {
+            ChildProject.Api.Key = "#{Global.Octopus.ApiKey}"
+            ChildProject.CancelDeployment.Seconds = "1800"
+            ChildProject.Deployment.FutureTime = "N/A"
+            ChildProject.Deployment.IgnoreSpecificMachineMismatch = "No"
+            ChildProject.DeploymentMode.Value = "Promote"
+            ChildProject.Destination.EnvironmentName = "#{Octopus.Environment.Name}"
+            ChildProject.EnableEnhancedLogging.Value = "No"
+            ChildProject.ManualIntervention.EnvironmentToUse = "#{Octopus.Environment.Name}"
+            ChildProject.ManualIntervention.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.ManualInterventions.UseApprovalsFromParent = "Yes"
+            ChildProject.Project.Name = "pitstop-time-service"
+            ChildProject.RefreshVariableSnapShots.Option = "No"
+            ChildProject.Release.NotFoundError = "Warning"
+            ChildProject.ReleaseNotes.SaveAsArtifact = "No"
+            ChildProject.SourceEnvironment.Name = "Test"
+            ChildProject.Space.Name = "#{Octopus.Space.Name}"
+            ChildProject.Target.MachineNames = "N/A"
+            ChildProject.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.WaitForFinish.Value = "Yes"
+            ChildProject.Web.ServerUrl = "#{Global.Octopus.ServerUrl}"
+            ChildProject.WhatIf.Value = "No"
+            Octopus.Action.Template.Id = "ActionTemplates-2921"
+            Octopus.Action.Template.Version = "29"
+        }
+        worker_pool = "hosted-windows"
+    }
+}
+
+step "deploy-pitstop-vehicle-management-api" {
+    name = "Deploy Pitstop Vehicle Management API"
+    start_trigger = "StartWithPrevious"
+
+    action {
+        properties = {
+            ChildProject.Api.Key = "#{Global.Octopus.ApiKey}"
+            ChildProject.CancelDeployment.Seconds = "1800"
+            ChildProject.Deployment.FutureTime = "N/A"
+            ChildProject.Deployment.IgnoreSpecificMachineMismatch = "No"
+            ChildProject.DeploymentMode.Value = "Promote"
+            ChildProject.Destination.EnvironmentName = "#{Octopus.Environment.Name}"
+            ChildProject.EnableEnhancedLogging.Value = "No"
+            ChildProject.ManualIntervention.EnvironmentToUse = "#{Octopus.Environment.Name}"
+            ChildProject.ManualIntervention.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.ManualInterventions.UseApprovalsFromParent = "Yes"
+            ChildProject.Project.Name = "pitstop-vehicle-management-api"
+            ChildProject.RefreshVariableSnapShots.Option = "No"
+            ChildProject.Release.NotFoundError = "Warning"
+            ChildProject.ReleaseNotes.SaveAsArtifact = "No"
+            ChildProject.SourceEnvironment.Name = "Test"
+            ChildProject.Space.Name = "#{Octopus.Space.Name}"
+            ChildProject.Target.MachineNames = "N/A"
+            ChildProject.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.WaitForFinish.Value = "Yes"
+            ChildProject.Web.ServerUrl = "#{Global.Octopus.ServerUrl}"
+            ChildProject.WhatIf.Value = "No"
+            Octopus.Action.Template.Id = "ActionTemplates-2921"
+            Octopus.Action.Template.Version = "29"
+        }
+        worker_pool = "hosted-windows"
+    }
+}
+
+step "deploy-pitstop-web-app" {
+    name = "Deploy Pitstop Web App"
+    start_trigger = "StartWithPrevious"
+
+    action {
+        properties = {
+            ChildProject.Api.Key = "#{Global.Octopus.ApiKey}"
+            ChildProject.CancelDeployment.Seconds = "1800"
+            ChildProject.Deployment.FutureTime = "N/A"
+            ChildProject.Deployment.IgnoreSpecificMachineMismatch = "No"
+            ChildProject.DeploymentMode.Value = "Promote"
+            ChildProject.Destination.EnvironmentName = "#{Octopus.Environment.Name}"
+            ChildProject.EnableEnhancedLogging.Value = "No"
+            ChildProject.ManualIntervention.EnvironmentToUse = "#{Octopus.Environment.Name}"
+            ChildProject.ManualIntervention.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.ManualInterventions.UseApprovalsFromParent = "Yes"
+            ChildProject.Project.Name = "pitstop-web-app"
+            ChildProject.RefreshVariableSnapShots.Option = "No"
+            ChildProject.Release.NotFoundError = "Warning"
+            ChildProject.ReleaseNotes.SaveAsArtifact = "No"
+            ChildProject.SourceEnvironment.Name = "Test"
+            ChildProject.Space.Name = "#{Octopus.Space.Name}"
+            ChildProject.Target.MachineNames = "N/A"
+            ChildProject.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.WaitForFinish.Value = "Yes"
+            ChildProject.Web.ServerUrl = "#{Global.Octopus.ServerUrl}"
+            ChildProject.WhatIf.Value = "No"
+            Octopus.Action.Template.Id = "ActionTemplates-2921"
+            Octopus.Action.Template.Version = "29"
+        }
+        worker_pool = "hosted-windows"
+    }
+}
+
+step "deploy-pitstop-workshop-management-api" {
+    name = "Deploy Pitstop Workshop Management API"
+    start_trigger = "StartWithPrevious"
+
+    action {
+        properties = {
+            ChildProject.Api.Key = "#{Global.Octopus.ApiKey}"
+            ChildProject.CancelDeployment.Seconds = "1800"
+            ChildProject.Deployment.FutureTime = "N/A"
+            ChildProject.Deployment.IgnoreSpecificMachineMismatch = "No"
+            ChildProject.DeploymentMode.Value = "Promote"
+            ChildProject.Destination.EnvironmentName = "#{Octopus.Environment.Name}"
+            ChildProject.EnableEnhancedLogging.Value = "No"
+            ChildProject.ManualIntervention.EnvironmentToUse = "#{Octopus.Environment.Name}"
+            ChildProject.ManualIntervention.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.ManualInterventions.UseApprovalsFromParent = "Yes"
+            ChildProject.Project.Name = "pitstop-workshop-management-api"
+            ChildProject.RefreshVariableSnapShots.Option = "No"
+            ChildProject.Release.NotFoundError = "Warning"
+            ChildProject.ReleaseNotes.SaveAsArtifact = "No"
+            ChildProject.SourceEnvironment.Name = "Test"
+            ChildProject.Space.Name = "#{Octopus.Space.Name}"
+            ChildProject.Target.MachineNames = "N/A"
+            ChildProject.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.WaitForFinish.Value = "Yes"
+            ChildProject.Web.ServerUrl = "#{Global.Octopus.ServerUrl}"
+            ChildProject.WhatIf.Value = "No"
+            Octopus.Action.Template.Id = "ActionTemplates-2921"
+            Octopus.Action.Template.Version = "29"
+        }
+        worker_pool = "hosted-windows"
+    }
+}
+
+step "deploy-pitstop-workshop-management-event-handler" {
+    name = "Deploy Pitstop Workshop Management Event Handler"
+    start_trigger = "StartWithPrevious"
+
+    action {
+        properties = {
+            ChildProject.Api.Key = "#{Global.Octopus.ApiKey}"
+            ChildProject.CancelDeployment.Seconds = "1800"
+            ChildProject.Deployment.FutureTime = "N/A"
+            ChildProject.Deployment.IgnoreSpecificMachineMismatch = "No"
+            ChildProject.DeploymentMode.Value = "Promote"
+            ChildProject.Destination.EnvironmentName = "#{Octopus.Environment.Name}"
+            ChildProject.EnableEnhancedLogging.Value = "No"
+            ChildProject.ManualIntervention.EnvironmentToUse = "#{Octopus.Environment.Name}"
+            ChildProject.ManualIntervention.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.ManualInterventions.UseApprovalsFromParent = "Yes"
+            ChildProject.Project.Name = "pitstop-workshop-management-event-handler"
+            ChildProject.RefreshVariableSnapShots.Option = "No"
+            ChildProject.Release.NotFoundError = "Warning"
+            ChildProject.ReleaseNotes.SaveAsArtifact = "No"
+            ChildProject.SourceEnvironment.Name = "Test"
+            ChildProject.Space.Name = "#{Octopus.Space.Name}"
+            ChildProject.Target.MachineNames = "N/A"
+            ChildProject.Tenant.Name = "#{Octopus.Deployment.Tenant.Name}"
+            ChildProject.WaitForFinish.Value = "Yes"
+            ChildProject.Web.ServerUrl = "#{Global.Octopus.ServerUrl}"
+            ChildProject.WhatIf.Value = "No"
+            Octopus.Action.Template.Id = "ActionTemplates-2921"
+            Octopus.Action.Template.Version = "29"
+        }
+        worker_pool = "hosted-windows"
+    }
+}
