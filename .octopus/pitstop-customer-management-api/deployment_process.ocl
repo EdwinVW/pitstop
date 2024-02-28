@@ -1,0 +1,57 @@
+step "create-name-space" {
+    name = "Create Name Space"
+    properties = {
+        Octopus.Action.TargetRoles = "demo-k8s-cluster"
+    }
+
+    action {
+        action_type = "Octopus.KubernetesRunScript"
+        environments = ["test", "production"]
+        properties = {
+            Octopus.Action.Script.ScriptBody = "kubectl create namespace #{Project.Pitstop.Namespace}"
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+            OctopusUseBundledTooling = "False"
+        }
+        worker_pool = "hosted-ubuntu"
+
+        container {
+            feed = "docker-hub"
+            image = "octopusdeploy/worker-tools:6.1.1-ubuntu.22.04"
+        }
+    }
+}
+
+step "deploy-audit-service-container" {
+    name = "Deploy Audit Service Container"
+    properties = {
+        Octopus.Action.TargetRoles = "demo-k8s-cluster"
+    }
+
+    action {
+        action_type = "Octopus.KubernetesDeployRawYaml"
+        properties = {
+            Octopus.Action.Kubernetes.DeploymentTimeout = "180"
+            Octopus.Action.Kubernetes.ResourceStatusCheck = "True"
+            Octopus.Action.KubernetesContainers.CustomResourceYamlFileName = "src/deployment/customer-management-api.yaml"
+            Octopus.Action.KubernetesContainers.Namespace = "#{Project.Pitstop.Namespace}"
+            Octopus.Action.Package.JsonConfigurationVariablesTargets = "**/*.{yml,yaml}"
+            Octopus.Action.Script.ScriptSource = "GitRepository"
+            OctopusUseBundledTooling = "False"
+        }
+        worker_pool = "hosted-ubuntu"
+
+        container {
+            feed = "docker-hub"
+            image = "octopusdeploy/worker-tools:6.1.0-ubuntu.22.04"
+        }
+
+        git_dependencies {
+            default_branch = "main"
+            file_path_filters = ["src/deployment/customer-management-api.yaml"]
+            git_credential_id = "GitCredentials-1458"
+            git_credential_type = "Library"
+            repository_uri = "https://github.com/adamoctoclose/pitstop.git"
+        }
+    }
+}
