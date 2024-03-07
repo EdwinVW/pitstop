@@ -1,15 +1,9 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using ServiceDefaults;
 
-// setup logging
-builder.Host.UseSerilog((context, logContext) => 
-    logContext
-        .ReadFrom.Configuration(builder.Configuration)
-        .Enrich.WithMachineName()
-);
+var builder = WebApplication.CreateBuilder(args);
 
-// add DBContext
-var sqlConnectionString = builder.Configuration.GetConnectionString("VehicleManagementCN");
-builder.Services.AddDbContext<VehicleManagementDBContext>(options => options.UseSqlServer(sqlConnectionString));
+builder.AddServiceDefaults();
+builder.AddSqlServerDbContext<VehicleManagementDBContext>("vehiclemanagement");
 
 // add messagepublisher
 builder.Services.UseRabbitMQMessagePublisher(builder.Configuration);
@@ -26,9 +20,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Add health checks
-builder.Services.AddHealthChecks()
-    .AddDbContextCheck<VehicleManagementDBContext>();
-
+builder.Services.AddHealthChecks();
 // Setup MVC
 builder.Services.AddControllers();
 
@@ -52,14 +44,13 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "CustomerManagement API - v1");
 });
 
-// auto migrate db
-using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
-{
-    scope.ServiceProvider.GetService<VehicleManagementDBContext>().MigrateDB();
-}
-
-app.UseHealthChecks("/hc");
+app.MapDefaultEndpoints();
 
 app.MapControllers();
+
+using var scope = app.Services.CreateScope();
+using var dbContext = scope.ServiceProvider.GetRequiredService<VehicleManagementDBContext>();
+
+await dbContext.Database.MigrateAsync();
 
 app.Run();

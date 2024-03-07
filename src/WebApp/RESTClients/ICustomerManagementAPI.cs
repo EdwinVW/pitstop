@@ -2,12 +2,12 @@
 
 public interface ICustomerManagementAPI
 {
-    [Get("/customers")]
+    [Get("/api/customers")]
     Task<List<Customer>> GetCustomers();
 
-    [Get("/customers/{id}")]
+    [Get("/api/customers/{id}")]
     Task<Customer> GetCustomerById([AliasAs("id")] string customerId);
 
-    [Post("/customers")]
+    [Post("/api/customers")]
     Task RegisterCustomer(RegisterCustomer command);
 }

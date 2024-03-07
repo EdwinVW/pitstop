@@ -2,30 +2,30 @@
 
 public interface IWorkshopManagementAPI
 {
-    [Get("/workshopplanning/{planningDate}")]
+    [Get("/api/workshopplanning/{planningDate}")]
     Task<WorkshopPlanning> GetWorkshopPlanning(string planningDate);
 
-    [Get("/workshopplanning/{planningDate}/jobs/{jobId}")]
+    [Get("/api/workshopplanning/{planningDate}/jobs/{jobId}")]
     Task<MaintenanceJob> GetMaintenanceJob(string planningDate, string jobId);
 
-    [Post("/workshopplanning/{planningDate}")]
+    [Post("/api/workshopplanning/{planningDate}")]
     Task RegisterPlanning(string planningDate, RegisterPlanning cmd);
 
-    [Post("/workshopplanning/{planningDate}/jobs")]
+    [Post("/api/workshopplanning/{planningDate}/jobs")]
     Task PlanMaintenanceJob(string planningDate, PlanMaintenanceJob cmd);
 
-    [Put("/workshopplanning/{planningDate}/jobs/{jobId}/finish")]
+    [Put("/api/workshopplanning/{planningDate}/jobs/{jobId}/finish")]
     Task FinishMaintenanceJob(string planningDate, string jobId, FinishMaintenanceJob cmd);
 
-    [Get("/refdata/customers")]
+    [Get("/api/refdata/customers")]
     Task<List<Customer>> GetCustomers();
 
-    [Get("/refdata/customers/{id}")]
+    [Get("/api/refdata/customers/{id}")]
     Task<Customer> GetCustomerById(string id);
 
-    [Get("/refdata/vehicles")]
+    [Get("/api/refdata/vehicles")]
     Task<List<Vehicle>> GetVehicles();
 
-    [Get("/refdata/vehicles/{id}")]
+    [Get("/api/refdata/vehicles/{id}")]
     Task<Vehicle> GetVehicleByLicenseNumber([AliasAs("id")] string licenseNumber);
 }

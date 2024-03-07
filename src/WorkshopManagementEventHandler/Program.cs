@@ -1,29 +1,19 @@
-﻿IHost host = Host
-    .CreateDefaultBuilder(args)
-    .ConfigureServices((hostContext, services) =>
-    {
-        services.UseRabbitMQMessageHandler(hostContext.Configuration);
+﻿using ServiceDefaults;
 
-        services.AddTransient<WorkshopManagementDBContext>((svc) =>
-        {
-            var sqlConnectionString = hostContext.Configuration.GetConnectionString("WorkshopManagementCN");
-            var dbContextOptions = new DbContextOptionsBuilder<WorkshopManagementDBContext>()
-                .UseSqlServer(sqlConnectionString)
-                .Options;
-            var dbContext = new WorkshopManagementDBContext(dbContextOptions);
+var builder = Host.CreateApplicationBuilder(args);
 
-            DBInitializer.Initialize(dbContext);
+builder.AddServiceDefaults();
+builder.AddSqlServerDbContext<WorkshopManagementDBContext>("WorkshopManagement");
 
-            return dbContext;
-        });
+builder.Services.UseRabbitMQMessageHandler(builder.Configuration);
 
-        services.AddHostedService<EventHandlerWorker>();
-    })
-    .UseSerilog((hostContext, loggerConfiguration) =>
-    {
-        loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration);
-    })
-    .UseConsoleLifetime()
-    .Build();
+builder.Services.AddHostedService<EventHandlerWorker>();
+
+var host = builder.Build();
+
+using var scope = host.Services.CreateScope();
+using var dbContext = scope.ServiceProvider.GetService<WorkshopManagementDBContext>();
+
+await dbContext.Database.MigrateAsync();
 
 await host.RunAsync();

@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Application.VehicleManagement": {
+    "VehicleManagementAPI": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "index.html",

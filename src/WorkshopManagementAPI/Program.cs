@@ -1,20 +1,23 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.DependencyInjection;
+using ServiceDefaults;
 
-// setup logging
-builder.Host.UseSerilog((context, logContext) => 
-    logContext
-        .ReadFrom.Configuration(builder.Configuration)
-        .Enrich.WithMachineName()
-);
+var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
+
+builder.AddKeyedSqlServerClient("WorkshopManagementEventStore");
+builder.AddKeyedSqlServerClient("WorkshopManagement");
 
 // add repo
-var eventStoreConnectionString = builder.Configuration.GetConnectionString("EventStoreCN");
-builder.Services.AddTransient<IEventSourceRepository<WorkshopPlanning>>((sp) => 
+var eventStoreConnectionString = builder.Configuration.GetConnectionString("WorkshopManagementEventStore");
+builder.Services.AddTransient<IEventSourceRepository<WorkshopPlanning>>((sp) =>
     new SqlServerWorkshopPlanningEventSourceRepository(eventStoreConnectionString));
 
-var workshopManagementConnectionString = builder.Configuration.GetConnectionString("WorkshopManagementCN");
+var workshopManagementConnectionString = builder.Configuration.GetConnectionString("WorkshopManagement");
 builder.Services.AddTransient<IVehicleRepository>((sp) => new SqlServerRefDataRepository(workshopManagementConnectionString));
 builder.Services.AddTransient<ICustomerRepository>((sp) => new SqlServerRefDataRepository(workshopManagementConnectionString));
+
 
 // add messagepublisher
 builder.Services.UseRabbitMQMessagePublisher(builder.Configuration);
@@ -32,11 +35,6 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo  { Title = "WorkshopManagement API", Version = "v1" });
 });
-
-// Add health checks
-builder.Services.AddHealthChecks()
-    .AddSqlServer(eventStoreConnectionString, name: "EventStoreHC")
-    .AddSqlServer(workshopManagementConnectionString, name: "WorkshopManagementStoreHC");
 
 // Setup MVC
 builder.Services.AddControllers();
@@ -61,8 +59,7 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "WorkshopManagement API - v1");
 });
 
-app.UseHealthChecks("/hc");
-
+app.MapDefaultEndpoints();
 app.MapControllers();
 
 app.Run();

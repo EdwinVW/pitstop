@@ -1,16 +1,11 @@
-﻿IHost host = Host
-    .CreateDefaultBuilder(args)
-    .ConfigureServices((hostContext, services) =>
-    {
-        services.UseRabbitMQMessagePublisher(hostContext.Configuration);
+﻿using ServiceDefaults;
 
-        services.AddHostedService<TimeWorker>();
-    })
-    .UseSerilog((hostContext, loggerConfiguration) =>
-    {
-        loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration);
-    })
-    .UseConsoleLifetime()
-    .Build();
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.AddServiceDefaults();
+builder.Services.UseRabbitMQMessagePublisher(builder.Configuration);
+builder.Services.AddHostedService<TimeWorker>();
+
+var host = builder.Build();
 
 await host.RunAsync();

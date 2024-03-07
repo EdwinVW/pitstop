@@ -7,7 +7,7 @@ public class CustomerManagementAPI : ICustomerManagementAPI
     public CustomerManagementAPI(IConfiguration config, HttpClient httpClient)
     {
         string apiHostAndPort = config.GetSection("APIServiceLocations").GetValue<string>("CustomerManagementAPI");
-        httpClient.BaseAddress = new Uri($"http://{apiHostAndPort}/api");
+        httpClient.BaseAddress = new Uri($"http://{apiHostAndPort}");
         _restClient = RestService.For<ICustomerManagementAPI>(
             httpClient,
             new RefitSettings

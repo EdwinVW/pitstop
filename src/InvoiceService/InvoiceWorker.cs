@@ -4,13 +4,13 @@ public class InvoiceWorker : IHostedService, IMessageHandlerCallback
 {
     private const decimal HOURLY_RATE = 18.50M;
     private IMessageHandler _messageHandler;
-    private IInvoiceRepository _repo;
+    private IServiceProvider _serviceProvider;
     private IEmailCommunicator _emailCommunicator;
 
-    public InvoiceWorker(IMessageHandler messageHandler, IInvoiceRepository repo, IEmailCommunicator emailCommunicator)
+    public InvoiceWorker(IMessageHandler messageHandler, IServiceProvider serviceProvider, IEmailCommunicator emailCommunicator)
     {
         _messageHandler = messageHandler;
-        _repo = repo;
+        _serviceProvider = serviceProvider;
         _emailCommunicator = emailCommunicator;
     }
 
@@ -60,6 +60,9 @@ public class InvoiceWorker : IHostedService, IMessageHandlerCallback
         Log.Information("Register customer: {Id}, {Name}, {Address}, {PostalCode}, {City}",
             cr.CustomerId, cr.Name, cr.Address, cr.PostalCode, cr.City);
 
+        using var scope = _serviceProvider.CreateScope();
+        var repo = scope.ServiceProvider.GetRequiredService<IInvoiceRepository>();
+
         Customer customer = new Customer
         {
             CustomerId = cr.CustomerId,
@@ -69,11 +72,14 @@ public class InvoiceWorker : IHostedService, IMessageHandlerCallback
             City = cr.City
         };
 
-        await _repo.RegisterCustomerAsync(customer);
+        await repo.RegisterCustomerAsync(customer);
     }
 
     private async Task HandleAsync(MaintenanceJobPlanned mjp)
     {
+        using var scope = _serviceProvider.CreateScope();
+        var repo = scope.ServiceProvider.GetRequiredService<IInvoiceRepository>();
+
         Log.Information("Register Maintenance Job: {Id}, {Description}, {CustomerId}, {VehicleLicenseNumber}",
             mjp.JobId, mjp.Description, mjp.CustomerInfo.Id, mjp.VehicleInfo.LicenseNumber);
 
@@ -85,25 +91,31 @@ public class InvoiceWorker : IHostedService, IMessageHandlerCallback
             Description = mjp.Description
         };
 
-        await _repo.RegisterMaintenanceJobAsync(job);
+        await repo.RegisterMaintenanceJobAsync(job);
     }
 
     private async Task HandleAsync(MaintenanceJobFinished mjf)
     {
+        using var scope = _serviceProvider.CreateScope();
+        var repo = scope.ServiceProvider.GetRequiredService<IInvoiceRepository>();
+
         Log.Information("Finish Maintenance Job: {Id}, {StartTime}, {EndTime}",
             mjf.JobId, mjf.StartTime, mjf.EndTime);
 
-        await _repo.MarkMaintenanceJobAsFinished(mjf.JobId, mjf.StartTime, mjf.EndTime);
+        await repo.MarkMaintenanceJobAsFinished(mjf.JobId, mjf.StartTime, mjf.EndTime);
     }
 
     private async Task HandleAsync(DayHasPassed dhp)
     {
-        var jobs = await _repo.GetMaintenanceJobsToBeInvoicedAsync();
+        using var scope = _serviceProvider.CreateScope();
+        var repo = scope.ServiceProvider.GetRequiredService<IInvoiceRepository>();
+
+        var jobs = await repo.GetMaintenanceJobsToBeInvoicedAsync();
         foreach (var jobsPerCustomer in jobs.GroupBy(job => job.CustomerId))
         {
             DateTime invoiceDate = DateTime.Now;
             string customerId = jobsPerCustomer.Key;
-            Customer customer = await _repo.GetCustomerAsync(customerId);
+            Customer customer = await repo.GetCustomerAsync(customerId);
             Invoice invoice = new Invoice
             {
                 InvoiceId = $"{invoiceDate.ToString("yyyyMMddhhmmss")}-{customerId.Substring(0, 4)}",
@@ -125,7 +137,7 @@ public class InvoiceWorker : IHostedService, IMessageHandlerCallback
             invoice.Amount = totalAmount;
 
             await SendInvoice(customer, invoice);
-            await _repo.RegisterInvoiceAsync(invoice);
+            await repo.RegisterInvoiceAsync(invoice);
 
             Log.Information("Invoice {Id} sent to {Customer}", invoice.InvoiceId, customer.Name);
         }

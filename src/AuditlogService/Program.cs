@@ -1,23 +1,19 @@
-﻿IHost host = Host
-    .CreateDefaultBuilder(args)
-    .ConfigureServices((hostContext, services) =>
-    {
-        services.UseRabbitMQMessageHandler(hostContext.Configuration);
+﻿using ServiceDefaults;
 
-        services.AddTransient<AuditlogWorkerConfig>((svc) =>
-        {
-            var auditlogConfigSection = hostContext.Configuration.GetSection("Auditlog");
-            string logPath = auditlogConfigSection["path"];
-            return new AuditlogWorkerConfig { LogPath = logPath };
-        });
+var builder = Host.CreateApplicationBuilder(args);
 
-        services.AddHostedService<AuditLogWorker>();
-    })
-    .UseSerilog((hostContext, loggerConfiguration) =>
-    {
-        loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration);
-    })
-    .UseConsoleLifetime()
-    .Build();
+builder.AddServiceDefaults();
 
+builder.Services.UseRabbitMQMessageHandler(builder.Configuration);
+
+builder.Services.AddTransient(svc =>
+{
+    var auditlogConfigSection = builder.Configuration.GetSection("Auditlog");
+    string logPath = auditlogConfigSection["path"];
+    return new AuditlogWorkerConfig { LogPath = logPath };
+});
+
+builder.Services.AddHostedService<AuditLogWorker>();
+
+var host = builder.Build();
 await host.RunAsync();
