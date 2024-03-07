@@ -4,6 +4,7 @@ public static class Configuration
 {
     private const int DEFAULT_PORT = 5672;
     private static string _host;
+    private static string DEFAULT_VIRTUAL_HOST = "/";
     private static string _userName;
     private static string _password;
     private static string _exchange;
@@ -40,6 +41,7 @@ public static class Configuration
 
         // get configuration settings
         DetermineHost(configSection);
+        DetermineVirtualHost(configSection);
         DeterminePort(configSection);
         DetermineUsername(configSection);
         DeterminePassword(configSection);
@@ -66,6 +68,19 @@ public static class Configuration
         {
             _errors.Add("Required config-setting 'Host' not found.");
             _isValid = false;
+        }
+    }
+
+    private static void DetermineVirtualHost(IConfigurationSection configSection)
+    {
+        string vhostSetting = configSection["VirtualHost"];
+        if (string.IsNullOrEmpty(vhostSetting))
+        {
+            _virtualHost = DEFAULT_VIRTUAL_HOST;
+        }
+        else
+        {
+            _virtualHost = configSection["VirtualHost"];
         }
     }
 
