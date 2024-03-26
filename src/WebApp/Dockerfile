@@ -2,14 +2,12 @@ FROM pitstop-dotnet-sdk-base:1.0 AS build-env
 WORKDIR /app
 
 # Install node
-RUN apt-get update
-RUN apt-get install -y ca-certificates curl gnupg
-RUN mkdir -p /etc/apt/keyrings
-RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-ENV NODE_MAJOR=20
-RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
-RUN apt-get update
-RUN apt-get install nodejs -y
+ENV NODE_VERSION=20.x
+RUN apt-get -y update \
+    && apt-get install -y curl \
+    && curl -sL https://deb.nodesource.com/setup_${NODE_VERSION} | sh - \ 
+    && apt-get install -y nodejs \
+    && apt-get clean
 
 # Install gulp
 RUN npm install --global gulp-cli
