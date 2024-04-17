@@ -4,6 +4,8 @@ variable "spec:template:spec:containers:0:env:1:value" {
 
 variable "Runbook.Replicas" {
     value {
+        process = ["runbook/scale-deployment"]
+
         prompt {
             description = ""
             display_settings = {
