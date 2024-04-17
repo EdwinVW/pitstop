@@ -17,4 +17,5 @@ public class Vehicle
 
     [Display(Name = "Owner")]
     public string OwnerId { get; set; }
+    
 }
