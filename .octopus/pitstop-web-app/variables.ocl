@@ -1,3 +1,16 @@
 variable "spec:template:spec:containers:0:env:1:value" {
     value "http://+:7000" {}
 }
+
+variable "Runbook.Replicas" {
+    value {
+        prompt {
+            description = ""
+            display_settings = {
+                Octopus.ControlType = "SingleLineText"
+            }
+            label = "Replicas"
+            required = true
+        }
+    }
+}
