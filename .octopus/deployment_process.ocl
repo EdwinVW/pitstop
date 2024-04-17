@@ -1,3 +1,17 @@
+step "manual-intervention-required" {
+    name = "Manual Intervention Required"
+
+    action {
+        action_type = "Octopus.Manual"
+        environments = ["production"]
+        properties = {
+            Octopus.Action.Manual.BlockConcurrentDeployments = "False"
+            Octopus.Action.Manual.Instructions = "Please Approve Deployment"
+            Octopus.Action.Manual.ResponsibleTeamIds = "global/octopus-administrators"
+        }
+    }
+}
+
 step "create-name-space-clone-1" {
     name = "Create Name Space"
     properties = {
