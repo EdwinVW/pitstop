@@ -7,7 +7,8 @@ step "manual-intervention-required" {
         properties = {
             Octopus.Action.Manual.BlockConcurrentDeployments = "False"
             Octopus.Action.Manual.Instructions = "Please Approve Deployment"
-            Octopus.Action.Manual.ResponsibleTeamIds = "global/octopus-administrators"
+            Octopus.Action.Manual.ResponsibleTeamIds = "global/everyone"
+            Octopus.Action.RunOnServer = "false"
         }
     }
 }
