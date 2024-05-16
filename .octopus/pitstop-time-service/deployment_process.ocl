@@ -9,6 +9,8 @@ step "deploy-audit-service-container" {
         properties = {
             Octopus.Action.Kubernetes.DeploymentTimeout = "180"
             Octopus.Action.Kubernetes.ResourceStatusCheck = "True"
+            Octopus.Action.Kubernetes.ServerSideApply.Enabled = "False"
+            Octopus.Action.Kubernetes.ServerSideApply.ForceConflicts = "False"
             Octopus.Action.KubernetesContainers.CustomResourceYamlFileName = "src/deployment/time-service.yaml"
             Octopus.Action.KubernetesContainers.Namespace = "#{Project.Pitstop.Namespace}"
             Octopus.Action.Package.JsonConfigurationVariablesTargets = "**/*.{yml,yaml}"
