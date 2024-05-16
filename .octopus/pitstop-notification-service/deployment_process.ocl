@@ -8,6 +8,8 @@ step "deploy-audit-service-container" {
         action_type = "Octopus.KubernetesDeployRawYaml"
         properties = {
             Octopus.Action.Kubernetes.ResourceStatusCheck = "True"
+            Octopus.Action.Kubernetes.ServerSideApply.Enabled = "False"
+            Octopus.Action.Kubernetes.ServerSideApply.ForceConflicts = "False"
             Octopus.Action.KubernetesContainers.CustomResourceYamlFileName = "src/deployment/notification-service.yaml"
             Octopus.Action.KubernetesContainers.Namespace = "#{Project.Pitstop.Namespace}"
             Octopus.Action.Package.JsonConfigurationVariablesTargets = "**/*.{yml,yaml}"
