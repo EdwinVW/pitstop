@@ -7,6 +7,14 @@ step "deploy-audit-service-container" {
     action {
         action_type = "Octopus.KubernetesDeployRawYaml"
         properties = {
+            Octopus.Action.GitRepository.FilePathFilters = <<-EOT
+                src/deployment/log-server.yaml
+                src/deployment/mail-server.yaml
+                src/deployment/rabbitmq.yaml
+                src/deployment/sqlserver.yaml
+                src/deployment/audit-log-service.yaml
+                EOT
+            Octopus.Action.GitRepository.Source = "Project"
             Octopus.Action.Kubernetes.ResourceStatusCheck = "True"
             Octopus.Action.Kubernetes.ServerSideApply.Enabled = "False"
             Octopus.Action.Kubernetes.ServerSideApply.ForceConflicts = "False"
@@ -28,14 +36,6 @@ step "deploy-audit-service-container" {
         container {
             feed = "docker-hub"
             image = "octopusdeploy/worker-tools:6.1.0-ubuntu.22.04"
-        }
-
-        git_dependencies {
-            default_branch = "main"
-            file_path_filters = ["src/deployment/log-server.yaml", "src/deployment/mail-server.yaml", "src/deployment/rabbitmq.yaml", "src/deployment/sqlserver.yaml", "src/deployment/audit-log-service.yaml"]
-            git_credential_id = "GitCredentials-1458"
-            git_credential_type = "Library"
-            repository_uri = "https://github.com/adamoctoclose/pitstop.git"
         }
     }
 }
