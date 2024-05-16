@@ -8,6 +8,8 @@ step "deploy-audit-service-container" {
         action_type = "Octopus.KubernetesDeployRawYaml"
         properties = {
             Octopus.Action.Kubernetes.ResourceStatusCheck = "True"
+            Octopus.Action.Kubernetes.ServerSideApply.Enabled = "False"
+            Octopus.Action.Kubernetes.ServerSideApply.ForceConflicts = "False"
             Octopus.Action.Kubernetes.WaitForJobs = "False"
             Octopus.Action.KubernetesContainers.CustomResourceYamlFileName = <<-EOT
                 src/deployment/log-server.yaml
