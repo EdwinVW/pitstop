@@ -8,6 +8,8 @@ step "deploy-audit-service-container" {
         action_type = "Octopus.KubernetesDeployRawYaml"
         properties = {
             Octopus.Action.Kubernetes.ResourceStatusCheck = "True"
+            Octopus.Action.Kubernetes.ServerSideApply.Enabled = "False"
+            Octopus.Action.Kubernetes.ServerSideApply.ForceConflicts = "False"
             Octopus.Action.KubernetesContainers.CustomResourceYamlFileName = "src/deployment/web-app.yaml"
             Octopus.Action.KubernetesContainers.Namespace = "#{Project.Pitstop.Namespace}"
             Octopus.Action.Package.JsonConfigurationVariablesTargets = "**/*.{yml,yaml}"
@@ -41,6 +43,7 @@ step "testing-sign-off" {
             Octopus.Action.Manual.BlockConcurrentDeployments = "False"
             Octopus.Action.Manual.Instructions = "QA Please approve this when the change is ready to be deployed "
             Octopus.Action.Manual.ResponsibleTeamIds = "space-managers"
+            Octopus.Action.RunOnServer = "false"
         }
     }
 }
