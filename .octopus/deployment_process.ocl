@@ -73,6 +73,7 @@ step "deploy-pitstop-audit-log-service" {
             ChildProject.Project.Name = "pitstop-audit-log-service"
             ChildProject.RefreshVariableSnapShots.Option = "No"
             ChildProject.Release.NotFoundError = "Warning"
+            ChildProject.Release.Number = "#{Project.Audit.Release.Number}"
             ChildProject.ReleaseNotes.SaveAsArtifact = "No"
             ChildProject.SourceEnvironment.Name = "Test"
             ChildProject.Space.Name = "#{Octopus.Space.Name}"
