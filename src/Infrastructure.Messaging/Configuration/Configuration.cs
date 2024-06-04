@@ -3,7 +3,10 @@ namespace Pitstop.Infrastructure.Messaging.Configuration;
 public static class Configuration
 {
     private const int DEFAULT_PORT = 5672;
+    private static string DEFAULT_VIRTUAL_HOST = "/";
+
     private static string _host;
+    private static string _virtualHost;
     private static string _userName;
     private static string _password;
     private static string _exchange;
@@ -17,14 +20,14 @@ public static class Configuration
     {
         GetRabbitMQSettings(config, "RabbitMQHandler");
         services.AddTransient<IMessageHandler>(_ => new RabbitMQMessageHandler(
-            _host, _userName, _password, _exchange, _queue, _routingKey, _port));
+            _host, _virtualHost, _userName, _password, _exchange, _queue, _routingKey, _port));
     }
 
     public static void UseRabbitMQMessagePublisher(this IServiceCollection services, IConfiguration config)
     {
         GetRabbitMQSettings(config, "RabbitMQPublisher");
         services.AddTransient<IMessagePublisher>(_ => new RabbitMQMessagePublisher(
-            _host, _userName, _password, _exchange, _port));
+            _host, _virtualHost, _userName, _password, _exchange, _port));
     }
 
     private static void GetRabbitMQSettings(IConfiguration config, string sectionName)
@@ -40,6 +43,7 @@ public static class Configuration
 
         // get configuration settings
         DetermineHost(configSection);
+        DetermineVirtualHost(configSection);
         DeterminePort(configSection);
         DetermineUsername(configSection);
         DeterminePassword(configSection);
@@ -66,6 +70,19 @@ public static class Configuration
         {
             _errors.Add("Required config-setting 'Host' not found.");
             _isValid = false;
+        }
+    }
+
+    private static void DetermineVirtualHost(IConfigurationSection configSection)
+    {
+        string vhostSetting = configSection["VirtualHost"];
+        if (string.IsNullOrEmpty(vhostSetting))
+        {
+            _virtualHost = DEFAULT_VIRTUAL_HOST;
+        }
+        else
+        {
+            _virtualHost = configSection["VirtualHost"];
         }
     }
 

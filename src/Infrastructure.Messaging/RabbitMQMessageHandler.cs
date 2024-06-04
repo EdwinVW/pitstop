@@ -3,8 +3,11 @@
 public class RabbitMQMessageHandler : IMessageHandler
 {
     private const int DEFAULT_PORT = 5672;
+    private const string DEFAULT_VIRTUAL_HOST = "/";
+    
     private readonly List<string> _hosts;
     private readonly string _username;
+    private readonly string _virtualHost;
     private readonly string _password;
     private readonly string _exchange;
     private readonly string _queuename;
@@ -16,24 +19,45 @@ public class RabbitMQMessageHandler : IMessageHandler
     private string _consumerTag;
     private IMessageHandlerCallback _callback;
 
-    public RabbitMQMessageHandler(string host, string username, string password, string exchange, string queuename, string routingKey)
-        : this(host, username, password, exchange, queuename, routingKey, DEFAULT_PORT)
+    public RabbitMQMessageHandler(string host, string username, string password, 
+        string exchange, string queuename, string routingKey)
+        : this(new List<string>(), DEFAULT_VIRTUAL_HOST, username, password, 
+            exchange, queuename, routingKey, DEFAULT_PORT)
     {
     }
 
-    public RabbitMQMessageHandler(string host, string username, string password, string exchange, string queuename, string routingKey, int port)
-        : this(new List<string>() { host }, username, password, exchange, queuename, routingKey, port)
+     public RabbitMQMessageHandler(string host, string virtualHost, string username, string password, 
+        string exchange, string queuename, string routingKey)
+        : this(new List<string>(), virtualHost, username, password, 
+            exchange, queuename, routingKey, DEFAULT_PORT)
+    {
+    }   
+
+    public RabbitMQMessageHandler(string host, string username, string password, 
+        string exchange, string queuename, string routingKey, int port)
+        : this(new List<string>() { host }, DEFAULT_VIRTUAL_HOST, username, password, 
+            exchange, queuename, routingKey, port)
+    {
+    }
+    public RabbitMQMessageHandler(string host, string virtualHost, string username, string password, 
+        string exchange, string queuename, string routingKey, int port)
+        : this(new List<string>() { host }, virtualHost, username, password, 
+            exchange, queuename, routingKey, port)
+    {
+    }    
+
+    public RabbitMQMessageHandler(IEnumerable<string> hosts, string username, string password, 
+        string exchange, string queuename, string routingKey)
+        : this(hosts, DEFAULT_VIRTUAL_HOST, username, password, 
+            exchange, queuename, routingKey, DEFAULT_PORT)
     {
     }
 
-    public RabbitMQMessageHandler(IEnumerable<string> hosts, string username, string password, string exchange, string queuename, string routingKey)
-        : this(hosts, username, password, exchange, queuename, routingKey, DEFAULT_PORT)
-    {
-    }
-
-    public RabbitMQMessageHandler(IEnumerable<string> hosts, string username, string password, string exchange, string queuename, string routingKey, int port)
+    public RabbitMQMessageHandler(IEnumerable<string> hosts, string virtualHost, string username, string password, 
+        string exchange, string queuename, string routingKey, int port)
     {
         _hosts = new List<string>(hosts);
+        _virtualHost = virtualHost;
         _port = port;
         _username = username;
         _password = password;
@@ -44,6 +68,7 @@ public class RabbitMQMessageHandler : IMessageHandler
         var logMessage = new StringBuilder();
         logMessage.AppendLine("Create RabbitMQ message-handler instance using config:");
         logMessage.AppendLine($" - Hosts: {string.Join(',', _hosts.ToArray())}");
+        logMessage.AppendLine($" - VirtualHost: {_virtualHost}");
         logMessage.AppendLine($" - Port: {_port}");
         logMessage.AppendLine($" - UserName: {_username}");
         logMessage.AppendLine($" - Password: {new string('*', _password.Length)}");
@@ -62,7 +87,7 @@ public class RabbitMQMessageHandler : IMessageHandler
             .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Log.Error("Error connecting to RabbitMQ. Retrying in 5 sec."); })
             .Execute(() =>
             {
-                var factory = new ConnectionFactory() { UserName = _username, Password = _password, DispatchConsumersAsync = true, Port = _port };
+                var factory = new ConnectionFactory() { VirtualHost = _virtualHost, UserName = _username, Password = _password, DispatchConsumersAsync = true, Port = _port };
                 _connection = factory.CreateConnection(_hosts);
                 _model = _connection.CreateModel();
                 _model.ExchangeDeclare(_exchange, "fanout", durable: true, autoDelete: false);

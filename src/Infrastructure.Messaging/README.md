@@ -8,6 +8,10 @@ This library contains helper-classes for working with messaging within the Pitst
 
 ## Release notes
 
+### Version 5.1.0
+- Add ability to specify a virtual host for RabbitMQ
+- Upgrade all NuGet references to the latest version.
+
 ### Version 5.0.0
 - Target .NET 8
 - Upgrade all NuGet references to the latest version.

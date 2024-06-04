@@ -6,7 +6,10 @@
 public sealed class RabbitMQMessagePublisher : IMessagePublisher, IDisposable
 {
     private const int DEFAULT_PORT = 5672;
-    private readonly List<string> _hosts;
+    private const string DEFAULT_VIRTUAL_HOST = "/";
+    
+    private readonly List<string> _hosts;    
+    private readonly string _virtualHost;
     private readonly int _port;
     private readonly string _username;
     private readonly string _password;
@@ -14,25 +17,36 @@ public sealed class RabbitMQMessagePublisher : IMessagePublisher, IDisposable
     private IConnection _connection;
     private IModel _model;
 
-    public RabbitMQMessagePublisher(string host, string username, string password, string exchange)
-        : this(new List<string>() { host }, username, password, exchange, DEFAULT_PORT)
+    public RabbitMQMessagePublisher(string host, string username, string password, string exchange, int port)
+    : this(new List<string>() { host }, DEFAULT_VIRTUAL_HOST, username, password, exchange, port)
     {
     }
 
-    public RabbitMQMessagePublisher(string host, string username, string password, string exchange, int port)
-        : this(new List<string>() { host }, username, password, exchange, port)
+    public RabbitMQMessagePublisher(string host, string virtualHost, string username, string password, string exchange)
+        : this(new List<string>() { host }, virtualHost, username, password, exchange, DEFAULT_PORT)
     {
     }
+
+    public RabbitMQMessagePublisher(string host, string virtualHost, string username, string password, string exchange, int port)
+        : this(new List<string>() { host }, virtualHost, username, password, exchange, port)
+    {
+    }
+
+    public RabbitMQMessagePublisher(string host, string username, string password, string exchange)
+        : this(new List<string>() { host }, DEFAULT_VIRTUAL_HOST, username, password, exchange, DEFAULT_PORT)
+    {
+    }  
 
     public RabbitMQMessagePublisher(IEnumerable<string> hosts, string username, string password, string exchange)
-        : this(hosts, username, password, exchange, DEFAULT_PORT)
+        : this(hosts, DEFAULT_VIRTUAL_HOST, username, password, exchange, DEFAULT_PORT)
     {
     }
 
-    public RabbitMQMessagePublisher(IEnumerable<string> hosts, string username, string password, string exchange, int port)
+    public RabbitMQMessagePublisher(IEnumerable<string> hosts, string virtualHost, string username, string password, string exchange, int port)
     {
         _hosts = new List<string>(hosts);
         _port = port;
+        _virtualHost = virtualHost;
         _username = username;
         _password = password;
         _exchange = exchange;
@@ -40,6 +54,7 @@ public sealed class RabbitMQMessagePublisher : IMessagePublisher, IDisposable
         var logMessage = new StringBuilder();
         logMessage.AppendLine("Create RabbitMQ message-publisher instance using config:");
         logMessage.AppendLine($" - Hosts: {string.Join(',', _hosts.ToArray())}");
+        logMessage.AppendLine($" - VirtualHost: {_virtualHost}");
         logMessage.AppendLine($" - Port: {_port}");
         logMessage.AppendLine($" - UserName: {_username}");
         logMessage.AppendLine($" - Password: {new string('*', _password.Length)}");
@@ -74,7 +89,7 @@ public sealed class RabbitMQMessagePublisher : IMessagePublisher, IDisposable
             .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Log.Error("Error connecting to RabbitMQ. Retrying in 5 sec."); })
             .Execute(() =>
             {
-                var factory = new ConnectionFactory() { UserName = _username, Password = _password, Port = _port };
+                var factory = new ConnectionFactory() { VirtualHost = _virtualHost, UserName = _username, Password = _password, Port = _port };
                 factory.AutomaticRecoveryEnabled = true;
                 _connection = factory.CreateConnection(_hosts);
                 _model = _connection.CreateModel();
