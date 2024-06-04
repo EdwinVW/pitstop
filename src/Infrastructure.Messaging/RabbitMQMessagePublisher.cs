@@ -22,10 +22,20 @@ public sealed class RabbitMQMessagePublisher : IMessagePublisher, IDisposable
     {
     }
 
+    public RabbitMQMessagePublisher(string host, string virtualHost, string username, string password, string exchange)
+        : this(new List<string>() { host }, virtualHost, username, password, exchange, DEFAULT_PORT)
+    {
+    }
+
+    public RabbitMQMessagePublisher(string host, string virtualHost, string username, string password, string exchange, int port)
+        : this(new List<string>() { host }, virtualHost, username, password, exchange, port)
+    {
+    }
+
     public RabbitMQMessagePublisher(string host, string username, string password, string exchange)
         : this(new List<string>() { host }, DEFAULT_VIRTUAL_HOST, username, password, exchange, DEFAULT_PORT)
     {
-    }
+    }  
 
     public RabbitMQMessagePublisher(IEnumerable<string> hosts, string username, string password, string exchange)
         : this(hosts, DEFAULT_VIRTUAL_HOST, username, password, exchange, DEFAULT_PORT)

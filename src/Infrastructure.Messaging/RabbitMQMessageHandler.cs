@@ -19,22 +19,42 @@ public class RabbitMQMessageHandler : IMessageHandler
     private string _consumerTag;
     private IMessageHandlerCallback _callback;
 
-    public RabbitMQMessageHandler(string host, string username, string password, string exchange, string queuename, string routingKey, int port)
-        : this(new List<string>() { host }, DEFAULT_VIRTUAL_HOST, username, password, exchange, queuename, routingKey, port)
+    public RabbitMQMessageHandler(string host, string username, string password, 
+        string exchange, string queuename, string routingKey)
+        : this(new List<string>(), DEFAULT_VIRTUAL_HOST, username, password, 
+            exchange, queuename, routingKey, DEFAULT_PORT)
     {
     }
 
-    public RabbitMQMessageHandler(string host, string username, string password, string exchange, string queuename, string routingKey)
-        : this(host, DEFAULT_VIRTUAL_HOST, username, password, exchange, queuename, routingKey, DEFAULT_PORT)
+     public RabbitMQMessageHandler(string host, string virtualHost, string username, string password, 
+        string exchange, string queuename, string routingKey)
+        : this(new List<string>(), virtualHost, username, password, 
+            exchange, queuename, routingKey, DEFAULT_PORT)
+    {
+    }   
+
+    public RabbitMQMessageHandler(string host, string username, string password, 
+        string exchange, string queuename, string routingKey, int port)
+        : this(new List<string>() { host }, DEFAULT_VIRTUAL_HOST, username, password, 
+            exchange, queuename, routingKey, port)
+    {
+    }
+    public RabbitMQMessageHandler(string host, string virtualHost, string username, string password, 
+        string exchange, string queuename, string routingKey, int port)
+        : this(new List<string>() { host }, virtualHost, username, password, 
+            exchange, queuename, routingKey, port)
+    {
+    }    
+
+    public RabbitMQMessageHandler(IEnumerable<string> hosts, string username, string password, 
+        string exchange, string queuename, string routingKey)
+        : this(hosts, DEFAULT_VIRTUAL_HOST, username, password, 
+            exchange, queuename, routingKey, DEFAULT_PORT)
     {
     }
 
-    public RabbitMQMessageHandler(IEnumerable<string> hosts, string username, string password, string exchange, string queuename, string routingKey)
-        : this(hosts, DEFAULT_VIRTUAL_HOST, username, password, exchange, queuename, routingKey, DEFAULT_PORT)
-    {
-    }
-
-    public RabbitMQMessageHandler(IEnumerable<string> hosts, string virtualHost, string username, string password, string exchange, string queuename, string routingKey, int port)
+    public RabbitMQMessageHandler(IEnumerable<string> hosts, string virtualHost, string username, string password, 
+        string exchange, string queuename, string routingKey, int port)
     {
         _hosts = new List<string>(hosts);
         _virtualHost = virtualHost;
