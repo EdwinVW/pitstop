@@ -258,3 +258,4 @@ out/
 # local nuget folder
 nuget/
 
+.DS_Store

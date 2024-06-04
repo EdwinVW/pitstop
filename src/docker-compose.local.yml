@@ -3,7 +3,6 @@
 # which will enable you to access the API services directly from the browser.
 # Do NOT start multiple instances of the API services when using this override 
 # (this will cause port collisions).
-version: '3'
 services:
 
   vehiclemanagementapi:

@@ -25,7 +25,7 @@ then
     echo "Starting Pitstop with Istio service mesh."
 
     # disable global istio side-car injection (only for annotated pods)
-    ./disable-default-istio-injection.sh
+    ../istio/disable-default-istio-injection.sh
 fi
 
 if [ "$1" = "--linkerd" ]
@@ -36,18 +36,18 @@ then
 fi
 
 kubectl apply \
-    -f ./pitstop-namespace$MESHPOSTFIX.yaml \
-    -f ./rabbitmq.yaml \
-    -f ./logserver.yaml \
-    -f ./sqlserver.yaml \
-    -f ./mailserver.yaml \
-    -f ./invoiceservice.yaml \
-    -f ./timeservice.yaml \
-    -f ./notificationservice.yaml \
-    -f ./workshopmanagementeventhandler.yaml \
-    -f ./auditlogservice.yaml \
-    -f ./customermanagementapi-v1$MESHPOSTFIX.yaml \
-    -f ./customermanagementapi-svc.yaml \
-    -f ./vehiclemanagementapi$MESHPOSTFIX.yaml \
-    -f ./workshopmanagementapi$MESHPOSTFIX.yaml \
-    -f ./webapp$MESHPOSTFIX.yaml
+    -f ../pitstop-namespace$MESHPOSTFIX.yaml \
+    -f ../rabbitmq.yaml \
+    -f ../logserver.yaml \
+    -f ../sqlserver$MESHPOSTFIX.yaml \
+    -f ../mailserver.yaml \
+    -f ../invoiceservice.yaml \
+    -f ../timeservice.yaml \
+    -f ../notificationservice.yaml \
+    -f ../workshopmanagementeventhandler.yaml \
+    -f ../auditlogservice.yaml \
+    -f ../customermanagementapi-v1$MESHPOSTFIX.yaml \
+    -f ../customermanagementapi-svc.yaml \
+    -f ../vehiclemanagementapi$MESHPOSTFIX.yaml \
+    -f ../workshopmanagementapi$MESHPOSTFIX.yaml \
+    -f ../webapp$MESHPOSTFIX.yaml

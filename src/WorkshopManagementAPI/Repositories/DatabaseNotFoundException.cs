@@ -13,8 +13,4 @@ public class DatabaseNotCreatedException : Exception
     public DatabaseNotCreatedException(string message, Exception innerException) : base(message, innerException)
     {
     }
-
-    protected DatabaseNotCreatedException(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-    }
 }
