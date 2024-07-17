@@ -1,9 +1,0 @@
-variable "Project.Audit.Release.Number" {
-    value {
-        prompt {
-            description = ""
-            label = "Audit Release Number"
-            required = true
-        }
-    }
-}
