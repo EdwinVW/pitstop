@@ -49,18 +49,18 @@ jobs:
       #      docker build --tag adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }} .
       #      docker push adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }}
 
-    - name: GHCR Login
-      uses: docker/login-action@v3
-      with:
-        registry: https://ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+       - name: GHCR Login
+         uses: docker/login-action@v3
+         with:
+          registry: https://ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build Docker Image and push to GHCR
-      working-directory: src/${{ inputs.service-name }}
-      run:  | 
-        docker build --tag ghcr.io/adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }} .
-        docker push ghcr.io/adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }}
+       - name: Build Docker Image and push to GHCR
+         working-directory: src/${{ inputs.service-name }}
+         run:  | 
+           docker build --tag ghcr.io/adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }} .
+           docker push ghcr.io/adamoctoclose/${{ inputs.docker-image-name }}:${{ inputs.docker-image-version }}${{ inputs.feature-branch-name }}
 
        - name: Create Octopus Release
          uses: OctopusDeploy/create-release-action@v3
