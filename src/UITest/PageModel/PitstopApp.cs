@@ -45,6 +45,7 @@ namespace Pitstop.UITest.PageModel
             string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--start-maximized");
+            options.AddArgument("--search-engine-choice-country");
             _webDriver = new ChromeDriver(dir, options);
             _webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             _startUrl = startUrl;
