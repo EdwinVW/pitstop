@@ -9,8 +9,9 @@ on:
       - main
 
 jobs:
-  build: 
+  build-and-test:
     runs-on: ubuntu-latest
+    name: Build & Test
 
     steps:
     - name: Checkout repository
@@ -27,24 +28,8 @@ jobs:
     - name: Build
       run: dotnet build --no-restore ./src/pitstop.sln
 
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 8.0.x
-
-    - name: Restore dependencies
-      run: dotnet restore ./src/pitstop.sln
-
     - name: Test
-      run: dotnet test --verbosity normal ./src/pitstop.sln
+      run: dotnet test --no-build --verbosity normal ./src/pitstop.sln
 
   # publish-docker-image:
   #   needs: build-and-test
