@@ -1,16 +1,20 @@
-﻿namespace Pitstop.NotificationService;
+﻿using Pitstop.NotificationService.Message;
+
+namespace Pitstop.NotificationService;
 
 public class NotificationWorker : IHostedService, IMessageHandlerCallback
 {
     IMessageHandler _messageHandler;
     INotificationRepository _repo;
     IEmailNotifier _emailNotifier;
+    private readonly ISlackMessenger _slackMessenger;
 
-    public NotificationWorker(IMessageHandler messageHandler, INotificationRepository repo, IEmailNotifier emailNotifier)
+    public NotificationWorker(IMessageHandler messageHandler, INotificationRepository repo, IEmailNotifier emailNotifier, ISlackMessenger slackMessenger)
     {
         _messageHandler = messageHandler;
         _repo = repo;
         _emailNotifier = emailNotifier;
+        _slackMessenger = slackMessenger;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -91,7 +95,21 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
 
     private async Task HandleAsync(MaintenanceJobFinished mjf)
     {
-        Log.Information("Remove finished Maintenance Job: {Id}", mjf.JobId);
+        SlackMessageBuilder slackMessageBuilder = new SlackMessageBuilder();
+
+        slackMessageBuilder.Add(new List<string>(["dit is een test"]));
+
+        try
+        {   
+            Log.Information("Sending notification for finished maintenance job: {job}", mjf.JobId);
+            await _slackMessenger.PostMessage(slackMessageBuilder.BuildSlackMessage());
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error sending notification for finished maintenance job: {job}", mjf.JobId);
+        }
+        
+        Log.Information("Remove finished Maintenance Jobssssssssss: {Id}", mjf.JobId);
 
         await _repo.RemoveMaintenanceJobsAsync(new string[] { mjf.JobId.ToString() });
     }
