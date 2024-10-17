@@ -30,10 +30,10 @@ jobs:
           ${{ runner.os }}-nuget-
 
     - name: Restore dependencies
-      run: dotnet restore .\src\pitstop.sln
+      run: dotnet restore ./src/pitstop.sln
 
     - name: Build
-      run: dotnet build --no-restore .\src\pitstop.sln
+      run: dotnet build --no-restore ./src/pitstop.sln
 
   test:
     runs-on: ubuntu-latest
@@ -56,10 +56,10 @@ jobs:
           ${{ runner.os }}-nuget-
 
     - name: Restore dependencies
-      run: dotnet restore .\src\pitstop.sln
+      run: dotnet restore ./src/pitstop.sln
 
     - name: Test
-      run: dotnet test --no-build --verbosity normal .\src\pitstop.sln
+      run: dotnet test --no-build --verbosity normal ./src/pitstop.sln
 
   # publish-docker-image:
   #   needs: build-and-test
