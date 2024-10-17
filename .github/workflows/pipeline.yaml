@@ -43,5 +43,6 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Run shell script
-      run: ./src/RebuildAllDockerImages.sh
+      run: ./RebuildAllDockerImages.sh
+      working-directory: src
       shell: bash
