@@ -21,22 +21,6 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    - name: Cache NuGet packages
-      uses: actions/cache@v2
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
-
-    - name: Cache Build Artifacts
-      uses: actions/cache@v2
-      with:
-        path: src/**/bin
-        key: ${{ runner.os }}-build-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-build-
-
     - name: Restore dependencies
       run: dotnet restore ./src/pitstop.sln
 
@@ -55,22 +39,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 8.0.x
-
-    - name: Cache NuGet packages
-      uses: actions/cache@v2
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
-
-    - name: Cache Build Artifacts
-      uses: actions/cache@v2
-      with:
-        path: src/**/bin
-        key: ${{ runner.os }}-build-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-build-
 
     - name: Restore dependencies
       run: dotnet restore ./src/pitstop.sln
