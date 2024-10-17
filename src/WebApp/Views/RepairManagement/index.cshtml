@@ -1,0 +1,20 @@
+@model Pitstop.WebApp.ViewModels.RepairManagementViewModel
+@{
+    ViewData["Title"] = "Mechanics Overview";
+}
+<h3 id="PageTitle">Repair Management - overview</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Customer Name</th>
+            <th>Email</th>
+            <th>LicenseNumber</th>
+            <th>Repair Status</th>
+        </tr>
+    </thead>
+
+</table>
+<a id="RegisterVehicleButton" asp-action="New" asp-controller="VehicleManagement" class="btn btn-default">Register vehicle</a>
+
+
