@@ -9,7 +9,8 @@ public class ScenarioTests
         _output = output;
     }
 
-    [Fact (Skip = "Does not work on pipeline")]
+    [Fact]
+    [Ignore]
     public void End_To_End()
     {
         // arrange
