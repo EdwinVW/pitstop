@@ -44,7 +44,7 @@ jobs:
       run: dotnet restore ./src/pitstop.sln
 
     - name: Test
-      run: dotnet test --no-build --verbosity normal ./src/pitstop.sln
+      run: dotnet test --verbosity normal ./src/pitstop.sln
 
   # publish-docker-image:
   #   needs: build-and-test
