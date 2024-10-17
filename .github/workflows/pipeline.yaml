@@ -12,6 +12,8 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     name: Build & Test
+    env:
+      Headless: true
 
     steps:
     - name: Checkout repository

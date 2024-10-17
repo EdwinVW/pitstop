@@ -46,6 +46,10 @@ namespace Pitstop.UITest.PageModel
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--start-maximized");
             options.AddArgument("--search-engine-choice-country");
+            if (Environment.GetEnvironmentVariable("Headless") == "true")
+            {
+                options.AddArguments("--headless", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage");
+            }
             _webDriver = new ChromeDriver(dir, options);
             _webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             _startUrl = startUrl;
