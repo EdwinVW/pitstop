@@ -6,7 +6,10 @@ namespace Pitstop.NotificationService.Message;
 
 public interface ISlackMessageBuilder
 {
-    ISlackMessageBuilder Add(List<string> fields);
+
+    ISlackMessageBuilder AddHeader(string text);
+    ISlackMessageBuilder AddSection(string text);
+    ISlackMessageBuilder AddField(List<string> fields);
     
     ISlackMessageBuilder AddDivider();
     
@@ -17,7 +20,22 @@ public class SlackMessageBuilder : ISlackMessageBuilder
 {
     private readonly IList<Block> _blocks = new List<Block>();
 
-    public SlackMessageBuilder Add(string text)
+    public ISlackMessageBuilder AddHeader(string text)
+    {
+        var header = new Section
+        {
+            Text = new TextObject
+            {
+                Text = $"# {text}",
+                Type = TextObject.TextType.Markdown
+
+            }
+        };
+        _blocks.Add(header);
+        return this;
+    }
+    
+    public ISlackMessageBuilder AddSection(string text)
     {
         var section = new Section
         {
@@ -32,7 +50,7 @@ public class SlackMessageBuilder : ISlackMessageBuilder
         return this;
     }
 
-    public ISlackMessageBuilder Add(List<string> fields)
+    public ISlackMessageBuilder AddField(List<string> fields)
     {
         var section = new Section
         {
