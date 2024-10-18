@@ -93,6 +93,26 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
 
         await _repo.RegisterMaintenanceJobAsync(job);
     }
+    
+    private async Task HandleAsync(MaintenanceJobStart mjs)
+    {
+        var message = new VehicleManagementStart("Maintenance start", $"Dear {mjs.JobId}",
+            new List<string>(["Your maintenance job has started."]));
+
+        try
+        {   
+            Log.Information("Sending notification for start maintenance job: {job}", mjs.JobId);
+            await _slackMessenger.PostMessage(message.BuildMessage());
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error sending notification for start maintenance job: {job}", mjs.JobId);
+        }
+        
+        Log.Information("Remove start Maintenance Job: {Id}", mjs.JobId);
+
+        await _repo.RemoveMaintenanceJobsAsync(new string[] { mjs.JobId.ToString() });
+    }
 
     private async Task HandleAsync(MaintenanceJobFinished mjf)
     {
