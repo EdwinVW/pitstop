@@ -26,7 +26,7 @@ public class SlackMessageBuilder : ISlackMessageBuilder
         {
             Text = new TextObject
             {
-                Text = $"# {text}",
+                Text = $"* {text} *",
                 Type = TextObject.TextType.Markdown
 
             }
