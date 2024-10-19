@@ -1,12 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using Polly;
-using Serilog;
-
 namespace Pitstop.RepairManagementAPI.DataAccess;
 
 public static class DBInitializer
 {
-    public static void Initialize(RepairManagementApiDBContext context)
+    public static void Initialize(RepairManagementDBContext context)
     {
         Log.Information("Ensure RepairManagementAPI Database");
 

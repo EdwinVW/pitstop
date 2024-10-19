@@ -1,13 +1,8 @@
-using Pitstop.Infrastructure.Messaging;
-using Pitstop.RepairManagementAPI.Commands;
-using Pitstop.RepairManagementAPI.Enums;
-using Pitstop.RepairManagementAPI.Model;
-
 namespace Pitstop.RepairManagementAPI.Events;
 
 public class RepairOrderCreated : Event
 {
-    public readonly string RepairOrderId;
+    public readonly Guid RepairOrderId;
     public readonly string CustomerId;
     public string LicenseNumber { get; set; }
     public readonly List<VehicleParts> VehicleParts;
@@ -19,7 +14,7 @@ public class RepairOrderCreated : Event
 
     public RepairOrderCreated(
         Guid messageId,
-        string repairOrderId,
+        Guid repairOrderId,
         string customerId,
         string licenseNumber,
         List<VehicleParts> vehicleParts,

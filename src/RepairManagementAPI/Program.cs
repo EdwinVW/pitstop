@@ -1,35 +1,58 @@
-using System.Text.Json.Serialization;
+var builder = WebApplication.CreateBuilder(args);
 
-var builder = WebApplication.CreateSlimBuilder(args);
+// setup logging
+builder.Host.UseSerilog((context, loggerConfiguration) =>
+    loggerConfiguration.ReadFrom.Configuration(context.Configuration)
+        .Enrich.WithMachineName()
+);
 
-builder.Services.ConfigureHttpJsonOptions(options =>
+// add DBContext
+var sqlConnectionString = builder.Configuration.GetConnectionString("RepairManagementCN");
+builder.Services.AddDbContext<RepairManagementDBContext>(options => options.UseSqlServer(sqlConnectionString));
+
+// add messagepublisher
+builder.Services.UseRabbitMQMessagePublisher(builder.Configuration);
+
+// Add framework services
+builder.Services
+    .AddMvc(options => options.EnableEndpointRouting = false)
+    .AddNewtonsoftJson();
+
+// Register the Swagger generator, defining one or more Swagger documents
+builder.Services.AddSwaggerGen(c =>
 {
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "RepairManagement API", Version = "v1" });
 });
 
+// Add health checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<RepairManagementDBContext>();
+ 
+// setup MVC
+builder.Services.AddControllers();
+
 var app = builder.Build();
-
-var sampleTodos = new Todo[]
+if (app.Environment.IsDevelopment())
 {
-    new(1, "Walk the dog"),
-    new(2, "Do the dishes", DateOnly.FromDateTime(DateTime.Now)),
-    new(3, "Do the laundry", DateOnly.FromDateTime(DateTime.Now.AddDays(1))),
-    new(4, "Clean the bathroom"),
-    new(5, "Clean the car", DateOnly.FromDateTime(DateTime.Now.AddDays(2)))
-};
+    app.UseDeveloperExceptionPage();
+}
 
-var todosApi = app.MapGroup("/todos");
-todosApi.MapGet("/", () => sampleTodos);
-todosApi.MapGet("/{id}", (int id) =>
-    sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
-        ? Results.Ok(todo)
-        : Results.NotFound());
+// Enable middleware to serve generated Swagger as a JSON endpoint.
+app.UseSwagger();
+
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "RepairManagement API - v1");
+});
+
+// auto migrate db
+using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+{
+    scope.ServiceProvider.GetService<RepairManagementDBContext>().MigrateDB();
+}
+
+app.UseHealthChecks("/hc");
+
+app.MapControllers();
 
 app.Run();
-
-public record Todo(int Id, string? Title, DateOnly? DueBy = null, bool IsComplete = false);
-
-[JsonSerializable(typeof(Todo[]))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext
-{
-}

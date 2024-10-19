@@ -1,8 +1,9 @@
-namespace Pitstop.RepairManagementAPI.Commands;
+
+namespace Pitstop.WebApp.Commands;
 
 public class CreateRepairOrder : Command
 {
-    public readonly Guid RepairOrderId;
+    public readonly string RepairOrderId;
     public readonly string CustomerId;
     public readonly string LicenseNumber;
     public readonly List<VehicleParts> VehicleParts;
@@ -14,7 +15,7 @@ public class CreateRepairOrder : Command
 
     public CreateRepairOrder(
         Guid messageId,
-        Guid repairOrderId,
+        string repairOrderId,
         string customerId,
         string licenseNumber,
         List<VehicleParts> vehicleParts,

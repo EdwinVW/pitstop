@@ -1,4 +1,5 @@
-namespace Pitstop.RepairManagementAPI.Commands;
+
+namespace Pitstop.WebApp.Commands;
 
 public class ApproveRepairOrder : Command
 {

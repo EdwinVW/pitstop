@@ -1,15 +1,12 @@
-using Microsoft.EntityFrameworkCore;
-using Pitstop.RepairManagementAPI.Model;
-
 namespace Pitstop.RepairManagementAPI.DataAccess;
 
-public class RepairManagementApiDBContext : DbContext
+public class RepairManagementDBContext : DbContext
 {
-    public RepairManagementApiDBContext()
+    public RepairManagementDBContext()
     {
     }
 
-    public RepairManagementApiDBContext(DbContextOptions<RepairManagementApiDBContext> options) : base(options)
+    public RepairManagementDBContext(DbContextOptions<RepairManagementDBContext> options) : base(options)
     {
     }
 
@@ -27,12 +24,27 @@ public class RepairManagementApiDBContext : DbContext
         builder.Entity<Customer>().HasKey(entity => entity.CustomerId);
         builder.Entity<Customer>().ToTable("Customer");
 
+        builder.Entity<RepairOrders>()
+            .Property(ro => ro.TotalCost)
+            .HasColumnType("decimal(18,2)");
         builder.Entity<RepairOrders>().HasKey(entity => entity.Id);
         builder.Entity<RepairOrders>().ToTable("RepairOrders");
 
+
+        builder.Entity<VehicleParts>()
+            .Property(vp => vp.Cost)
+            .HasColumnType("decimal(18,2)");
         builder.Entity<VehicleParts>().HasKey(entity => entity.Id);
         builder.Entity<VehicleParts>().ToTable("VehicleParts");
 
         base.OnModelCreating(builder);
+    }
+
+    public void MigrateDB()
+    {
+        Policy
+            .Handle<Exception>()
+            .WaitAndRetry(10, r => TimeSpan.FromSeconds(10))
+            .Execute(() => Database.Migrate());
     }
 }

@@ -1,10 +1,8 @@
-using Pitstop.RepairManagementAPI.Enums;
-
 namespace Pitstop.RepairManagementAPI.Model;
 
 public class RepairOrders
 {
-    public string Id { get; set; }
+    public Guid Id { get; set; }
     public string CustomerId { get; set; }
     public string LicenseNumber { get; set; }
     public decimal TotalCost { get; set; }
