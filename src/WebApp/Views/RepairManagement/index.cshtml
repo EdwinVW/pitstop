@@ -13,20 +13,20 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var repairOrder in Model.RepairOrders)
+    @foreach (var repairOrder in Model.CustomerVehicles)
     {
-        <tr class="clickable" onclick="location.href = '@(Url.Action("Details", "RepairManagement", new { repairOrder = repairOrder.Id }))'">
-            <td>@repairOrder.CustomerId</td>
+        <tr class="clickable" onclick="location.href = '@(Url.Action("Details", "RepairManagement", new { repairOrder = repairOrder.LicenseNumber }))'">
+            <td>@repairOrder.CustomerName</td>
             <td>@repairOrder.LicenseNumber</td>
 
             <td>
-                @if (repairOrder.Status == RepairOrdersStatus.NotCreatedYet)
+                @if (!repairOrder.RepairOrderStatus.Equals(RepairOrdersStatus.NotCreatedYet.ToString()))
                 {
-                <button class="btn btn-primary" onclick="location.href='@Url.Action("New", "RepairManagement")'">Create Repair Order</button>
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("New", "RepairManagement")'">Create Repair Order</button>
                 }
                 else
                 {
-                @repairOrder.Status
+                    @repairOrder.RepairOrderStatus
                 }
             </td>
 

@@ -6,9 +6,6 @@ builder.Host.UseSerilog((context, loggerConfiguration) =>
         .Enrich.WithMachineName()
 );
 
-// add DBContext
-var sqlConnectionString = builder.Configuration.GetConnectionString("RepairManagementCN");
-builder.Services.AddDbContext<RepairManagementDBContext>(options => options.UseSqlServer(sqlConnectionString));
 
 // add messagepublisher
 builder.Services.UseRabbitMQMessagePublisher(builder.Configuration);
@@ -24,9 +21,14 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "RepairManagement API", Version = "v1" });
 });
 
+// add DBContext
+var sqlConnectionString = builder.Configuration.GetConnectionString("RepairManagementCN");
+builder.Services.AddDbContext<RepairManagementContext>(options => options.UseSqlServer(sqlConnectionString));
+
+
 // Add health checks
 builder.Services.AddHealthChecks()
-    .AddDbContextCheck<RepairManagementDBContext>();
+    .AddDbContextCheck<RepairManagementContext>();
  
 // setup MVC
 builder.Services.AddControllers();
@@ -48,7 +50,7 @@ app.UseSwaggerUI(c =>
 // auto migrate db
 using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
-    scope.ServiceProvider.GetService<RepairManagementDBContext>().MigrateDB();
+    scope.ServiceProvider.GetService<RepairManagementContext>().MigrateDB();
 }
 
 app.UseHealthChecks("/hc");

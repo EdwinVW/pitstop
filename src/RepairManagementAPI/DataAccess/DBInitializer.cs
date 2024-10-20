@@ -2,7 +2,7 @@ namespace Pitstop.RepairManagementAPI.DataAccess;
 
 public static class DBInitializer
 {
-    public static void Initialize(RepairManagementDBContext context)
+    public static void Initialize(RepairManagementContext context)
     {
         Log.Information("Ensure RepairManagementAPI Database");
 

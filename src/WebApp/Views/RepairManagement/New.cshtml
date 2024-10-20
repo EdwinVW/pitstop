@@ -1,1 +1,36 @@
-@model Pitstop.WebApp.Views.RepairManagement.New
+@model Pitstop.WebApp.ViewModels.RepairManagementViewModel
+@{
+    ViewData["Title"] = "Create Repair Order";
+}
+<h3 id="PageTitle">Repair Management - New Repair Order</h3>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Customer Name</th>
+        <th>LicenseNumber</th>
+        <th>Repair Order Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var repairOrder in Model.CustomerVehicles)
+    {
+        <tr class="clickable" onclick="location.href = '@(Url.Action("Details", "RepairManagement", new { repairOrder = repairOrder.LicenseNumber }))'">
+            <td>@repairOrder.CustomerName</td>
+            <td>@repairOrder.LicenseNumber</td>
+
+            <td>
+                @if (!repairOrder.RepairOrderStatus.Equals(RepairOrdersStatus.NotCreatedYet.ToString()))
+                {
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("New", "RepairManagement")'">Create Repair Order</button>
+                }
+                else
+                {
+                    @repairOrder.RepairOrderStatus
+                }
+            </td>
+
+        </tr>
+    }
+    </tbody>
+</table>

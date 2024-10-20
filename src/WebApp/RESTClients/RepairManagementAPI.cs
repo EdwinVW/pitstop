@@ -7,6 +7,8 @@ public class RepairManagementAPI : IRepairManagementAPI
     public RepairManagementAPI(IConfiguration config, HttpClient httpClient)
     {
         string apiHostAndPort = config.GetSection("APIServiceLocations").GetValue<string>("RepairManagementAPI");
+        
+        
         httpClient.BaseAddress = new Uri($"http://{apiHostAndPort}/api");
         _restClient = RestService.For<IRepairManagementAPI>(
             httpClient,

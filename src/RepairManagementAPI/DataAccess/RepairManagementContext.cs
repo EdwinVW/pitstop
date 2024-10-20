@@ -1,19 +1,10 @@
 namespace Pitstop.RepairManagementAPI.DataAccess;
 
-public class RepairManagementDBContext : DbContext
+public class RepairManagementContext(DbContextOptions<RepairManagementContext> options) : DbContext(options)
 {
-    public RepairManagementDBContext()
-    {
-    }
-
-    public RepairManagementDBContext(DbContextOptions<RepairManagementDBContext> options) : base(options)
-    {
-    }
-
     public DbSet<Vehicle> Vehicles { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<RepairOrders> RepairOrders { get; set; }
-
     public DbSet<VehicleParts> VehicleParts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)

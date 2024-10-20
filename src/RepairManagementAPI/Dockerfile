@@ -15,8 +15,8 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 
-EXPOSE 7080/tcp
-ENV ASPNETCORE_URLS http://*:7080
-HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:5200/hc || exit 1
+EXPOSE 5300/tcp
+ENV ASPNETCORE_URLS http://*:5300
+HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:5300/hc || exit 1
 
-ENTRYPOINT ["dotnet", "RepairManagementAPI.dll"]
+ENTRYPOINT ["dotnet", "Pitstop.RepairManagementAPI.dll"]

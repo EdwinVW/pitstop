@@ -3,12 +3,12 @@ namespace Pitstop.RepairManagementAPI.Controllers
     [Route("api/[controller]")]
     public class RepairManagementController : ControllerBase
     {
-        private readonly RepairManagementDBContext _dbContext;
+        private readonly RepairManagementContext _context;
         private readonly IMessagePublisher _messagePublisher;
 
-        public RepairManagementController(RepairManagementDBContext dbContext, IMessagePublisher messagePublisher)
+        public RepairManagementController(RepairManagementContext context, IMessagePublisher messagePublisher)
         {
-            _dbContext = dbContext;
+            _context = context;
             _messagePublisher = messagePublisher;
         }
 
@@ -16,7 +16,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            var repairOrders = await _dbContext.RepairOrders.ToListAsync();
+            var repairOrders = await _context.RepairOrders.ToListAsync();
             return Ok(repairOrders);
         }
 
@@ -25,7 +25,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
         [Route("{repairOrderId:guid}", Name = "GetByRepairOrderId")]
         public async Task<IActionResult> GetByRepairOrderIdAsync(Guid repairOrderId)
         {
-            var repairOrder = await _dbContext.RepairOrders.FindAsync(repairOrderId);
+            var repairOrder = await _context.RepairOrders.FindAsync(repairOrderId);
             if (repairOrder == null)
             {
                 return NotFound();
@@ -44,8 +44,8 @@ namespace Pitstop.RepairManagementAPI.Controllers
             repairOrder.CreatedAt = DateTime.Now;
             repairOrder.UpdatedAt = DateTime.Now;
 
-            await _dbContext.RepairOrders.AddAsync(repairOrder);
-            await _dbContext.SaveChangesAsync();
+            await _context.RepairOrders.AddAsync(repairOrder);
+            await _context.SaveChangesAsync();
 
             // Create and send the RepairOrderCreated event
             var e = RepairOrderCreated.FromCommand(command);
@@ -59,7 +59,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
         [Route("/approve{repairOrderId:guid}", Name = "ApproveRepairOrder")]
         public async Task<IActionResult> ApproveRepairOrder(Guid repairOrderId)
         {
-            var repairOrder = await _dbContext.RepairOrders.FirstOrDefaultAsync(x => x.Id == repairOrderId);
+            var repairOrder = await _context.RepairOrders.FirstOrDefaultAsync(x => x.Id == repairOrderId);
             if (repairOrder == null)
             {
                 return NotFound();
@@ -69,7 +69,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
             repairOrder.Status = RepairOrdersStatus.Approved;
             repairOrder.UpdatedAt = DateTime.Now;
             repairOrder.IsApproved = true;
-            await _dbContext.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             // Create and send the RepairOrderApproved event
             var e = RepairOrderApproved.FromCommand(repairOrderId.ToString());
@@ -83,7 +83,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
         [Route("/reject{repairOrderId:guid}", Name = "RejectRepairOrder")]
         public async Task<IActionResult> RejectRepairOrder(Guid repairOrderId, [FromBody] RejectRepairOrder command)
         {
-            var repairOrder = await _dbContext.RepairOrders.FirstOrDefaultAsync(x => x.Id == repairOrderId);
+            var repairOrder = await _context.RepairOrders.FirstOrDefaultAsync(x => x.Id == repairOrderId);
             if (repairOrder == null)
             {
                 return NotFound();
@@ -95,7 +95,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
             repairOrder.IsApproved = false;
             repairOrder.RejectReason = command.RejectReason;
 
-            await _dbContext.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             // Create and send the RepairOrderRejected event
             var e = RepairOrderRejected.FromCommand(command);
