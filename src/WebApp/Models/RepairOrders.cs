@@ -58,4 +58,5 @@ public enum RepairOrdersStatus
     Approved,
     Rejected,
     Sent,
+    NotCreatedYet
 }
