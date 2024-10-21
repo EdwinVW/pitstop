@@ -1,4 +1,4 @@
-namespace Pitstop.RepairManagementAPI.DataAccess;
+namespace Pitstop.RepairManagementAPI.Model;
 
 public class Customer
 {

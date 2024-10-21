@@ -5,7 +5,7 @@ public class RepairOrderCreated : Event
     public readonly Guid RepairOrderId;
     public readonly string CustomerId;
     public string LicenseNumber { get; set; }
-    public readonly List<VehicleParts> VehicleParts;
+    public readonly List<string> VehiclePartId;
     public readonly decimal TotalCost;
     public readonly decimal LaborCost;
     public readonly bool IsApproved;
@@ -17,7 +17,7 @@ public class RepairOrderCreated : Event
         Guid repairOrderId,
         string customerId,
         string licenseNumber,
-        List<VehicleParts> vehicleParts,
+        List<string> vehiclePartId,
         decimal totalCost,
         decimal laborCost,
         bool isApproved,
@@ -29,7 +29,7 @@ public class RepairOrderCreated : Event
         RepairOrderId = repairOrderId;
         CustomerId = customerId;
         LicenseNumber = licenseNumber;
-        VehicleParts = vehicleParts;
+        VehiclePartId = vehiclePartId;
         TotalCost = totalCost;
         LaborCost = laborCost;
         IsApproved = isApproved;
@@ -44,7 +44,7 @@ public class RepairOrderCreated : Event
             command.RepairOrderId,
             command.CustomerId,
             command.LicenseNumber,
-            command.VehicleParts,
+            command.VehiclePartId,
             command.TotalCost,
             command.LaborCost,
             command.IsApproved,

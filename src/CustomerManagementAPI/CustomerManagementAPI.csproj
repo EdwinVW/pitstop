@@ -26,4 +26,8 @@
         <PackageReference Include="Serilog.Sinks.Console"/>
         <PackageReference Include="Serilog.Sinks.Seq"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\RepairManagementAPI\RepairManagementAPI.csproj" />
+    </ItemGroup>
 </Project>

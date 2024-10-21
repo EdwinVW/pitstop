@@ -79,7 +79,7 @@ services:
       - rabbitmq
       - sqlserver
     ports:
-      - "5300"
+      - "5300:5300"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
 

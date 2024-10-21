@@ -6,7 +6,7 @@ public class RepairOrders
     public string CustomerId { get; set; }
     public string LicenseNumber { get; set; }
     public decimal TotalCost { get; set; }
-    public List<VehicleParts> VehicleParts { get; set; }
+    public List<string> VehiclePartId  { get; set; }
     public string LaborCost { get; set; }
     public bool IsApproved { get; set; }
     public DateTime CreatedAt { get; set; }

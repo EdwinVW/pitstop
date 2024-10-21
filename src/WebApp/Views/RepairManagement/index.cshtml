@@ -13,24 +13,42 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var repairOrder in Model.CustomerVehicles)
+    @foreach (var repairOrder in Model.RepairOrders)
     {
         <tr class="clickable" onclick="location.href = '@(Url.Action("Details", "RepairManagement", new { repairOrder = repairOrder.LicenseNumber }))'">
             <td>@repairOrder.CustomerName</td>
             <td>@repairOrder.LicenseNumber</td>
-
             <td>
-                @if (!repairOrder.RepairOrderStatus.Equals(RepairOrdersStatus.NotCreatedYet.ToString()))
+                @if (repairOrder.RepairOrderStatus == "NotCreatedYet")
                 {
-                    <button class="btn btn-primary" onclick="location.href='@Url.Action("New", "RepairManagement")'">Create Repair Order</button>
+                    <button class="btn btn-primary create-repair-order-btn" data-customer-id="@repairOrder.CustomerId" data-license-number="@repairOrder.LicenseNumber">
+                        Create Repair Order
+                    </button>
                 }
                 else
                 {
-                    @repairOrder.RepairOrderStatus
+                    <span>@repairOrder.RepairOrderStatus</span>
                 }
-            </td>
 
+                <!-- Debugging: display the RepairOrderStatus -->
+                <span class="text-muted">[Status: @repairOrder.RepairOrderStatus]</span>
+            </td>
         </tr>
     }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.create-repair-order-btn').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.stopPropagation();
+                
+                var customerId = event.target.getAttribute('data-customer-id');
+                var licenseNumber = event.target.getAttribute('data-license-number');
+
+                window.location.href = `@Url.Action("New", "RepairManagement")?customerId=${customerId}&licenseNumber=${licenseNumber}`;
+            });
+        });
+    </script>
+}

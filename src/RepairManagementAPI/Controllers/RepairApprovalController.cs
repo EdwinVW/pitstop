@@ -13,16 +13,15 @@ namespace Pitstop.RepairManagementAPI.Controllers
         }
 
         // Get all repair orders
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        [HttpGet("repairorders")]
+        public async Task<IActionResult> GetRepairOrders()
         {
             var repairOrders = await _context.RepairOrders.ToListAsync();
             return Ok(repairOrders);
         }
 
         // Get a specific repair order by its ID
-        [HttpGet]
-        [Route("{repairOrderId:guid}", Name = "GetByRepairOrderId")]
+        [HttpGet("repairorders/{repairOrderId:guid}")]
         public async Task<IActionResult> GetByRepairOrderIdAsync(Guid repairOrderId)
         {
             var repairOrder = await _context.RepairOrders.FindAsync(repairOrderId);
@@ -35,7 +34,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
         }
 
         // Create a new repair order
-        [HttpPost("create")]
+        [HttpPost("repairorders/create")]
         public async Task<IActionResult> CreateRepairOrder([FromBody] CreateRepairOrder command)
         {
             // Map the command to a RepairOrders entity
@@ -55,8 +54,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
         }
 
         // Approve a repair order
-        [HttpPost]
-        [Route("/approve{repairOrderId:guid}", Name = "ApproveRepairOrder")]
+        [HttpPost("approve/{repairOrderId:guid}")]
         public async Task<IActionResult> ApproveRepairOrder(Guid repairOrderId)
         {
             var repairOrder = await _context.RepairOrders.FirstOrDefaultAsync(x => x.Id == repairOrderId);
@@ -79,8 +77,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
         }
 
         // Reject a repair order
-        [HttpPost]
-        [Route("/reject{repairOrderId:guid}", Name = "RejectRepairOrder")]
+        [HttpPost("reject/{repairOrderId:guid}")]
         public async Task<IActionResult> RejectRepairOrder(Guid repairOrderId, [FromBody] RejectRepairOrder command)
         {
             var repairOrder = await _context.RepairOrders.FirstOrDefaultAsync(x => x.Id == repairOrderId);
@@ -102,6 +99,14 @@ namespace Pitstop.RepairManagementAPI.Controllers
             await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
             return Ok(repairOrder);
+        }
+
+        // Get all vehicle parts
+        [HttpGet("vehicleparts")]
+        public async Task<IActionResult> GetVehicleParts()
+        {
+            var vehicleParts = await _context.VehicleParts.ToListAsync();
+            return Ok(vehicleParts);
         }
     }
 }

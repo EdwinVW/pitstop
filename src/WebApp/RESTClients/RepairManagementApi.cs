@@ -1,14 +1,14 @@
 namespace Pitstop.WebApp.RESTClients;
 
-public class RepairManagementAPI : IRepairManagementAPI
+public class RepairManagementApi : IRepairManagementAPI
 {
     private IRepairManagementAPI _restClient;
 
-    public RepairManagementAPI(IConfiguration config, HttpClient httpClient)
+    public RepairManagementApi(IConfiguration config, HttpClient httpClient)
     {
         string apiHostAndPort = config.GetSection("APIServiceLocations").GetValue<string>("RepairManagementAPI");
-        
-        
+
+
         httpClient.BaseAddress = new Uri($"http://{apiHostAndPort}/api");
         _restClient = RestService.For<IRepairManagementAPI>(
             httpClient,
@@ -33,12 +33,12 @@ public class RepairManagementAPI : IRepairManagementAPI
         {
             if (ex.StatusCode == HttpStatusCode.NotFound)
             {
+                Console.WriteLine(ex);
                 return null;
             }
-            else
-            {
-                throw;
-            }
+
+            Console.WriteLine(ex);
+            throw;
         }
     }
 
@@ -47,13 +47,31 @@ public class RepairManagementAPI : IRepairManagementAPI
         await _restClient.CreateRepairOrder(command);
     }
     
-    public async Task ApproveRepairOrder(int repairOrderId, ApproveRepairOrder command)
+    public async Task ApproveRepairOrder(Guid repairOrderId, ApproveRepairOrder command)
     {
         await _restClient.ApproveRepairOrder(repairOrderId, command);
     }
-    
-    public async Task RejectRepairOrder(int repairOrderId, RejectRepairOrder command)
+
+    public async Task RejectRepairOrder(Guid repairOrderId, RejectRepairOrder command)
     {
         await _restClient.RejectRepairOrder(repairOrderId, command);
+    }
+
+    public async Task<List<VehicleParts>> GetVehicleParts()
+    {
+        try
+        {
+            var result = await _restClient.GetVehicleParts();
+            return result;
+        }
+        catch (ApiException ex)
+        {
+            if (ex.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
+            throw;
+        }
     }
 }

@@ -2,12 +2,13 @@ namespace Pitstop.WebApp.ViewModels;
 
 public class RepairManagementViewModel
 {
-    public List<CustomerVehicleViewModel> CustomerVehicles { get; set; } // Combinatie van klanten en voertuigen
+    public List<RepairManagementCustomerVehicleViewModel> RepairOrders { get; set; }
 
-    public class CustomerVehicleViewModel
+    public class RepairManagementCustomerVehicleViewModel
     {
+        public string CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string LicenseNumber { get; set; }
-        public string RepairOrderStatus { get; set; } // Status van de Repair Order, of null als er geen is
+        public string RepairOrderStatus { get; set; }
     }
 }

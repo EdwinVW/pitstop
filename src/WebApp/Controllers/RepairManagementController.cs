@@ -29,28 +29,49 @@ public class RepairManagementController : Controller
         {
             var repairOrders = await _repairManagementApi.GetAllRepairOrders();
             var vehicles = await _vehicleManagementApi.GetVehicles();
-            
-            var customerVehicles = new List<RepairManagementViewModel.CustomerVehicleViewModel>();
+
+            var customerVehicles = new List<RepairManagementViewModel.RepairManagementCustomerVehicleViewModel>();
             _logger.LogInformation("Getting customer vehicles");
+
             foreach (var vehicle in vehicles)
             {
+                RepairOrders repairOrder = null;
+                var status = "";
                 var customer = await _customerManagementApi.GetCustomerById(vehicle.OwnerId);
-                
-                var repairOrder = repairOrders.FirstOrDefault(ro => ro.CustomerId == customer.CustomerId && ro.LicenseNumber == vehicle.LicenseNumber);
-                
-                var status = repairOrder != null ? repairOrder.Status.ToString() : RepairOrdersStatus.NotCreatedYet.ToString();
-                
-                customerVehicles.Add(new RepairManagementViewModel.CustomerVehicleViewModel
+
+                // Check if repairOrders exist before accessing them
+                if (repairOrders != null && repairOrders.Any())
                 {
+                    repairOrder = repairOrders.FirstOrDefault(ro =>
+                        ro.CustomerId == customer.CustomerId && ro.LicenseNumber == vehicle.LicenseNumber);
+                    if (repairOrder != null)
+                    {
+                        status = repairOrder.Status.ToString();
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation(
+                        $"No repair orders found for vehicle {vehicle.LicenseNumber}. Setting status to 'NotCreatedYet'");
+                    status = "NotCreatedYet";
+                }
+
+                _logger.LogInformation(
+                    $"Customer: {customer.Name}, Vehicle: {vehicle.LicenseNumber}, Status: {status}");
+
+                customerVehicles.Add(new RepairManagementViewModel.RepairManagementCustomerVehicleViewModel
+                {
+                    CustomerId = vehicle.OwnerId,
                     CustomerName = customer.Name,
                     LicenseNumber = vehicle.LicenseNumber,
                     RepairOrderStatus = status
                 });
             }
-            _logger.LogInformation("createing customer vehicles");
+
+            _logger.LogInformation("Creating customer vehicles list.");
             var model = new RepairManagementViewModel
             {
-                CustomerVehicles = customerVehicles
+                RepairOrders = customerVehicles
             };
 
             return View(model);
@@ -70,9 +91,79 @@ public class RepairManagementController : Controller
     }
 
 
-    [HttpGet]
-    public IActionResult New()
+    [HttpGet("New")]
+    public async Task<IActionResult> New(string customerId, string licenseNumber)
     {
-        return View();
+        _logger.LogInformation(
+            $"Loading New Repair Order page for customerId: {customerId}, licenseNumber: {licenseNumber}");
+
+        // Get customer details
+        var customer = await _customerManagementApi.GetCustomerById(customerId);
+
+        // Get available vehicle parts from the API
+        var availableVehicleParts = await _repairManagementApi.GetVehicleParts();
+
+        if (availableVehicleParts == null || !availableVehicleParts.Any())
+        {
+            _logger.LogWarning("No vehicle parts returned from RepairManagementAPI.");
+            ModelState.AddModelError("", "No vehicle parts available.");
+            availableVehicleParts = new List<VehicleParts>();
+        }
+
+        // Create the view model and populate with data
+        var model = new RepairManagementNewViewModel
+        {
+            CustomerId = customer.CustomerId,
+            CustomerName = customer.Name,
+            LicenseNumber = licenseNumber,
+            AvailableVehicleParts = availableVehicleParts.Select(vp => new SelectListItem
+            {
+                Value = vp.Id,
+                Text = $"{vp.PartName} - {vp.PartCost:C}"
+            }).ToList(),
+            SelectedVehicleParts = new List<string>(),
+            TotalCost = 0,
+            LaborCost = 0,
+        };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateRepairOrder(RepairManagementNewViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            var availableVehicleParts = await _repairManagementApi.GetVehicleParts();
+            model.AvailableVehicleParts = availableVehicleParts.Select(vp => new SelectListItem
+            {
+                Value = vp.Id,
+                Text = $"{vp.PartName} - {vp.PartCost:C}"
+            }).ToList();
+
+            return View("New", model);
+        }
+
+        var repairOrderId = Guid.NewGuid().ToString();
+
+        // Prepare the CreateRepairOrder command
+        var command = new CreateRepairOrder(
+            messageId: Guid.NewGuid(),
+            repairOrderId: repairOrderId,
+            customerId: model.CustomerId,
+            licenseNumber: model.LicenseNumber,
+            vehiclePartId: model.SelectedVehicleParts, // IDs of the selected parts
+            totalCost: model.TotalCost,
+            laborCost: model.LaborCost, // Convert string to decimal
+            isApproved: false, // New repair orders are not approved by default
+            createdAt: DateTime.Now,
+            status: RepairOrdersStatus.Sent
+        );
+
+        // Send the command to the RepairManagementAPI
+        await _repairManagementApi.CreateRepairOrder(command);
+
+        // Redirect to the Index page after successful creation
+        return RedirectToAction("Index");
     }
 }

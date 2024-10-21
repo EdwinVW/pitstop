@@ -5,7 +5,7 @@ public class CreateRepairOrder : Command
     public readonly Guid RepairOrderId;
     public readonly string CustomerId;
     public readonly string LicenseNumber;
-    public readonly List<VehicleParts> VehicleParts;
+    public readonly List<string> VehiclePartId;
     public readonly decimal TotalCost;
     public readonly decimal LaborCost;
     public readonly bool IsApproved;
@@ -17,7 +17,7 @@ public class CreateRepairOrder : Command
         Guid repairOrderId,
         string customerId,
         string licenseNumber,
-        List<VehicleParts> vehicleParts,
+        List<string> vehiclePartId,
         decimal totalCost,
         decimal laborCost,
         bool isApproved,
@@ -28,7 +28,7 @@ public class CreateRepairOrder : Command
         RepairOrderId = repairOrderId;
         CustomerId = customerId;
         TotalCost = totalCost;
-        VehicleParts = vehicleParts;
+        VehiclePartId = vehiclePartId;
         LaborCost = laborCost;
         IsApproved = isApproved;
         CreatedAt = createdAt;

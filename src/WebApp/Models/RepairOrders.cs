@@ -1,4 +1,5 @@
 namespace Pitstop.WebApp.Models;
+
 public class RepairOrders
 {
     public string Id { get; set; }
@@ -18,7 +19,7 @@ public class RepairOrders
 
     [Required]
     [Display(Name = "Vehicle Parts")]
-    public List<VehicleParts> VehicleParts { get; set; } = new List<VehicleParts>();
+    public List<string> VehiclePartIds { get; set; } = new List<string>();
 
     [Required]
     [Display(Name = "Labor Cost")]
@@ -43,6 +44,8 @@ public class RepairOrders
 
 public class VehicleParts
 {
+    public string Id { get; set; }
+
     [Required]
     [Display(Name = "Part Name")]
     public string PartName { get; set; }

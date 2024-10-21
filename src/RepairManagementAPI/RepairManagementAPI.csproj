@@ -30,4 +30,8 @@
         <PackageReference Include="Serilog.Sinks.Console"/>
 
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+    </ItemGroup>
 </Project>
