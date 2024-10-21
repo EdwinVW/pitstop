@@ -105,10 +105,9 @@ public class RepairManagementController : Controller
 
         if (availableVehicleParts == null || !availableVehicleParts.Any())
         {
-            _logger.LogWarning("No vehicle parts returned from RepairManagementAPI.");
-            ModelState.AddModelError("", "No vehicle parts available.");
             availableVehicleParts = new List<VehicleParts>();
         }
+
 
         // Create the view model and populate with data
         var model = new RepairManagementNewViewModel
@@ -116,30 +115,21 @@ public class RepairManagementController : Controller
             CustomerId = customer.CustomerId,
             CustomerName = customer.Name,
             LicenseNumber = licenseNumber,
-            AvailableVehicleParts = availableVehicleParts.Select(vp => new SelectListItem
-            {
-                Value = vp.Id,
-                Text = $"{vp.PartName} - {vp.PartCost:C}"
-            }).ToList(),
+            AvailableVehicleParts = availableVehicleParts,
             SelectedVehicleParts = new List<string>(),
-            TotalCost = 0,
-            LaborCost = 0,
         };
-
         return View(model);
     }
 
+    [HttpPost]
     [HttpPost]
     public async Task<IActionResult> CreateRepairOrder(RepairManagementNewViewModel model)
     {
         if (!ModelState.IsValid)
         {
+            // Retrieve the vehicle parts again if model state is invalid
             var availableVehicleParts = await _repairManagementApi.GetVehicleParts();
-            model.AvailableVehicleParts = availableVehicleParts.Select(vp => new SelectListItem
-            {
-                Value = vp.Id,
-                Text = $"{vp.PartName} - {vp.PartCost:C}"
-            }).ToList();
+            model.AvailableVehicleParts = availableVehicleParts;
 
             return View("New", model);
         }
@@ -154,7 +144,7 @@ public class RepairManagementController : Controller
             licenseNumber: model.LicenseNumber,
             vehiclePartId: model.SelectedVehicleParts, // IDs of the selected parts
             totalCost: model.TotalCost,
-            laborCost: model.LaborCost, // Convert string to decimal
+            laborCost: model.LaborCost, // Labor cost is already decimal
             isApproved: false, // New repair orders are not approved by default
             createdAt: DateTime.Now,
             status: RepairOrdersStatus.Sent

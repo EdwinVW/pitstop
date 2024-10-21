@@ -48,12 +48,12 @@ public class VehicleParts
 
     [Required]
     [Display(Name = "Part Name")]
-    public string PartName { get; set; }
+    public string Name { get; set; }
 
     [Required]
     [Display(Name = "Part Cost")]
     [DataType(DataType.Currency)]
-    public decimal PartCost { get; set; }
+    public decimal Cost { get; set; }
 }
 
 public enum RepairOrdersStatus

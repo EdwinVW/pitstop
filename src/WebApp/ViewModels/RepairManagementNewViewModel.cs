@@ -12,7 +12,8 @@ public class RepairManagementNewViewModel
 
     public decimal LaborCost { get; set; }
     
-    public List<SelectListItem> AvailableVehicleParts { get; set; }
+    public List<VehicleParts> AvailableVehicleParts { get; set; }
     
     public List<string> SelectedVehicleParts { get; set; }
 }
+
