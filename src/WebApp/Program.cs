@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseContentRoot(Directory.GetCurrentDirectory());
 
 // setup logging
-builder.Host.UseSerilog((context, logContext) => 
+builder.Host.UseSerilog((context, logContext) =>
     logContext
         .ReadFrom.Configuration(builder.Configuration)
         .Enrich.WithMachineName()

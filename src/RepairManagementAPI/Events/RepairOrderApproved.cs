@@ -2,19 +2,22 @@ namespace Pitstop.RepairManagementAPI.Events;
 
 public class RepairOrderApproved : Event
 {
-    public readonly string RepairOrderId;
+    public readonly Guid RepairOrderId;
+    public readonly DateTime ApproveDate;
 
-    public RepairOrderApproved(Guid messageId, string repairOrderId)
+    public RepairOrderApproved(Guid messageId, Guid repairOrderId, DateTime approveDate)
         : base(messageId)
     {
         RepairOrderId = repairOrderId;
+        ApproveDate = approveDate;
     }
 
-    public static RepairOrderApproved FromCommand(string repairOrderId)
+    public static RepairOrderApproved FromCommand(ApproveRepairOrder command)
     {
         return new RepairOrderApproved(
             Guid.NewGuid(),
-            repairOrderId
+            command.RepairOrderId,
+            command.ApproveDate
         );
     }
 }

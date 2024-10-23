@@ -1,24 +1,24 @@
 public interface IRepairManagementAPI
 {
     // Get all repair orders
-    [Get("/repairManagement/repairorders")]
-    Task<List<RepairOrders>> GetAllRepairOrders();
+    [Get("/repairManagement")]
+    Task<List<RepairOrder>> GetAllRepairOrders();
 
-    // Get a specific repair order by ID
-    [Get("/repairManagement/repairorders/{id}")]
-    Task<RepairOrders> GetRepairOrderById(Guid id);
+    // Get repair order by ID
+    [Get("/repairManagement/{repairOrderId}")]
+    Task<RepairOrder> GetRepairOrderById([AliasAs("repairOrderId")] Guid repairOrderId);
 
-    // Create a new repair order
-    [Post("/repairManagement/repairorders/create")]
-    Task CreateRepairOrder([Body] CreateRepairOrder command);
+    // Send a new repair order
+    [Post("/repairManagement/send")]
+    Task SendRepairOrder([Body] SendRepairOrder command);
 
-    // Approve a repair order
+    // Approve a repair order by ID
     [Post("/repairManagement/approve/{repairOrderId}")]
-    Task ApproveRepairOrder([AliasAs("repairOrderId")] Guid repairOrderId, [Body] ApproveRepairOrder command);
+    Task ApproveRepairOrder([AliasAs("repairOrderId")] Guid repairOrderId);
 
-    // Reject a repair order
+    // Reject a repair order by ID
     [Post("/repairManagement/reject/{repairOrderId}")]
-    Task RejectRepairOrder([AliasAs("repairOrderId")] Guid repairOrderId, [Body] RejectRepairOrder command);
+    Task RejectRepairOrder([AliasAs("repairOrderId")] Guid repairOrderId, RejectRepairOrder command);
 
     // Get all vehicle parts
     [Get("/repairManagement/vehicleparts")]

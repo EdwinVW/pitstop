@@ -2,11 +2,8 @@ namespace Pitstop.WebApp.Commands;
 
 public class ApproveRepairOrder : Command
 {
-    public readonly string RepairOrderId;
-
-    public ApproveRepairOrder(Guid messageId, string repairOrderId)
+    public ApproveRepairOrder(Guid messageId)
         : base(messageId)
     {
-        RepairOrderId = repairOrderId;
     }
 }

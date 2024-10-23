@@ -18,12 +18,12 @@ public class RepairManagementApi : IRepairManagementAPI
             });
     }
 
-    public async Task<List<RepairOrders>> GetAllRepairOrders()
+    public async Task<List<RepairOrder>> GetAllRepairOrders()
     {
         return await _restClient.GetAllRepairOrders();
     }
 
-    public async Task<RepairOrders> GetRepairOrderById(Guid id)
+    public async Task<RepairOrder> GetRepairOrderById(Guid id)
     {
         try
         {
@@ -42,14 +42,14 @@ public class RepairManagementApi : IRepairManagementAPI
         }
     }
 
-    public async Task CreateRepairOrder(CreateRepairOrder command)
+    public async Task SendRepairOrder(SendRepairOrder command)
     {
-        await _restClient.CreateRepairOrder(command);
+        await _restClient.SendRepairOrder(command);
     }
-    
-    public async Task ApproveRepairOrder(Guid repairOrderId, ApproveRepairOrder command)
+
+    public async Task ApproveRepairOrder(Guid repairOrderId)
     {
-        await _restClient.ApproveRepairOrder(repairOrderId, command);
+        await _restClient.ApproveRepairOrder(repairOrderId);
     }
 
     public async Task RejectRepairOrder(Guid repairOrderId, RejectRepairOrder command)

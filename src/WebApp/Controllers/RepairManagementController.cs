@@ -1,5 +1,3 @@
-using Pitstop.WebApp.RESTClients;
-
 namespace PitStop.WebApp.Controllers;
 
 public class RepairManagementController : Controller
@@ -24,59 +22,66 @@ public class RepairManagementController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        _logger.LogInformation("Getting vehicle list");
         return await _resiliencyHelper.ExecuteResilient(async () =>
         {
-            var repairOrders = await _repairManagementApi.GetAllRepairOrders();
+            var repairOrdersData = await _repairManagementApi.GetAllRepairOrders();
             var vehicles = await _vehicleManagementApi.GetVehicles();
 
-            var customerVehicles = new List<RepairManagementViewModel.RepairManagementCustomerVehicleViewModel>();
-            _logger.LogInformation("Getting customer vehicles");
+            var repairOrders = new List<RepairOrder>();
 
-            foreach (var vehicle in vehicles)
+            foreach (var v in vehicles)
             {
-                RepairOrders repairOrder = null;
-                var status = "";
-                var customer = await _customerManagementApi.GetCustomerById(vehicle.OwnerId);
+                var r = repairOrdersData?.FirstOrDefault(ro => ro.VehicleInfo.LicenseNumber == v.LicenseNumber);
 
-                // Check if repairOrders exist before accessing them
-                if (repairOrders != null && repairOrders.Any())
+                if (r != null)
                 {
-                    repairOrder = repairOrders.FirstOrDefault(ro =>
-                        ro.CustomerId == customer.CustomerId && ro.LicenseNumber == vehicle.LicenseNumber);
-                    if (repairOrder != null)
+                    var ro = new RepairOrder
                     {
-                        status = repairOrder.Status.ToString();
-                    }
+                        Id = r.Id,
+                        CustomerInfo = new CustomerInfo
+                        {
+                            CustomerName = r.CustomerInfo.CustomerName
+                        },
+                        VehicleInfo = new VehicleInfo
+                        {
+                            LicenseNumber = r.VehicleInfo.LicenseNumber,
+                        },
+                        Status = r.Status
+                    };
+
+                    repairOrders.Add(ro);
                 }
                 else
                 {
-                    _logger.LogInformation(
-                        $"No repair orders found for vehicle {vehicle.LicenseNumber}. Setting status to 'NotCreatedYet'");
-                    status = "NotCreatedYet";
+                    var customer = await _customerManagementApi.GetCustomerById(v.OwnerId);
+                    if (customer != null)
+                    {
+                        var ro = new RepairOrder
+                        {
+                            CustomerInfo = new CustomerInfo
+                            {
+                                CustomerName = customer.Name,
+                            },
+                            VehicleInfo = new VehicleInfo
+                            {
+                                LicenseNumber = v.LicenseNumber,
+                            },
+                            Status = RepairOrdersStatus.NotCreatedYet.ToString()
+                        };
+                        repairOrders.Add(ro);
+                    }
                 }
-
-                _logger.LogInformation(
-                    $"Customer: {customer.Name}, Vehicle: {vehicle.LicenseNumber}, Status: {status}");
-
-                customerVehicles.Add(new RepairManagementViewModel.RepairManagementCustomerVehicleViewModel
-                {
-                    CustomerId = vehicle.OwnerId,
-                    CustomerName = customer.Name,
-                    LicenseNumber = vehicle.LicenseNumber,
-                    RepairOrderStatus = status
-                });
             }
 
-            _logger.LogInformation("Creating customer vehicles list.");
             var model = new RepairManagementViewModel
             {
-                RepairOrders = customerVehicles
+                RepairOrders = repairOrders
             };
 
             return View(model);
         }, View("Offline", new RepairManagementOfflineViewModel()));
     }
+
 
     [HttpGet]
     public IActionResult Error()
@@ -91,69 +96,99 @@ public class RepairManagementController : Controller
     }
 
 
-    [HttpGet("New")]
-    public async Task<IActionResult> New(string customerId, string licenseNumber)
+    [HttpGet]
+    public async Task<IActionResult> New(string licenseNumber)
     {
-        _logger.LogInformation(
-            $"Loading New Repair Order page for customerId: {customerId}, licenseNumber: {licenseNumber}");
+        var repairOrder = new RepairOrder();
+        repairOrder.Status = RepairOrdersStatus.NotCreatedYet.ToString();
+        repairOrder.ToRepairVehiclePartIds = new List<Guid>();
 
-        // Get customer details
-        var customer = await _customerManagementApi.GetCustomerById(customerId);
+        _logger.LogInformation($"Loading New Repair Order page for licenseNumber: {licenseNumber}");
 
-        // Get available vehicle parts from the API
+        var vehicle = await _vehicleManagementApi.GetVehicleByLicenseNumber(licenseNumber);
+        var customer = await _customerManagementApi.GetCustomerById(vehicle.OwnerId);
+
+        repairOrder.CustomerInfo = new CustomerInfo
+        {
+            CustomerName = customer.Name,
+            CustomerEmail = customer.EmailAddress,
+            CustomerPhone = customer.TelephoneNumber
+        };
+
+        repairOrder.VehicleInfo = new VehicleInfo
+        {
+            LicenseNumber = vehicle.LicenseNumber,
+            Brand = vehicle.Brand,
+            Type = vehicle.Type
+        };
+
+        repairOrder.TotalCost = 0;
+        repairOrder.LaborCost = 0;
+        repairOrder.IsApproved = false;
+        repairOrder.Status = RepairOrdersStatus.Sent.ToString();
+        repairOrder.CreatedAt = DateTime.Now;
+
         var availableVehicleParts = await _repairManagementApi.GetVehicleParts();
-
         if (availableVehicleParts == null || !availableVehicleParts.Any())
         {
             availableVehicleParts = new List<VehicleParts>();
         }
 
-
-        // Create the view model and populate with data
         var model = new RepairManagementNewViewModel
         {
-            CustomerId = customer.CustomerId,
-            CustomerName = customer.Name,
-            LicenseNumber = licenseNumber,
+            RepairOrder = repairOrder,
             AvailableVehicleParts = availableVehicleParts,
-            SelectedVehicleParts = new List<string>(),
+            SelectedVehicleParts = new List<Guid>()
         };
+
         return View(model);
     }
 
-    [HttpPost]
-    [HttpPost]
-    public async Task<IActionResult> CreateRepairOrder(RepairManagementNewViewModel model)
+    public async Task<IActionResult> SendRepairOrder(RepairManagementNewViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            // Retrieve the vehicle parts again if model state is invalid
-            var availableVehicleParts = await _repairManagementApi.GetVehicleParts();
-            model.AvailableVehicleParts = availableVehicleParts;
-
-            return View("New", model);
+            return await HandleInvalidModelStateAsync(model);
         }
 
-        var repairOrderId = Guid.NewGuid().ToString();
+        var command = SendRepairOrderCommand(model);
 
-        // Prepare the CreateRepairOrder command
-        var command = new CreateRepairOrder(
+        return await ExecuteSendRepairOrderAsync(model, command);
+    }
+
+    private async Task<IActionResult> HandleInvalidModelStateAsync(RepairManagementNewViewModel model)
+    {
+        _logger.LogError("Model state is invalid. Errors: {Errors}",
+            string.Join(", ", ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))));
+
+        model.AvailableVehicleParts = await _repairManagementApi.GetVehicleParts();
+        return View("New", model);
+    }
+
+    private static SendRepairOrder SendRepairOrderCommand(RepairManagementNewViewModel model)
+    {
+        return new SendRepairOrder(
             messageId: Guid.NewGuid(),
-            repairOrderId: repairOrderId,
-            customerId: model.CustomerId,
-            licenseNumber: model.LicenseNumber,
-            vehiclePartId: model.SelectedVehicleParts, // IDs of the selected parts
-            totalCost: model.TotalCost,
-            laborCost: model.LaborCost, // Labor cost is already decimal
-            isApproved: false, // New repair orders are not approved by default
-            createdAt: DateTime.Now,
-            status: RepairOrdersStatus.Sent
+            customerInfo: model.RepairOrder.CustomerInfo,
+            vehicleInfo: model.RepairOrder.VehicleInfo,
+            toRepairVehicleParts: model.SelectedVehicleParts,
+            totalCost: model.RepairOrder.TotalCost,
+            laborCost: model.RepairOrder.LaborCost,
+            isApproved: false,
+            createdAt: model.RepairOrder.CreatedAt,
+            status: RepairOrdersStatus.Sent.ToString()
         );
+    }
 
-        // Send the command to the RepairManagementAPI
-        await _repairManagementApi.CreateRepairOrder(command);
-
-        // Redirect to the Index page after successful creation
-        return RedirectToAction("Index");
+    private async Task<IActionResult> ExecuteSendRepairOrderAsync(RepairManagementNewViewModel model,
+        SendRepairOrder command)
+    {
+        return await _resiliencyHelper.ExecuteResilient(async () =>
+        {
+            await _repairManagementApi.SendRepairOrder(command);
+            _logger.LogInformation("Repair order created successfully for customer {Customer}",
+                model.RepairOrder.CustomerInfo.CustomerName);
+            return RedirectToAction("Index", "RepairManagement");
+        }, View("Offline", new RepairManagementOfflineViewModel()));
     }
 }

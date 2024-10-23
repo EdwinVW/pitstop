@@ -2,7 +2,6 @@ global using Pitstop.RepairManagementAPI.Commands;
 global using Pitstop.RepairManagementAPI.Events;
 global using Pitstop.RepairManagementAPI.Model;
 global using Pitstop.RepairManagementAPI.DataAccess;
-global using Pitstop.RepairManagementAPI.Mappers;
 global using Pitstop.Infrastructure.Messaging;
 global using Pitstop.Infrastructure.Messaging.Configuration;
 global using Microsoft.EntityFrameworkCore;

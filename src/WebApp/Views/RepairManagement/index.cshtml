@@ -15,23 +15,20 @@
     <tbody>
     @foreach (var repairOrder in Model.RepairOrders)
     {
-        <tr class="clickable" onclick="location.href = '@(Url.Action("Details", "RepairManagement", new { repairOrder = repairOrder.LicenseNumber }))'">
-            <td>@repairOrder.CustomerName</td>
-            <td>@repairOrder.LicenseNumber</td>
+        <tr class="clickable" onclick="location.href = '@(Url.Action("Details", "RepairManagement", new { repairOrder = repairOrder.VehicleInfo.LicenseNumber }))'">
+            <td>@repairOrder.CustomerInfo.CustomerName</td>
+            <td>@repairOrder.VehicleInfo.LicenseNumber</td>
             <td>
-                @if (repairOrder.RepairOrderStatus == "NotCreatedYet")
+                @if (repairOrder.Status == RepairOrdersStatus.NotCreatedYet.ToString())
                 {
-                    <button class="btn btn-primary create-repair-order-btn" data-customer-id="@repairOrder.CustomerId" data-license-number="@repairOrder.LicenseNumber">
+                    <button class="btn btn-primary create-repair-order-btn" data-license-number="@repairOrder.VehicleInfo.LicenseNumber">
                         Create Repair Order
                     </button>
                 }
                 else
                 {
-                    <span>@repairOrder.RepairOrderStatus</span>
+                    <span>@repairOrder.Status</span>
                 }
-
-                <!-- Debugging: display the RepairOrderStatus -->
-                <span class="text-muted">[Status: @repairOrder.RepairOrderStatus]</span>
             </td>
         </tr>
     }
@@ -44,10 +41,9 @@
             button.addEventListener('click', function(event) {
                 event.stopPropagation();
                 
-                var customerId = event.target.getAttribute('data-customer-id');
                 var licenseNumber = event.target.getAttribute('data-license-number');
 
-                window.location.href = `@Url.Action("New", "RepairManagement")?customerId=${customerId}&licenseNumber=${licenseNumber}`;
+                window.location.href = `@Url.Action("New", "RepairManagement")?licenseNumber=${licenseNumber}`;
             });
         });
     </script>

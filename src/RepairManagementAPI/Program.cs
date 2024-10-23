@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // setup logging
@@ -20,6 +22,12 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "RepairManagement API", Version = "v1" });
 });
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+    });
 
 // add DBContext
 var sqlConnectionString = builder.Configuration.GetConnectionString("RepairManagementCN");

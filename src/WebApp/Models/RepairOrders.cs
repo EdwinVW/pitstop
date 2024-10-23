@@ -1,65 +1,86 @@
-namespace Pitstop.WebApp.Models;
-
-public class RepairOrders
+namespace Pitstop.WebApp.Models
 {
-    public string Id { get; set; }
+    public class RepairOrder
+    {
+        public Guid Id { get; set; }
+        
+        [Display(Name = "Customer Info")]
+        public CustomerInfo CustomerInfo { get; set; }
+        
+        [Display(Name = "Vehicle Info")]
+        public VehicleInfo VehicleInfo { get; set; }
 
-    [Required]
-    [Display(Name = "Customer ID")]
-    public string CustomerId { get; set; }
+        
+        [Display(Name = "Total Cost")]
+        [DataType(DataType.Currency)]
+        public decimal TotalCost { get; set; }
 
-    [Required]
-    [Display(Name = "License Number")]
-    public string LicenseNumber { get; set; }
+        
+        [Display(Name = "Vehicle Parts")]
+        public List<Guid> ToRepairVehiclePartIds { get; set; }
 
-    [Required]
-    [Display(Name = "Total Cost")]
-    [DataType(DataType.Currency)]
-    public decimal TotalCost { get; set; }
+        [Display(Name = "Labor Cost")]
+        [DataType(DataType.Currency)]
+        public decimal LaborCost { get; set; }
 
-    [Required]
-    [Display(Name = "Vehicle Parts")]
-    public List<string> VehiclePartIds { get; set; } = new List<string>();
+        public bool IsApproved { get; set; }
 
-    [Required]
-    [Display(Name = "Labor Cost")]
-    [DataType(DataType.Currency)]
-    public string LaborCost { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime CreatedAt { get; set; }
 
-    [Display(Name = "Is Approved")] public bool IsApproved { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        
+        [Display(Name = "Status")]
+        public string Status { get; set; }
 
-    [Required]
-    [Display(Name = "Created At")]
-    [DataType(DataType.Date)]
-    public DateTime CreatedAt { get; set; }
+        [Display(Name = "Reject Reason")]
+        public string RejectReason { get; set; }
+    }
 
-    [Display(Name = "Updated At")]
-    [DataType(DataType.Date)]
-    public DateTime UpdatedAt { get; set; }
+    public class CustomerInfo
+    {
+        [Required]
+        [Display(Name = "Customer Name")]
+        public string CustomerName { get; set; }
+        
+        [Display(Name = "Customer Email")]
+        public string CustomerEmail { get; set; }
 
-    [Required] [Display(Name = "Status")] public RepairOrdersStatus Status { get; set; }
+        [Display(Name = "Customer Phone")]
+        public string CustomerPhone { get; set; }
+    }
 
-    [Display(Name = "Reject Reason")] public string RejectReason { get; set; }
-}
+    public class VehicleInfo
+    {
+        [Required]
+        [Display(Name = "License Number")]
+        public string LicenseNumber { get; set; }
 
-public class VehicleParts
-{
-    public string Id { get; set; }
+        [Display(Name = "Brand")]
+        public string Brand { get; set; }
 
-    [Required]
-    [Display(Name = "Part Name")]
-    public string Name { get; set; }
+        [Display(Name = "Type")]
+        public string Type { get; set; }
+    }
 
-    [Required]
-    [Display(Name = "Part Cost")]
-    [DataType(DataType.Currency)]
-    public decimal Cost { get; set; }
-}
+    public class VehicleParts
+    {
+        public string Id { get; set; }
 
-public enum RepairOrdersStatus
-{
-    Approved,
-    Rejected,
-    Sent,
-    NotCreatedYet
+        
+        [Display(Name = "Part Name")]
+        public string Name { get; set; }
+        
+        [Display(Name = "Part Cost")]
+        [DataType(DataType.Currency)]
+        public decimal Cost { get; set; }
+    }
+
+    public enum RepairOrdersStatus
+    {
+        Approved,
+        Rejected,
+        Sent,
+        NotCreatedYet
+    }
 }

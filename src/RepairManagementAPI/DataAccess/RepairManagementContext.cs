@@ -2,26 +2,14 @@ namespace Pitstop.RepairManagementAPI.DataAccess;
 
 public class RepairManagementContext(DbContextOptions<RepairManagementContext> options) : DbContext(options)
 {
-    public DbSet<Vehicle> Vehicles { get; set; }
-    public DbSet<Customer> Customers { get; set; }
-    public DbSet<RepairOrders> RepairOrders { get; set; }
+    public DbSet<RepairOrder> RepairOrders { get; set; }
     public DbSet<VehicleParts> VehicleParts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Vehicle>().HasKey(entity => entity.LicenseNumber);
-        builder.Entity<Vehicle>().ToTable("Vehicle");
-
-        builder.Entity<Customer>().HasKey(entity => entity.CustomerId);
-        builder.Entity<Customer>().ToTable("Customer");
-
-        builder.Entity<RepairOrders>()
+        builder.Entity<RepairOrder>()
             .Property(ro => ro.TotalCost)
             .HasColumnType("decimal(18,2)");
-        builder.Entity<RepairOrders>().HasKey(entity => entity.Id);
-        builder.Entity<RepairOrders>().ToTable("RepairOrders");
-
-
         builder.Entity<VehicleParts>()
             .Property(vp => vp.Cost)
             .HasColumnType("decimal(18,2)");
@@ -56,6 +44,16 @@ public class RepairManagementContext(DbContextOptions<RepairManagementContext> o
             new VehicleParts(Guid.NewGuid(), "Muffler", 350.00m)
         );
 
+        builder.Entity<RepairOrder>()
+            .Property(ro => ro.LaborCost)
+            .HasColumnType("decimal(18,2)");
+
+        builder.Entity<RepairOrder>().HasKey(entity => entity.Id);
+        builder.Entity<RepairOrder>().ToTable("RepairOrders");
+
+        builder.Entity<RepairOrderVehicleParts>().HasKey(rv => new { rv.RepairOrderId, rv.VehiclePartsId });
+        builder.Entity<RepairOrderVehicleParts>().HasOne(rv => rv.RepairOrder)
+            .WithMany(rp => rp.RepairOrderVehicleParts).HasForeignKey(rv => rv.RepairOrderId);
 
         base.OnModelCreating(builder);
     }

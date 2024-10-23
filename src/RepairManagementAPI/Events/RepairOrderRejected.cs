@@ -2,15 +2,17 @@ namespace Pitstop.RepairManagementAPI.Events;
 
 public class RepairOrderRejected : Event
 {
-    public readonly string RepairOrderId;
+    public readonly Guid RepairOrderId;
+    public readonly DateTime RejectedAt;
     public readonly string RejectReason;
 
-    public RepairOrderRejected(Guid messageId, string repairOrderId, string rejectReason
+    public RepairOrderRejected(Guid messageId, Guid repairOrderId, string rejectReason, DateTime rejectedAt
     )
         : base(messageId)
     {
         RepairOrderId = repairOrderId;
         RejectReason = rejectReason;
+        RejectedAt = rejectedAt;
     }
 
     public static RepairOrderRejected FromCommand(RejectRepairOrder command)
@@ -18,7 +20,8 @@ public class RepairOrderRejected : Event
         return new RepairOrderRejected(
             Guid.NewGuid(),
             command.RepairOrderId,
-            command.RejectReason
+            command.RejectReason,
+            command.RejectedAt
         );
     }
 }

@@ -22,42 +22,32 @@ namespace Pitstop.RepairManagementAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Pitstop.RepairManagementAPI.Model.Customer", b =>
-                {
-                    b.Property<string>("CustomerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TelephoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CustomerId");
-
-                    b.ToTable("Customer", (string)null);
-                });
-
-            modelBuilder.Entity("Pitstop.RepairManagementAPI.Model.RepairOrders", b =>
+            modelBuilder.Entity("Pitstop.RepairManagementAPI.Model.RepairOrder", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Brand")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CustomerId")
+                    b.Property<string>("CustomerEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CutomerName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
 
-                    b.Property<string>("LaborCost")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("LaborCost")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("LicenseNumber")
                         .HasColumnType("nvarchar(max)");
@@ -65,40 +55,36 @@ namespace Pitstop.RepairManagementAPI.Migrations
                     b.Property<string>("RejectReason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalCost")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("VehiclePartId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("RepairOrders", (string)null);
                 });
 
-            modelBuilder.Entity("Pitstop.RepairManagementAPI.Model.Vehicle", b =>
+            modelBuilder.Entity("Pitstop.RepairManagementAPI.Model.RepairOrderVehicleParts", b =>
                 {
-                    b.Property<string>("LicenseNumber")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RepairOrderId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Brand")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("VehiclePartsId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("RepairOrderId", "VehiclePartsId");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasIndex("VehiclePartsId");
 
-                    b.HasKey("LicenseNumber");
-
-                    b.ToTable("Vehicle", (string)null);
+                    b.ToTable("RepairOrderVehicleParts");
                 });
 
             modelBuilder.Entity("Pitstop.RepairManagementAPI.Model.VehicleParts", b =>
@@ -120,154 +106,178 @@ namespace Pitstop.RepairManagementAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e831584d-b318-4b57-b436-aa934a06e8d6"),
+                            Id = new Guid("62b8cb27-6654-42db-9eb9-6ca192a18819"),
                             Cost = 1200.00m,
                             Name = "Engine"
                         },
                         new
                         {
-                            Id = new Guid("ab99586f-a421-48f7-83b5-f9ec47aeac7b"),
+                            Id = new Guid("0dcce8a1-24fe-4b78-8cd9-0d517d6210cf"),
                             Cost = 300.00m,
                             Name = "Brake Pads"
                         },
                         new
                         {
-                            Id = new Guid("a2bc1f12-c90d-4780-b9a2-6eb14f955610"),
+                            Id = new Guid("03fd0223-a8ef-44c3-819f-f704e9bf4b19"),
                             Cost = 2400.00m,
                             Name = "Transmission"
                         },
                         new
                         {
-                            Id = new Guid("f9284ca5-f36b-4e57-90dd-417598d7ae86"),
+                            Id = new Guid("dbbc0244-6d50-40cb-86cd-fdfd3345a07b"),
                             Cost = 600.00m,
                             Name = "Fuel Pump"
                         },
                         new
                         {
-                            Id = new Guid("bff55876-b954-495a-8871-56887f547032"),
+                            Id = new Guid("a45e3037-e1ac-489c-b707-448bd8760799"),
                             Cost = 450.00m,
                             Name = "Alternator"
                         },
                         new
                         {
-                            Id = new Guid("8549b861-ef1b-448e-b791-e6176cd95386"),
+                            Id = new Guid("ab912724-4b12-4ddc-8ecc-9d694c17675f"),
                             Cost = 250.00m,
                             Name = "Radiator"
                         },
                         new
                         {
-                            Id = new Guid("486e09f9-da8b-4577-ba57-fe75990d6f84"),
+                            Id = new Guid("88c05295-0c58-4d0a-b5ed-85c5ef505334"),
                             Cost = 500.00m,
                             Name = "Exhaust"
                         },
                         new
                         {
-                            Id = new Guid("6df99364-466b-4e88-9b9e-dfddc572f06b"),
+                            Id = new Guid("4532dd87-8207-4ed0-8e03-0cb31cac6319"),
                             Cost = 800.00m,
                             Name = "Suspension"
                         },
                         new
                         {
-                            Id = new Guid("a81c2242-1340-48a7-81f3-2700114fa520"),
+                            Id = new Guid("496b0ac1-6ff0-4256-b845-e40a50e44464"),
                             Cost = 200.00m,
                             Name = "Battery"
                         },
                         new
                         {
-                            Id = new Guid("bfd00e1b-e2a9-4c1b-ae3e-837f8c7b1c9a"),
+                            Id = new Guid("3cee969b-7561-4ba2-a3e2-17bcef8f0fc8"),
                             Cost = 400.00m,
                             Name = "Starter Motor"
                         },
                         new
                         {
-                            Id = new Guid("e6d590cd-d4d8-4cd8-9a08-7a754d12a7de"),
+                            Id = new Guid("76cf53e4-0968-408d-88d0-8f3421e600b9"),
                             Cost = 150.00m,
                             Name = "Headlights"
                         },
                         new
                         {
-                            Id = new Guid("e2efd403-fe51-46d4-966e-90b0430c0b4e"),
+                            Id = new Guid("ec1066ca-245a-42db-b4ea-b1910637e343"),
                             Cost = 120.00m,
                             Name = "Taillights"
                         },
                         new
                         {
-                            Id = new Guid("56947ee4-b977-4bcc-85f4-9eba1ed63940"),
+                            Id = new Guid("d1afd464-480b-4101-9052-9c94687b3d72"),
                             Cost = 75.00m,
                             Name = "Spark Plugs"
                         },
                         new
                         {
-                            Id = new Guid("5280ec2b-c0c1-45c9-8916-e439b8f557d4"),
+                            Id = new Guid("c9a2e5d9-241d-4667-8abe-9905ea041181"),
                             Cost = 850.00m,
                             Name = "Clutch"
                         },
                         new
                         {
-                            Id = new Guid("ee01a952-6f23-4479-a76b-8cc92e5ea26f"),
+                            Id = new Guid("7a4f3ccc-985f-484c-bc6e-598e7e16981e"),
                             Cost = 35.00m,
                             Name = "Air Filter"
                         },
                         new
                         {
-                            Id = new Guid("0d66b7e2-c228-4379-87e0-25196049e6fd"),
+                            Id = new Guid("261b7ad0-d769-4ef0-a1d6-d1713cb8f950"),
                             Cost = 25.00m,
                             Name = "Oil Filter"
                         },
                         new
                         {
-                            Id = new Guid("bc37223d-2fad-4eec-b8fc-134e00da097a"),
+                            Id = new Guid("149a46cc-1a6d-4c2b-a744-9537e7140a5c"),
                             Cost = 320.00m,
                             Name = "Timing Belt"
                         },
                         new
                         {
-                            Id = new Guid("810dcdf3-fd00-4d39-8132-8a0c393edd8a"),
+                            Id = new Guid("1a38a640-5aff-4ccb-b90b-408e58bcfe1b"),
                             Cost = 400.00m,
                             Name = "Water Pump"
                         },
                         new
                         {
-                            Id = new Guid("65ba4299-05dd-4f72-9ff0-2d7ee6695990"),
+                            Id = new Guid("3e9753cd-7031-48d5-9767-b96eed95ade9"),
                             Cost = 550.00m,
                             Name = "Fuel Injector"
                         },
                         new
                         {
-                            Id = new Guid("2c099b35-2282-4bb3-946e-3cae913abee2"),
+                            Id = new Guid("1a030c72-c058-430e-8e09-fe19d782ca9f"),
                             Cost = 650.00m,
                             Name = "Dashboard"
                         },
                         new
                         {
-                            Id = new Guid("6537d296-1888-41d4-a6f8-8096eea77da0"),
+                            Id = new Guid("21a60a25-dd00-4e85-b92f-6b50af9b9da8"),
                             Cost = 220.00m,
                             Name = "Steering Wheel"
                         },
                         new
                         {
-                            Id = new Guid("b60a9a1a-195d-4f8f-8624-c51a69a4991d"),
+                            Id = new Guid("2a2ff87b-ff7b-469b-be5c-559b69019bdf"),
                             Cost = 300.00m,
                             Name = "Shock Absorbers"
                         },
                         new
                         {
-                            Id = new Guid("8248a366-fe21-41ac-acc4-bfc46867916a"),
+                            Id = new Guid("f90e7acc-c05e-4b9f-9edd-3a92e725491f"),
                             Cost = 280.00m,
                             Name = "Brake Calipers"
                         },
                         new
                         {
-                            Id = new Guid("702f8668-296c-4c6a-8e48-b6b94be8136d"),
+                            Id = new Guid("e44efe1f-12e1-423e-9bcd-f516a38a4c7e"),
                             Cost = 700.00m,
                             Name = "Catalytic Converter"
                         },
                         new
                         {
-                            Id = new Guid("1f364a5c-6d62-4664-8691-bed60c692572"),
+                            Id = new Guid("298e3e56-be49-453f-8988-6d34a0ed2f9f"),
                             Cost = 350.00m,
                             Name = "Muffler"
                         });
+                });
+
+            modelBuilder.Entity("Pitstop.RepairManagementAPI.Model.RepairOrderVehicleParts", b =>
+                {
+                    b.HasOne("Pitstop.RepairManagementAPI.Model.RepairOrder", "RepairOrder")
+                        .WithMany("RepairOrderVehicleParts")
+                        .HasForeignKey("RepairOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Pitstop.RepairManagementAPI.Model.VehicleParts", "VehicleParts")
+                        .WithMany()
+                        .HasForeignKey("VehiclePartsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RepairOrder");
+
+                    b.Navigation("VehicleParts");
+                });
+
+            modelBuilder.Entity("Pitstop.RepairManagementAPI.Model.RepairOrder", b =>
+                {
+                    b.Navigation("RepairOrderVehicleParts");
                 });
 #pragma warning restore 612, 618
         }
