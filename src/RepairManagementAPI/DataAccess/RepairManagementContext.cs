@@ -5,6 +5,8 @@ public class RepairManagementContext(DbContextOptions<RepairManagementContext> o
     public DbSet<RepairOrder> RepairOrders { get; set; }
     public DbSet<VehicleParts> VehicleParts { get; set; }
 
+    public DbSet<RepairOrderVehicleParts> RepairOrderVehicleParts { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<RepairOrder>()

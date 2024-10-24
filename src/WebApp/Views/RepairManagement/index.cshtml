@@ -15,7 +15,7 @@
     <tbody>
     @foreach (var repairOrder in Model.RepairOrders)
     {
-        <tr class="clickable" onclick="location.href = '@(Url.Action("Details", "RepairManagement", new { repairOrder = repairOrder.VehicleInfo.LicenseNumber }))'">
+        <tr class="clickable" onclick="location.href = '@(Url.Action("Details", "RepairManagement", new { id = repairOrder.Id }))'">
             <td>@repairOrder.CustomerInfo.CustomerName</td>
             <td>@repairOrder.VehicleInfo.LicenseNumber</td>
             <td>

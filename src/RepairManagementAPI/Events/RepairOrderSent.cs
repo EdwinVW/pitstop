@@ -11,7 +11,7 @@ namespace Pitstop.RepairManagementAPI.Events
         public readonly bool IsApproved;
         public readonly DateTime CreatedAt;
         public readonly string Status;
-        
+
         public RepairOrderSent(
             Guid messageId,
             Guid repairOrderId,

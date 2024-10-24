@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace PitStop.WebApp.Controllers;
 
 public class RepairManagementController : Controller
@@ -90,11 +92,75 @@ public class RepairManagementController : Controller
     }
 
     [HttpGet]
-    public IActionResult Details()
+    public async Task<IActionResult> Details(string id)
     {
-        return View();
+        return await _resiliencyHelper.ExecuteResilient(async () =>
+            {
+                // Fetch the repair order from the API
+                var repairOrder = await _repairManagementApi.GetRepairOrderById(id);
+
+                var model = new RepairManagementDetailsViewModel
+                {
+                    RepairOrder = repairOrder,
+                };
+
+
+                return View(model);
+            },
+            View("Offline", new RepairManagementOfflineViewModel()));
     }
 
+    [HttpGet]
+    public async Task<IActionResult> DetailsCustomer(string id)
+    {
+        return await _resiliencyHelper.ExecuteResilient(async () =>
+            {
+                // Fetch the repair order from the API
+                var repairOrder = await _repairManagementApi.GetRepairOrderById(id);
+
+                var model = new RepairManagementDetailsCustomerViewModel
+                {
+                    RepairOrder = repairOrder,
+                };
+
+
+                return View(model);
+            },
+            View("Offline", new RepairManagementOfflineViewModel()));
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> ApproveRepairOrder(string repairOrderId)
+    {
+        try
+        {
+            await _repairManagementApi.ApproveRepairOrder(repairOrderId);
+            TempData["Message"] = "The repair order has been approved successfully!";
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = "An error occurred while approving the repair order.";
+        }
+
+        return RedirectToAction("Index", "Home");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RejectRepairOrder(string repairOrderId, string rejectReason)
+    {
+        try
+        {
+            RejectRepairOrder command = new RejectRepairOrder(new Guid(), rejectReason);
+            await _repairManagementApi.RejectRepairOrder(repairOrderId, command);
+            TempData["Message"] = "The repair order has been rejected successfully!";
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = "An error occurred while rejecting the repair order.";
+        }
+
+        return RedirectToAction("Index", "Home");
+    }
 
     [HttpGet]
     public async Task<IActionResult> New(string licenseNumber)

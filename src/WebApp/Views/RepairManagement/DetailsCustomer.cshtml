@@ -1,0 +1,128 @@
+@model Pitstop.WebApp.ViewModels.RepairManagementDetailsCustomerViewModel
+@{
+    ViewData["Title"] = "Details Repair Order";
+}
+
+<h1 id="PageTitle">Repair Management - Details Repair Order</h1>
+
+<h2>Details Repair Order</h2>
+
+<form asp-action="HandleRepairOrderAction" method="post">
+    <input type="hidden" name="RepairOrderId" value="@Model.RepairOrder.Id"/>
+
+    <!-- Customer Information -->
+    <div class="form-group">
+        <h3>Customer Information</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.CustomerInfo.CustomerName"></label>
+                <input asp-for="RepairOrder.CustomerInfo.CustomerName" class="form-control" readonly/>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.CustomerInfo.CustomerEmail"></label>
+                <input asp-for="RepairOrder.CustomerInfo.CustomerEmail" class="form-control" readonly/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.CustomerInfo.CustomerPhone"></label>
+                <input asp-for="RepairOrder.CustomerInfo.CustomerPhone" class="form-control" readonly/>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicle Information -->
+    <div class="form-group mt-4">
+        <h3>Vehicle Information</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.VehicleInfo.LicenseNumber"></label>
+                <input asp-for="RepairOrder.VehicleInfo.LicenseNumber" class="form-control" readonly/>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.VehicleInfo.Brand"></label>
+                <input asp-for="RepairOrder.VehicleInfo.Brand" class="form-control" readonly/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.VehicleInfo.Type"></label>
+                <input asp-for="RepairOrder.VehicleInfo.Type" class="form-control" readonly/>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicle Parts for Repair -->
+    <div class="form-group mt-4">
+        <h3>Vehicle Parts for Repair</h3>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    @foreach (var part in Model.RepairOrder.ToRepairVehicleParts)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>@part.PartName</span>
+                            <span class="badge bg-primary text-white">@part.PartCost.ToString("C", new System.Globalization.CultureInfo("en-US"))</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Costs -->
+    <div class="form-group mt-4">
+        <h3>Costs</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.LaborCost">Labor Cost</label>
+                <input asp-for="RepairOrder.LaborCost" class="form-control" readonly/>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.TotalCost">Total Cost</label>
+                <input asp-for="RepairOrder.TotalCost" class="form-control" readonly/>
+            </div>
+        </div>
+    </div>
+    <div class="form-group mt-4">
+        <h3>Approve</h3>
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-end">
+                <button  type="submit" class="btn btn-success" formaction="@Url.Action("ApproveRepairOrder", "RepairManagement")">
+                    Approve Repair Order
+                </button>
+            </div>
+        </div>
+    </div>
+    <h3>Reject</h3>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="rejectModalLabel">Reject Repair Order</h5>
+        </div>
+        <div class="modal-body">
+            <!-- Reason for rejection -->
+            <div class="form-group">
+                <label for="RejectReason">Reason for Rejection:</label>
+                <textarea class="form-control" id="RejectReason" name="RejectReason" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" formaction="@Url.Action("RejectRepairOrder", "RepairManagement")" class="btn btn-danger">Reject</button>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+    <script>
+        // Ensure 'RejectReason' is only required when rejecting
+        document.getElementById('rejectButton').addEventListener('click', function () {
+            document.getElementById('RejectReason').setAttribute('required', 'required');
+        });
+
+        // Remove 'required' attribute if the Approve button is clicked
+        document.querySelector('button[formaction="@Url.Action("ApproveRepairOrder", "RepairManagement")"]').addEventListener('click', function () {
+            document.getElementById('RejectReason').removeAttribute('required');
+        });
+    </script>
+}

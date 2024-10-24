@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pitstop.RepairManagementAPI.DataAccess;
 
@@ -11,9 +12,11 @@ using Pitstop.RepairManagementAPI.DataAccess;
 namespace Pitstop.RepairManagementAPI.Migrations
 {
     [DbContext(typeof(RepairManagementContext))]
-    partial class RepairManagementContextModelSnapshot : ModelSnapshot
+    [Migration("20241024140721_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

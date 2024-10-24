@@ -6,7 +6,7 @@ public interface IRepairManagementAPI
 
     // Get repair order by ID
     [Get("/repairManagement/{repairOrderId}")]
-    Task<RepairOrder> GetRepairOrderById([AliasAs("repairOrderId")] Guid repairOrderId);
+    Task<RepairOrder> GetRepairOrderById(string repairOrderId);
 
     // Send a new repair order
     [Post("/repairManagement/send")]
@@ -14,11 +14,11 @@ public interface IRepairManagementAPI
 
     // Approve a repair order by ID
     [Post("/repairManagement/approve/{repairOrderId}")]
-    Task ApproveRepairOrder([AliasAs("repairOrderId")] Guid repairOrderId);
+    Task ApproveRepairOrder(string repairOrderId);
 
     // Reject a repair order by ID
     [Post("/repairManagement/reject/{repairOrderId}")]
-    Task RejectRepairOrder([AliasAs("repairOrderId")] Guid repairOrderId, RejectRepairOrder command);
+    Task RejectRepairOrder(string repairOrderId, RejectRepairOrder command);
 
     // Get all vehicle parts
     [Get("/repairManagement/vehicleparts")]

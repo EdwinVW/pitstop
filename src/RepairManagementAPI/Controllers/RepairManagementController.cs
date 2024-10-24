@@ -1,6 +1,5 @@
 using Pitstop.RepairManagementAPI.DTO;
-using CustomerInfo = Pitstop.RepairManagementAPI.DTO.CustomerInfo;
-using VehicleInfo = Pitstop.RepairManagementAPI.DTO.VehicleInfo;
+
 
 namespace Pitstop.RepairManagementAPI.Controllers
 {
@@ -36,11 +35,11 @@ namespace Pitstop.RepairManagementAPI.Controllers
                     var dto = new RepairOrderDTO
                     {
                         Id = repairOrder.RepairOrderId,
-                        CustomerInfo = new CustomerInfo
+                        CustomerInfo = new DTO.CustomerInfo
                         {
                             CustomerName = repairOrder.CutomerName
                         },
-                        VehicleInfo = new VehicleInfo
+                        VehicleInfo = new DTO.VehicleInfo
                         {
                             LicenseNumber = repairOrder.LicenseNumber
                         },
@@ -75,12 +74,19 @@ namespace Pitstop.RepairManagementAPI.Controllers
             var result = new
             {
                 repairOrder.Id,
-                repairOrder.CutomerName,
-                repairOrder.CustomerEmail,
-                repairOrder.CustomerPhone,
-                repairOrder.LicenseNumber,
-                repairOrder.Type,
-                repairOrder.Brand,
+                CustomerInfo = new Commands.CustomerInfo
+                {
+                    CustomerName = repairOrder.CutomerName,
+                    CustomerEmail = repairOrder.CustomerEmail,
+                    CustomerPhone = repairOrder.CustomerPhone,
+                    
+                },
+                VehicleInfo = new Commands.VehicleInfo
+                {
+                    LicenseNumber = repairOrder.LicenseNumber,
+                    Type = repairOrder.Type,
+                    Brand = repairOrder.Brand,
+                },
                 repairOrder.TotalCost,
                 repairOrder.LaborCost,
                 repairOrder.IsApproved,
@@ -88,7 +94,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
                 repairOrder.UpdatedAt,
                 repairOrder.Status,
                 repairOrder.RejectReason,
-                VehicleParts = repairOrder.RepairOrderVehicleParts.Select(rovp => new
+                ToRepairVehicleParts = repairOrder.RepairOrderVehicleParts.Select(rovp => new
                 {
                     PartName = rovp.VehicleParts.Name,
                     PartCost = rovp.VehicleParts.Cost
@@ -136,7 +142,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
             };
 
             await _context.RepairOrders.AddAsync(repairOrder);
-
+            List<(string Name, decimal Cost)> vehiclePartsList = new List<(string Name, decimal Cost)>();
             if (command.ToRepairVehicleParts != null)
             {
                 foreach (var partId in command.ToRepairVehicleParts)
@@ -144,33 +150,54 @@ namespace Pitstop.RepairManagementAPI.Controllers
                     var vehiclePart = await _context.VehicleParts.FindAsync(partId);
                     if (vehiclePart != null)
                     {
+                        vehiclePartsList.Add((vehiclePart.Name, vehiclePart.Cost));
                         var repairOrderVehiclePart = new RepairOrderVehicleParts
                         {
                             RepairOrderId = repairOrder.Id,
                             VehiclePartsId = vehiclePart.Id
                         };
                         await _context.AddAsync(repairOrderVehiclePart);
+                        
+                    }
+                    else
+                    {
+                        // Log if the part ID is invalid or not found
+                        Console.WriteLine($"Vehicle part with ID {partId} not found.");
                     }
                 }
             }
+            else
+            {
+                Console.WriteLine("No vehicle parts were selected or passed.");
+            }
 
             await _context.SaveChangesAsync();
-            // var repairOrderSentEvent = new RepairOrderSent(
-            //     command.MessageId,
-            //     repairOrder.Id,
-            //     command.CustomerInfo,
-            //     command.VehicleInfo,
-            //     command.ToRepairVehicleParts.Select(vp => (Name: _context.VehicleParts.First(v => v.Id == vp).Name,
-            //         Cost: _context.VehicleParts.First(v => v.Id == vp).Cost)).ToList(),
-            //     command.TotalCost,
-            //     command.LaborCost,
-            //     command.IsApproved,
-            //     command.CreatedAt,
-            //     command.Status
-            // );
-            //
-            // await _messagePublisher.PublishMessageAsync(repairOrderSentEvent.MessageType, repairOrderSentEvent, "");
 
+
+            var repairOrderSentEvent = new RepairOrderSent(
+                command.MessageId,
+                repairOrder.Id,
+                new Commands.CustomerInfo
+                {
+                    CustomerName = command.CustomerInfo.CustomerName,
+                    CustomerEmail = command.CustomerInfo.CustomerEmail,
+                    CustomerPhone = command.CustomerInfo.CustomerPhone
+                },
+                new Commands.VehicleInfo
+                {
+                    LicenseNumber = command.VehicleInfo.LicenseNumber,
+                    Type = command.VehicleInfo.Type,
+                    Brand = command.VehicleInfo.Brand
+                },
+                vehiclePartsList,
+                command.TotalCost,
+                command.LaborCost,
+                command.IsApproved,
+                command.CreatedAt,
+                command.Status
+            );
+
+            await _messagePublisher.PublishMessageAsync(repairOrderSentEvent.MessageType, repairOrderSentEvent, "");
             return Ok(repairOrder);
         }
 

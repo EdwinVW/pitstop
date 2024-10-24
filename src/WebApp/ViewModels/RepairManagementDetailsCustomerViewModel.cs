@@ -1,6 +1,6 @@
 namespace Pitstop.WebApp.ViewModels;
 
-public class RepairManagementDetailsViewModel
+public class RepairManagementDetailsCustomerViewModel
 {
     public RepairOrder RepairOrder { get; set; }
 
