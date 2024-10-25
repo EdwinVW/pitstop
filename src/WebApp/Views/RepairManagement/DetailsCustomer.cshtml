@@ -7,7 +7,7 @@
 
 <h2>Details Repair Order</h2>
 
-<form asp-action="HandleRepairOrderAction" method="post">
+<form method="post">
     <input type="hidden" name="RepairOrderId" value="@Model.RepairOrder.Id"/>
 
     <!-- Customer Information -->
@@ -87,42 +87,15 @@
     <div class="form-group mt-4">
         <h3>Approve</h3>
         <div class="row">
-            <div class="col-md-12 d-flex justify-content-end">
-                <button  type="submit" class="btn btn-success" formaction="@Url.Action("ApproveRepairOrder", "RepairManagement")">
+            <div class="col-md-12 d-flex justify-content-between">
+                <button type="submit" class="btn btn-success" formaction="@Url.Action("ApproveRepairOrder", "RepairManagement")">
                     Approve Repair Order
                 </button>
+
+                <a href="@Url.Action("RejectRepairOrder", "RepairManagement", new { repairOrderId = Model.RepairOrder.Id })" class="btn btn-danger ms-2">
+                    Reject
+                </a>
             </div>
-        </div>
-    </div>
-    <h3>Reject</h3>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="rejectModalLabel">Reject Repair Order</h5>
-        </div>
-        <div class="modal-body">
-            <!-- Reason for rejection -->
-            <div class="form-group">
-                <label for="RejectReason">Reason for Rejection:</label>
-                <textarea class="form-control" id="RejectReason" name="RejectReason" rows="3"></textarea>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" formaction="@Url.Action("RejectRepairOrder", "RepairManagement")" class="btn btn-danger">Reject</button>
         </div>
     </div>
 </form>
-
-
-@section Scripts {
-    <script>
-        // Ensure 'RejectReason' is only required when rejecting
-        document.getElementById('rejectButton').addEventListener('click', function () {
-            document.getElementById('RejectReason').setAttribute('required', 'required');
-        });
-
-        // Remove 'required' attribute if the Approve button is clicked
-        document.querySelector('button[formaction="@Url.Action("ApproveRepairOrder", "RepairManagement")"]').addEventListener('click', function () {
-            document.getElementById('RejectReason').removeAttribute('required');
-        });
-    </script>
-}

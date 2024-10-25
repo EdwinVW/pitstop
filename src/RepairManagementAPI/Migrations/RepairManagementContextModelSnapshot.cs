@@ -93,10 +93,10 @@ namespace Pitstop.RepairManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Cost")
+                    b.Property<decimal>("PartCost")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("PartName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -106,153 +106,153 @@ namespace Pitstop.RepairManagementAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e6a6ea35-2535-4f57-be93-bb721b409af3"),
-                            Cost = 1200.00m,
-                            Name = "Engine"
+                            Id = new Guid("83aca8e8-29f9-4d2e-b5cb-7c6ee21f3aee"),
+                            PartCost = 1200.00m,
+                            PartName = "Engine"
                         },
                         new
                         {
-                            Id = new Guid("7a8930fa-f4d2-463e-b274-ec4d4e1fc70b"),
-                            Cost = 300.00m,
-                            Name = "Brake Pads"
+                            Id = new Guid("d756198d-250d-440f-a532-115cae2b653d"),
+                            PartCost = 300.00m,
+                            PartName = "Brake Pads"
                         },
                         new
                         {
-                            Id = new Guid("6be1fcbd-929c-4657-84e3-01b17ae0096e"),
-                            Cost = 2400.00m,
-                            Name = "Transmission"
+                            Id = new Guid("51211baa-9056-49f2-aa8a-9535d21c3e83"),
+                            PartCost = 2400.00m,
+                            PartName = "Transmission"
                         },
                         new
                         {
-                            Id = new Guid("c601f130-56f9-480b-8dc7-fe272c98c3a6"),
-                            Cost = 600.00m,
-                            Name = "Fuel Pump"
+                            Id = new Guid("8be4af84-25c2-4b58-8fa3-36982beb3dc4"),
+                            PartCost = 600.00m,
+                            PartName = "Fuel Pump"
                         },
                         new
                         {
-                            Id = new Guid("5b17530d-71a0-4258-b70a-9d4e7e2e5b38"),
-                            Cost = 450.00m,
-                            Name = "Alternator"
+                            Id = new Guid("5ca923e8-e47f-488e-8438-f0d29bde8510"),
+                            PartCost = 450.00m,
+                            PartName = "Alternator"
                         },
                         new
                         {
-                            Id = new Guid("9c1dc79e-6e98-4126-828f-696ffe7e325c"),
-                            Cost = 250.00m,
-                            Name = "Radiator"
+                            Id = new Guid("305080ed-a8d5-41cd-9cb0-5a6375ce1615"),
+                            PartCost = 250.00m,
+                            PartName = "Radiator"
                         },
                         new
                         {
-                            Id = new Guid("b3335655-937f-47a2-a6e9-96cff0050ac2"),
-                            Cost = 500.00m,
-                            Name = "Exhaust"
+                            Id = new Guid("e52df18f-2116-4124-9850-dcf99a36ef02"),
+                            PartCost = 500.00m,
+                            PartName = "Exhaust"
                         },
                         new
                         {
-                            Id = new Guid("d3136793-6ca6-41c1-b5bf-7b90466183f2"),
-                            Cost = 800.00m,
-                            Name = "Suspension"
+                            Id = new Guid("10b53bff-9e67-483e-9f2c-ae36f3422bb1"),
+                            PartCost = 800.00m,
+                            PartName = "Suspension"
                         },
                         new
                         {
-                            Id = new Guid("a224187e-169e-45bf-8b91-3986f3bb9fd0"),
-                            Cost = 200.00m,
-                            Name = "Battery"
+                            Id = new Guid("74049415-7d35-4857-bfaf-a4eeec2e72da"),
+                            PartCost = 200.00m,
+                            PartName = "Battery"
                         },
                         new
                         {
-                            Id = new Guid("e263ae28-6cc7-4fb0-a4ca-1241bf821433"),
-                            Cost = 400.00m,
-                            Name = "Starter Motor"
+                            Id = new Guid("8d525553-83e6-41cf-953d-71f53ff7f968"),
+                            PartCost = 400.00m,
+                            PartName = "Starter Motor"
                         },
                         new
                         {
-                            Id = new Guid("27285fe4-8729-463d-9f6e-39518a5b7826"),
-                            Cost = 150.00m,
-                            Name = "Headlights"
+                            Id = new Guid("2436b636-585b-49c3-a0cc-e9d7e00f1abc"),
+                            PartCost = 150.00m,
+                            PartName = "Headlights"
                         },
                         new
                         {
-                            Id = new Guid("dd96438c-f40c-4ad8-88a4-06b978511149"),
-                            Cost = 120.00m,
-                            Name = "Taillights"
+                            Id = new Guid("c7da1541-4e93-44eb-bbf7-7512be5ca54b"),
+                            PartCost = 120.00m,
+                            PartName = "Taillights"
                         },
                         new
                         {
-                            Id = new Guid("9f3f455c-ea81-4a28-a968-0c6d34f310f7"),
-                            Cost = 75.00m,
-                            Name = "Spark Plugs"
+                            Id = new Guid("b49b7c02-b6b1-4c57-832e-17b66e15ba53"),
+                            PartCost = 75.00m,
+                            PartName = "Spark Plugs"
                         },
                         new
                         {
-                            Id = new Guid("8ad8c9a1-9bb7-460f-a986-471dd0864d73"),
-                            Cost = 850.00m,
-                            Name = "Clutch"
+                            Id = new Guid("ab3b2aa9-544a-4a41-a511-aa9253fa17d8"),
+                            PartCost = 850.00m,
+                            PartName = "Clutch"
                         },
                         new
                         {
-                            Id = new Guid("108dece9-44e9-4fe6-84cf-52faa345c283"),
-                            Cost = 35.00m,
-                            Name = "Air Filter"
+                            Id = new Guid("c382b0da-c294-4302-aad6-e3c993aba5a3"),
+                            PartCost = 35.00m,
+                            PartName = "Air Filter"
                         },
                         new
                         {
-                            Id = new Guid("ab29e382-54be-46b9-98ce-76084c638130"),
-                            Cost = 25.00m,
-                            Name = "Oil Filter"
+                            Id = new Guid("da630a7e-51be-427f-9b76-eec798dd2825"),
+                            PartCost = 25.00m,
+                            PartName = "Oil Filter"
                         },
                         new
                         {
-                            Id = new Guid("d35f5cbc-61a2-4015-8218-f6a23a63ea21"),
-                            Cost = 320.00m,
-                            Name = "Timing Belt"
+                            Id = new Guid("2c9470db-6bbf-4f90-a4b1-c95180e400bc"),
+                            PartCost = 320.00m,
+                            PartName = "Timing Belt"
                         },
                         new
                         {
-                            Id = new Guid("26713241-e87f-48ca-8ded-5648700805b7"),
-                            Cost = 400.00m,
-                            Name = "Water Pump"
+                            Id = new Guid("1d593592-0892-4b7e-9f20-3963c85146cb"),
+                            PartCost = 400.00m,
+                            PartName = "Water Pump"
                         },
                         new
                         {
-                            Id = new Guid("a0fd9950-ad0e-485c-b607-8a83149fe78f"),
-                            Cost = 550.00m,
-                            Name = "Fuel Injector"
+                            Id = new Guid("ee14080e-ad18-4142-8ec2-a0732ea3d548"),
+                            PartCost = 550.00m,
+                            PartName = "Fuel Injector"
                         },
                         new
                         {
-                            Id = new Guid("5076b669-9e74-4245-962f-74ef0b4e6b3d"),
-                            Cost = 650.00m,
-                            Name = "Dashboard"
+                            Id = new Guid("f293d48f-f841-4677-b461-fe78338433ce"),
+                            PartCost = 650.00m,
+                            PartName = "Dashboard"
                         },
                         new
                         {
-                            Id = new Guid("891c8dcf-b50d-4c0e-9951-cc949d3c4e4b"),
-                            Cost = 220.00m,
-                            Name = "Steering Wheel"
+                            Id = new Guid("7189321d-5ed3-41db-a91b-7c9641135b23"),
+                            PartCost = 220.00m,
+                            PartName = "Steering Wheel"
                         },
                         new
                         {
-                            Id = new Guid("4c18c931-3d0e-45e1-b1fa-ba28a527fc7c"),
-                            Cost = 300.00m,
-                            Name = "Shock Absorbers"
+                            Id = new Guid("78d25e89-7aa8-4e96-a14e-68f632d15540"),
+                            PartCost = 300.00m,
+                            PartName = "Shock Absorbers"
                         },
                         new
                         {
-                            Id = new Guid("03997cb1-57ca-4597-9a23-f43ab4f8c517"),
-                            Cost = 280.00m,
-                            Name = "Brake Calipers"
+                            Id = new Guid("694912c5-3841-41fc-bec7-4544a84e48f0"),
+                            PartCost = 280.00m,
+                            PartName = "Brake Calipers"
                         },
                         new
                         {
-                            Id = new Guid("df93f1d0-5d36-44da-8d24-d880590c40f4"),
-                            Cost = 700.00m,
-                            Name = "Catalytic Converter"
+                            Id = new Guid("30b38c16-fabf-4229-a7f4-069aa068c8c0"),
+                            PartCost = 700.00m,
+                            PartName = "Catalytic Converter"
                         },
                         new
                         {
-                            Id = new Guid("0db3b891-1e79-423d-94ed-b640268ec570"),
-                            Cost = 350.00m,
-                            Name = "Muffler"
+                            Id = new Guid("44717b24-eed4-434d-b784-cf7292ab3c07"),
+                            PartCost = 350.00m,
+                            PartName = "Muffler"
                         });
                 });
 

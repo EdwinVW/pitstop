@@ -13,7 +13,7 @@ public class RepairManagementContext(DbContextOptions<RepairManagementContext> o
             .Property(ro => ro.TotalCost)
             .HasColumnType("decimal(18,2)");
         builder.Entity<VehicleParts>()
-            .Property(vp => vp.Cost)
+            .Property(vp => vp.PartCost)
             .HasColumnType("decimal(18,2)");
         builder.Entity<VehicleParts>().HasKey(entity => entity.Id);
         builder.Entity<VehicleParts>().ToTable("VehicleParts");

@@ -89,4 +89,16 @@
             </div>
         </div>
     </div>
+
+    @if (Model.RepairOrder.Status == RepairOrdersStatus.Rejected.ToString())
+    {
+    <div class="form-group mt-4">
+        <h3>Reason for Rejection</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <textarea asp-for="RepairOrder.RejectReason" class="form-control" readonly></textarea>
+            </div>
+        </div>
+    </div>
+    }
 </form>

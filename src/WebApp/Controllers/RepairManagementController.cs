@@ -74,6 +74,7 @@ public class RepairManagementController : Controller
                     }
                 }
             }
+            repairOrders = repairOrders.OrderByDescending(ro => ro.Status == RepairOrdersStatus.NotCreatedYet.ToString()).ToList();
 
             var model = new RepairManagementViewModel
             {
@@ -128,7 +129,7 @@ public class RepairManagementController : Controller
             },
             View("Offline", new RepairManagementOfflineViewModel()));
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> ApproveRepairOrder(string repairOrderId)
     {
@@ -146,20 +147,27 @@ public class RepairManagementController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> RejectRepairOrder(string repairOrderId, string rejectReason)
+    public async Task<IActionResult> RejectRepairOrder(RepairManagementRejectRepairOrderViewModel model)
     {
-        try
+        if (ModelState.IsValid)
         {
-            RejectRepairOrder command = new RejectRepairOrder(new Guid(), rejectReason);
-            await _repairManagementApi.RejectRepairOrder(repairOrderId, command);
-            TempData["Message"] = "The repair order has been rejected successfully!";
-        }
-        catch (Exception ex)
-        {
-            TempData["Error"] = "An error occurred while rejecting the repair order.";
+            var command = new RejectRepairOrder(new Guid(), model.RejectReason);
+            await _repairManagementApi.RejectRepairOrder(model.RepairOrderId, command);
+            return RedirectToAction("Index", "Home");
         }
 
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("DetailsCustomer", new { id = model.RepairOrderId });
+    }
+
+    [HttpGet]
+    public IActionResult RejectRepairOrder(string repairOrderId)
+    {
+        var model = new RepairManagementRejectRepairOrderViewModel
+        {
+            RepairOrderId = repairOrderId,
+        };
+
+        return View(model);
     }
 
     [HttpGet]

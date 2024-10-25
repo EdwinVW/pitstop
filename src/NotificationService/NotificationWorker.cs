@@ -7,13 +7,14 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
     IMessageHandler _messageHandler;
     INotificationRepository _repo;
     IEmailNotifier _emailNotifier;
-
-    public NotificationWorker(IMessageHandler messageHandler, INotificationRepository repo,
+    private readonly IConfiguration _config;
+    public NotificationWorker(IConfiguration config, IMessageHandler messageHandler, INotificationRepository repo,
         IEmailNotifier emailNotifier)
     {
         _messageHandler = messageHandler;
         _repo = repo;
         _emailNotifier = emailNotifier;
+        _config = config;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -64,14 +65,11 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
 
     private async Task HandleAsync(RepairOrderSent rs)
     {
-        // Create the email subject and body
+        string baseUrl = _config.GetSection("WebLocation").GetValue<string>("WebApp");
         string subject = $"Repair Order #{rs.CustomerInfo.CustomerName} - {rs.VehicleInfo.LicenseNumber}";
         
-        // string apiHostAndPort = config.GetSection("APIServiceLocations").GetValue<string>("RepairManagementAPI");
-        // Generate a link to view the repair order (you'll need to provide the correct URL for your app)
-        string repairOrderUrl = $"http://localhost:7005/RepairManagement/DetailsCustomer/{rs.RepairOrderId}";
-
-        // Build the HTML body of the email
+        string repairOrderUrl = $"http://{baseUrl}/RepairManagement/DetailsCustomer/{rs.RepairOrderId}";
+        
         string body = $@"
         <html>
             <body>

@@ -96,8 +96,8 @@ namespace Pitstop.RepairManagementAPI.Controllers
                 repairOrder.RejectReason,
                 ToRepairVehicleParts = repairOrder.RepairOrderVehicleParts.Select(rovp => new
                 {
-                    PartName = rovp.VehicleParts.Name,
-                    PartCost = rovp.VehicleParts.Cost
+                    PartName = rovp.VehicleParts.PartName,
+                    PartCost = rovp.VehicleParts.PartCost
                 })
             };
 
@@ -150,7 +150,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
                     var vehiclePart = await _context.VehicleParts.FindAsync(partId);
                     if (vehiclePart != null)
                     {
-                        vehiclePartsList.Add((vehiclePart.Name, vehiclePart.Cost));
+                        vehiclePartsList.Add((vehiclePart.PartName, vehiclePart.PartCost));
                         var repairOrderVehiclePart = new RepairOrderVehicleParts
                         {
                             RepairOrderId = repairOrder.Id,

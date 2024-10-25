@@ -42,8 +42,8 @@ namespace Pitstop.RepairManagementAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Cost = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    PartName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PartCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,34 +76,34 @@ namespace Pitstop.RepairManagementAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "VehicleParts",
-                columns: new[] { "Id", "Cost", "Name" },
+                columns: new[] { "Id", "PartCost", "PartName" },
                 values: new object[,]
                 {
-                    { new Guid("03997cb1-57ca-4597-9a23-f43ab4f8c517"), 280.00m, "Brake Calipers" },
-                    { new Guid("0db3b891-1e79-423d-94ed-b640268ec570"), 350.00m, "Muffler" },
-                    { new Guid("108dece9-44e9-4fe6-84cf-52faa345c283"), 35.00m, "Air Filter" },
-                    { new Guid("26713241-e87f-48ca-8ded-5648700805b7"), 400.00m, "Water Pump" },
-                    { new Guid("27285fe4-8729-463d-9f6e-39518a5b7826"), 150.00m, "Headlights" },
-                    { new Guid("4c18c931-3d0e-45e1-b1fa-ba28a527fc7c"), 300.00m, "Shock Absorbers" },
-                    { new Guid("5076b669-9e74-4245-962f-74ef0b4e6b3d"), 650.00m, "Dashboard" },
-                    { new Guid("5b17530d-71a0-4258-b70a-9d4e7e2e5b38"), 450.00m, "Alternator" },
-                    { new Guid("6be1fcbd-929c-4657-84e3-01b17ae0096e"), 2400.00m, "Transmission" },
-                    { new Guid("7a8930fa-f4d2-463e-b274-ec4d4e1fc70b"), 300.00m, "Brake Pads" },
-                    { new Guid("891c8dcf-b50d-4c0e-9951-cc949d3c4e4b"), 220.00m, "Steering Wheel" },
-                    { new Guid("8ad8c9a1-9bb7-460f-a986-471dd0864d73"), 850.00m, "Clutch" },
-                    { new Guid("9c1dc79e-6e98-4126-828f-696ffe7e325c"), 250.00m, "Radiator" },
-                    { new Guid("9f3f455c-ea81-4a28-a968-0c6d34f310f7"), 75.00m, "Spark Plugs" },
-                    { new Guid("a0fd9950-ad0e-485c-b607-8a83149fe78f"), 550.00m, "Fuel Injector" },
-                    { new Guid("a224187e-169e-45bf-8b91-3986f3bb9fd0"), 200.00m, "Battery" },
-                    { new Guid("ab29e382-54be-46b9-98ce-76084c638130"), 25.00m, "Oil Filter" },
-                    { new Guid("b3335655-937f-47a2-a6e9-96cff0050ac2"), 500.00m, "Exhaust" },
-                    { new Guid("c601f130-56f9-480b-8dc7-fe272c98c3a6"), 600.00m, "Fuel Pump" },
-                    { new Guid("d3136793-6ca6-41c1-b5bf-7b90466183f2"), 800.00m, "Suspension" },
-                    { new Guid("d35f5cbc-61a2-4015-8218-f6a23a63ea21"), 320.00m, "Timing Belt" },
-                    { new Guid("dd96438c-f40c-4ad8-88a4-06b978511149"), 120.00m, "Taillights" },
-                    { new Guid("df93f1d0-5d36-44da-8d24-d880590c40f4"), 700.00m, "Catalytic Converter" },
-                    { new Guid("e263ae28-6cc7-4fb0-a4ca-1241bf821433"), 400.00m, "Starter Motor" },
-                    { new Guid("e6a6ea35-2535-4f57-be93-bb721b409af3"), 1200.00m, "Engine" }
+                    { new Guid("10b53bff-9e67-483e-9f2c-ae36f3422bb1"), 800.00m, "Suspension" },
+                    { new Guid("1d593592-0892-4b7e-9f20-3963c85146cb"), 400.00m, "Water Pump" },
+                    { new Guid("2436b636-585b-49c3-a0cc-e9d7e00f1abc"), 150.00m, "Headlights" },
+                    { new Guid("2c9470db-6bbf-4f90-a4b1-c95180e400bc"), 320.00m, "Timing Belt" },
+                    { new Guid("305080ed-a8d5-41cd-9cb0-5a6375ce1615"), 250.00m, "Radiator" },
+                    { new Guid("30b38c16-fabf-4229-a7f4-069aa068c8c0"), 700.00m, "Catalytic Converter" },
+                    { new Guid("44717b24-eed4-434d-b784-cf7292ab3c07"), 350.00m, "Muffler" },
+                    { new Guid("51211baa-9056-49f2-aa8a-9535d21c3e83"), 2400.00m, "Transmission" },
+                    { new Guid("5ca923e8-e47f-488e-8438-f0d29bde8510"), 450.00m, "Alternator" },
+                    { new Guid("694912c5-3841-41fc-bec7-4544a84e48f0"), 280.00m, "Brake Calipers" },
+                    { new Guid("7189321d-5ed3-41db-a91b-7c9641135b23"), 220.00m, "Steering Wheel" },
+                    { new Guid("74049415-7d35-4857-bfaf-a4eeec2e72da"), 200.00m, "Battery" },
+                    { new Guid("78d25e89-7aa8-4e96-a14e-68f632d15540"), 300.00m, "Shock Absorbers" },
+                    { new Guid("83aca8e8-29f9-4d2e-b5cb-7c6ee21f3aee"), 1200.00m, "Engine" },
+                    { new Guid("8be4af84-25c2-4b58-8fa3-36982beb3dc4"), 600.00m, "Fuel Pump" },
+                    { new Guid("8d525553-83e6-41cf-953d-71f53ff7f968"), 400.00m, "Starter Motor" },
+                    { new Guid("ab3b2aa9-544a-4a41-a511-aa9253fa17d8"), 850.00m, "Clutch" },
+                    { new Guid("b49b7c02-b6b1-4c57-832e-17b66e15ba53"), 75.00m, "Spark Plugs" },
+                    { new Guid("c382b0da-c294-4302-aad6-e3c993aba5a3"), 35.00m, "Air Filter" },
+                    { new Guid("c7da1541-4e93-44eb-bbf7-7512be5ca54b"), 120.00m, "Taillights" },
+                    { new Guid("d756198d-250d-440f-a532-115cae2b653d"), 300.00m, "Brake Pads" },
+                    { new Guid("da630a7e-51be-427f-9b76-eec798dd2825"), 25.00m, "Oil Filter" },
+                    { new Guid("e52df18f-2116-4124-9850-dcf99a36ef02"), 500.00m, "Exhaust" },
+                    { new Guid("ee14080e-ad18-4142-8ec2-a0732ea3d548"), 550.00m, "Fuel Injector" },
+                    { new Guid("f293d48f-f841-4677-b461-fe78338433ce"), 650.00m, "Dashboard" }
                 });
 
             migrationBuilder.CreateIndex(

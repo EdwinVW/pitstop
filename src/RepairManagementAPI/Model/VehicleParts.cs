@@ -4,13 +4,13 @@ public class VehicleParts
 {
     
     public Guid Id { get; set; }
-    public string Name { get; set; }
-    public decimal Cost { get; set; }
+    public string PartName { get; set; }
+    public decimal PartCost { get; set; }
 
-    public VehicleParts(Guid id, string name, decimal cost)
+    public VehicleParts(Guid id, string partName, decimal partCost)
     {
         Id = id;
-        Name = name;
-        Cost = cost;
+        PartName = partName;
+        PartCost = partCost;
     }
 }
