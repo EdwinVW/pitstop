@@ -61,7 +61,7 @@ jobs:
 
     # Log in to GitHub Container Registry
     - name: Log in to GitHub Container Registry
-      run: echo "${{ secrets.PAT_GITHUB }}" | docker login ghcr.io -u "${{ DOCKER_USERNAME }}" --password-stdin
+      run: echo "${{ secrets.PAT_GITHUB }}" | docker login ghcr.io -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
     # Run the push-images.ps1 script
     - name: Execute push images script
