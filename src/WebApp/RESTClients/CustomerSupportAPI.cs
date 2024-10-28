@@ -15,4 +15,9 @@ public class CustomerSupportAPI : ICustomerSupportAPI
                 ContentSerializer = new NewtonsoftJsonContentSerializer()
             });
     }
+
+    public Task<List<Customer>> GetCommunications()
+    {
+        return Task.FromResult(Array.Empty<Customer>().ToList());
+    }
 }
