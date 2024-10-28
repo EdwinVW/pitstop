@@ -43,6 +43,9 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
                 case "MaintenanceJobPlanned":
                     await HandleAsync(messageObject.ToObject<MaintenanceJobPlanned>());
                     break;
+                case "MaintenanceJobStarted":
+                    await HandleAsync(mjs:messageObject.ToObject<MaintenanceJobStart>());
+                    break;
                 case "MaintenanceJobFinished":
                     await HandleAsync(messageObject.ToObject<MaintenanceJobFinished>());
                     break;
