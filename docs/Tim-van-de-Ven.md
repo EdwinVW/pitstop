@@ -88,7 +88,7 @@ Tijdens het project heb ik actief deelgenomen aan Scrum ceremonies en bijgedrage
 
 1. Tijdens de sprint planning heb ik geholpen bij het inschatten van de benodigde tijd, prioritering van taken en inplannen van de sprintdoelen.
 2. Tijdens de technische discussie met de opdrachtgever heb ik het proces [genotuleerd](https://github.com/hanaim-devops/pitstop-team-luna/commit/c9f2829c4debd22ce8c2707c887216650d54e0b8).
-3. ...
+3. Om het groepsproces te verbeteren heb ik een Daily Standup meeting aangemaakt, dagelijks om 10.00.
 4. ...
   
 ## 8. Leerervaringen
