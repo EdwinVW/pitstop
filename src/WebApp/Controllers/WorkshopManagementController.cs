@@ -165,7 +165,33 @@
             return View("Finish", inputModel);
         }
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> StartMaintenanceJob([FromForm] WorkshopManagementFinishViewModel inputModel)
+    {
+        if (ModelState.IsValid)
+        {
+            return await _resiliencyHelper.ExecuteResilient(async () =>
+            {
+                string dateStr = inputModel.Date.ToString("yyyy-MM-dd");
+                DateTime actualStartTime = inputModel.Date.Add(inputModel.ActualStartTime.Value.TimeOfDay);
+                DateTime actualEndTime = inputModel.Date.Add(inputModel.ActualEndTime.Value.TimeOfDay);
 
+                StartMaintenanceJob cmd = new StartMaintenanceJob(Guid.NewGuid(), inputModel.Id,
+                    actualStartTime, actualEndTime, inputModel.Notes);
+
+                await _workshopManagementAPI.StartMaintenanceJob(dateStr, inputModel.Id.ToString("D"), cmd);
+
+                return RedirectToAction("Details", new { planningDate = dateStr, jobId = inputModel.Id });
+            }, View("Offline", new WorkshopManagementOfflineViewModel()));
+        }
+        else
+        {
+            return View("Finish", inputModel);
+        }
+    }
+    
+    
     public IActionResult Error()
     {
         return View();

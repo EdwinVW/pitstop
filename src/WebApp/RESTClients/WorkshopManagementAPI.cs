@@ -64,6 +64,11 @@ public class WorkshopManagementAPI : IWorkshopManagementAPI
         await _restClient.PlanMaintenanceJob(planningDate, cmd);
     }
 
+    public async Task StartMaintenanceJob(string planningDate, string jobId, StartMaintenanceJob cmd)
+    {
+        await _restClient.StartMaintenanceJob(planningDate, jobId, cmd);
+    }
+    
     public async Task FinishMaintenanceJob(string planningDate, string jobId, FinishMaintenanceJob cmd)
     {
         await _restClient.FinishMaintenanceJob(planningDate, jobId, cmd);

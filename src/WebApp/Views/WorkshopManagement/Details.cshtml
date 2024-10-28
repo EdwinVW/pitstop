@@ -53,6 +53,13 @@
     </tbody>
 </table>
 <span><a id="BackButton" asp-action="Index" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-default">Back</a></span>
+@if (Model.MaintenanceJob.Status != "Started")
+{
+    <span><a id="StartButton" asp-action="StartMaintenanceJob" asp-controller="WorkshopManagement" 
+             asp-route-planningDate="@Model.Date.ToString("yyyy-MM-dd")" asp-route-jobId="@Model.MaintenanceJob.Id" 
+             class="btn btn-default">Complete</a></span>
+}
+
 @if (Model.MaintenanceJob.Status != "Completed" )
 { 
     <span><a id="CompleteButton" asp-action="Finish" asp-controller="WorkshopManagement" asp-route-planningDate="@Model.Date.ToString("yyyy-MM-dd")" asp-route-jobId="@Model.MaintenanceJob.Id" class="btn btn-default">Complete</a></span>
