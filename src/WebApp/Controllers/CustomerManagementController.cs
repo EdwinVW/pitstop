@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace PitStop.WebApp.Controllers;
 
 public class CustomerManagementController : Controller
@@ -5,6 +7,7 @@ public class CustomerManagementController : Controller
     private readonly ICustomerManagementAPI _customerManagementAPI;
     private readonly Microsoft.Extensions.Logging.ILogger _logger;
     private ResiliencyHelper _resiliencyHelper;
+    private readonly ActivitySource _activitySource = new ActivitySource("test-source");
 
     public CustomerManagementController(ICustomerManagementAPI customerManagementAPI, ILogger<CustomerManagementController> logger)
     {
@@ -16,6 +19,9 @@ public class CustomerManagementController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
+        using (var activity = _activitySource.StartActivity("YourAction"))
+        {
+            activity?.SetTag("your-tag", "value");
         return await _resiliencyHelper.ExecuteResilient(async () =>
         {
             var model = new CustomerManagementViewModel
@@ -24,6 +30,7 @@ public class CustomerManagementController : Controller
             };
             return View(model);
         }, View("Offline", new CustomerManagementOfflineViewModel()));
+        }
     }
 
     [HttpGet]

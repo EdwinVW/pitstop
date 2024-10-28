@@ -51,6 +51,13 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
                 case "RepairOrderSent":
                     await HandleAsync(messageObject.ToObject<RepairOrderSent>());
                     break;
+                case "MaintananceJobAccepted":
+                    await HandleAsync(messageObject.ToObject<MaintenanceJobAccepted>());
+                    break;
+                case "MaintenanceJobRejected":
+                    await HandleAsync(messageObject.ToObject<MaintenanceJobRejected>());
+
+                    break;
                 default:
                     break;
             }
@@ -97,6 +104,24 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
 
         string email = rs.CustomerInfo.CustomerEmail;
         await _emailNotifier.SendEmailHtmlAsync(email, "info@local.com", subject, body);
+    }
+    
+    private async Task HandleAsync(MaintenanceJobAccepted acceptedEvent)
+    {
+        string subject = "Klant heeft de reparatie goedgekeurd";
+        string body = $"De klant heeft de onderhoudstaak met ID {acceptedEvent.repairOrderId} goedgekeurd. U kunt nu beginnen met de reparatie.";
+
+        await _emailNotifier.SendEmailAsync(acceptedEvent.MechanicEmail, "noreply@pitstop.nl", subject, body);
+        Log.Information("Approval notification sent to mechanic at {MechanicEmail}", acceptedEvent.MechanicEmail);
+    }
+    
+    private async Task HandleAsync(MaintenanceJobRejected rejectedEvent)
+    {
+        string subject = "Klant heeft de reparatie afgewezen";
+        string body = $"De klant heeft de onderhoudstaak met ID {rejectedEvent.repairOrderId} afgewezen. Er kan geen reparatie worden uitgevoerd.";
+
+        await _emailNotifier.SendEmailAsync(rejectedEvent.MechanicEmail, "noreply@pitstop.nl", subject, body);
+        Log.Information("Rejection notification sent to mechanic at {MechanicEmail}", rejectedEvent.MechanicEmail);
     }
 
     private async Task HandleAsync(CustomerRegistered cr)

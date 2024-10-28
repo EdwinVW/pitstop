@@ -14,11 +14,11 @@ public interface IRepairManagementAPI
 
     // Approve a repair order by ID
     [Post("/repairManagement/approve/{repairOrderId}")]
-    Task ApproveRepairOrder(string repairOrderId);
+    Task ApproveRepairOrder([Body] ApproveRepairOrder command);
 
     // Reject a repair order by ID
     [Post("/repairManagement/reject/{repairOrderId}")]
-    Task RejectRepairOrder(string repairOrderId, RejectRepairOrder command);
+    Task RejectRepairOrder([Body] RejectRepairOrder command);
 
     // Get all vehicle parts
     [Get("/repairManagement/vehicleparts")]
