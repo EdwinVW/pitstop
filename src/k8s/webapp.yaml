@@ -22,12 +22,14 @@ spec:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: pitstop/webapp:1.0
+        image: ghcr.io/hanaim-devops/pitstop-team-luna:webapp-1.0
         imagePullPolicy: IfNotPresent
         name: webapp
         ports:
         - containerPort: 7005
       restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
 
 ---
 
