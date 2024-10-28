@@ -71,7 +71,6 @@ services:
       - "5200"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-<<<<<<< Updated upstream
 
   repairmanagementapi:
     image: pitstop/repairmanagementapi:1.0
@@ -84,9 +83,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
 
-=======
-  
->>>>>>> Stashed changes
   auditlogservice:
     image: ghcr.io/hanaim-devops/pitstop-team-luna:auditlogservice-1.0
     build: AuditlogService
