@@ -52,6 +52,23 @@ public class WorkshopPlanning : AggregateRoot<WorkshopPlanningId>
         RaiseEvent(e);
     }
 
+    public void StartMaintenanceJob(StartMaintenanceJob command)
+    {
+        // find job
+        MaintenanceJob job = Jobs.FirstOrDefault(j => j.Id == command.JobId);
+        if (job == null)
+        {
+            throw new MaintenanceJobNotFoundException($"Maintenance job with id {command.JobId} found.");
+        }
+
+        // check business rules
+        job.StartMaintenanceJobCanNotBeStarted();
+
+        // handle event
+        MaintenanceJobStart e = command.MapToMaintenanceJobStart();
+        RaiseEvent(e);
+    }
+    
     /// <summary>
     /// Handles an event and updates the aggregate version.
     /// </summary>

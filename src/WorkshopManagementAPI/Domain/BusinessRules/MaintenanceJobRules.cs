@@ -17,4 +17,12 @@ public static class MaintenanceJobRules
             throw new BusinessRuleViolationException($"An already finished job can not be finished.");
         }
     }
+    
+    public static void StartMaintenanceJobCanNotBeStarted(this MaintenanceJob job)
+    {
+        if (job.Status == "Completed" | job.Status== "Started")
+        {
+            throw new BusinessRuleViolationException($"Job has already been started or finished.");
+        }
+    }
 }

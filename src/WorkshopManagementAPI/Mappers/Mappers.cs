@@ -12,6 +12,15 @@ public static class Mappers
         source.Description
     );
 
+    public static MaintenanceJobStart MapToMaintenanceJobStart(this StartMaintenanceJob source) => new MaintenanceJobStart
+    (
+        Guid.NewGuid(),
+        source.JobId,
+        source.StartTime,
+        source.EndTime,
+        source.Notes
+    );
+    
     public static MaintenanceJobFinished MapToMaintenanceJobFinished(this FinishMaintenanceJob source) => new MaintenanceJobFinished
     (
         Guid.NewGuid(),

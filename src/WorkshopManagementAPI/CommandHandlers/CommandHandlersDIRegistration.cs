@@ -6,5 +6,6 @@ public static class CommandHandlersDIRegistration
     {
         services.AddTransient<IPlanMaintenanceJobCommandHandler, PlanMaintenanceJobCommandHandler>();
         services.AddTransient<IFinishMaintenanceJobCommandHandler, FinishMaintenanceJobCommandHandler>();
+        services.AddTransient<IStartMaintenanceJobCommandHandler, StartMaintenanceJobCommandHandler>();
     }
 }
