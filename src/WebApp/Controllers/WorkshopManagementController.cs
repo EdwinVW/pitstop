@@ -187,7 +187,7 @@
         }
         else
         {
-            return View("Finish", inputModel);
+            return View("Details");
         }
     }
     

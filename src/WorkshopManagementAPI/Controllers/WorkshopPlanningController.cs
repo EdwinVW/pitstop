@@ -6,6 +6,7 @@ public class WorkshopPlanningController : Controller
     private readonly IEventSourceRepository<WorkshopPlanning> _planningRepo;
     private readonly IPlanMaintenanceJobCommandHandler _planMaintenanceJobCommandHandler;
     private readonly IFinishMaintenanceJobCommandHandler _finishMaintenanceJobCommandHandler;
+    private readonly IStartMaintenanceJobCommandHandler _startMaintenanceJobCommandHandler;
 
     public WorkshopPlanningController(
         IEventSourceRepository<WorkshopPlanning> planningRepo,
@@ -140,6 +141,40 @@ public class WorkshopPlanningController : Controller
             string errorMessage = "Unable to save changes. " +
                 "Try again, and if the problem persists " +
                 "see your system administrator.";
+            Log.Error(errorMessage);
+            ModelState.AddModelError("", errorMessage);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+    
+    [HttpPut]
+    [Route("{planningDate}/jobs/{jobId}/start")]
+    public async Task<IActionResult> StartMaintenanceJobAsync(DateTime planningDate, Guid jobId, [FromBody] StartMaintenanceJob command)
+    {
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                // handle command
+                WorkshopPlanning planning = await
+                    _startMaintenanceJobCommandHandler.HandleCommandAsync(planningDate, command);
+
+                // handle result    
+                if (planning == null)
+                {
+                    return NotFound();
+                }
+
+                // return result
+                return Ok();
+            }
+            return BadRequest();
+        }
+        catch (ConcurrencyException)
+        {
+            string errorMessage = "Unable to save changes. " +
+                                  "Try again, and if the problem persists " +
+                                  "see your system administrator.";
             Log.Error(errorMessage);
             ModelState.AddModelError("", errorMessage);
             return StatusCode(StatusCodes.Status500InternalServerError);

@@ -23,6 +23,13 @@ public class MaintenanceJob : Entity<Guid>
         Description = description;
     }
 
+    public void Start(Timeslot actualTimeslot, string notes)
+    {
+
+        ActualTimeslot = actualTimeslot;
+        Notes = notes;
+    }
+    
     public void Finish(Timeslot actualTimeslot, string notes)
     {
 

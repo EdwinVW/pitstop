@@ -78,6 +78,13 @@ public class WorkshopPlanning : AggregateRoot<WorkshopPlanningId>
         Jobs.Add(job);
     }
 
+    private void Handle(MaintenanceJobStart e)
+    {
+        MaintenanceJob job = Jobs.FirstOrDefault(j => j.Id == e.JobId);
+        Timeslot actualTimeslot = Timeslot.Create(e.StartTime, e.EndTime);
+        job.Start(actualTimeslot, e.Notes);
+    }
+    
     private void Handle(MaintenanceJobFinished e)
     {
         MaintenanceJob job = Jobs.FirstOrDefault(j => j.Id == e.JobId);
