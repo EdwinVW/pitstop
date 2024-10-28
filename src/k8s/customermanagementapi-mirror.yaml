@@ -18,19 +18,27 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: customermanagementapi
+  name: customermanagementapi-mirror-get
   namespace: pitstop
 spec:
   hosts:
     - customermanagementapi
   http:
-    - route:
-      - destination:
-          host: customermanagementapi
-          subset: v1
-        weight: 100
-      mirror:
+  - match:
+    - method:
+        exact: GET
+    route:
+    - destination:
         host: customermanagementapi
-        subset: v2
-      mirrorPercentage:
-        value: 100
+        subset: v1
+      weight: 100
+    mirror:
+      host: customermanagementapi
+      subset: v2
+    mirrorPercentage:
+      value: 100
+  - route:
+    - destination:
+        host: customermanagementapi
+        subset: v1
+      weight: 100
