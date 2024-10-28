@@ -49,3 +49,21 @@ jobs:
       shell: bash
 
     # TODO: Actually publish the Docker images to a container registry
+  push-docker-images:
+    needs: publish
+    runs-on: ubuntu-latest
+    name: push docker images
+
+    steps:
+    # Checkout the repository
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    # Log in to GitHub Container Registry
+    - name: Log in to GitHub Container Registry
+      run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+    # Run the push-images.ps1 script
+    - name: Execute push images script
+      run: ./push-images.ps1
+    
