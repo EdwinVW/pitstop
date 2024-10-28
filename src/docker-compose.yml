@@ -40,7 +40,7 @@ services:
       - ACCEPT_EULA=Y
 
   vehiclemanagementapi:
-    image: ghcr.io/hanaim-devops/pitstop-team-luna:vehiclemanagementapi-1.0
+    image: pitstop/vehiclemanagementapi:1.0
     build: VehicleManagementAPI
     depends_on:
       - rabbitmq
@@ -51,7 +51,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
 
   customermanagementapi:
-    image: ghcr.io/hanaim-devops/pitstop-team-luna:customermanagementapi-1.0
+    image: pitstop/customermanagementapi:1.0
     build: CustomerManagementAPI
     depends_on:
       - rabbitmq
@@ -62,7 +62,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
 
   workshopmanagementapi:
-    image: ghcr.io/hanaim-devops/pitstop-team-luna:workshopmanagementapi-1.0
+    image: pitstop/workshopmanagementapi:1.0
     build: WorkshopManagementAPI
     depends_on:
       - rabbitmq
@@ -73,7 +73,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
 
   auditlogservice:
-    image: ghcr.io/hanaim-devops/pitstop-team-luna:auditlogservice-1.0
+    image: pitstop/auditlogservice:1.0
     build: AuditlogService
     container_name: auditlogservice
     depends_on:
@@ -82,7 +82,7 @@ services:
       - DOTNET_ENVIRONMENT=Production
 
   invoiceservice:
-    image: ghcr.io/hanaim-devops/pitstop-team-luna:invoiceservice-1.0
+    image: pitstop/invoiceservice:1.0
     build: InvoiceService
     container_name: invoiceservice
     depends_on:
@@ -93,7 +93,7 @@ services:
       - DOTNET_ENVIRONMENT=Production
 
   notificationservice:
-    image: ghcr.io/hanaim-devops/pitstop-team-luna:notificationservice-1.0
+    image: pitstop/notificationservice:1.0
     build: NotificationService
     container_name: notificationservice
     depends_on:
@@ -104,7 +104,7 @@ services:
       - DOTNET_ENVIRONMENT=Production
 
   timeservice:
-    image: ghcr.io/hanaim-devops/pitstop-team-luna:timeservice-1.0
+    image: pitstop/timeservice:1.0
     build: TimeService
     container_name: timeservice
     depends_on:
@@ -113,7 +113,7 @@ services:
       - DOTNET_ENVIRONMENT=Production
 
   workshopmanagementeventhandler:
-    image: ghcr.io/hanaim-devops/pitstop-team-luna:workshopmanagementeventhandler-1.0
+    image: pitstop/workshopmanagementeventhandler:1.0
     build: WorkshopManagementEventHandler
     container_name: workshopmanagementeventhandler
     depends_on:
@@ -123,7 +123,7 @@ services:
       - DOTNET_ENVIRONMENT=Production
 
   webapp:
-    image: ghcr.io/hanaim-devops/pitstop-team-luna:webapp-1.0
+    image: pitstop/webapp:1.0
     build: WebApp
     container_name: webapp
     depends_on:

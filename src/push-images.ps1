@@ -19,3 +19,4 @@ docker push ghcr.io/hanaim-devops/pitstop-team-luna:invoiceservice-1.0
 docker push ghcr.io/hanaim-devops/pitstop-team-luna:auditlogservice-1.0
 docker push ghcr.io/hanaim-devops/pitstop-team-luna:workshopmanagementapi-1.0
 docker push ghcr.io/hanaim-devops/pitstop-team-luna:vehiclemanagementapi-1.0
+
