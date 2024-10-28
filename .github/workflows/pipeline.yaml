@@ -66,4 +66,6 @@ jobs:
     # Run the push-images.ps1 script
     - name: Execute push images script
       run: ./push-images.ps1
-    
+      working-directory: src
+      shell: pwsh
+
