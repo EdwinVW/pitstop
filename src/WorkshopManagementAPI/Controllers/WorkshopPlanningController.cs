@@ -11,11 +11,13 @@ public class WorkshopPlanningController : Controller
     public WorkshopPlanningController(
         IEventSourceRepository<WorkshopPlanning> planningRepo,
         IPlanMaintenanceJobCommandHandler planMaintenanceJobCommandHandler,
-        IFinishMaintenanceJobCommandHandler finishMaintenanceJobCommand)
+        IFinishMaintenanceJobCommandHandler finishMaintenanceJobCommand,
+        IStartMaintenanceJobCommandHandler startMaintenanceJobCommandHandler)
     {
         _planningRepo = planningRepo;
         _planMaintenanceJobCommandHandler = planMaintenanceJobCommandHandler;
         _finishMaintenanceJobCommandHandler = finishMaintenanceJobCommand;
+        _startMaintenanceJobCommandHandler = startMaintenanceJobCommandHandler;
     }
 
     [HttpGet]
