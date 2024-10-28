@@ -19,3 +19,5 @@ See [the Wiki for this repository](https://github.com/EdwinVW/pitstop/wiki "Pits
 ![](pitstop-garage.png)
 
 > This is an actual garage somewhere in Dresden Germany. Thanks to Thomas Moerkerken for the picture!
+
+slack invite: https://join.slack.com/t/pitstop-luna/shared_invite/zt-2spmmbuc5-0NxJT2TPwBu3YBC9zX6BDQ
