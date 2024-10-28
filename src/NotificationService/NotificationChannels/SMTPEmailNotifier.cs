@@ -31,7 +31,31 @@ public class SMTPEmailNotifier : IEmailNotifier
 
             await Policy
                 .Handle<Exception>()
-                .WaitAndRetry(3, r => TimeSpan.FromSeconds(2), (ex, ts) => { Log.Error("Error sending mail. Retrying in 2 sec."); })
+                .WaitAndRetry(3, r => TimeSpan.FromSeconds(2),
+                    (ex, ts) => { Log.Error("Error sending mail. Retrying in 2 sec."); })
+                .Execute(() => client.SendMailAsync(mailMessage))
+                .ContinueWith(_ => Log.Information("Notification mail sent to {Recipient}.", to));
+        }
+    }
+
+    public async Task SendEmailHtmlAsync(string to, string from, string subject, string body)
+    {
+        using (SmtpClient client = new SmtpClient(_smptServer, _smtpPort))
+        {
+            client.UseDefaultCredentials = false;
+            client.Credentials = new NetworkCredential(_userName, _password);
+
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress(from);
+            mailMessage.To.Add(to);
+            mailMessage.Body = body;
+            mailMessage.Subject = subject;
+            mailMessage.IsBodyHtml = true;
+
+            await Policy
+                .Handle<Exception>()
+                .WaitAndRetry(3, r => TimeSpan.FromSeconds(2),
+                    (ex, ts) => { Log.Error("Error sending mail. Retrying in 2 sec."); })
                 .Execute(() => client.SendMailAsync(mailMessage))
                 .ContinueWith(_ => Log.Information("Notification mail sent to {Recipient}.", to));
         }

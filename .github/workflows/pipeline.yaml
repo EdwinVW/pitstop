@@ -1,0 +1,51 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    name: Build & Test
+    env:
+      Headless: true
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore ./src/pitstop.sln
+
+    - name: Build
+      run: dotnet build --no-restore ./src/pitstop.sln
+
+    - name: Test
+      run: dotnet test --no-build --verbosity normal ./src/pitstop.sln
+
+  publish:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    name: Publish
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run shell script
+      run: ./RebuildAllDockerImages.sh
+      working-directory: src
+      shell: bash
+
+    # TODO: Actually publish the Docker images to a container registry
