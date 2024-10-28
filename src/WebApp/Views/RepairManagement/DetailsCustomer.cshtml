@@ -1,0 +1,101 @@
+@model Pitstop.WebApp.ViewModels.RepairManagementDetailsCustomerViewModel
+@{
+    ViewData["Title"] = "Details Repair Order";
+}
+
+<h1 id="PageTitle">Repair Management - Details Repair Order</h1>
+
+<h2>Details Repair Order</h2>
+
+<form method="post">
+    <input type="hidden" name="RepairOrderId" value="@Model.RepairOrder.Id"/>
+
+    <!-- Customer Information -->
+    <div class="form-group">
+        <h3>Customer Information</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.CustomerInfo.CustomerName"></label>
+                <input asp-for="RepairOrder.CustomerInfo.CustomerName" class="form-control" readonly/>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.CustomerInfo.CustomerEmail"></label>
+                <input asp-for="RepairOrder.CustomerInfo.CustomerEmail" class="form-control" readonly/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.CustomerInfo.CustomerPhone"></label>
+                <input asp-for="RepairOrder.CustomerInfo.CustomerPhone" class="form-control" readonly/>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicle Information -->
+    <div class="form-group mt-4">
+        <h3>Vehicle Information</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.VehicleInfo.LicenseNumber"></label>
+                <input asp-for="RepairOrder.VehicleInfo.LicenseNumber" class="form-control" readonly/>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.VehicleInfo.Brand"></label>
+                <input asp-for="RepairOrder.VehicleInfo.Brand" class="form-control" readonly/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.VehicleInfo.Type"></label>
+                <input asp-for="RepairOrder.VehicleInfo.Type" class="form-control" readonly/>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicle Parts for Repair -->
+    <div class="form-group mt-4">
+        <h3>Vehicle Parts for Repair</h3>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    @foreach (var part in Model.RepairOrder.ToRepairVehicleParts)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>@part.PartName</span>
+                            <span class="badge bg-primary text-white">@part.PartCost.ToString("C", new System.Globalization.CultureInfo("en-US"))</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Costs -->
+    <div class="form-group mt-4">
+        <h3>Costs</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.LaborCost">Labor Cost</label>
+                <input asp-for="RepairOrder.LaborCost" class="form-control" readonly/>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.TotalCost">Total Cost</label>
+                <input asp-for="RepairOrder.TotalCost" class="form-control" readonly/>
+            </div>
+        </div>
+    </div>
+    <div class="form-group mt-4">
+        <h3>Approve</h3>
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-between">
+                <button type="submit" class="btn btn-success" formaction="@Url.Action("ApproveRepairOrder", "RepairManagement")">
+                    Approve Repair Order
+                </button>
+
+                <a href="@Url.Action("RejectRepairOrder", "RepairManagement", new { repairOrderId = Model.RepairOrder.Id })" class="btn btn-danger ms-2">
+                    Reject
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
