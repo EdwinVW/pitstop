@@ -64,7 +64,7 @@ jobs:
     name: depploy
     if: github.ref == 'refs/heads/main'
 
-      steps:
+    steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
