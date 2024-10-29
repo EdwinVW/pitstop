@@ -43,9 +43,9 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - name: "7005"
-    port: 7005
-    targetPort: 7005
+  - name: "80"
+    port: 80
+    targetPort: 80
   selector:
     app: webapp
 
