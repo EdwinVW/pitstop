@@ -15,8 +15,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Pitstop.Infrastructure.Messaging" />
     <PackageReference Include="Dapper" />
+    <PackageReference Include="Slack.Webhooks" />
     <PackageReference Include="System.Data.SqlClient" />
     <PackageReference Include="AutoMapper" />
     <PackageReference Include="Serilog" />

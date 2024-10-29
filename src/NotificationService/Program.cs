@@ -19,7 +19,14 @@
             string mailPassword = mailConfigSection["Pwd"];
             return new SMTPEmailNotifier(mailHost, mailPort, mailUserName, mailPassword);
         });
-
+        
+        services.AddTransient<ISlackMessenger>((svc) =>
+        {
+            var slackConfigSection = hostContext.Configuration.GetSection("Slack");
+            string webhookUrl = slackConfigSection["WebhookUrl"];
+            return new SlackMessenger(webhookUrl);
+        });
+        
         services.AddHostedService<NotificationWorker>();
     })
     .UseSerilog((hostContext, loggerConfiguration) =>

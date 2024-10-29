@@ -1,4 +1,5 @@
-﻿
+using Pitstop.NotificationService.Message;
+using Pitstop.NotificationService.Message.Templates;
 
 namespace Pitstop.NotificationService;
 
@@ -7,13 +8,16 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
     IMessageHandler _messageHandler;
     INotificationRepository _repo;
     IEmailNotifier _emailNotifier;
+    private readonly ISlackMessenger _slackMessenger;
     private readonly IConfiguration _config;
-    public NotificationWorker(IConfiguration config, IMessageHandler messageHandler, INotificationRepository repo,
-        IEmailNotifier emailNotifier)
+
+    public NotificationWorker(IConfiguration config, IMessageHandler messageHandler, INotificationRepository repo, IEmailNotifier emailNotifier, ISlackMessenger slackMessenger)
+
     {
         _messageHandler = messageHandler;
         _repo = repo;
         _emailNotifier = emailNotifier;
+        _slackMessenger = slackMessenger;
         _config = config;
     }
 
@@ -150,9 +154,8 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
             StartTime = mjp.StartTime,
             Description = mjp.Description
         };
-
-        Log.Information(
-            "Register Maintenance Job: {Id}, {CustomerId}, {VehicleLicenseNumber}, {StartTime}, {Description}",
+        
+        Log.Information("Register Maintenance Job: {Id}, {CustomerId}, {VehicleLicenseNumber}, {StartTime}, {Description}",
             job.JobId, job.CustomerId, job.LicenseNumber, job.StartTime, job.Description);
 
         await _repo.RegisterMaintenanceJobAsync(job);
@@ -160,6 +163,19 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
 
     private async Task HandleAsync(MaintenanceJobFinished mjf)
     {
+        var message = new VehicleManagementFinished("Maintenance finished", $"Dear {mjf.JobId}",
+        new List<string>(["Your maintenance job has finished.", "Please pickup your car"]));
+
+        try
+        {   
+            Log.Information("Sending notification for finished maintenance job: {job}", mjf.JobId);
+            await _slackMessenger.PostMessage(message.BuildMessage());
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error sending notification for finished maintenance job: {job}", mjf.JobId);
+        }
+        
         Log.Information("Remove finished Maintenance Job: {Id}", mjf.JobId);
 
         await _repo.RemoveMaintenanceJobsAsync(new string[] { mjf.JobId.ToString() });

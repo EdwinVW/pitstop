@@ -2,34 +2,32 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: workshopmanagementapi
+    app: repairmanagementapi
     version: "1.0"
-  name: workshopmanagementapi
+  name: repairmanagementapi
   namespace: pitstop
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: workshopmanagementapi
+      app: repairmanagementapi
       version: "1.0"
   template:
     metadata:
       labels:
-        app: workshopmanagementapi
+        app: repairmanagementapi
         version: "1.0"
     spec:
       containers:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: ghcr.io/hanaim-devops/pitstop-team-luna:workshopmanagementapi-1.0
+        image: pitstop/repairmanagementapi:1.0
         imagePullPolicy: IfNotPresent
-        name: workshopmanagementapi
+        name: repairmanagementapi
         ports:
-        - containerPort: 5200
+        - containerPort: 5300
       restartPolicy: Always
-      imagePullSecrets:
-        - name: ghcr-secret
 
 ---
 
@@ -37,15 +35,16 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: workshopmanagementapi
-  name: workshopmanagementapi
+    app: repairmanagementapi
+  name: repairmanagementapi
   namespace: pitstop
 spec:
   type: NodePort
   ports:
-  - name: "http-5200"
-    port: 5200
-    targetPort: 5200
-    nodePort: 30007
+  - name: "http-5300"
+    port: 5300
+    targetPort: 5300
+    nodePort: 30013
   selector:
-    app: workshopmanagementapi
+    app: repairmanagementapi
+
