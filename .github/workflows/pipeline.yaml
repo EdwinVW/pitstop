@@ -58,3 +58,40 @@ jobs:
       working-directory: src
       shell: pwsh
 
+  deploy:
+    needs: publish
+    runs-on: ubuntu-latest
+    name: depploy
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Minikube
+      uses: manusa/actions-setup-minikube@v2
+      with:
+        minikube version: 'latest'
+        kubernetes version: 'latest'
+        driver: docker
+
+    - name: set context
+      run: set KUBECONFIG=.config-groep5.yml
+      working-directory: src
+      shell: pwsh
+
+    - name: use context
+      run: kubectl config use-context groep5
+      working-directory: src
+      shell: pwsh
+
+    - name: stop pods
+      run: ./stop-all.ps1
+      working-directory: src
+      shell: pwsh
+
+    - name: start pods
+      run: ./start-all.ps1 -nomesh
+      working-directory: src
+      shell: pwsh
+
