@@ -22,10 +22,12 @@ spec:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: pitstop/customermanagementapi:1.0
+        image: ghcr.io/hanaim-devops/pitstop-team-luna/customermanagementapi:1.0
         imagePullPolicy: IfNotPresent
         name: customermanagementapi
         ports:
         - containerPort: 5100
       restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
   

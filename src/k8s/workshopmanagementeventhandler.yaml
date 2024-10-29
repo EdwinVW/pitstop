@@ -22,7 +22,9 @@ spec:
       - env:
         - name: DOTNET_ENVIRONMENT
           value: Production
-        image: pitstop/workshopmanagementeventhandler:1.0
+        image: ghcr.io/hanaim-devops/pitstop-team-luna/workshopmanagementeventhandler:1.0
         imagePullPolicy: IfNotPresent
         name: workshopmanagementeventhandler
       restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret

@@ -1,0 +1,13 @@
+global using Pitstop.RepairManagementAPI.Commands;
+global using Pitstop.RepairManagementAPI.Events;
+global using Pitstop.RepairManagementAPI.Model;
+global using Pitstop.RepairManagementAPI.DataAccess;
+global using Pitstop.Infrastructure.Messaging;
+global using Pitstop.Infrastructure.Messaging.Configuration;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Infrastructure;
+global using Serilog;
+global using Polly;
+global using Microsoft.AspNetCore.Mvc;
+global using Pitstop.RepairManagementAPI.Enums;
+global using Microsoft.OpenApi.Models;

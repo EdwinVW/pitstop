@@ -22,8 +22,10 @@ spec:
       - env:
         - name: DOTNET_ENVIRONMENT
           value: Production
-        image: pitstop/auditlogservice:1.0
+        image: ghcr.io/hanaim-devops/pitstop-team-luna/auditlogservice:1.0
         imagePullPolicy: IfNotPresent
         name: auditlogservice
       restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
 

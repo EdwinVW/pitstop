@@ -1,10 +1,12 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Pitstop.WebApp.RESTClients;
+
+var builder = WebApplication.CreateBuilder(args);
 
 //builder.UseKestrel();
 builder.Host.UseContentRoot(Directory.GetCurrentDirectory());
 
 // setup logging
-builder.Host.UseSerilog((context, logContext) => 
+builder.Host.UseSerilog((context, logContext) =>
     logContext
         .ReadFrom.Configuration(builder.Configuration)
         .Enrich.WithMachineName()
@@ -22,6 +24,7 @@ builder.Services.AddHealthChecks();
 builder.Services.AddHttpClient<ICustomerManagementAPI, CustomerManagementAPI>();
 builder.Services.AddHttpClient<IVehicleManagementAPI, VehicleManagementAPI>();
 builder.Services.AddHttpClient<IWorkshopManagementAPI, WorkshopManagementAPI>();
+builder.Services.AddHttpClient<IRepairManagementAPI, RepairManagementApi>();
 
 var app = builder.Build();
 

@@ -22,12 +22,14 @@ spec:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: pitstop/vehiclemanagementapi:1.0
+        image: ghcr.io/hanaim-devops/pitstop-team-luna/vehiclemanagementapi:1.0
         imagePullPolicy: IfNotPresent
         name: vehiclemanagementapi
         ports:
         - containerPort: 5000
       restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
 
 ---
 

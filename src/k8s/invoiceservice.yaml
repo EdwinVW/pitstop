@@ -22,7 +22,9 @@ spec:
       - env:
         - name: DOTNET_ENVIRONMENT
           value: Production
-        image: pitstop/invoiceservice:1.0
+        image: ghcr.io/hanaim-devops/pitstop-team-luna/invoiceservice:1.0
         imagePullPolicy: IfNotPresent
         name: invoiceservice
       restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret

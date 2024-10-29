@@ -22,12 +22,14 @@ spec:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: pitstop/webapp:1.0
+        image: ghcr.io/hanaim-devops/pitstop-team-luna/webapp:1.0
         imagePullPolicy: IfNotPresent
         name: webapp
         ports:
-        - containerPort: 7005
+        - containerPort: 80
       restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
 
 ---
 
@@ -41,8 +43,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - name: "7005"
-    port: 7005
+  - name: "80"
+    port: 80
     targetPort: 7005
   selector:
     app: webapp

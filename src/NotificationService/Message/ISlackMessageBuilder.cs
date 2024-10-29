@@ -6,7 +6,6 @@ namespace Pitstop.NotificationService.Message;
 
 public interface ISlackMessageBuilder
 {
-
     ISlackMessageBuilder AddHeader(string text);
     ISlackMessageBuilder AddSection(string text);
     ISlackMessageBuilder AddField(List<string> fields);
@@ -43,7 +42,6 @@ public class SlackMessageBuilder : ISlackMessageBuilder
             {
                 Text = text,
                 Type = TextObject.TextType.Markdown
-
             }
         };
         _blocks.Add(section);

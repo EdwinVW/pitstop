@@ -71,6 +71,17 @@ services:
       - "5200"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+        
+  repairmanagementapi:
+    image: pitstop/repairmanagementapi:1.0
+    build: RepairManagementAPI
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    ports:
+      - "5300:5300"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
 
   auditlogservice:
     image: pitstop/auditlogservice:1.0
@@ -131,7 +142,7 @@ services:
       - vehiclemanagementapi
       - workshopmanagementapi
     ports:
-      - "7005:7005"
+      - "7005:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
 

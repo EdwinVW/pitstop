@@ -1,20 +1,63 @@
 @model Pitstop.WebApp.ViewModels.RepairManagementViewModel
 @{
-    ViewData["Title"] = "Mechanics Overview";
+    ViewData["Title"] = "Repair Orders Overview";
 }
 <h3 id="PageTitle">Repair Management - overview</h3>
 
 <table class="table">
     <thead>
-        <tr>
-            <th>Customer Name</th>
-            <th>Email</th>
-            <th>LicenseNumber</th>
-            <th>Repair Status</th>
-        </tr>
+    <tr>
+        <th>Customer Name</th>
+        <th>LicenseNumber</th>
+        <th>Repair Order Status</th>
+    </tr>
     </thead>
-
+    <tbody>
+    @foreach (var repairOrder in Model.RepairOrders)
+    {
+        <tr class="clickable" onclick="location.href = '@(Url.Action("Details", "RepairManagement", new { id = repairOrder.Id }))'">
+            <td>@repairOrder.CustomerInfo.CustomerName</td>
+            <td>@repairOrder.VehicleInfo.LicenseNumber</td>
+            <td>
+                @if (repairOrder.Status == RepairOrdersStatus.NotCreatedYet.ToString())
+                {
+                    <button class="btn btn-primary create-repair-order-btn" data-license-number="@repairOrder.VehicleInfo.LicenseNumber">
+                        Create Repair Order
+                    </button>
+                }
+                else
+                {
+                    <span>@repairOrder.Status</span>
+                    @if (repairOrder.Status == RepairOrdersStatus.Approved.ToString())
+                    {
+                        <span class="text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </span>
+                    }
+                    if(repairOrder.Status == RepairOrdersStatus.Rejected.ToString())
+                    {
+                        <span class="text-danger">
+                            <i class="fas fa-times-circle"></i>
+                        </span>
+                    }
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
 </table>
-<a id="RegisterVehicleButton" asp-action="New" asp-controller="VehicleManagement" class="btn btn-default">Register vehicle</a>
 
+@section Scripts {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <script>
+        document.querySelectorAll('.create-repair-order-btn').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.stopPropagation();
+                
+                var licenseNumber = event.target.getAttribute('data-license-number');
 
+                window.location.href = `@Url.Action("New", "RepairManagement")?licenseNumber=${licenseNumber}`;
+            });
+        });
+    </script>
+}

@@ -1,0 +1,158 @@
+@model Pitstop.WebApp.ViewModels.RepairManagementNewViewModel
+@{
+    ViewData["Title"] = "Create Repair Order";
+}
+<h3 id="PageTitle">Repair Management - New Repair Order</h3>
+
+<h2>New Repair Order</h2>
+<form asp-controller="RepairManagement" asp-action="SendRepairOrder" method="post">
+    <div class="form-group">
+        <div>
+            <h3>
+                <label asp-for="RepairOrder.CustomerInfo"></label>
+            </h3>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.CustomerInfo.CustomerName"></label>
+                <input asp-for="RepairOrder.CustomerInfo.CustomerName" class="form-control" readonly/>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.CustomerInfo.CustomerEmail"></label>
+                <input asp-for="RepairOrder.CustomerInfo.CustomerEmail" class="form-control" readonly/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.CustomerInfo.CustomerPhone"></label>
+                <input asp-for="RepairOrder.CustomerInfo.CustomerPhone" class="form-control" readonly/>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div>
+            <h3>
+                <label asp-for="RepairOrder.VehicleInfo"></label>
+            </h3>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.VehicleInfo.LicenseNumber"></label>
+                <input asp-for="RepairOrder.VehicleInfo.LicenseNumber" class="form-control" readonly/>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.VehicleInfo.Brand"></label>
+                <input asp-for="RepairOrder.VehicleInfo.Brand" class="form-control" readonly/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="RepairOrder.VehicleInfo.Type"></label>
+                <input asp-for="RepairOrder.VehicleInfo.Type" class="form-control" readonly/>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Select Vehicle Parts</label>
+        <div class="row">
+            @for (var i = 0; i < Model.AvailableVehicleParts.Count; i += 2)
+            {
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input vehicle-part-checkbox" value="@Model.AvailableVehicleParts[i].Id" data-cost="@Model.AvailableVehicleParts[i].PartCost"/>
+                        <label class="form-check-label">
+                            @Model.AvailableVehicleParts[i].PartName - @Model.AvailableVehicleParts[i].PartCost.ToString("C", new System.Globalization.CultureInfo("en-US"))
+                        </label>
+                    </div>
+
+                    @if (i + 1 < Model.AvailableVehicleParts.Count)
+                    {
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input vehicle-part-checkbox" value="@Model.AvailableVehicleParts[i + 1].Id" data-cost="@Model.AvailableVehicleParts[i + 1].PartCost"/>
+                            <label class="form-check-label">
+                                @Model.AvailableVehicleParts[i + 1].PartName - @Model.AvailableVehicleParts[i + 1].PartCost.ToString("C", new System.Globalization.CultureInfo("en-US"))
+                            </label>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- This is where the selected parts will be appended as hidden inputs -->
+    <div id="selectedPartsContainer">
+        @for (var i = 0; i < Model.SelectedVehicleParts.Count; i++)
+        {
+        <input type="hidden" name="SelectedVehicleParts" value="@Model.SelectedVehicleParts[i]" />
+        }
+    </div>
+
+    <div class="form-group">
+        <label asp-for="RepairOrder.LaborCost">Labor Cost</label>
+        <input asp-for="RepairOrder.LaborCost" class="form-control labor-cost-input"/>
+        <span asp-validation-for="RepairOrder.LaborCost" class="text-danger"></span>
+    </div>
+
+    <div class="form-group text-right">
+        <label asp-for="RepairOrder.TotalCost">
+            <span id="total-cost">€0.00</span>
+        </label>
+        <input asp-for="RepairOrder.TotalCost" type="hidden" readonly/>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Send Repair Order</button>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        function calculateTotalCost() {
+            let totalCost = 0;
+
+            document.querySelectorAll('.vehicle-part-checkbox:checked').forEach(function(checkbox) {
+                totalCost += parseFloat(checkbox.getAttribute('data-cost')) || 0;
+            });
+
+            const laborCost = parseFloat(document.querySelector('.labor-cost-input').value) || 0;
+            totalCost += laborCost;
+
+            document.getElementById('total-cost').innerText = totalCost.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            });
+
+            document.querySelector('input[name="RepairOrder.TotalCost"]').value = totalCost;
+        }
+
+        function collectSelectedParts() {
+            const selectedPartsContainer = document.getElementById('selectedPartsContainer');
+            selectedPartsContainer.innerHTML = '';  
+
+            document.querySelectorAll('.vehicle-part-checkbox:checked').forEach(function(checkbox) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'SelectedVehicleParts';  
+                input.value = checkbox.value;
+                selectedPartsContainer.appendChild(input);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.vehicle-part-checkbox').forEach(function(checkbox) {
+                checkbox.addEventListener('change', calculateTotalCost);
+            });
+
+            document.querySelector('.labor-cost-input').addEventListener('input', calculateTotalCost);
+        });
+
+        document.querySelector('form').addEventListener('submit', function(event) {
+            collectSelectedParts();
+        });
+    </script>
+}

@@ -1,4 +1,4 @@
-﻿using Pitstop.NotificationService.Message;
+using Pitstop.NotificationService.Message;
 using Pitstop.NotificationService.Message.Templates;
 
 namespace Pitstop.NotificationService;
@@ -9,13 +9,16 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
     INotificationRepository _repo;
     IEmailNotifier _emailNotifier;
     private readonly ISlackMessenger _slackMessenger;
+    private readonly IConfiguration _config;
 
-    public NotificationWorker(IMessageHandler messageHandler, INotificationRepository repo, IEmailNotifier emailNotifier, ISlackMessenger slackMessenger)
+    public NotificationWorker(IConfiguration config, IMessageHandler messageHandler, INotificationRepository repo, IEmailNotifier emailNotifier, ISlackMessenger slackMessenger)
+
     {
         _messageHandler = messageHandler;
         _repo = repo;
         _emailNotifier = emailNotifier;
         _slackMessenger = slackMessenger;
+        _config = config;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -52,6 +55,9 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
                 case "DayHasPassed":
                     await HandleAsync(messageObject.ToObject<DayHasPassed>());
                     break;
+                case "RepairOrderSent":
+                    await HandleAsync(messageObject.ToObject<RepairOrderSent>());
+                    break;
                 default:
                     break;
             }
@@ -62,6 +68,42 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
         }
 
         return true;
+    }
+
+    private async Task HandleAsync(RepairOrderSent rs)
+    {
+        string baseUrl = _config.GetSection("WebLocation").GetValue<string>("WebApp");
+        string subject = $"Repair Order #{rs.CustomerInfo.CustomerName} - {rs.VehicleInfo.LicenseNumber}";
+        
+        string repairOrderUrl = $"http://{baseUrl}/RepairManagement/DetailsCustomer/{rs.RepairOrderId}";
+        
+        string body = $@"
+        <html>
+            <body>
+                <h2>Dear {rs.CustomerInfo.CustomerName},</h2>
+                <p>Your repair order has been created successfully for your vehicle with license number: <strong>{rs.VehicleInfo.LicenseNumber}</strong>.</p>
+                <p><strong>Vehicle Details:</strong></p>
+                <ul>
+                    <li>Brand: {rs.VehicleInfo.Brand}</li>
+                    <li>Type: {rs.VehicleInfo.Type}</li>
+                    <li>License Number: {rs.VehicleInfo.LicenseNumber}</li>
+                </ul>
+                <p><strong>Repair Order Details:</strong></p>
+                <ul>
+                    <li>Total Cost: {rs.TotalCost.ToString("C", new CultureInfo("en-US"))}</li>
+                    <li>Status: {rs.Status}</li>
+                </ul>
+                <p>Click the button below to view and manage your repair order:</p>
+                <p>
+                    <a href='{repairOrderUrl}' style='padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;'>View Repair Order</a>
+                </p>
+                <br/>
+                <p>Best regards,<br/>The Repair Team</p>
+            </body>
+        </html>";
+
+        string email = rs.CustomerInfo.CustomerEmail;
+        await _emailNotifier.SendEmailHtmlAsync(email, "info@local.com", subject, body);
     }
 
     private async Task HandleAsync(CustomerRegistered cr)
@@ -149,14 +191,16 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
             Customer customer = await _repo.GetCustomerAsync(customerId);
             StringBuilder body = new StringBuilder();
             body.AppendLine($"Dear {customer.Name},\n");
-            body.AppendLine($"We would like to remind you that you have an appointment with us for maintenance on your vehicle(s):\n");
+            body.AppendLine(
+                $"We would like to remind you that you have an appointment with us for maintenance on your vehicle(s):\n");
             foreach (MaintenanceJob job in jobsPerCustomer)
             {
                 body.AppendLine($"- {job.StartTime.ToString("dd-MM-yyyy")} at {job.StartTime.ToString("HH:mm")} : " +
-                    $"{job.Description} on vehicle with license-number {job.LicenseNumber}");
+                                $"{job.Description} on vehicle with license-number {job.LicenseNumber}");
             }
 
-            body.AppendLine($"\nPlease make sure you're present at least 10 minutes before the (first) job is planned.");
+            body.AppendLine(
+                $"\nPlease make sure you're present at least 10 minutes before the (first) job is planned.");
             body.AppendLine($"Once arrived, you can notify your arrival at our front-desk.\n");
             body.AppendLine($"Greetings,\n");
             body.AppendLine($"The PitStop crew");

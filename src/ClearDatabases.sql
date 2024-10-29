@@ -13,5 +13,9 @@ delete from WorkshopManagement.dbo.MaintenanceJob;
 delete from WorkshopManagement.dbo.Vehicle;
 delete from WorkshopManagement.dbo.Customer;
 
+delete from RepairManagement.dbo.RepairOrders
+
 delete from WorkshopManagementEventStore.dbo.WorkshopPlanningEvent;
 delete from WorkshopManagementEventStore.dbo.WorkshopPlanning;
+
+

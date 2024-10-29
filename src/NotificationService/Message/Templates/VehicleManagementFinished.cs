@@ -14,7 +14,6 @@ public class VehicleManagementFinished
         _slackMessageBuilder.AddSection(section);
         _slackMessageBuilder.AddDivider();
         _slackMessageBuilder.AddField(fields);
-        
     }
 
     public SlackMessage BuildMessage()

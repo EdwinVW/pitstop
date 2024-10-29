@@ -4,7 +4,7 @@
 }
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
 
 <h3 id="PageTitle">Customer Management - register customer</h3>
@@ -12,34 +12,38 @@
 <form asp-controller="CustomerManagement" asp-action="Register" method="post">
     <div class="form-group">
         <label asp-for="Customer.Name"></label>
-        <input asp-for="Customer.Name" type="text" class="form-control" />
+        <input asp-for="Customer.Name" type="text" class="form-control"/>
         <span asp-validation-for="Customer.Name" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Customer.Address"></label>
-        <input asp-for="Customer.Address" type="text" class="form-control" />
+        <input asp-for="Customer.Address" type="text" class="form-control"/>
         <span asp-validation-for="Customer.Address" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Customer.PostalCode"></label>
-        <input asp-for="Customer.PostalCode" type="text" class="form-control" />
+        <input asp-for="Customer.PostalCode" type="text" class="form-control"/>
         <span asp-validation-for="Customer.PostalCode" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Customer.City"></label>
-        <input asp-for="Customer.City" type="text" class="form-control" />
+        <input asp-for="Customer.City" type="text" class="form-control"/>
         <span asp-validation-for="Customer.City" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Customer.TelephoneNumber"></label>
-        <input asp-for="Customer.TelephoneNumber" type="text" class="form-control" />
+        <input asp-for="Customer.TelephoneNumber" type="text" class="form-control"/>
         <span asp-validation-for="Customer.TelephoneNumber" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Customer.EmailAddress"></label>
-        <input asp-for="Customer.EmailAddress" type="text" class="form-control" />
+        <input asp-for="Customer.EmailAddress" type="text" class="form-control"/>
         <span asp-validation-for="Customer.EmailAddress" class="text-danger"></span>
     </div>
-    <span><button id="SubmitButton" type="submit" class="btn btn-default">Register</button></span>
-    <span><a id="CancelButton" asp-action="Index" asp-controller="CustomerManagement" class="btn btn-default">Cancel</a></span>
+    <span>
+        <button id="SubmitButton" type="submit" class="btn btn-default">Register</button>
+    </span>
+    <span>
+        <a id="CancelButton" asp-action="Index" asp-controller="CustomerManagement" class="btn btn-default">Cancel</a>
+    </span>
 </form>

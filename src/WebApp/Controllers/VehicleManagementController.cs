@@ -1,6 +1,6 @@
 ﻿namespace PitStop.WebApp.Controllers;
 
-    public class VehicleManagementController : Controller
+public class VehicleManagementController : Controller
 {
     private IVehicleManagementAPI _vehicleManagementAPI;
     private ICustomerManagementAPI _customerManagementAPI;
@@ -51,8 +51,8 @@
     {
         return await _resiliencyHelper.ExecuteResilient(async () =>
         {
-                // get customerlist
-                var customers = await _customerManagementAPI.GetCustomers();
+            // get customerlist
+            var customers = await _customerManagementAPI.GetCustomers();
 
             var model = new VehicleManagementNewViewModel
             {
