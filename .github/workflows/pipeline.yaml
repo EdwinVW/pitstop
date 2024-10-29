@@ -86,7 +86,10 @@ jobs:
       run: kubectl config use-context groep5
 
     # Stop existing pods (uses stop-all.ps1 script)
-   
+    - name: Stop Pods
+      run: ./stop-all.ps1
+      working-directory: src/k8s/scripts
+      shell: pwsh
 
     # Start pods (uses start-all.ps1 script)
     - name: Start Pods
