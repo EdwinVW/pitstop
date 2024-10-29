@@ -26,7 +26,7 @@ spec:
         imagePullPolicy: IfNotPresent
         name: webapp
         ports:
-        - containerPort: 7005
+        - containerPort: 80
       restartPolicy: Always
       imagePullSecrets:
         - name: ghcr-secret
@@ -41,7 +41,7 @@ metadata:
   name: webapp
   namespace: pitstop
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
   - name: "80"
     port: 80
