@@ -166,7 +166,7 @@
         }
     }
     
-    [HttpPost]
+    [HttpPut]
     public async Task<IActionResult> StartMaintenanceJob([FromForm] WorkshopManagementFinishViewModel inputModel)
     {
         if (ModelState.IsValid)

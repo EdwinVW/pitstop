@@ -17,7 +17,7 @@ public interface IWorkshopManagementAPI
     [Put("/workshopplanning/{planningDate}/jobs/{jobId}/finish")]
     Task FinishMaintenanceJob(string planningDate, string jobId, FinishMaintenanceJob cmd);
     
-    [Post("/workshopplanning/{planningDate}/jobs/{jobId}/Start")]
+    [Put("/workshopplanning/{planningDate}/jobs/{jobId}/start")]
     Task StartMaintenanceJob(string planningDate, string jobId, StartMaintenanceJob cmd);
         
     [Get("/refdata/customers")]
