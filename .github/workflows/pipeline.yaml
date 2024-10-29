@@ -72,16 +72,14 @@ jobs:
     - name: Setup Minikube
       uses: medyagh/setup-minikube@latest
       with:
-        minikube driver: docker  # Adjust if using a different driver
+        minikube driver: docker
 
-    # Copy your KUBECONFIG file to the GitHub runner
     - name: Configure KUBECONFIG
-      # Assuming `config-groep5.yml` is either in the repository or stored as a secret
       run: |
         mkdir -p $HOME/.kube
-        cp src/.config-groep5.yml $HOME/.kube/config  # Update path if needed
+        cp src/.config-groep5.ymal $HOME/.kube/config  # Update path if needed
       env:
-        KUBECONFIG: $HOME/.kube/config  # Set KUBECONFIG to the copied file path
+        KUBECONFIG: $HOME/.kube/config
 
     # Set the Kubernetes context
     - name: Use Kubernetes Context
