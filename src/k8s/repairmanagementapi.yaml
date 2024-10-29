@@ -22,12 +22,14 @@ spec:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: pitstop/repairmanagementapi:1.0
+        image: ghcr.io/hanaim-devops/pitstop-team-luna/repairmanagementapi:1.0
         imagePullPolicy: IfNotPresent
         name: repairmanagementapi
         ports:
         - containerPort: 5300
       restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
 
 ---
 
