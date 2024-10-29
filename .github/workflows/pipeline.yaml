@@ -68,12 +68,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Minikube
-      uses: manusa/actions-setup-minikube@v2
-      with:
-        minikube version: 'latest'
-        kubernetes version: 'latest'
-        driver: docker
+    - name: setup minikube
+      id: minikube
+      uses: medyagh/setup-minikube@latest
 
     - name: set context
       run: set KUBECONFIG=.config-groep5.yml
