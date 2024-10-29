@@ -1,3 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sqlserver-pvc
+  namespace: pitstop
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi  # Adjust the size based on your needs
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,7 +44,15 @@ spec:
         name: sqlserver
         ports:
         - containerPort: 1433
+        volumeMounts:
+          - name: sqlserver-storage
+            mountPath: /var/opt/mssql
       restartPolicy: Always
+      volumes:
+        - name: sqlserver-storage
+          persistentVolumeClaim:
+            claimName: sqlserver-pvc
+      
 
 ---
 

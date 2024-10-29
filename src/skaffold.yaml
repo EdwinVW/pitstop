@@ -1,0 +1,167 @@
+apiVersion: skaffold/v2beta26
+kind: Config
+metadata:
+  name: pitstop
+build:
+  artifacts:
+    - image: pitstop/auditlogservice
+      context: AuditlogService
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.cs'
+            dest: /app
+          - src: '**/*.csproj'
+            dest: /app
+          - src: '**/*.json'
+            dest: /app
+
+    - image: pitstop/customermanagementapi
+      context: CustomerManagementAPI
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.cs'
+            dest: /app
+          - src: '**/*.csproj'
+            dest: /app
+          - src: '**/*.json'
+            dest: /app
+
+    - image: pitstop/invoiceservice
+      context: InvoiceService
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.cs'
+            dest: /app
+          - src: '**/*.csproj'
+            dest: /app
+          - src: '**/*.json'
+            dest: /app
+
+    - image: pitstop/notificationservice
+      context: NotificationService
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.cs'
+            dest: /app
+          - src: '**/*.csproj'
+            dest: /app
+          - src: '**/*.json'
+            dest: /app
+
+    - image: pitstop/repairmanagementapi
+      context: RepairManagementAPI
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.cs'
+            dest: /app
+          - src: '**/*.csproj'
+            dest: /app
+          - src: '**/*.json'
+            dest: /app
+
+    - image: pitstop/timeservice
+      context: TimeService
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.cs'
+            dest: /app
+          - src: '**/*.csproj'
+            dest: /app
+          - src: '**/*.json'
+            dest: /app
+
+    - image: pitstop/vehiclemanagementapi
+      context: VehicleManagementAPI
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.cs'
+            dest: /app
+          - src: '**/*.csproj'
+            dest: /app
+          - src: '**/*.json'
+            dest: /app
+
+    - image: pitstop/webapp
+      context: WebApp
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.cs'
+            dest: /app
+          - src: '**/*.csproj'
+            dest: /app
+          - src: '**/*.json'
+            dest: /app
+
+    - image: pitstop/workshopmanagementapi
+      context: WorkshopManagementAPI
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.cs'
+            dest: /app
+          - src: '**/*.csproj'
+            dest: /app
+          - src: '**/*.json'
+            dest: /app
+
+    - image: pitstop/workshopmanagementeventhandler
+      context: WorkshopManagementEventHandler
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.cs'
+            dest: /app
+          - src: '**/*.csproj'
+            dest: /app
+          - src: '**/*.json'
+            dest: /app
+
+deploy:
+  kubectl:
+    manifests:
+      - ./k8s/auditlogservice.yaml
+      - ./k8s/customermanagementapi-auth.yaml
+      - ./k8s/customermanagementapi-canary.yaml
+      - ./k8s/customermanagementapi-mirror.yaml
+      - ./k8s/customermanagementapi-svc.yaml
+      - ./k8s/customermanagementapi-v1.yaml
+      - ./k8s/customermanagementapi-v2.yaml
+      - ./k8s/dashboard-adminuser.yaml
+      - ./k8s/invoiceservice.yaml
+      - ./k8s/logserver.yaml
+      - ./k8s/mailserver.yaml
+      - ./k8s/notificationservice.yaml
+      - ./k8s/rabbitmq.yaml
+      - ./k8s/sqlserver.yaml
+      - ./k8s/sqlserver-istio.yaml
+      - ./k8s/timeservice.yaml
+      - ./k8s/vehiclemanagementapi.yaml
+      - ./k8s/webapp.yaml
+      - ./k8s/webapp-istio.yaml
+      - ./k8s/webapp-linkerd.yaml
+      - ./k8s/workshopmanagementapi.yaml
+      - ./k8s/workshopmanagementeventhandler.yaml
+
+
+
+
+
+

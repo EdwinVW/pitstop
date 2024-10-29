@@ -10,6 +10,19 @@ data:
 
 ---
 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rabbitmq-pvc
+  namespace: pitstop
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi        
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -44,11 +57,17 @@ spec:
         - name: rqconfig
           mountPath: "/etc/pitstop"
           readOnly: true
+        - name: rabbitmq-storage
+          mountPath: /var/lib/rabbitmq
       restartPolicy: Always
       volumes:
       - name: rqconfig
         configMap:
           name: rqconfigmap
+      - name: rabbitmq-storage
+        persistentVolumeClaim:
+          claimName: rabbitmq-pvc
+
 
 ---
 
