@@ -58,3 +58,38 @@ jobs:
       working-directory: src
       shell: pwsh
 
+  deploy:
+    needs: publish
+    runs-on: ubuntu-latest
+    name: deploy
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Set up Minikube
+    - name: Setup Minikube
+      uses: medyagh/setup-minikube@latest
+      with:
+        minikube driver: docker
+
+    - name: Configure KUBECONFIG
+      run: |
+        mkdir -p $HOME/.kube
+        cp src/groep5.yaml $HOME/.kube/config  # Update path if needed
+      env:
+        KUBECONFIG: $HOME/.kube/config
+
+    # Set the Kubernetes context
+    - name: Use Kubernetes Context
+      run: kubectl config use-context groep5
+
+    # Stop existing pods (uses stop-all.ps1 script)
+   
+
+    # Start pods (uses start-all.ps1 script)
+    - name: Start Pods
+      run: ./start-all.ps1 -nomesh
+      working-directory: src/k8s/scripts
+      shell: pwsh
