@@ -64,31 +64,37 @@ jobs:
     name: depploy
     if: github.ref == 'refs/heads/main'
 
-    steps:
+      steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: setup minikube
-      id: minikube
+    # Set up Minikube
+    - name: Setup Minikube
       uses: medyagh/setup-minikube@latest
+      with:
+        minikube driver: docker  # Adjust if using a different driver
 
-    - name: set context
-      run: set KUBECONFIG=.config-groep5.yml
-      working-directory: src
-      shell: pwsh
+    # Copy your KUBECONFIG file to the GitHub runner
+    - name: Configure KUBECONFIG
+      # Assuming `config-groep5.yml` is either in the repository or stored as a secret
+      run: |
+        mkdir -p $HOME/.kube
+        cp src/.config-groep5.yml $HOME/.kube/config  # Update path if needed
+      env:
+        KUBECONFIG: $HOME/.kube/config  # Set KUBECONFIG to the copied file path
 
-    - name: use context
+    # Set the Kubernetes context
+    - name: Use Kubernetes Context
       run: kubectl config use-context groep5
-      working-directory: src
-      shell: pwsh
 
-    - name: stop pods
+    # Stop existing pods (uses stop-all.ps1 script)
+    - name: Stop Pods
       run: ./stop-all.ps1
       working-directory: src
       shell: pwsh
 
-    - name: start pods
+    # Start pods (uses start-all.ps1 script)
+    - name: Start Pods
       run: ./start-all.ps1 -nomesh
       working-directory: src
       shell: pwsh
-
