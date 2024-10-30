@@ -6,3 +6,23 @@ ViewData["Title"] = "Customer Support Overview";
     <img src="~/images/banner.jpg" />
     <h3 id="PageTitle">Customer Support - overview</h3>
 </div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.Rejections.First().RepairOrderId)</th>
+        <th>@Html.DisplayNameFor(model => model.Rejections.First().RejectReason)</th>
+        <th>@Html.DisplayNameFor(model => model.Rejections.First().RejectedAt)</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Rejections)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.RepairOrderId)</td>
+            <td>@Html.DisplayFor(modelItem => item.RejectReason)</td>
+            <td>@Html.DisplayFor(modelItem => item.RejectedAt)</td>
+        </tr>
+    }
+    </tbody>
+</table>

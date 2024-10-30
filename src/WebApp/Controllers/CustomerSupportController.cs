@@ -18,7 +18,10 @@ public class CustomerSupportController : Controller
     {
         return await _resiliencyHelper.ExecuteResilient(async () =>
         {
-            var model = new CustomerSupportViewModel();
+            var model = new CustomerSupportViewModel
+            {
+                Rejections = await _customerSupportApi.GetRejections()
+            };
 
             return await Task.FromResult<IActionResult>(View(model));
         }, View("Offline", new CustomerSupportOfflineViewModel()));
