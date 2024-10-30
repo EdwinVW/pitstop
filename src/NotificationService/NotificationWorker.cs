@@ -1,5 +1,6 @@
 using Pitstop.NotificationService.Message;
 using Pitstop.NotificationService.Message.Templates;
+using Slack.Webhooks;
 
 namespace Pitstop.NotificationService;
 
@@ -9,6 +10,8 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
     INotificationRepository _repo;
     IEmailNotifier _emailNotifier;
     private readonly ISlackMessenger _slackMessenger;
+
+    private readonly SlackMessage _slackmessage;
     private readonly IConfiguration _config;
 
     public NotificationWorker(IConfiguration config, IMessageHandler messageHandler, INotificationRepository repo, IEmailNotifier emailNotifier, ISlackMessenger slackMessenger)
@@ -116,6 +119,12 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
         string body = $"De klant heeft de onderhoudstaak met ID {acceptedEvent.RepairOrderId} goedgekeurd. U kunt nu beginnen met de reparatie.";
 
         await _emailNotifier.SendEmailHtmlAsync("noreply@pitstop.nl", "noreply@pitstop.nl", subject, body);
+
+        var slackMessage = new SlackMessage
+        {
+            Text = $"Klant heeft de reparatie goedgekeurd: De klant heeft de onderhoudstaak met ID {acceptedEvent.RepairOrderId} goedgekeurd. U kunt nu beginnen met de reparatie."
+        };
+        await _slackMessenger.PostMessage(slackMessage);
     }
     
     private async Task HandleAsync(RepairOrderRejected rejectedEvent)
@@ -124,6 +133,12 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
         string body = $"De klant heeft de onderhoudstaak met ID {rejectedEvent.RepairOrderId} afgewezen. Er kan geen reparatie worden uitgevoerd.";
 
         await _emailNotifier.SendEmailHtmlAsync("noreply@pitstop.nl", "noreply@pitstop.nl", subject, body);
+
+        var slackMessage = new SlackMessage
+        {
+            Text = $"Klant heeft de reparatie afgewezen: De klant heeft de onderhoudstaak met ID {rejectedEvent.RepairOrderId} afgewezen. Er kan geen reparatie worden uitgevoerd."
+        };
+        await _slackMessenger.PostMessage(slackMessage);
     }
 
     private async Task HandleAsync(CustomerRegistered cr)
