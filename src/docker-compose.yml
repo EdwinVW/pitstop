@@ -142,7 +142,7 @@ services:
       - vehiclemanagementapi
       - workshopmanagementapi
     ports:
-      - "7005:80"
+      - "80:7005"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
 
