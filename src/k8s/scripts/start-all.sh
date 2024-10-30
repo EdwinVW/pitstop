@@ -50,4 +50,5 @@ kubectl apply \
     -f ../customermanagementapi-svc.yaml \
     -f ../vehiclemanagementapi$MESHPOSTFIX.yaml \
     -f ../workshopmanagementapi$MESHPOSTFIX.yaml \
+    -f ../customersupportapi.yaml \
     -f ../webapp$MESHPOSTFIX.yaml
