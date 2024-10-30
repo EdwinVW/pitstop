@@ -231,7 +231,6 @@ namespace Pitstop.RepairManagementAPI.Controllers
                 return NotFound();
             }
 
-
             repairOrder.Status = RepairOrdersStatus.Rejected.ToString();
             repairOrder.UpdatedAt = DateTime.Now;
             repairOrder.IsApproved = false;
