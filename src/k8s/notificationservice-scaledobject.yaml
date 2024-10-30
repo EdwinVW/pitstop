@@ -13,7 +13,7 @@ spec:
   triggers:
     - type: rabbitmq
       metadata:
-        queueName: Notification
+        queueName: Notifications
         queueLength: "5"
         host: amqp://rabbitmq.pitstop.svc.cluster.local:5672
       authenticationRef:

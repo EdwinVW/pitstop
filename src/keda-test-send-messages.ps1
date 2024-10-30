@@ -1,7 +1,7 @@
 # Define the RabbitMQ connection details
 $username = "rabbitmquser"
 $password = "DEBmbwkSrzy9D1T9cJfa"
-$url = "http://<node-ip>:30001/api/exchanges/%2F/amq.default/publish"
+$url = "http://<node-ip>:30001/api/exchanges/%2F/Pitstop/publish"
 
 # Define the message body template
 $bodyTemplate = @{
