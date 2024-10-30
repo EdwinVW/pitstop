@@ -16,3 +16,12 @@ services:
   workshopmanagementapi:
     ports:
       - "5200:5200"
+
+  repairmanagementapi:
+    ports:
+      - "5300:5300"
+
+  customersupportapi:
+    ports:
+      - "5400:5400"
+

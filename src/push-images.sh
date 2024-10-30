@@ -9,3 +9,5 @@ docker push pitstop/invoiceservice:1.0
 docker push pitstop/auditlogservice:1.0
 docker push pitstop/workshopmanagementapi:1.0
 docker push pitstop/vehiclemanagementapi:1.0
+docker push pitstop/repairmanagementapi:1.0
+docker push pitstop/customersupportapi:1.0
