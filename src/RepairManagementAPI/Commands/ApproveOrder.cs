@@ -1,14 +1,16 @@
 namespace Pitstop.RepairManagementAPI.Commands;
 
-public class ApproveRepairOrder : Command
+public class ApproveOrder : Command
 {
     public readonly Guid RepairOrderId;
     public readonly DateTime ApproveDate;
+    public readonly string CustomerId;
 
-    public ApproveRepairOrder(Guid messageId, Guid repairOrderId, DateTime approveDate)
+    public ApproveOrder(Guid messageId, Guid repairOrderId, DateTime approveDate, string customerId)
         : base(messageId)
     {
         RepairOrderId = repairOrderId;
         ApproveDate = approveDate;
+        CustomerId = customerId;
     }
 }

@@ -1,5 +1,4 @@
-namespace Pitstop.RepairManagementAPI.Events;
-
+namespace Pitstop.NotificationService.Events;
 public class RepairOrderRejected : Event
 {
     public readonly Guid RepairOrderId;
@@ -13,15 +12,5 @@ public class RepairOrderRejected : Event
         RepairOrderId = repairOrderId;
         RejectReason = rejectReason;
         RejectedAt = rejectedAt;
-    }
-
-    public static RepairOrderRejected FromCommand(RejectOrder command)
-    {
-        return new RepairOrderRejected(
-            Guid.NewGuid(),
-            command.RepairOrderId,
-            command.RejectReason,
-            command.RejectedAt
-        );
     }
 }

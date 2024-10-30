@@ -1,5 +1,4 @@
-namespace Pitstop.RepairManagementAPI.Events;
-
+namespace Pitstop.NotificationService.Events;
 public class RepairOrderApproved : Event
 {
     public readonly Guid RepairOrderId;
@@ -13,15 +12,5 @@ public class RepairOrderApproved : Event
         RepairOrderId = repairOrderId;
         ApproveDate = approveDate;
         CustomerId = customerId;
-    }
-
-    public static RepairOrderApproved FromCommand(ApproveOrder command)
-    {
-        return new RepairOrderApproved(
-            Guid.NewGuid(),
-            command.RepairOrderId,
-            command.ApproveDate,
-            command.CustomerId
-        );
     }
 }

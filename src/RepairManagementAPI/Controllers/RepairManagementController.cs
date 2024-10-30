@@ -1,4 +1,3 @@
-using Pitstop.NotificationService.Events;
 using Pitstop.RepairManagementAPI.DTO;
 using RepairOrderSent = Pitstop.RepairManagementAPI.Events.RepairOrderSent;
 
@@ -204,7 +203,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
 
 
         [HttpPost("approve/{repairOrderId:guid}")]
-        public async Task<IActionResult> ApproveMaintenanceJob(Guid repairOrderId, string mechanicEmail, Guid customerId)
+        public async Task<IActionResult> ApproveMaintenanceJob(Guid repairOrderId, [FromBody] ApproveOrder command)
         {
             var repairOrder = await _context.RepairOrders.FirstOrDefaultAsync(x => x.Id == repairOrderId);
             if (repairOrder == null)
@@ -217,17 +216,14 @@ namespace Pitstop.RepairManagementAPI.Controllers
             repairOrder.IsApproved = true;
             await _context.SaveChangesAsync();
 
-            var acceptedEvent = new MaintenanceJobAccepted(Guid.NewGuid(), repairOrderId, mechanicEmail, customerId);
-            await _messagePublisher.PublishMessageAsync("MaintenanceJobAccepted", acceptedEvent, "");
-
+            var acceptedEvent = RepairOrderApproved.FromCommand(command);
+            await _messagePublisher.PublishMessageAsync(acceptedEvent.MessageType, acceptedEvent, "");
 
             return Ok(repairOrder);
         }
 
-
         [HttpPost("reject/{repairOrderId:guid}")]
-        public async Task<IActionResult> RejectRepairOrder(Guid repairOrderId, string mechanicEmail, Guid customerId,
-            [FromBody] RejectRepairOrderReason rejectReason)
+        public async Task<IActionResult> RejectRepairOrder(Guid repairOrderId, [FromBody] RejectOrder command)
         {
             var repairOrder = await _context.RepairOrders.FirstOrDefaultAsync(x => x.Id == repairOrderId);
             if (repairOrder == null)
@@ -239,11 +235,11 @@ namespace Pitstop.RepairManagementAPI.Controllers
             repairOrder.Status = RepairOrdersStatus.Rejected.ToString();
             repairOrder.UpdatedAt = DateTime.Now;
             repairOrder.IsApproved = false;
-            repairOrder.RejectReason = rejectReason.RejectReason;
+            repairOrder.RejectReason = command.RejectReason;
 
             await _context.SaveChangesAsync();
 
-            var rejectedEvent = new MaintenanceJobRejected(Guid.NewGuid(), repairOrderId, mechanicEmail, customerId);
+            var rejectedEvent = RepairOrderRejected.FromCommand(command);
             await _messagePublisher.PublishMessageAsync("MaintenanceJobRejected", rejectedEvent, "");
 
             return Ok(repairOrder);
