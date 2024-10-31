@@ -162,7 +162,7 @@ services:
   cloud-custodian:
     container_name: cloud-custodian
     build:
-      context: ./c7n
+      context: ./k8s/c7n
       dockerfile: ./dockerfile
     volumes:
       - ./c7n/Policies:/usr/src/app/Policies
