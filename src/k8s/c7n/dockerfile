@@ -6,6 +6,6 @@ RUN pip install c7n
 
 RUN pip install c7n-kube
 
-COPY ./Policies .
+COPY ./Policies ./
 
 CMD ["custodian", "run", "-s", "out", "policy.yml"]
