@@ -35,20 +35,6 @@ then
     echo "Starting Pitstop with Linkerd service mesh."
 fi
 
-# Define the secret name and credentials
-SECRET_NAME="rabbitmq-secret"
-USERNAME="rabbitmquser"
-PASSWORD="DEBmbwkSrzy9D1T9cJfa"
-
-# Check if the secret exists
-if kubectl get secret $SECRET_NAME -n pitstop >/dev/null 2>&1; then
-    echo "rabbitmq-secret already exists."
-else
-    echo "Creating rabbitmq-secret with provided username and password."
-    kubectl create secret generic $SECRET_NAME \
-        --from-literal=username=$USERNAME \
-        --from-literal=password=$PASSWORD -n pitstop
-fi
 
 kubectl apply \
     -f ../pitstop-namespace$MESHPOSTFIX.yaml \
@@ -67,8 +53,4 @@ kubectl apply \
     -f ../vehiclemanagementapi$MESHPOSTFIX.yaml \
     -f ../workshopmanagementapi$MESHPOSTFIX.yaml \
     -f ../customersupportapi.yaml \
-    -f ../webapp$meshPostfix.yaml \
-    -f ../workshopmanagementeventhandler-scaledobject.yaml \
-    -f ../invoiceservice-scaledobject.yaml \
-    -f ../auditlogservice-scaledobject.yaml \
-    -f ../notificationservice-scaledobject.yaml 
+    -f ../webapp$meshPostfix.yaml 

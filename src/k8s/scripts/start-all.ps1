@@ -41,27 +41,8 @@ else
     echo "Starting Pitstop without service mesh."
 }
 
-# Define the secret name and credentials
-$secretName = "rabbitmq-secret"
-$username = "rabbitmquser"
-$password = "DEBmbwkSrzy9D1T9cJfa"
-
-# Check if the secret exists
-$secretExists = & kubectl get secret $secretName -n pitstop 2>$null
-
-
-if (-not $secretExists) {
-    echo "Creating rabbitmq-secret with provided username and password."
-    & kubectl create secret generic $secretName `
-        --from-literal=username=$username `
-        --from-literal=password=$password -n pitstop
-} else {
-    echo "rabbitmq-secret already exists."
-}
-
 kubectl apply `
     -f ../pitstop-namespace$meshPostfix.yaml `
-    -f ../rabbitmq-trigger-auth.yaml `
     -f ../rabbitmq.yaml `
     -f ../logserver.yaml `
     -f ../sqlserver$meshPostfix.yaml `
@@ -77,8 +58,4 @@ kubectl apply `
     -f ../workshopmanagementapi$meshPostfix.yaml `
     -f ../repairmanagementapi.yaml `
     -f ../customersupportapi.yaml `
-    -f ../webapp$meshPostfix.yaml `
-    -f ../workshopmanagementeventhandler-scaledobject.yaml `
-    -f ../invoiceservice-scaledobject.yaml `
-    -f ../auditlogservice-scaledobject.yaml `
-    -f ../notificationservice-scaledobject.yaml 
+    -f ../webapp$meshPostfix.yaml 
