@@ -8,8 +8,5 @@
     "gulp-cssmin": "0.2.0",
     "gulp-uglify": "3.0.2",
     "rimraf": "3.0.0"
-  },
-  "dependencies": {
-    "asp.net": "file:"
   }
 }
