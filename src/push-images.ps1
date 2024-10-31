@@ -10,7 +10,7 @@ docker tag pitstop/workshopmanagementapi:1.0 ghcr.io/hanaim-devops/pitstop-team-
 docker tag pitstop/vehiclemanagementapi:1.0 ghcr.io/hanaim-devops/pitstop-team-luna/vehiclemanagementapi:1.0
 docker tag pitstop/repairmanagementapi:1.0 ghcr.io/hanaim-devops/pitstop-team-luna/repairmanagementapi:1.0
 docker tag pitstop/customersupportapi:1.0 ghcr.io/hanaim-devops/pitstop-team-luna/customersupportapi:1.0
-docker tag cloudcustodian/c7n:1.0 ghcr.io/hanaim-devops/pitstop-team-luna/cloudcustodian:1.0
+docker tag cloudcustodian/c7n:latest ghcr.io/hanaim-devops/pitstop-team-luna/cloudcustodian:1.0
 
 # Push all the tagged images to the same repo with different tags
 docker push ghcr.io/hanaim-devops/pitstop-team-luna/customermanagementapi:1.0
