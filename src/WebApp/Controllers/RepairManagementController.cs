@@ -136,7 +136,7 @@ public class RepairManagementController : Controller
         try
         {
             var command = new ApproveRepairOrder(Guid.NewGuid(), repairOrderId);
-            await _repairManagementApi.ApproveRepairOrder(command);
+            await _repairManagementApi.ApproveRepairOrder(repairOrderId, command);
             TempData["Message"] = "The repair order has been approved successfully!";
         }
         catch (Exception ex)
@@ -153,7 +153,7 @@ public class RepairManagementController : Controller
         if (ModelState.IsValid)
         {
             var command = new RejectRepairOrder(Guid.NewGuid(), model.RepairOrderId, model.RejectReason);
-            await _repairManagementApi.RejectRepairOrder(command);
+            await _repairManagementApi.RejectRepairOrder(model.RepairOrderId, command);
             return RedirectToAction("Index", "Home");
         }
 

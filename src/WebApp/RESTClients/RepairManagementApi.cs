@@ -44,14 +44,14 @@ public class RepairManagementApi : IRepairManagementAPI
         await _restClient.SendRepairOrder(command);
     }
 
-    public async Task ApproveRepairOrder(ApproveRepairOrder command) 
+    public async Task ApproveRepairOrder(string repairOrderId, ApproveRepairOrder command) 
     {
-        await _restClient.ApproveRepairOrder(command); 
+        await _restClient.ApproveRepairOrder(repairOrderId, command); 
     }
 
-    public async Task RejectRepairOrder(RejectRepairOrder command)
+    public async Task RejectRepairOrder(string repairOrderId, RejectRepairOrder command)
     {
-        await _restClient.RejectRepairOrder(command); 
+        await _restClient.RejectRepairOrder(repairOrderId, command); 
     }
 
     public async Task<List<VehicleParts>> GetVehicleParts()

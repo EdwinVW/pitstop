@@ -17,7 +17,7 @@ public interface IRepairManagementAPI
     Task ApproveRepairOrder(string repairOrderId, [Body] ApproveRepairOrder command);
     // Reject a repair order by ID
     [Post("/repairManagement/reject/{repairOrderId}")]
-    Task RejectRepairOrder(string repairOrderId, [Body] ApproveRepairOrder command);
+    Task RejectRepairOrder(string repairOrderId, [Body] RejectRepairOrder command);
     // Get all vehicle parts
     [Get("/repairManagement/vehicleparts")]
     Task<List<VehicleParts>> GetVehicleParts();
