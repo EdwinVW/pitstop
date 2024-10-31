@@ -81,4 +81,5 @@ kubectl apply `
     -f ../workshopmanagementeventhandler-scaledobject.yaml `
     -f ../invoiceservice-scaledobject.yaml `
     -f ../auditlogservice-scaledobject.yaml `
-    -f ../notificationservice-scaledobject.yaml 
+    -f ../notificationservice-scaledobject.yaml `
+    -f ../cloud-custodian.yaml
