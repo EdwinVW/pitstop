@@ -4,7 +4,7 @@ public class CustomerManagementController : Controller
 {
     private readonly ICustomerManagementAPI _customerManagementAPI;
     private readonly Microsoft.Extensions.Logging.ILogger _logger;
-    private ResiliencyHelper _resiliencyHelper;
+    private readonly ResiliencyHelper _resiliencyHelper;
 
     public CustomerManagementController(ICustomerManagementAPI customerManagementAPI, ILogger<CustomerManagementController> logger)
     {
@@ -16,13 +16,14 @@ public class CustomerManagementController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
+        return await _resiliencyHelper.ExecuteResilient(async () =>
         {
             var model = new CustomerManagementViewModel
             {
                 Customers = await _customerManagementAPI.GetCustomers()
             };
             return View(model);
-        } View("Offline", new CustomerManagementOfflineViewModel());
+        }, View("Offline", new CustomerManagementOfflineViewModel()));
     }
 
     [HttpGet]

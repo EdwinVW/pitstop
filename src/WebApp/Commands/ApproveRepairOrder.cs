@@ -7,5 +7,6 @@ public class ApproveRepairOrder : Command
     public ApproveRepairOrder(Guid messageId, string repairOrderId)
         : base(messageId)
     {
+        RepairOrderId = repairOrderId;
     }
 }
