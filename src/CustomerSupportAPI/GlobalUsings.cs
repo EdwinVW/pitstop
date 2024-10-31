@@ -1,0 +1,14 @@
+// global using Pitstop.CustomerSupportAPI.Model;
+// global using Pitstop.CustomerSupportAPI.Events;
+// global using Pitstop.CustomerSupportAPI.Commands;
+// global using Pitstop.CustomerSupportAPI.Mappers;
+global using Pitstop.CustomerSupportAPI.DataAccess;
+global using Pitstop.Infrastructure.Messaging;
+global using Pitstop.Infrastructure.Messaging.Configuration;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Infrastructure;
+global using Serilog;
+global using Microsoft.OpenApi.Models;
+global using Microsoft.AspNetCore.Mvc;
+global using System.Text.RegularExpressions;
+global using Polly;

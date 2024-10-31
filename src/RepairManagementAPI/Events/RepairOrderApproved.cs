@@ -5,19 +5,29 @@ public class RepairOrderApproved : Event
     public readonly Guid RepairOrderId;
     public readonly DateTime ApproveDate;
 
-    public RepairOrderApproved(Guid messageId, Guid repairOrderId, DateTime approveDate)
+    public readonly string CustomerId;
+    public readonly string CustomerName;
+    public readonly string LicenseNumber;
+
+    public RepairOrderApproved(Guid messageId, Guid repairOrderId, DateTime approveDate, string customerId, string customerName, string licenseNumber)
         : base(messageId)
     {
         RepairOrderId = repairOrderId;
         ApproveDate = approveDate;
+        CustomerId = customerId;
+        customerName = CustomerName;
+        licenseNumber = LicenseNumber;
     }
 
-    public static RepairOrderApproved FromCommand(ApproveRepairOrder command)
+    public static RepairOrderApproved FromCommand(ApproveOrder command)
     {
         return new RepairOrderApproved(
             Guid.NewGuid(),
             command.RepairOrderId,
-            command.ApproveDate
+            command.ApproveDate,
+            command.CustomerId,
+            command.CustomerName,
+            command.LicenseNumber
         );
     }
 }

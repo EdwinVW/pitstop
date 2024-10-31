@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: customersupportapi
+    version: "1.0"
+  name: customersupportapi
+  namespace: pitstop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customersupportapi
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        app: customersupportapi
+        version: "1.0"
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+        image: ghcr.io/hanaim-devops/pitstop-team-luna/customersupportapi:1.0
+        imagePullPolicy: IfNotPresent
+        name: customersupportapi
+        ports:
+        - containerPort: 5000
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: customersupportapi
+  name: customersupportapi
+  namespace: pitstop
+spec:
+  type: NodePort
+  ports:
+  - name: "http-5000"
+    port: 5400
+    targetPort: 5400
+    nodePort: 30008
+  selector:
+    app: customersupportapi
+

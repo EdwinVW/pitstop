@@ -1,16 +1,16 @@
-namespace Pitstop.RepairManagementAPI.Commands;
+namespace Pitstop.CustomerSupportAPI.Events;
 
-public class RejectRepairOrder : Command
+public class RepairOrderRejected : Event
 {
     public readonly Guid RepairOrderId;
     public readonly DateTime RejectedAt;
     public readonly string RejectReason;
 
-    public RejectRepairOrder(Guid messageId, Guid repairOrderId,DateTime rejectedAt, string rejectReason )
+    public RepairOrderRejected(Guid messageId, Guid repairOrderId, string rejectReason, DateTime rejectedAt)
         : base(messageId)
     {
         RepairOrderId = repairOrderId;
-        RejectedAt = rejectedAt;
         RejectReason = rejectReason;
+        RejectedAt = rejectedAt;
     }
 }

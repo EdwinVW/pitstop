@@ -1,5 +1,3 @@
-namespace Pitstop.WebApp.RESTClients;
-
 public class RepairManagementApi : IRepairManagementAPI
 {
     private IRepairManagementAPI _restClient;
@@ -7,7 +5,6 @@ public class RepairManagementApi : IRepairManagementAPI
     public RepairManagementApi(IConfiguration config, HttpClient httpClient)
     {
         string apiHostAndPort = config.GetSection("APIServiceLocations").GetValue<string>("RepairManagementAPI");
-
 
         httpClient.BaseAddress = new Uri($"http://{apiHostAndPort}/api");
         _restClient = RestService.For<IRepairManagementAPI>(
@@ -47,14 +44,14 @@ public class RepairManagementApi : IRepairManagementAPI
         await _restClient.SendRepairOrder(command);
     }
 
-    public async Task ApproveRepairOrder(string repairOrderId)
+    public async Task ApproveRepairOrder(string repairOrderId, ApproveRepairOrder command) 
     {
-        await _restClient.ApproveRepairOrder(repairOrderId);
+        await _restClient.ApproveRepairOrder(repairOrderId, command); 
     }
 
     public async Task RejectRepairOrder(string repairOrderId, RejectRepairOrder command)
     {
-        await _restClient.RejectRepairOrder(repairOrderId, command);
+        await _restClient.RejectRepairOrder(repairOrderId, command); 
     }
 
     public async Task<List<VehicleParts>> GetVehicleParts()

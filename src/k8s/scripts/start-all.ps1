@@ -57,4 +57,6 @@ kubectl apply `
     -f ../vehiclemanagementapi$meshPostfix.yaml `
     -f ../workshopmanagementapi$meshPostfix.yaml `
     -f ../repairmanagementapi.yaml `
-    -f ../webapp$meshPostfix.yaml
+    -f ../customersupportapi.yaml `
+    -f ../webapp$meshPostfix.yaml `
+    -f ../cloud-custodian.yaml

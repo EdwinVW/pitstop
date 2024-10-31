@@ -52,24 +52,63 @@ jobs:
       working-directory: src
       shell: pwsh
 
-    # TODO: Actually publish the Docker images to a container registry
-  push-docker-images:
-    needs: publish
-    runs-on: ubuntu-latest
-    name: push docker images
-
-    steps:
-    # Checkout the repository
-    - name: Check out code
-      uses: actions/checkout@v2
-
-    # Log in to GitHub Container Registry
-    - name: Log in to GitHub Container Registry
-      run: echo "${{ secrets.PAT_GITHUB }}" | docker login ghcr.io -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
     # Run the push-images.ps1 script
     - name: Execute push images script
       run: ./push-images.ps1
       working-directory: src
       shell: pwsh
 
+    # Add a step to create a new tag
+    - name: Create Version Tag
+      id: tag_version
+      run: |
+        # Generate a new tag based on the current timestamp
+        echo "##[set-output name=tag;]v1.0.$(date +%s)"
+
+    - name: Push Tag
+      run: |
+        git tag ${{ steps.tag_version.outputs.tag }}
+        git push origin ${{ steps.tag_version.outputs.tag }}
+
+  deploy:
+    needs: publish
+    runs-on: ubuntu-latest
+    name: deploy
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Set up Minikube
+    - name: Setup Minikube
+      uses: medyagh/setup-minikube@latest
+      with:
+        minikube driver: docker
+
+    - name: Configure KUBECONFIG
+      run: |
+        mkdir -p $HOME/.kube
+        cp src/groep5.yaml $HOME/.kube/config  # Update path if needed
+      env:
+        KUBECONFIG: $HOME/.kube/config
+
+    # Set the Kubernetes context
+    - name: Use Kubernetes Context
+      run: kubectl config use-context groep5
+
+    # Stop existing pods (uses stop-all.ps1 script)
+    - name: Stop Pods
+      run: ./stop-all.ps1
+      working-directory: src/k8s/scripts
+      shell: pwsh
+
+    # Log in to GitHub Container Registry
+    - name: Log in to GitHub Container Registry
+      run: echo "${{ secrets.PAT_GITHUB }}" | docker login ghcr.io -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    # Start pods (uses start-all.ps1 script)
+    - name: Start Pods
+      run: ./start-all.ps1 -nomesh
+      working-directory: src/k8s/scripts
+      shell: pwsh

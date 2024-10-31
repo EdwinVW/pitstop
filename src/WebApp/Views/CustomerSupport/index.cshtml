@@ -1,0 +1,29 @@
+@model Pitstop.WebApp.ViewModels.CustomerSupportViewModel
+@{
+ViewData["Title"] = "Customer Support Overview";
+}
+
+<div>
+    <img src="~/images/banner.jpg" />
+    <h3 id="PageTitle">Customer Support - overview</h3>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Reason</th>
+        <th>Rejected At</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var rejection in Model.Rejections)
+    {
+        <tr>
+            <td>@rejection.RepairOrderId</td>
+            <td>@rejection.RejectReason</td>
+            <td>@rejection.RejectedAt</td>
+        </tr>
+    }
+    </tbody>
+</table>

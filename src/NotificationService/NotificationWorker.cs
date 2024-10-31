@@ -55,7 +55,11 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
                 case "RepairOrderSent":
                     await HandleAsync(messageObject.ToObject<RepairOrderSent>());
                     break;
-                default:
+                case "RepairOrderApproved":
+                    await HandleAsync(messageObject.ToObject<RepairOrderApproved>());
+                    break;
+                case "RepairOrderRejected":
+                    await HandleAsync(messageObject.ToObject<RepairOrderRejected>());
                     break;
             }
         }
@@ -102,7 +106,37 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
         string email = rs.CustomerInfo.CustomerEmail;
         await _emailNotifier.SendEmailHtmlAsync(email, "info@local.com", subject, body);
     }
+    
+    private async Task HandleAsync(RepairOrderApproved acceptedEvent)
+    {
+        string subject = "Klant heeft de reparatie goedgekeurd";
+        string body = $"De klant met naam {acceptedEvent.CustomerName} heeft de onderhoudstaak met ID {acceptedEvent.RepairOrderId} en kentekenplaat {acceptedEvent.LicenseNumber} goedgekeurd. U kunt nu beginnen met de reparatie.";
 
+        await _emailNotifier.SendEmailHtmlAsync("noreply@pitstop.nl", "noreply@pitstop.nl", subject, body);
+
+        var slackMessage = new SlackMessageBuilder()
+            .AddHeader("Klant heeft de reparatie goedgekeurd")
+            .AddSection($"De klant met naam {acceptedEvent.CustomerName} heeft de onderhoudstaak met ID {acceptedEvent.RepairOrderId} en kentekenplaat {acceptedEvent.LicenseNumber} goedgekeurd. U kunt nu beginnen met de reparatie.")
+            .BuildSlackMessage();
+
+        await _slackMessenger.PostMessage(slackMessage);
+    }
+    
+    private async Task HandleAsync(RepairOrderRejected rejectedEvent)
+    {
+        string subject = "Klant heeft de reparatie afgewezen";
+        string body = $"De klant met de naam {rejectedEvent.CustomerName} heeft de onderhoudstaak met ID {rejectedEvent.RepairOrderId} en kentekenplaat {rejectedEvent.LicenseNumber} afgewezen. Er kan geen reparatie worden uitgevoerd.";
+
+        await _emailNotifier.SendEmailHtmlAsync("noreply@pitstop.nl", "noreply@pitstop.nl", subject, body);
+
+        var slackMessage = new SlackMessageBuilder()
+            .AddHeader("Klant heeft de reparatie afgewezen")
+            .AddSection($"De klant met de naam {rejectedEvent.CustomerName} heeft de onderhoudstaak met ID {rejectedEvent.RepairOrderId} en kentekenplaat {rejectedEvent.LicenseNumber} afgewezen. Er kan geen reparatie worden uitgevoerd.")
+            .BuildSlackMessage();
+
+        await _slackMessenger.PostMessage(slackMessage);
+    }
+    
     private async Task HandleAsync(CustomerRegistered cr)
     {
         Customer customer = new Customer

@@ -72,6 +72,28 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
 
+  repairmanagementapi:
+    image: pitstop/repairmanagementapi:1.0
+    build: RepairManagementAPI
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    ports:
+      - "5300:5300"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  customersupportapi:
+    image: pitstop/customersupportapi:1.0
+    build: CustomerSupportAPI
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    ports:
+      - "5400:5400"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
   auditlogservice:
     image: pitstop/auditlogservice:1.0
     build: AuditlogService
@@ -130,10 +152,21 @@ services:
       - customermanagementapi
       - vehiclemanagementapi
       - workshopmanagementapi
+      - repairmanagementapi
+      - customersupportapi
     ports:
-      - "7005:7005"
+      - "80:7005"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+      
+  cloud-custodian:
+    container_name: cloud-custodian
+    build:
+      context: ./k8s/c7n
+      dockerfile: ./dockerfile
+    volumes:
+      - ./c7n/Policies:/usr/src/app/Policies
+    image: cloudcustodian/c7n:latest
 
 volumes:
   sqlserverdata:

@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UITest", "UITest\UITest.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepairManagementAPI", "RepairManagementAPI\RepairManagementAPI.csproj", "{B3549DA8-1E8A-47FB-864A-099F307F1522}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerSupportAPI", "CustomerSupportAPI\CustomerSupportAPI.csproj", "{A887FF9F-B172-4D05-8C19-93F0DBE4E364}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +98,10 @@ Global
 		{B3549DA8-1E8A-47FB-864A-099F307F1522}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3549DA8-1E8A-47FB-864A-099F307F1522}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3549DA8-1E8A-47FB-864A-099F307F1522}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A887FF9F-B172-4D05-8C19-93F0DBE4E364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A887FF9F-B172-4D05-8C19-93F0DBE4E364}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A887FF9F-B172-4D05-8C19-93F0DBE4E364}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A887FF9F-B172-4D05-8C19-93F0DBE4E364}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

@@ -1,5 +1,5 @@
 using Pitstop.RepairManagementAPI.DTO;
-
+using RepairOrderSent = Pitstop.RepairManagementAPI.Events.RepairOrderSent;
 
 namespace Pitstop.RepairManagementAPI.Controllers
 {
@@ -203,31 +203,27 @@ namespace Pitstop.RepairManagementAPI.Controllers
 
 
         [HttpPost("approve/{repairOrderId:guid}")]
-        public async Task<IActionResult> ApproveRepairOrder(Guid repairOrderId)
+        public async Task<IActionResult> ApproveMaintenanceJob(Guid repairOrderId, [FromBody] ApproveOrder command)
         {
             var repairOrder = await _context.RepairOrders.FirstOrDefaultAsync(x => x.Id == repairOrderId);
             if (repairOrder == null)
             {
                 return NotFound();
             }
-
-
+            
             repairOrder.Status = RepairOrdersStatus.Approved.ToString();
             repairOrder.UpdatedAt = DateTime.Now;
             repairOrder.IsApproved = true;
             await _context.SaveChangesAsync();
 
-
-            // var e = RepairOrderApproved.FromCommand(command);
-            // await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
+            var acceptedEvent = RepairOrderApproved.FromCommand(command);
+            await _messagePublisher.PublishMessageAsync(acceptedEvent.MessageType, acceptedEvent, "");
 
             return Ok(repairOrder);
         }
 
-
         [HttpPost("reject/{repairOrderId:guid}")]
-        public async Task<IActionResult> RejectRepairOrder(Guid repairOrderId,
-            [FromBody] RejectRepairOrderReason rejectReason)
+        public async Task<IActionResult> RejectRepairOrder(Guid repairOrderId, [FromBody] RejectOrder command)
         {
             var repairOrder = await _context.RepairOrders.FirstOrDefaultAsync(x => x.Id == repairOrderId);
             if (repairOrder == null)
@@ -235,17 +231,15 @@ namespace Pitstop.RepairManagementAPI.Controllers
                 return NotFound();
             }
 
-
             repairOrder.Status = RepairOrdersStatus.Rejected.ToString();
             repairOrder.UpdatedAt = DateTime.Now;
             repairOrder.IsApproved = false;
-            repairOrder.RejectReason = rejectReason.RejectReason;
+            repairOrder.RejectReason = command.RejectReason;
 
             await _context.SaveChangesAsync();
 
-            //
-            // var e = RepairOrderRejected.FromCommand(command);
-            // await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
+            var rejectedEvent = RepairOrderRejected.FromCommand(command);
+            await _messagePublisher.PublishMessageAsync(rejectedEvent.MessageType, rejectedEvent, "");
 
             return Ok(repairOrder);
         }

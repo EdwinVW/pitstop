@@ -50,6 +50,7 @@ kubectl apply \
     -f ../customermanagementapi-svc.yaml \
     -f ../vehiclemanagementapi$MESHPOSTFIX.yaml \
     -f ../workshopmanagementapi$MESHPOSTFIX.yaml \
+    -f ../customersupportapi.yaml \
     -f ../webapp$MESHPOSTFIX.yaml \
     -f ../sonarqube/sonar-namespace.yaml \
     -f ../sonarqube/storage-classes.yaml \
@@ -58,6 +59,3 @@ kubectl apply \
     -f ../sonarqube/app-deployment.yaml \
     -f ../sonarqube/db-deployment.yaml \
     -f ../sonarqube/ingress-deployment.yaml \
-
-
-    

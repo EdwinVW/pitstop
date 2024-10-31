@@ -1,6 +1,4 @@
-﻿using Pitstop.WebApp.RESTClients;
-
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 //builder.UseKestrel();
 builder.Host.UseContentRoot(Directory.GetCurrentDirectory());
@@ -25,6 +23,7 @@ builder.Services.AddHttpClient<ICustomerManagementAPI, CustomerManagementAPI>();
 builder.Services.AddHttpClient<IVehicleManagementAPI, VehicleManagementAPI>();
 builder.Services.AddHttpClient<IWorkshopManagementAPI, WorkshopManagementAPI>();
 builder.Services.AddHttpClient<IRepairManagementAPI, RepairManagementApi>();
+builder.Services.AddHttpClient<ICustomerSupportAPI, CustomerSupportAPI>();
 
 var app = builder.Build();
 

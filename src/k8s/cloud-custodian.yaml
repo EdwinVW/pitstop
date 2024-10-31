@@ -1,0 +1,18 @@
+﻿apiVersion: v1
+kind: Pod
+metadata:
+  name: cloud-custodian
+  labels:
+    app: cloud-custodian
+spec:
+  containers:
+    - name: cloud-custodian
+      image: ghcr.io/hanaim-devops/pitstop-team-luna/cloudcustodian:1.0
+      volumeMounts:
+        - name: policy-volume
+          mountPath: /usr/src/app/Policies
+  volumes:
+    - name: policy-volume
+      hostPath:
+        path: ./Policies
+        type: Directory

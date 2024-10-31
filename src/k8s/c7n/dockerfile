@@ -1,0 +1,11 @@
+﻿FROM python:3.11-slim
+
+WORKDIR /usr/src/app
+
+RUN pip install c7n
+
+RUN pip install c7n-kube
+
+COPY ./Policies ./
+
+CMD ["custodian", "run", "-s", "out", "policy.yml"]
