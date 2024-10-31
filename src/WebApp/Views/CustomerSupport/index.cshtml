@@ -1,3 +1,4 @@
+@model Pitstop.WebApp.ViewModels.CustomerSupportViewModel
 @{
 ViewData["Title"] = "Customer Support Overview";
 }
@@ -10,18 +11,18 @@ ViewData["Title"] = "Customer Support Overview";
 <table class="table">
     <thead>
     <tr>
-        <th>@Html.DisplayNameFor(model => model.Rejections.First().RepairOrderId)</th>
-        <th>@Html.DisplayNameFor(model => model.Rejections.First().RejectReason)</th>
-        <th>@Html.DisplayNameFor(model => model.Rejections.First().RejectedAt)</th>
+        <th>Id</th>
+        <th>Reason</th>
+        <th>Rejected At</th>
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model.Rejections)
+    @foreach (var rejection in Model.Rejections)
     {
         <tr>
-            <td>@Html.DisplayFor(modelItem => item.RepairOrderId)</td>
-            <td>@Html.DisplayFor(modelItem => item.RejectReason)</td>
-            <td>@Html.DisplayFor(modelItem => item.RejectedAt)</td>
+            <td>@rejection.RepairOrderId</td>
+            <td>@rejection.RejectReason</td>
+            <td>@rejection.RejectedAt</td>
         </tr>
     }
     </tbody>
