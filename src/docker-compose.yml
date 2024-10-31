@@ -158,6 +158,15 @@ services:
       - "80:7005"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+      
+  cloud-custodian:
+    container_name: cloud-custodian
+    build:
+      context: ./k8s/c7n
+      dockerfile: ./dockerfile
+    volumes:
+      - ./c7n/Policies:/usr/src/app/Policies
+    image: cloudcustodian/c7n:latest
 
 volumes:
   sqlserverdata:

@@ -1,158 +1,158 @@
 {
-   // Use IntelliSense to find out which attributes exist for C# debugging
-   // Use hover for the description of the existing attributes
-   // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
-   "version": "0.2.0",
-   "configurations": [
-        {
-            "name": "Run WebApp",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "",
-            "program": "${workspaceFolder}/WebApp/bin/Debug/net8.0/Pitstop.WebApp.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/WebApp/bin/Debug/net8.0",
-            "stopAtEntry": false,
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },
-        {
-            "name": "Run CustomerManagementAPI",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "",
-            "program": "${workspaceFolder}/CustomerManagementAPI/bin/Debug/net8.0/Pitstop.CustomerManagementAPI.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/CustomerManagementAPI/bin/Debug/net8.0",
-            "stopAtEntry": false,
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },
-        {
-            "name": "Run VehicleManagementAPI",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "",
-            "program": "${workspaceFolder}/VehicleManagementAPI/bin/Debug/net8.0/Pitstop.VehicleManagementAPI.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/VehicleManagementAPI/bin/Debug/net8.0",
-            "stopAtEntry": false,
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },    
-        {
-            "name": "Run WorkshopManagementAPI",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "",
-            "program": "${workspaceFolder}/WorkshopManagementAPI/bin/Debug/net8.0/Pitstop.WorkshopManagementAPI.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/WorkshopManagementAPI/bin/Debug/net8.0",
-            "stopAtEntry": false,
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },                
-        {
-            "name": "Run AuditlogService",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/AuditlogService/bin/Debug/net8.0/Pitstop.AuditlogService.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/AuditlogService/bin/Debug/net8.0",
-            "stopAtEntry": false,
-            "console": "externalTerminal",
-            "env": {
-                "DOTNET_ENVIRONMENT": "Development"
-            }
-        },
-        {
-            "name": "Run InvoiceService",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/InvoiceService/bin/Debug/net8.0/Pitstop.InvoiceService.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/InvoiceService/bin/Debug/net8.0",
-            "stopAtEntry": false,
-            "console": "externalTerminal",
-            "env": {
-                "DOTNET_ENVIRONMENT": "Development"
-            }
-        },
-        {
-            "name": "Run NotificationService",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/NotificationService/bin/Debug/net8.0/Pitstop.NotificationService.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/NotificationService/bin/Debug/net8.0",
-            "stopAtEntry": false,
-            "console": "externalTerminal",
-            "env": {
-                "DOTNET_ENVIRONMENT": "Development"
-            }
-        },        
-        {
-            "name": "Run TimeService",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/TimeService/bin/Debug/net8.0/Pitstop.TimeService.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/TimeService/bin/Debug/net8.0",
-            "stopAtEntry": false,
-            "console": "externalTerminal",
-            "env": {
-                "DOTNET_ENVIRONMENT": "Development"
-            }
-        }, 
-        {
-            "name": "Run WorkshopManagementEventHandler",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "",
-            "program": "${workspaceFolder}/WorkshopManagementEventHandler/bin/Debug/net8.0/Pitstop.WorkshopManagementEventHandler.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/WorkshopManagementEventHandler/bin/Debug/net8.0",
-            "stopAtEntry": false,
-            "console": "externalTerminal",
-            "env": {
-                "DOTNET_ENVIRONMENT": "Development"
-            }
-        }          
-    ]
-}
+    // Use IntelliSense to find out which attributes exist for C# debugging
+    // Use hover for the description of the existing attributes
+    // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+    "version": "0.2.0",
+    "configurations": [
+         {
+             "name": "Run WebApp",
+             "type": "coreclr",
+             "request": "launch",
+             "preLaunchTask": "",
+             "program": "${workspaceFolder}/WebApp/bin/Debug/net8.0/Pitstop.WebApp.dll",
+             "args": [],
+             "cwd": "${workspaceFolder}/WebApp/bin/Debug/net8.0",
+             "stopAtEntry": false,
+             "serverReadyAction": {
+                 "action": "openExternally",
+                 "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+             },
+             "env": {
+                 "ASPNETCORE_ENVIRONMENT": "Development"
+             },
+             "sourceFileMap": {
+                 "/Views": "${workspaceFolder}/Views"
+             }
+         },
+         {
+             "name": "Run CustomerManagementAPI",
+             "type": "coreclr",
+             "request": "launch",
+             "preLaunchTask": "",
+             "program": "${workspaceFolder}/CustomerManagementAPI/bin/Debug/net8.0/Pitstop.CustomerManagementAPI.dll",
+             "args": [],
+             "cwd": "${workspaceFolder}/CustomerManagementAPI/bin/Debug/net8.0",
+             "stopAtEntry": false,
+             "serverReadyAction": {
+                 "action": "openExternally",
+                 "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+             },
+             "env": {
+                 "ASPNETCORE_ENVIRONMENT": "Development"
+             },
+             "sourceFileMap": {
+                 "/Views": "${workspaceFolder}/Views"
+             }
+         },
+         {
+             "name": "Run VehicleManagementAPI",
+             "type": "coreclr",
+             "request": "launch",
+             "preLaunchTask": "",
+             "program": "${workspaceFolder}/VehicleManagementAPI/bin/Debug/net8.0/Pitstop.VehicleManagementAPI.dll",
+             "args": [],
+             "cwd": "${workspaceFolder}/VehicleManagementAPI/bin/Debug/net8.0",
+             "stopAtEntry": false,
+             "serverReadyAction": {
+                 "action": "openExternally",
+                 "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+             },
+             "env": {
+                 "ASPNETCORE_ENVIRONMENT": "Development"
+             },
+             "sourceFileMap": {
+                 "/Views": "${workspaceFolder}/Views"
+             }
+         },    
+         {
+             "name": "Run WorkshopManagementAPI",
+             "type": "coreclr",
+             "request": "launch",
+             "preLaunchTask": "",
+             "program": "${workspaceFolder}/WorkshopManagementAPI/bin/Debug/net8.0/Pitstop.WorkshopManagementAPI.dll",
+             "args": [],
+             "cwd": "${workspaceFolder}/WorkshopManagementAPI/bin/Debug/net8.0",
+             "stopAtEntry": false,
+             "serverReadyAction": {
+                 "action": "openExternally",
+                 "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+             },
+             "env": {
+                 "ASPNETCORE_ENVIRONMENT": "Development"
+             },
+             "sourceFileMap": {
+                 "/Views": "${workspaceFolder}/Views"
+             }
+         },                
+         {
+             "name": "Run AuditlogService",
+             "type": "coreclr",
+             "request": "launch",
+             "preLaunchTask": "build",
+             "program": "${workspaceFolder}/AuditlogService/bin/Debug/net8.0/Pitstop.AuditlogService.dll",
+             "args": [],
+             "cwd": "${workspaceFolder}/AuditlogService/bin/Debug/net8.0",
+             "stopAtEntry": false,
+             "console": "externalTerminal",
+             "env": {
+                 "DOTNET_ENVIRONMENT": "Development"
+             }
+         },
+         {
+             "name": "Run InvoiceService",
+             "type": "coreclr",
+             "request": "launch",
+             "preLaunchTask": "build",
+             "program": "${workspaceFolder}/InvoiceService/bin/Debug/net8.0/Pitstop.InvoiceService.dll",
+             "args": [],
+             "cwd": "${workspaceFolder}/InvoiceService/bin/Debug/net8.0",
+             "stopAtEntry": false,
+             "console": "externalTerminal",
+             "env": {
+                 "DOTNET_ENVIRONMENT": "Development"
+             }
+         },
+         {
+             "name": "Run NotificationService",
+             "type": "coreclr",
+             "request": "launch",
+             "preLaunchTask": "build",
+             "program": "${workspaceFolder}/NotificationService/bin/Debug/net8.0/Pitstop.NotificationService.dll",
+             "args": [],
+             "cwd": "${workspaceFolder}/NotificationService/bin/Debug/net8.0",
+             "stopAtEntry": false,
+             "console": "externalTerminal",
+             "env": {
+                 "DOTNET_ENVIRONMENT": "Development"
+             }
+         },        
+         {
+             "name": "Run TimeService",
+             "type": "coreclr",
+             "request": "launch",
+             "preLaunchTask": "build",
+             "program": "${workspaceFolder}/TimeService/bin/Debug/net8.0/Pitstop.TimeService.dll",
+             "args": [],
+             "cwd": "${workspaceFolder}/TimeService/bin/Debug/net8.0",
+             "stopAtEntry": false,
+             "console": "externalTerminal",
+             "env": {
+                 "DOTNET_ENVIRONMENT": "Development"
+             }
+         }, 
+         {
+             "name": "Run WorkshopManagementEventHandler",
+             "type": "coreclr",
+             "request": "launch",
+             "preLaunchTask": "",
+             "program": "${workspaceFolder}/WorkshopManagementEventHandler/bin/Debug/net8.0/Pitstop.WorkshopManagementEventHandler.dll",
+             "args": [],
+             "cwd": "${workspaceFolder}/WorkshopManagementEventHandler/bin/Debug/net8.0",
+             "stopAtEntry": false,
+             "console": "externalTerminal",
+             "env": {
+                 "DOTNET_ENVIRONMENT": "Development"
+             }
+         }          
+     ]
+ }

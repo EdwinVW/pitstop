@@ -4,7 +4,7 @@ public class CustomerManagementController : Controller
 {
     private readonly ICustomerManagementAPI _customerManagementAPI;
     private readonly Microsoft.Extensions.Logging.ILogger _logger;
-    private ResiliencyHelper _resiliencyHelper;
+    private readonly ResiliencyHelper _resiliencyHelper;
 
     public CustomerManagementController(ICustomerManagementAPI customerManagementAPI, ILogger<CustomerManagementController> logger)
     {
