@@ -22,7 +22,7 @@ public class CustomerManagementController : Controller
         using (var activity = _activitySource.StartActivity("YourAction"))
         {
             activity?.SetTag("your-tag", "value");
-        return await _resiliencyHelper.ExecuteResilient(async () =>
+            return await _resiliencyHelper.ExecuteResilient(async () =>
         {
             var model = new CustomerManagementViewModel
             {
