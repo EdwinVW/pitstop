@@ -55,14 +55,11 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
                 case "RepairOrderSent":
                     await HandleAsync(messageObject.ToObject<RepairOrderSent>());
                     break;
-                case "MaintananceJobAccepted":
+                case "RepairOrderApproved":
                     await HandleAsync(messageObject.ToObject<RepairOrderApproved>());
                     break;
-                case "MaintenanceJobRejected":
+                case "RepairOrderRejected":
                     await HandleAsync(messageObject.ToObject<RepairOrderRejected>());
-
-                    break;
-                default:
                     break;
             }
         }
