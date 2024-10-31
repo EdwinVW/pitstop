@@ -22,7 +22,7 @@ spec:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: pitstop/customersupportapi:1.0
+        image: ghcr.io/hanaim-devops/pitstop-team-luna/customersupportapi:1.0
         imagePullPolicy: IfNotPresent
         name: customersupportapi
         ports:
