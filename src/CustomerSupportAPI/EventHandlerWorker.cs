@@ -39,6 +39,8 @@ public class EventHandlerWorker : IHostedService, IMessageHandlerCallback
 
     public async Task<bool> HandleMessageAsync(string messageType, string message)
     {
+        Log.Information("Received message of type {MessageType}", messageType);
+        
         var messageObject = MessageSerializer.Deserialize(message);
         try
         {

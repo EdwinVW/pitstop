@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Pitstop.CustomerSupportAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +9,10 @@ builder.Host.UseSerilog((context, loggerConfiguration) =>
         .Enrich.WithMachineName()
 );
 
-// add messagepublisher
-builder.Services.UseRabbitMQMessagePublisher(builder.Configuration);
+// add messagehandler
+builder.Services.UseRabbitMQMessageHandler(builder.Configuration);
+
+builder.Services.AddHostedService<EventHandlerWorker>();
 
 // Add framework services
 builder.Services
