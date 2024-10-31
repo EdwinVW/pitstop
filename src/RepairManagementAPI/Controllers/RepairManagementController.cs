@@ -239,7 +239,7 @@ namespace Pitstop.RepairManagementAPI.Controllers
             await _context.SaveChangesAsync();
 
             var rejectedEvent = RepairOrderRejected.FromCommand(command);
-            await _messagePublisher.PublishMessageAsync("MaintenanceJobRejected", rejectedEvent, "");
+            await _messagePublisher.PublishMessageAsync(rejectedEvent.MessageType, rejectedEvent, "");
 
             return Ok(repairOrder);
         }

@@ -1,6 +1,7 @@
 namespace Pitstop.CustomerSupportAPI.Controllers;
 
-public class CustomerSupportController : ControllerBase
+[Route("api/[controller]")]
+public class CustomerSupportController : Controller
 {
     private readonly CustomerSupportContext _context;
     private readonly IMessagePublisher _messagePublisher;
@@ -9,5 +10,11 @@ public class CustomerSupportController : ControllerBase
     {
         _context = context;
         _messagePublisher = messagePublisher;
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAllAsync()
+    {
+        return Ok(await _context.Rejections.ToListAsync());
     }
 }
