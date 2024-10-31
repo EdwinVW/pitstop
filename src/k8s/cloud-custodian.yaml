@@ -14,5 +14,5 @@ spec:
   volumes:
     - name: policy-volume
       hostPath:
-        path: src/Policies
+        path: ./Policies
         type: Directory
