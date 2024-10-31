@@ -4,7 +4,7 @@ public class RejectRepairOrder : Command
 {
     public readonly string RejectReason;
 
-    public RejectRepairOrder(Guid messageId, string rejectReason, string rejectReason1)
+    public RejectRepairOrder(Guid messageId, string repairOrderId, string rejectReason)
         : base(messageId)
     {
         RejectReason = rejectReason;

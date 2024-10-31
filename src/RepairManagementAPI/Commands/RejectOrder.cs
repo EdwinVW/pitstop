@@ -10,5 +10,6 @@ public class RejectOrder
         MessageId = messageId;
         RepairOrderId = repairOrderId;
         RejectReason = rejectReason;
+        RejectedAt = DateTime.UtcNow;
     }
 }
