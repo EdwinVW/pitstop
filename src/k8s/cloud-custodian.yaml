@@ -1,0 +1,18 @@
+﻿apiVersion: v1
+kind: Pod
+metadata:
+  name: cloud-custodian
+  labels:
+    app: cloud-custodian
+spec:
+  containers:
+    - name: cloud-custodian
+      image: cloudcustodian/c7n:latest
+      volumeMounts:
+        - name: policy-volume
+          mountPath: /usr/src/app/Policies
+  volumes:
+    - name: policy-volume
+      hostPath:
+        path: src/Policies
+        type: Directory
