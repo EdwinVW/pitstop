@@ -28,6 +28,8 @@ spec:
         ports:
         - containerPort: 5000
       restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
 
 ---
 

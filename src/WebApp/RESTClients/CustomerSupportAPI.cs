@@ -16,8 +16,8 @@ public class CustomerSupportAPI : ICustomerSupportAPI
             });
     }
 
-    public Task<List<Customer>> GetCommunications()
+    public Task<List<Rejection>> GetRejections()
     {
-        return Task.FromResult(Array.Empty<Customer>().ToList());
+        return _restClient.GetRejections();
     }
 }

@@ -3,5 +3,5 @@ namespace WebApp.RESTClients;
 public interface ICustomerSupportAPI
 {
     [Get("/customersupport")]
-    Task<List<Customer>> GetCommunications();
+    Task<List<Rejection>> GetRejections();
 }
