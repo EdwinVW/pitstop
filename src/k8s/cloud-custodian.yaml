@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
     - name: cloud-custodian
-      image: cloudcustodian/c7n:latest
+      image: ghcr.io/hanaim-devops/pitstop-team-luna/cloudcustodian:1.0
       volumeMounts:
         - name: policy-volume
           mountPath: /usr/src/app/Policies
