@@ -58,6 +58,18 @@ jobs:
       working-directory: src
       shell: pwsh
 
+    # Add a step to create a new tag
+    - name: Create Version Tag
+      id: tag_version
+      run: |
+        # Generate a new tag based on the current timestamp
+        echo "##[set-output name=tag;]v1.0.$(date +%s)"
+
+    - name: Push Tag
+      run: |
+        git tag ${{ steps.tag_version.outputs.tag }}
+        git push origin ${{ steps.tag_version.outputs.tag }}
+
   deploy:
     needs: publish
     runs-on: ubuntu-latest
