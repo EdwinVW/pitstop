@@ -1,0 +1,23 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: postgres-storage
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2                     # Type van het EBS-volume
+  fsType: ext4                  # Bestandssysteem type
+reclaimPolicy: Delete            # Bij het verwijderen van de PVC, wordt de PV ook verwijderd
+volumeBindingMode: Immediate     # Directe toewijzing van volumes
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: sonarqube-storage
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2                     # Type van het EBS-volume
+  fsType: ext4                  # Bestandssysteem type
+reclaimPolicy: Delete            # Bij het verwijderen van de PVC, wordt de PV ook verwijderd
+volumeBindingMode: Immediate     # Directe toewijzing van volumes

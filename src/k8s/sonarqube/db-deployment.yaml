@@ -1,0 +1,79 @@
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgres-pvc
+  namespace: sonar
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: postgres-storage
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres
+  namespace: sonar
+  labels:
+    app: postgres
+data:
+  POSTGRESQL_USERNAME: 'sonar_user'
+  POSTGRESQL_DATABASE: 'sonar_db'
+  POSTGRESQL_PASSWORD: 'S0N4RQUB3'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: sonar
+  labels:
+    app: postgres
+spec:
+  ports:
+    - port: 5432
+      name: postgres
+  selector:
+    app: postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: sonar
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      securityContext:
+        fsGroup: 2000
+      containers:
+        - name: postgres
+          image: bitnami/postgresql
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+          envFrom:
+            - configMapRef:
+                name: postgres
+          volumeMounts:
+            - name: postgres
+              mountPath: /opt/postgres/data
+      volumes:
+        - name: postgres
+          persistentVolumeClaim:
+            claimName: postgres-pvc

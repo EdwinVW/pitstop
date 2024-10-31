@@ -1,0 +1,97 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: sonar-pvc
+  namespace: sonar
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: sonarqube-storage
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sonar-config
+  namespace: sonar
+  labels:
+    app: sonar
+data:
+  SONARQUBE_JDBC_URL: "jdbc:postgresql://postgres:5432/sonar_db"
+  SONARQUBE_JDBC_USERNAME: "sonar_user"
+  SONARQUBE_JDBC_PASSWORD: "S0N4RQUB3"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonar
+  namespace: sonar
+  labels:
+    app: sonar
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: sonar
+  template:
+    metadata:
+      labels:
+        app: sonar
+    spec:
+      initContainers:
+        - name: init
+          image: busybox
+          command: ["sh", "-c", "mkdir -p /mnt/data/sonarqube/data && mkdir -p /mnt/data/sonarqube/extensions && chown -R 1000:1000 /mnt/data/sonarqube"]
+          volumeMounts:
+            - name: app-pvc
+              mountPath: /mnt/data/sonarqube
+      containers:
+        - name: sonarqube
+          image: sonarqube:8.9.1-community
+          ports:
+            - containerPort: 9000
+          envFrom:
+            - configMapRef:
+                name: sonar-config
+          volumeMounts:
+            - name: app-pvc
+              mountPath: "/opt/sonarqube/data/"
+            - name: app-pvc
+              mountPath: "/opt/sonarqube/extensions/"
+          resources:
+            requests:
+              memory: "1025Mi"
+            limits:
+              memory: "2050Mi"
+          securityContext:
+            runAsUser: 1000  # Gebruikers-ID van de hoofdpod
+      volumes:
+        - name: app-pvc
+          persistentVolumeClaim:
+            claimName: sonar-pvc
+            
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonar-svc
+  namespace: sonar
+  labels:
+    app: sonar
+spec:
+  ports:
+    - port: 9000
+      name: sonar
+  selector:
+    app: sonar
+    
+---

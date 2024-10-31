@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sonarqube-pv
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: sonarqube-storage
+  hostPath:  # Voor lokale ontwikkeling, voor productie gebruik een cloudopslag
+    path: /mnt/data/sonarqube
