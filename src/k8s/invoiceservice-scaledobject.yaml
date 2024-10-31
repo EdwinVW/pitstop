@@ -1,0 +1,24 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: invoiceservice-scaledobject
+  namespace: pitstop
+spec:
+  scaleTargetRef:
+    name: invoiceservice
+  pollingInterval: 5
+  cooldownPeriod: 60
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  triggers:
+    - type: rabbitmq
+      metadata:
+        queueName: Invoicing
+        queueLength: "5"
+        host: amqp://rabbitmq.pitstop.svc.cluster.local:5672
+      authenticationRef:
+        name: rabbitmq-trigger-auth
+  fallback: 
+    failureThreshold: 2                                    
+    replicas: 2  
+    

@@ -1,0 +1,24 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: workshopmanagementeventhandler-scaledobject
+  namespace: pitstop
+spec:
+  scaleTargetRef:
+    name: workshopmanagementeventhandler
+  pollingInterval: 5
+  cooldownPeriod: 60
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  triggers:
+    - type: rabbitmq
+      metadata:
+        queueName: WorkshopManagement
+        queueLength: "5"
+        host: amqp://rabbitmq.pitstop.svc.cluster.local:5672
+      authenticationRef:
+        name: rabbitmq-trigger-auth
+  fallback: 
+    failureThreshold: 2                                    
+    replicas: 2  
+    
