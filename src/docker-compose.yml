@@ -13,7 +13,7 @@ services:
       - RABBITMQ_CONFIG_FILE=/etc/pitstop/rabbitmq.conf
 
   sqlserver:
-    image: mcr.microsoft.com/azure-sql-edge
+    image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
     volumes:
       - sqlserverdata:/var/opt/mssql
@@ -22,7 +22,7 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_PID=Developer
-      - SA_PASSWORD=8jkGh47hnDw89Haq8LN2
+      - MSSQL_SA_PASSWORD=8jkGh47hnDw89H@q8LN2
 
   mailserver:
     image: maildev/maildev:1.1.0
