@@ -1,4 +1,4 @@
-$ISTIO_VERSION = "1.25"
+$ISTIO_VERSION = "1.26"
 
 kubectl create namespace istio-system
 istioctl install --set profile=demo -y
