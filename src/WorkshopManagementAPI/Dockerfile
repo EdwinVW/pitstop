@@ -16,7 +16,7 @@ COPY --from=build-env /app/out .
 
 # Expose ports
 EXPOSE 5200/tcp
-ENV ASPNETCORE_URLS http://*:5200
+ENV ASPNETCORE_URLS=http://*:5200
 HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:5200/hc || exit 1
 
 # Start
