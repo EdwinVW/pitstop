@@ -15,7 +15,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" />
     <PackageReference Include="Selenium.Support" Version="4.15.0" />
     <PackageReference Include="Selenium.WebDriver" Version="4.15.0" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="134.*" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="*" />
   </ItemGroup>
 
   <ItemGroup>
