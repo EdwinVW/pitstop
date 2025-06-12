@@ -22,7 +22,7 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_PID=Developer
-      - MSSQL_SA_PASSWORD=8jkGh47hnDw89H@q8LN2
+      - SA_PASSWORD=8jkGh47hnDw89H@q8LN2
 
   mailserver:
     image: maildev/maildev:1.1.0
