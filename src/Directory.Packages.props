@@ -1,36 +1,36 @@
 <Project>
   <ItemGroup>
-    <PackageVersion Include="System.Data.SqlClient" Version="4.8.6" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.6" />  
+    <PackageVersion Include="System.Data.SqlClient" Version="4.9.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.6" />  
     <PackageVersion Include="Microsoft.AspNetCore.HealthChecks" Version="1.0.0" />
-    <PackageVersion Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.2" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />  
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.CommandLine" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.6" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+    <PackageVersion Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.6" />  
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.CommandLine" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="9.0.6" />
     <PackageVersion Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-    <PackageVersion Include="AutoMapper" Version="13.0.1" />
-    <PackageVersion Include="Dapper" Version="2.1.44" />
-    <PackageVersion Include="Polly" Version="8.4.0" />
-    <PackageVersion Include="Refit" Version="7.0.0" />
-    <PackageVersion Include="Refit.Newtonsoft.Json" Version="7.0.0" />
-    <PackageVersion Include="Refit.HttpClientFactory" Version="7.0.0" />
-    <PackageVersion Include="Serilog" Version="4.0.0" />
-    <PackageVersion Include="Serilog.AspNetCore" Version="8.0.1" />
-    <PackageVersion Include="Serilog.Enrichers.Environment" Version="2.3.0" />
-    <PackageVersion Include="Serilog.Extensions.Hosting" Version="8.0.0" />
-    <PackageVersion Include="Serilog.Settings.Configuration" Version="8.0.0" />
-    <PackageVersion Include="Serilog.Sinks.Console" Version="5.0.1" />
-    <PackageVersion Include="Serilog.Sinks.Seq" Version="8.0.0" />     
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.4" />
+    <PackageVersion Include="AutoMapper" Version="14.0.0" />
+    <PackageVersion Include="Dapper" Version="2.1.66" />
+    <PackageVersion Include="Polly" Version="8.6.0" />
+    <PackageVersion Include="Refit" Version="8.0.0" />
+    <PackageVersion Include="Refit.Newtonsoft.Json" Version="8.0.0" />
+    <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
+    <PackageVersion Include="Serilog" Version="4.3.0" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+    <PackageVersion Include="Serilog.Extensions.Hosting" Version="9.0.0" />
+    <PackageVersion Include="Serilog.Settings.Configuration" Version="9.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />     
     <PackageVersion Include="Pitstop.Infrastructure.Messaging" Version="5.1.0" />
   </ItemGroup>
 </Project>
-
