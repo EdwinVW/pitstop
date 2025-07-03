@@ -1,5 +1,5 @@
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
 
 namespace Pitstop.UITest.PageModel.Pages.WorkshopManagement
 {
@@ -12,30 +12,24 @@ namespace Pitstop.UITest.PageModel.Pages.WorkshopManagement
         {
         }
 
-        public FinishMaintenanceJobPage FillJobDetails(string actualStartTime, string actualEndTime, string notes)
+        public async Task<FinishMaintenanceJobPage> FillJobDetailsAsync(string actualStartTime, string actualEndTime, string notes)
         {
-            var startTimeBox = WebDriver.FindElement(By.Name("ActualStartTime"));
-            startTimeBox.Clear();
-            startTimeBox.SendKeys(actualStartTime);
-
-            var endTimeBox = WebDriver.FindElement(By.Name("ActualEndTime"));
-            endTimeBox.Clear();
-            endTimeBox.SendKeys(actualEndTime);
-
-            WebDriver.FindElement(By.Name("Notes")).SendKeys(notes);
+            await Page.FillAsync("[name=\"ActualStartTime\"]", actualStartTime);
+            await Page.FillAsync("[name=\"ActualEndTime\"]", actualEndTime);
+            await Page.FillAsync("[name=\"Notes\"]", notes);
             
             return this;
         }
 
-        public MaintenanceJobDetailsPage Complete()
+        public async Task<MaintenanceJobDetailsPage> CompleteAsync()
         {
-            WebDriver.FindElement(By.Id("CompleteButton")).Click();
+            await Page.ClickAsync("#CompleteButton");
             return new MaintenanceJobDetailsPage(Pitstop);
         }
 
-        public MaintenanceJobDetailsPage Cancel()
+        public async Task<MaintenanceJobDetailsPage> CancelAsync()
         {
-            WebDriver.FindElement(By.Id("CancelButton")).Click();
+            await Page.ClickAsync("#CancelButton");
             return new MaintenanceJobDetailsPage(Pitstop);
         }
     }

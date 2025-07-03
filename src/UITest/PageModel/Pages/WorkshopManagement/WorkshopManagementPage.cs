@@ -1,5 +1,5 @@
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
 
 namespace Pitstop.UITest.PageModel.Pages.WorkshopManagement
 {
@@ -12,17 +12,15 @@ namespace Pitstop.UITest.PageModel.Pages.WorkshopManagement
         {
         }
 
-        public RegisterMaintenanceJobPage RegisterMaintenanceJob()
+        public async Task<RegisterMaintenanceJobPage> RegisterMaintenanceJobAsync()
         {
-            WebDriver.FindElement(By.Id("RegisterMaintenanceJobButton")).Click();
+            await Page.ClickAsync("#RegisterMaintenanceJobButton");
             return new RegisterMaintenanceJobPage(Pitstop);
         }
 
-        public MaintenanceJobDetailsPage SelectMaintenanceJob(string jobDescription)
+        public async Task<MaintenanceJobDetailsPage> SelectMaintenanceJobAsync(string jobDescription)
         {
-            WebDriver
-                .FindElement(By.XPath($"//td[contains(text(),'{jobDescription}')]"))
-                .Click();
+            await Page.ClickAsync($"//td[contains(text(),'{jobDescription}')]");
             return new MaintenanceJobDetailsPage(Pitstop); 
         }
     }

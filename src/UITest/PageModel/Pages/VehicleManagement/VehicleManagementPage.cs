@@ -1,5 +1,5 @@
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
 
 namespace Pitstop.UITest.PageModel.Pages.VehicleManagement
 {
@@ -12,17 +12,15 @@ namespace Pitstop.UITest.PageModel.Pages.VehicleManagement
         {
         }
 
-        public RegisterVehiclePage RegisterVehicle()
+        public async Task<RegisterVehiclePage> RegisterVehicleAsync()
         {
-            WebDriver.FindElement(By.Id("RegisterVehicleButton")).Click();
+            await Page.ClickAsync("#RegisterVehicleButton");
             return new RegisterVehiclePage(Pitstop);
         }
 
-        public VehicleDetailsPage SelectVehicle(string licenseNumber)
+        public async Task<VehicleDetailsPage> SelectVehicleAsync(string licenseNumber)
         {
-            WebDriver
-                .FindElement(By.XPath($"//td[contains(text(),'{licenseNumber}')]"))
-                .Click();
+            await Page.ClickAsync($"//td[contains(text(),'{licenseNumber}')]");
             return new VehicleDetailsPage(Pitstop); 
         }
     }

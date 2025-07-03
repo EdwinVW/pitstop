@@ -1,4 +1,5 @@
-using OpenQA.Selenium;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
 
 namespace Pitstop.UITest.PageModel.Pages.CustomerManagement
 {
@@ -11,17 +12,15 @@ namespace Pitstop.UITest.PageModel.Pages.CustomerManagement
         {
         }
 
-        public RegisterCustomerPage RegisterCustomer()
+        public async Task<RegisterCustomerPage> RegisterCustomerAsync()
         {
-            WebDriver.FindElement(By.Id("RegisterCustomerButton")).Click();
+            await Page.ClickAsync("#RegisterCustomerButton");
             return new RegisterCustomerPage(Pitstop);
         }
 
-        public CustomerDetailsPage SelectCustomer(string customerName)
+        public async Task<CustomerDetailsPage> SelectCustomerAsync(string customerName)
         {
-            WebDriver
-                .FindElement(By.XPath($"//td[contains(text(),'{customerName}')]"))
-                .Click();
+            await Page.ClickAsync($"//td[contains(text(),'{customerName}')]");
             return new CustomerDetailsPage(Pitstop); 
         }
     }

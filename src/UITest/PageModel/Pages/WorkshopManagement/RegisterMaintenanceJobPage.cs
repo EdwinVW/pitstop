@@ -1,5 +1,5 @@
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
 
 namespace Pitstop.UITest.PageModel.Pages.WorkshopManagement
 {
@@ -12,33 +12,26 @@ namespace Pitstop.UITest.PageModel.Pages.WorkshopManagement
         {
         }
 
-        public RegisterMaintenanceJobPage FillJobDetails(string startTime, string endTime, string description, string licenseNumber)
+        public async Task<RegisterMaintenanceJobPage> FillJobDetailsAsync(string startTime, string endTime, string description, string licenseNumber)
         {
-            var startTimeBox = WebDriver.FindElement(By.Name("StartTime"));
-            startTimeBox.Clear();
-            startTimeBox.SendKeys(startTime);
-
-            var endTimeBox = WebDriver.FindElement(By.Name("EndTime"));
-            endTimeBox.Clear();
-            endTimeBox.SendKeys(endTime);
-
-            WebDriver.FindElement(By.Name("Description")).SendKeys(description);
+            await Page.FillAsync("[name=\"StartTime\"]", startTime);
+            await Page.FillAsync("[name=\"EndTime\"]", endTime);
+            await Page.FillAsync("[name=\"Description\"]", description);
             
-            SelectElement select = new SelectElement(WebDriver.FindElement(By.Id("SelectedVehicleLicenseNumber")));
-            select.SelectByValue(licenseNumber);
+            await Page.SelectOptionAsync("#SelectedVehicleLicenseNumber", licenseNumber);
             
             return this;
         }
 
-        public WorkshopManagementPage Submit()
+        public async Task<WorkshopManagementPage> SubmitAsync()
         {
-            WebDriver.FindElement(By.Id("SubmitButton")).Click();
+            await Page.ClickAsync("#SubmitButton");
             return new WorkshopManagementPage(Pitstop);
         }
 
-        public WorkshopManagementPage Cancel()
+        public async Task<WorkshopManagementPage> CancelAsync()
         {
-            WebDriver.FindElement(By.Id("CancelButton")).Click();
+            await Page.ClickAsync("#CancelButton");
             return new WorkshopManagementPage(Pitstop);
         }
     }

@@ -1,4 +1,5 @@
-using OpenQA.Selenium;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
 
 namespace Pitstop.UITest.PageModel.Pages.CustomerManagement
 {
@@ -11,9 +12,9 @@ namespace Pitstop.UITest.PageModel.Pages.CustomerManagement
         {
         }
 
-        public CustomerManagementPage Back()
+        public async Task<CustomerManagementPage> BackAsync()
         {
-            WebDriver.FindElement(By.Id("BackButton")).Click();
+            await Page.ClickAsync("#BackButton");
             return new CustomerManagementPage(Pitstop);
         }
     }
