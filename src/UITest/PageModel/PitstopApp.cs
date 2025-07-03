@@ -64,7 +64,8 @@ namespace Pitstop.UITest.PageModel
             var playwright = await Playwright.CreateAsync();
             var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
-                Headless = true  // Use headless mode to avoid browser installation issues
+                Channel = "msedge",
+                Headless = false
             });
             var page = await browser.NewPageAsync();
             await page.SetViewportSizeAsync(1920, 1080);
