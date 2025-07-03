@@ -1,5 +1,5 @@
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
 
 namespace Pitstop.UITest.PageModel.Pages.VehicleManagement
 {
@@ -12,9 +12,9 @@ namespace Pitstop.UITest.PageModel.Pages.VehicleManagement
         {
         }
 
-        public VehicleManagementPage Back()
+        public async Task<VehicleManagementPage> BackAsync()
         {
-            WebDriver.FindElement(By.Id("BackButton")).Click();
+            await Page.ClickAsync("#BackButton");
             return new VehicleManagementPage(Pitstop);
         }
     }

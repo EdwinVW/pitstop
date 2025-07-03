@@ -1,5 +1,5 @@
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
 
 namespace Pitstop.UITest.PageModel.Pages.VehicleManagement
 {
@@ -12,25 +12,24 @@ namespace Pitstop.UITest.PageModel.Pages.VehicleManagement
         {
         }
 
-        public RegisterVehiclePage FillVehicleDetails(string licenseNumber, string brand, string type, string owner)
+        public async Task<RegisterVehiclePage> FillVehicleDetailsAsync(string licenseNumber, string brand, string type, string owner)
         {
-            WebDriver.FindElement(By.Name("Vehicle.LicenseNumber")).SendKeys(licenseNumber);
-            WebDriver.FindElement(By.Name("Vehicle.Brand")).SendKeys(brand);
-            WebDriver.FindElement(By.Name("Vehicle.Type")).SendKeys(type);
-            SelectElement select = new SelectElement(WebDriver.FindElement(By.Id("SelectedCustomerId")));
-            select.SelectByText(owner);
+            await Page.FillAsync("[name=\"Vehicle.LicenseNumber\"]", licenseNumber);
+            await Page.FillAsync("[name=\"Vehicle.Brand\"]", brand);
+            await Page.FillAsync("[name=\"Vehicle.Type\"]", type);
+            await Page.SelectOptionAsync("#SelectedCustomerId", new SelectOptionValue { Label = owner });
             return this;
         }
 
-        public VehicleManagementPage Submit()
+        public async Task<VehicleManagementPage> SubmitAsync()
         {
-            WebDriver.FindElement(By.Id("SubmitButton")).Click();
+            await Page.ClickAsync("#SubmitButton");
             return new VehicleManagementPage(Pitstop);
         }
 
-        public VehicleManagementPage Cancel()
+        public async Task<VehicleManagementPage> CancelAsync()
         {
-            WebDriver.FindElement(By.Id("CancelButton")).Click();
+            await Page.ClickAsync("#CancelButton");
             return new VehicleManagementPage(Pitstop);
         }
     }

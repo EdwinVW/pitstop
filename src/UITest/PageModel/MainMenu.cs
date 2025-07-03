@@ -1,4 +1,5 @@
-using OpenQA.Selenium;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
 using Pitstop.UITest.PageModel.Pages;
 using Pitstop.UITest.PageModel.Pages.CustomerManagement;
 using Pitstop.UITest.PageModel.Pages.VehicleManagement;
@@ -15,33 +16,33 @@ namespace Pitstop.UITest.PageModel
             _pitStop = pitstop;
         }
 
-        public HomePage Home()
+        public async Task<HomePage> HomeAsync()
         {
-            _pitStop.WebDriver.FindElement(By.Id("MainMenu.Home")).Click();
+            await _pitStop.Page.ClickAsync("#MainMenu\\.Home");
             return new HomePage(_pitStop);
         }
 
-        public CustomerManagementPage CustomerManagement()
+        public async Task<CustomerManagementPage> CustomerManagementAsync()
         {
-            _pitStop.WebDriver.FindElement(By.Id("MainMenu.CustomerManagement")).Click();
+            await _pitStop.Page.ClickAsync("#MainMenu\\.CustomerManagement");
             return new CustomerManagementPage(_pitStop);
         }
 
-        public VehicleManagementPage VehicleManagement()
+        public async Task<VehicleManagementPage> VehicleManagementAsync()
         {
-            _pitStop.WebDriver.FindElement(By.Id("MainMenu.VehicleManagement")).Click();
+            await _pitStop.Page.ClickAsync("#MainMenu\\.VehicleManagement");
             return new VehicleManagementPage(_pitStop);
         }
 
-        public WorkshopManagementPage WorkshopManagement()
+        public async Task<WorkshopManagementPage> WorkshopManagementAsync()
         {
-            _pitStop.WebDriver.FindElement(By.Id("MainMenu.WorkshopManagement")).Click();
+            await _pitStop.Page.ClickAsync("#MainMenu\\.WorkshopManagement");
             return new WorkshopManagementPage(_pitStop);
         }
 
-        public AboutPage About()
+        public async Task<AboutPage> AboutAsync()
         {
-            _pitStop.WebDriver.FindElement(By.Id("MainMenu.About")).Click();
+            await _pitStop.Page.ClickAsync("#MainMenu\\.About");
             return new AboutPage(_pitStop);
         }
     }

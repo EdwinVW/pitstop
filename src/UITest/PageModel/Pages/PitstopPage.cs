@@ -1,4 +1,5 @@
-using OpenQA.Selenium;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
 
 namespace Pitstop.UITest.PageModel.Pages
 {
@@ -10,7 +11,7 @@ namespace Pitstop.UITest.PageModel.Pages
         public string Title { get; }
         public PitstopApp Pitstop { get; }
 
-        public IWebDriver WebDriver => Pitstop.WebDriver;
+        public IPage Page => Pitstop.Page;
 
 
         /// <summary>
@@ -27,22 +28,22 @@ namespace Pitstop.UITest.PageModel.Pages
         /// <summary>
         /// Indication whether the page with the title of the page is shown.
         /// </summary>
-        public bool IsActive()
+        public async Task<bool> IsActiveAsync()
         {
-            var header = WebDriver
-                .FindElement(By.Id("PageTitle"));
-            return header.Text == Title;
+            var header = await Page.QuerySelectorAsync("#PageTitle");
+            if (header == null) return false;
+            var text = await header.TextContentAsync();
+            return text == Title;
         }
 
         /// <summary>
         /// Gets the current page with the title of the page being shown.
         /// </summary>
-        public PitstopPage GetActivePageTitle(out string pageTitle)
+        public async Task<(PitstopPage page, string pageTitle)> GetActivePageTitleAsync()
         {
-            var header = WebDriver
-                .FindElement(By.Id("PageTitle"));
-            pageTitle = header.Text;
-            return this;
+            var header = await Page.QuerySelectorAsync("#PageTitle");
+            var pageTitle = header != null ? await header.TextContentAsync() : "";
+            return (this, pageTitle);
         }
     }
 }

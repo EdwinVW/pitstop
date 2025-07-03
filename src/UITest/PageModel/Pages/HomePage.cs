@@ -1,4 +1,4 @@
-using OpenQA.Selenium;
+using Microsoft.Playwright;
 
 namespace Pitstop.UITest.PageModel.Pages
 {
