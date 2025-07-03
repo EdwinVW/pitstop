@@ -259,3 +259,8 @@ out/
 nuget/
 
 .DS_Store
+
+# Playwright
+**/.playwright/
+**/playwright.ps1
+dotnet-install.sh
