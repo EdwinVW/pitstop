@@ -1,14 +1,11 @@
-using Microsoft.Playwright;
+namespace Pitstop.UITest.PageModel.Pages;
 
-namespace Pitstop.UITest.PageModel.Pages
+/// <summary>
+/// Represents the About page.
+/// </summary>
+public class AboutPage : PitstopPage
 {
-    /// <summary>
-    /// Represents the About page.
-    /// </summary>
-    public class AboutPage : PitstopPage
+    public AboutPage(PitstopApp pitstop) : base("About Pitstop", pitstop)
     {
-        public AboutPage(PitstopApp pitstop) : base("About Pitstop", pitstop)
-        {
-        }
     }
 }

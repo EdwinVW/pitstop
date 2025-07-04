@@ -1,76 +1,81 @@
 namespace Pitstop.UITest;
 
+[TestClass]
 public class ScenarioTests
 {
-    private readonly ITestOutputHelper _output;
+    string _testrunId;
+    PitstopApp _pitstopApp;
+    string _licenseNumber;
 
-    public ScenarioTests(ITestOutputHelper output)
+    [TestInitialize]
+    public async Task Initialize()
     {
-        _output = output;
+        _testrunId = Guid.NewGuid().ToString("N");
+        _licenseNumber = TestDataGenerators.GenerateRandomLicenseNumber();
+        _pitstopApp = await PitstopApp.CreateAsync(_testrunId, TestConstants.PitstopStartUrl);
+        await _pitstopApp.StartAsync();
     }
 
-    [Fact]
-    public async Task End_To_End()
+    [TestMethod]
+    public async Task RegisterCustomer()
     {
-        // arrange
-        string testrunId = Guid.NewGuid().ToString("N");
-        PitstopApp pitstop = await PitstopApp.CreateAsync(testrunId, TestConstants.PitstopStartUrl);
-        await pitstop.StartAsync();
-        string licenseNumber = TestDataGenerators.GenerateRandomLicenseNumber();
-
         try
         {
-            // act
-            var customerManagementPage = await pitstop.Menu.CustomerManagementAsync();
+            // Register Customer
+            var customerManagementPage = await _pitstopApp.Menu.CustomerManagementAsync();
             var registerCustomerPage = await customerManagementPage.RegisterCustomerAsync();
             var cancelledPage = await registerCustomerPage.CancelAsync();
             var registerCustomerPage2 = await cancelledPage.RegisterCustomerAsync();
             var filledPage = await registerCustomerPage2.FillCustomerDetailsAsync(
-                $"TestCustomer {testrunId}", "Verzonnenstraat 21",
+                $"TestCustomer {_testrunId}", "Verzonnenstraat 21",
                 "Uitdeduimerveen", "1234 AZ", "+31612345678", "tc@test.com");
             var submittedPage = await filledPage.SubmitAsync();
-            var customerDetailsPage = await submittedPage.SelectCustomerAsync($"TestCustomer {testrunId}");
+            var customerDetailsPage = await submittedPage.SelectCustomerAsync($"TestCustomer {_testrunId}");
             await customerDetailsPage.BackAsync();
-
-            var vehicleManagementPage = await pitstop.Menu.VehicleManagementAsync();
+    
+            // Register Vehicle
+            var vehicleManagementPage = await _pitstopApp.Menu.VehicleManagementAsync();
             var registerVehiclePage = await vehicleManagementPage.RegisterVehicleAsync();
             var cancelledVehiclePage = await registerVehiclePage.CancelAsync();
             var registerVehiclePage2 = await cancelledVehiclePage.RegisterVehicleAsync();
-            var filledVehiclePage = await registerVehiclePage2.FillVehicleDetailsAsync(licenseNumber, "Testla", "Model T", $"TestCustomer {testrunId}");
+            var filledVehiclePage = await registerVehiclePage2.FillVehicleDetailsAsync(_licenseNumber, "Testla", "Model T", $"TestCustomer {_testrunId}");
             var submittedVehiclePage = await filledVehiclePage.SubmitAsync();
-            var vehicleDetailsPage = await submittedVehiclePage.SelectVehicleAsync(licenseNumber);
+            var vehicleDetailsPage = await submittedVehiclePage.SelectVehicleAsync(_licenseNumber);
             await vehicleDetailsPage.BackAsync();
 
-            var workshopManagementPage = await pitstop.Menu.WorkshopManagementAsync();
+            // Register MaintenanceJob
+            var workshopManagementPage = await _pitstopApp.Menu.WorkshopManagementAsync();
             var registerMaintenanceJobPage = await workshopManagementPage.RegisterMaintenanceJobAsync();
             var cancelledJobPage = await registerMaintenanceJobPage.CancelAsync();
             var registerMaintenanceJobPage2 = await cancelledJobPage.RegisterMaintenanceJobAsync();
-            var filledJobPage = await registerMaintenanceJobPage2.FillJobDetailsAsync("08:00", "12:00", $"Job {testrunId}", licenseNumber);
+            var filledJobPage = await registerMaintenanceJobPage2.FillJobDetailsAsync("08:00", "12:00", $"Job {_testrunId}", _licenseNumber);
             var submittedJobPage = await filledJobPage.SubmitAsync();
-            var jobDetailsPage = await submittedJobPage.SelectMaintenanceJobAsync($"Job {testrunId}");
+            var jobDetailsPage = await submittedJobPage.SelectMaintenanceJobAsync($"Job {_testrunId}");
             await jobDetailsPage.BackAsync();
 
-            var workshopManagementPage2 = await pitstop.Menu.WorkshopManagementAsync();
-            var jobDetailsPage2 = await workshopManagementPage2.SelectMaintenanceJobAsync($"Job {testrunId}");
+            // Complete MaintenanceJob
+            var workshopManagementPage2 = await _pitstopApp.Menu.WorkshopManagementAsync();
+            var jobDetailsPage2 = await workshopManagementPage2.SelectMaintenanceJobAsync($"Job {_testrunId}");
             var beforeJobStatus = await jobDetailsPage2.GetJobStatusAsync();
             var finishJobPage = await jobDetailsPage2.CompleteAsync();
-            var filledFinishJobPage = await finishJobPage.FillJobDetailsAsync("08:00", "11:00", $"Mechanic notes {testrunId}");
+            var filledFinishJobPage = await finishJobPage.FillJobDetailsAsync("08:00", "11:00", $"Mechanic notes {_testrunId}");
             var completedJobPage = await filledFinishJobPage.CompleteAsync();
             await completedJobPage.BackAsync();
 
-            var workshopManagementPage3 = await pitstop.Menu.WorkshopManagementAsync();
-            var finalJobDetailsPage = await workshopManagementPage3.SelectMaintenanceJobAsync($"Job {testrunId}");
+            // Select MaintenanceJob
+            var workshopManagementPage3 = await _pitstopApp.Menu.WorkshopManagementAsync();
+            var finalJobDetailsPage = await workshopManagementPage3.SelectMaintenanceJobAsync($"Job {_testrunId}");
             var afterJobStatus = await finalJobDetailsPage.GetJobStatusAsync();
             await finalJobDetailsPage.BackAsync();
 
             // assert
-            Assert.Equal("Planned", beforeJobStatus);
-            Assert.Equal("Completed", afterJobStatus);
+            Assert.AreEqual("Planned", beforeJobStatus);
+            Assert.AreEqual("Completed", afterJobStatus);
         }
         finally
         {
             // cleanup
-            await pitstop.StopAsync();
+            await _pitstopApp.StopAsync();
         }
     }
 }
