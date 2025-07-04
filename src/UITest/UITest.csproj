@@ -12,7 +12,6 @@
   <ItemGroup>
     <PackageReference Include="MSTest" Version="3.2.0" />
     <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.10.1" />
-      <!-- <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" /> -->
     <PackageReference Include="Microsoft.Playwright" Version="1.52.0" />
   </ItemGroup>
 
