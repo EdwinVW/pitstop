@@ -6,13 +6,13 @@
     <AssemblyName>Pitstop.UITest</AssemblyName>
     <RootNamespace>Pitstop.UITest</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSTest" Version="3.2.0" />
-    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.10.1" />
-    <PackageReference Include="Microsoft.Playwright" Version="1.52.0" />
+    <PackageReference Include="MSTest" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+    <PackageReference Include="Microsoft.Playwright" />
   </ItemGroup>
 
   <ItemGroup>
