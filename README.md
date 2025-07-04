@@ -7,12 +7,14 @@ This repo contains a sample application based on a Garage Management System for 
 * Domain Driven Design (DDD)  
 * Eventual Consistency  
 
-and how to use container-technologies like:
+how to use container-technologies like:
 
 * Docker
 * Kubernetes
 * Istio (service-mesh)
 * Linkerd (service-mesh)
+
+and how to implement automated UI tests.
 
 See [the Wiki for this repository](https://github.com/EdwinVW/pitstop/wiki "Pitstop Wiki") for more information about the solution and instructions on how to build, run and test the application using Docker-compose and Kubernetes.
 
