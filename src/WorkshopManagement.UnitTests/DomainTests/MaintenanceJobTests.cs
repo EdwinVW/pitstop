@@ -1,8 +1,9 @@
 namespace WorkshopManagement.UnitTests.DomainTests;
 
+[TestClass]
 public class MaintenanceJobTests
 {
-    [Fact]
+    [TestMethod]
     public void Plan_Should_Create_A_New_Job()
     {
         // arrange
@@ -14,23 +15,23 @@ public class MaintenanceJobTests
         // sut.Plan() is called by the Testdata Builder
 
         // assert
-        Assert.Equal(maintenanceJobBuilder.JobId, sut.Id);
-        Assert.Equal(maintenanceJobBuilder.StartTime, sut.PlannedTimeslot.StartTime);
-        Assert.Equal(maintenanceJobBuilder.EndTime, sut.PlannedTimeslot.EndTime);
-        Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Id, sut.Customer.Id);
-        Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Name, sut.Customer.Name);
-        Assert.Equal(maintenanceJobBuilder.CustomerBuilder.TelephoneNumber, sut.Customer.TelephoneNumber);
-        Assert.Equal(maintenanceJobBuilder.VehicleBuilder.LicenseNumber, sut.Vehicle.Id);
-        Assert.Equal(maintenanceJobBuilder.VehicleBuilder.Brand, sut.Vehicle.Brand);
-        Assert.Equal(maintenanceJobBuilder.VehicleBuilder.Type, sut.Vehicle.Type);
-        Assert.Equal(maintenanceJobBuilder.VehicleBuilder.OwnerId, sut.Vehicle.OwnerId);
-        Assert.Equal(maintenanceJobBuilder.Description, sut.Description);
-        Assert.Null(sut.ActualTimeslot);
-        Assert.Null(sut.Notes);
-        Assert.Equal("Planned", sut.Status);
+        Assert.AreEqual(maintenanceJobBuilder.JobId, sut.Id);
+        Assert.AreEqual(maintenanceJobBuilder.StartTime, sut.PlannedTimeslot.StartTime);
+        Assert.AreEqual(maintenanceJobBuilder.EndTime, sut.PlannedTimeslot.EndTime);
+        Assert.AreEqual(maintenanceJobBuilder.CustomerBuilder.Id, sut.Customer.Id);
+        Assert.AreEqual(maintenanceJobBuilder.CustomerBuilder.Name, sut.Customer.Name);
+        Assert.AreEqual(maintenanceJobBuilder.CustomerBuilder.TelephoneNumber, sut.Customer.TelephoneNumber);
+        Assert.AreEqual(maintenanceJobBuilder.VehicleBuilder.LicenseNumber, sut.Vehicle.Id);
+        Assert.AreEqual(maintenanceJobBuilder.VehicleBuilder.Brand, sut.Vehicle.Brand);
+        Assert.AreEqual(maintenanceJobBuilder.VehicleBuilder.Type, sut.Vehicle.Type);
+        Assert.AreEqual(maintenanceJobBuilder.VehicleBuilder.OwnerId, sut.Vehicle.OwnerId);
+        Assert.AreEqual(maintenanceJobBuilder.Description, sut.Description);
+        Assert.IsNull(sut.ActualTimeslot);
+        Assert.IsNull(sut.Notes);
+        Assert.AreEqual("Planned", sut.Status);
     }
 
-    [Fact]
+    [TestMethod]
     public void Finish_Should_Finish_An_Existing_Job()
     {
         // arrange
@@ -47,19 +48,19 @@ public class MaintenanceJobTests
         sut.Finish(actualTimeslot, notes);
 
         // assert
-        Assert.Equal(maintenanceJobBuilder.JobId, sut.Id);
-        Assert.Equal(maintenanceJobBuilder.StartTime, sut.PlannedTimeslot.StartTime);
-        Assert.Equal(maintenanceJobBuilder.EndTime, sut.PlannedTimeslot.EndTime);
-        Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Id, sut.Customer.Id);
-        Assert.Equal(maintenanceJobBuilder.CustomerBuilder.Name, sut.Customer.Name);
-        Assert.Equal(maintenanceJobBuilder.CustomerBuilder.TelephoneNumber, sut.Customer.TelephoneNumber);
-        Assert.Equal(maintenanceJobBuilder.VehicleBuilder.LicenseNumber, sut.Vehicle.Id);
-        Assert.Equal(maintenanceJobBuilder.VehicleBuilder.Brand, sut.Vehicle.Brand);
-        Assert.Equal(maintenanceJobBuilder.VehicleBuilder.Type, sut.Vehicle.Type);
-        Assert.Equal(maintenanceJobBuilder.VehicleBuilder.OwnerId, sut.Vehicle.OwnerId);
-        Assert.Equal(maintenanceJobBuilder.Description, sut.Description);
-        Assert.Equal(actualTimeslot, sut.ActualTimeslot);
-        Assert.Equal(notes, sut.Notes);
-        Assert.Equal("Completed", sut.Status);
+        Assert.AreEqual(maintenanceJobBuilder.JobId, sut.Id);
+        Assert.AreEqual(maintenanceJobBuilder.StartTime, sut.PlannedTimeslot.StartTime);
+        Assert.AreEqual(maintenanceJobBuilder.EndTime, sut.PlannedTimeslot.EndTime);
+        Assert.AreEqual(maintenanceJobBuilder.CustomerBuilder.Id, sut.Customer.Id);
+        Assert.AreEqual(maintenanceJobBuilder.CustomerBuilder.Name, sut.Customer.Name);
+        Assert.AreEqual(maintenanceJobBuilder.CustomerBuilder.TelephoneNumber, sut.Customer.TelephoneNumber);
+        Assert.AreEqual(maintenanceJobBuilder.VehicleBuilder.LicenseNumber, sut.Vehicle.Id);
+        Assert.AreEqual(maintenanceJobBuilder.VehicleBuilder.Brand, sut.Vehicle.Brand);
+        Assert.AreEqual(maintenanceJobBuilder.VehicleBuilder.Type, sut.Vehicle.Type);
+        Assert.AreEqual(maintenanceJobBuilder.VehicleBuilder.OwnerId, sut.Vehicle.OwnerId);
+        Assert.AreEqual(maintenanceJobBuilder.Description, sut.Description);
+        Assert.AreEqual(actualTimeslot, sut.ActualTimeslot);
+        Assert.AreEqual(notes, sut.Notes);
+        Assert.AreEqual("Completed", sut.Status);
     }
 }

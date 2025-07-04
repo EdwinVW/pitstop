@@ -10,5 +10,5 @@ global using Pitstop.WorkshopManagementAPI.CommandHandlers;
 global using Pitstop.WorkshopManagement.UnitTests.TestdataBuilders;
 global using Pitstop.Infrastructure.Messaging;
 global using Pitstop.TestUtils;
-global using Xunit;
+global using Microsoft.VisualStudio.TestTools.UnitTesting;
 global using Moq;

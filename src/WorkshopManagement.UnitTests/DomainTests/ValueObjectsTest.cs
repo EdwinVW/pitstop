@@ -1,8 +1,9 @@
 namespace WorkshopManagement.UnitTests.DomainTests;
 
+[TestClass]
 public class ValueObjectsTest
 {
-    [Fact]
+    [TestMethod]
     public void Creating_A_LicenseNumber_With_An_Invalid_Format_Should_Throw_Exception()
     {
         // arrange
@@ -10,14 +11,14 @@ public class ValueObjectsTest
 
         // act
         var thrownException =
-            Assert.Throws<InvalidValueException>(() => LicenseNumber.Create(licenseNumber));
+            Assert.ThrowsException<InvalidValueException>(() => LicenseNumber.Create(licenseNumber));
 
         // assert
-        Assert.Equal($"The specified license-number '{licenseNumber}' is not in the correct format.",
+        Assert.AreEqual($"The specified license-number '{licenseNumber}' is not in the correct format.",
             thrownException.Message);
     }
 
-    [Fact]
+    [TestMethod]
     public void Creating_A_TimeSlot_With_A_StartTime_After_EndTime_Should_Throw_Exception()
     {
         // arrange
@@ -26,10 +27,10 @@ public class ValueObjectsTest
 
         // act
         var thrownException =
-            Assert.Throws<InvalidValueException>(() => Timeslot.Create(startTime, endTime));
+            Assert.ThrowsException<InvalidValueException>(() => Timeslot.Create(startTime, endTime));
 
         // assert
-        Assert.Equal("The specified start-time may not be after the specified end-time.",
+        Assert.AreEqual("The specified start-time may not be after the specified end-time.",
             thrownException.Message);
     }
 }

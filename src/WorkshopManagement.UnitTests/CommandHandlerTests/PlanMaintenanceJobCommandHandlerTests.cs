@@ -1,10 +1,10 @@
 namespace WorkshopManagement.UnitTests.CommandHandlerTests;
 
-[Collection("AutomapperCollection")]
+[TestClass]
 public class PlanMaintenanceJobCommandHandlerTests
 {
-    [Fact]
-    public async void Given_An_Existing_Job_The_Handler_Should_Handle_The_Command()
+    [TestMethod]
+    public async Task Given_An_Existing_Job_The_Handler_Should_Handle_The_Command()
     {
         // arrange
         DateTime date = DateTime.Today;
@@ -52,11 +52,11 @@ public class PlanMaintenanceJobCommandHandlerTests
         messagePublisherMock.VerifyNoOtherCalls();
         repoMock.VerifyAll();
         repoMock.VerifyNoOtherCalls();
-        Assert.IsAssignableFrom<WorkshopPlanning>(result);
+        Assert.IsInstanceOfType<WorkshopPlanning>(result);
     }
 
-    [Fact]
-    public async void Given_A_Non_Existing_Job_The_Handler_Should_Return_Null()
+    [TestMethod]
+    public async Task Given_A_Non_Existing_Job_The_Handler_Should_Return_Null()
     {
         // arrange
         DateTime date = DateTime.Today;
@@ -108,6 +108,6 @@ public class PlanMaintenanceJobCommandHandlerTests
         messagePublisherMock.VerifyNoOtherCalls();
         repoMock.VerifyAll();
         repoMock.VerifyNoOtherCalls();
-        Assert.IsAssignableFrom<WorkshopPlanning>(result);
+        Assert.IsInstanceOfType<WorkshopPlanning>(result);
     }
 }

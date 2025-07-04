@@ -1,9 +1,9 @@
 namespace WorkshopManagement.UnitTests.DomainTests;
 
-[Collection("AutomapperCollection")]
+[TestClass]
 public class WorkshopPlanningTests
 {
-    [Fact]
+    [TestMethod]
     public void Create_Should_Create_A_New_Instance()
     {
         // arrange
@@ -11,19 +11,19 @@ public class WorkshopPlanningTests
 
         // act
         WorkshopPlanning sut = WorkshopPlanning.Create(date);
-        IEnumerable<Event> events = sut.GetEvents();
+        var events = sut.GetEvents().ToList();
 
         // assert
-        Assert.NotNull(sut);
-        Assert.NotNull(sut.Id);
-        Assert.Equal(date, sut.Id);
-        Assert.Equal(0, sut.OriginalVersion);
-        Assert.Equal(1, sut.Version);
-        Assert.Empty(sut.Jobs);
-        Assert.Collection(events, item0 => Assert.IsAssignableFrom<WorkshopPlanningCreated>(item0));
+        Assert.IsNotNull(sut);
+        Assert.IsNotNull(sut.Id);
+        Assert.AreEqual(date, sut.Id);
+        Assert.AreEqual(0, sut.OriginalVersion);
+        Assert.AreEqual(1, sut.Version);
+        Assert.AreEqual(0, sut.Jobs.Count);
+        CollectionAssert.AllItemsAreInstancesOfType(events, typeof(WorkshopPlanningCreated));
     }
 
-    [Fact]
+    [TestMethod]
     public void Plan_MaintenanceJob_Should_Add_A_New_MaintenanceJob()
     {
         // arrange
@@ -38,34 +38,30 @@ public class WorkshopPlanningTests
 
         // act
         sut.PlanMaintenanceJob(command);
-        IEnumerable<Event> events = sut.GetEvents();
+        var events = sut.GetEvents().ToList();
 
         // assert
-        Assert.NotNull(sut);
-        Assert.NotNull(sut.Id);
-        Assert.Equal(date, sut.Id);
-        Assert.Equal(1, sut.OriginalVersion);
-        Assert.Equal(2, sut.Version);
-        Assert.Collection(sut.Jobs,
-            item0 =>
-            {
-                Assert.Equal(command.JobId, item0.Id);
-                Assert.Equal(command.StartTime, item0.PlannedTimeslot.StartTime);
-                Assert.Equal(command.EndTime, item0.PlannedTimeslot.EndTime);
-                Assert.Equal(command.CustomerInfo.Id, item0.Customer.Id);
-                Assert.Equal(command.CustomerInfo.Name, item0.Customer.Name);
-                Assert.Equal(command.CustomerInfo.TelephoneNumber, item0.Customer.TelephoneNumber);
-                Assert.Equal(command.VehicleInfo.LicenseNumber, item0.Vehicle.Id);
-                Assert.Equal(command.VehicleInfo.Brand, item0.Vehicle.Brand);
-                Assert.Equal(command.VehicleInfo.Type, item0.Vehicle.Type);
-                Assert.Equal(command.CustomerInfo.Id, item0.Vehicle.OwnerId);
-                Assert.Equal(command.Description, item0.Description);
-            }
-        );
-        Assert.Collection(events, item0 => Assert.IsAssignableFrom<MaintenanceJobPlanned>(item0));
+        Assert.IsNotNull(sut);
+        Assert.IsNotNull(sut.Id);
+        Assert.AreEqual(date, sut.Id);
+        Assert.AreEqual(1, sut.OriginalVersion);
+        Assert.AreEqual(2, sut.Version);
+        var job = sut.Jobs.First();
+        Assert.AreEqual(command.JobId, job.Id);
+        Assert.AreEqual(command.StartTime, job.PlannedTimeslot.StartTime);
+        Assert.AreEqual(command.EndTime, job.PlannedTimeslot.EndTime);
+        Assert.AreEqual(command.CustomerInfo.Id, job.Customer.Id);
+        Assert.AreEqual(command.CustomerInfo.Name, job.Customer.Name);
+        Assert.AreEqual(command.CustomerInfo.TelephoneNumber, job.Customer.TelephoneNumber);
+        Assert.AreEqual(command.VehicleInfo.LicenseNumber, job.Vehicle.Id);
+        Assert.AreEqual(command.VehicleInfo.Brand, job.Vehicle.Brand);
+        Assert.AreEqual(command.VehicleInfo.Type, job.Vehicle.Type);
+        Assert.AreEqual(command.CustomerInfo.Id, job.Vehicle.OwnerId);
+        Assert.AreEqual(command.Description, job.Description);
+        CollectionAssert.AllItemsAreInstancesOfType(events, typeof(MaintenanceJobPlanned));
     }
 
-    [Fact]
+    [TestMethod]
     public void Plan_MaintenanceJob_That_Spans_Two_Days_Should_Throw_Exception()
     {
         // arrange
@@ -84,14 +80,14 @@ public class WorkshopPlanningTests
 
         // act
         var thrownException =
-            Assert.Throws<BusinessRuleViolationException>(() => sut.PlanMaintenanceJob(command));
+            Assert.ThrowsException<BusinessRuleViolationException>(() => sut.PlanMaintenanceJob(command));
 
         // assert
-        Assert.Equal("Start-time and end-time of a Maintenance Job must be within a 1 day.",
+        Assert.AreEqual("Start-time and end-time of a Maintenance Job must be within a 1 day.",
             thrownException.Message);
     }
 
-    [Fact]
+    [TestMethod]
     public void Planning_Too_Much_MaintenanceJobs_In_Parallel_Should_Throw_Exception()
     {
         // arrange
@@ -117,17 +113,17 @@ public class WorkshopPlanningTests
         sut.PlanMaintenanceJob(command1);
         sut.PlanMaintenanceJob(command2);
         sut.PlanMaintenanceJob(command3);
-        var thrownException = Assert.Throws<BusinessRuleViolationException>(() =>
+        var thrownException = Assert.ThrowsException<BusinessRuleViolationException>(() =>
         {
             sut.PlanMaintenanceJob(command4); // 4th parallel job
         });
 
         // assert
-        Assert.Equal("Maintenancejob overlaps with more than 3 other jobs.",
+        Assert.AreEqual("Maintenancejob overlaps with more than 3 other jobs.",
             thrownException.Message);
     }
 
-    [Fact]
+    [TestMethod]
     public void Plan_Two_MaintenanceJobs_In_Parallel_For_The_Same_Vehicle_Should_Throw_Exception()
     {
         // arrange
@@ -141,17 +137,17 @@ public class WorkshopPlanningTests
 
         // act
         sut.PlanMaintenanceJob(command);
-        var thrownException = Assert.Throws<BusinessRuleViolationException>(() =>
+        var thrownException = Assert.ThrowsException<BusinessRuleViolationException>(() =>
         {
             sut.PlanMaintenanceJob(command); // parallel job for same vehicle
         });
 
         // assert
-        Assert.Equal("Only 1 maintenance job can be executed on a vehicle during a certain time-slot.",
+        Assert.AreEqual("Only 1 maintenance job can be executed on a vehicle during a certain time-slot.",
             thrownException.Message);
     }
 
-    [Fact]
+    [TestMethod]
     public void Finish_MaintenanceJob_Should_Finish_An_Unfinished_MaintenanceJob()
     {
         // arrange
@@ -181,29 +177,25 @@ public class WorkshopPlanningTests
 
         // act
         sut.FinishMaintenanceJob(command);
-        IEnumerable<Event> events = sut.GetEvents();
+        var events = sut.GetEvents().ToList();
 
         // assert
-        Assert.NotNull(sut);
-        Assert.NotNull(sut.Id);
-        Assert.Equal(date, sut.Id);
-        Assert.Equal(2, sut.OriginalVersion);
-        Assert.Equal(3, sut.Version);
-        Assert.Collection(sut.Jobs,
-            item0 =>
-            {
-                Assert.Equal(command.JobId, item0.Id);
-                Assert.Equal(startTime, item0.PlannedTimeslot.StartTime);
-                Assert.Equal(endTime, item0.PlannedTimeslot.EndTime);
-                Assert.Equal(command.StartTime, item0.ActualTimeslot.StartTime);
-                Assert.Equal(command.EndTime, item0.ActualTimeslot.EndTime);
-                Assert.Equal(command.Notes, item0.Notes);
-            }
-        );
-        Assert.Collection(events, item0 => Assert.IsAssignableFrom<MaintenanceJobFinished>(item0));
+        Assert.IsNotNull(sut);
+        Assert.IsNotNull(sut.Id);
+        Assert.AreEqual(date, sut.Id);
+        Assert.AreEqual(2, sut.OriginalVersion);
+        Assert.AreEqual(3, sut.Version);
+        var job = sut.Jobs[0];
+        Assert.AreEqual(command.JobId, job.Id);
+        Assert.AreEqual(startTime, job.PlannedTimeslot.StartTime);
+        Assert.AreEqual(endTime, job.PlannedTimeslot.EndTime);
+        Assert.AreEqual(command.StartTime, job.ActualTimeslot.StartTime);
+        Assert.AreEqual(command.EndTime, job.ActualTimeslot.EndTime);
+        Assert.AreEqual(command.Notes, job.Notes);
+        CollectionAssert.AllItemsAreInstancesOfType(events, typeof(MaintenanceJobFinished));
     }
 
-    [Fact]
+    [TestMethod]
     public void Finish_An_Already_Finished_MaintenanceJob_Should_Throw_Exception()
     {
         // arrange
@@ -241,11 +233,11 @@ public class WorkshopPlanningTests
 
         // act
         var thrownException =
-            Assert.Throws<BusinessRuleViolationException>(() =>
+            Assert.ThrowsException<BusinessRuleViolationException>(() =>
                 sut.FinishMaintenanceJob(command));
 
         // assert
-        Assert.Equal("An already finished job can not be finished.",
+        Assert.AreEqual("An already finished job can not be finished.",
             thrownException.Message);
     }
 }

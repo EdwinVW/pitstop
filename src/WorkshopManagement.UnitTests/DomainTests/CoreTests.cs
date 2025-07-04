@@ -15,9 +15,10 @@ internal class TestValue : ValueObject
     }
 }
 
+[TestClass]
 public class CoreTests
 {
-    [Fact]
+    [TestMethod]
     public void ValueObject_Equality_Should_Detect_Equal_Values()
     {
         // arrange
@@ -29,11 +30,11 @@ public class CoreTests
         bool explicitEqual = value1.Equals(value2);
 
         // assert
-        Assert.True(implicitEqual);
-        Assert.True(explicitEqual);
+        Assert.IsTrue(implicitEqual);
+        Assert.IsTrue(explicitEqual);
     }
 
-    [Fact]
+    [TestMethod]
     public void ValueObject_Equality_Should_Detect_NotEqual_Values()
     {
         // arrange
@@ -45,7 +46,7 @@ public class CoreTests
         bool explicitEqual = !value1.Equals(value2);
 
         // assert
-        Assert.True(implicitEqual);
-        Assert.True(explicitEqual);
+        Assert.IsTrue(implicitEqual);
+        Assert.IsTrue(explicitEqual);
     }
 }

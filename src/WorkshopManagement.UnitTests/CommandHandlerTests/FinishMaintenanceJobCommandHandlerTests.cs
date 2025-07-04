@@ -1,10 +1,10 @@
 namespace WorkshopManagement.UnitTests.CommandHandlerTests;
 
-[Collection("AutomapperCollection")]
+[TestClass]
 public class FinishMaintenanceJobCommandHandlerTests
 {
-    [Fact]
-    public async void FinishMaintenanceJob_Handler_Should_Handle_Command()
+    [TestMethod]
+    public async Task FinishMaintenanceJob_Handler_Should_Handle_Command()
     {
         // arrange
         DateTime date = DateTime.Today;
@@ -69,8 +69,8 @@ public class FinishMaintenanceJobCommandHandlerTests
         repoMock.VerifyNoOtherCalls();
     }
 
-    [Fact]
-    public async void Given_A_Non_Existing_Job_The_Handler_Should_Return_Null()
+    [TestMethod]
+    public async Task Given_A_Non_Existing_Job_The_Handler_Should_Return_Null()
     {
         // arrange
         DateTime date = DateTime.Today;
@@ -103,6 +103,6 @@ public class FinishMaintenanceJobCommandHandlerTests
         messagePublisherMock.VerifyNoOtherCalls();
         repoMock.VerifyAll();
         repoMock.VerifyNoOtherCalls();
-        Assert.Null(result);
+        Assert.IsNull(result);
     }
 }
