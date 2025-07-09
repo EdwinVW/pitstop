@@ -52,7 +52,7 @@ public class PlanMaintenanceJobCommandHandlerTests
         messagePublisherMock.VerifyNoOtherCalls();
         repoMock.VerifyAll();
         repoMock.VerifyNoOtherCalls();
-        Assert.IsInstanceOfType<WorkshopPlanning>(result);
+        result.ShouldBeOfType<WorkshopPlanning>();
     }
 
     [TestMethod]
@@ -108,6 +108,6 @@ public class PlanMaintenanceJobCommandHandlerTests
         messagePublisherMock.VerifyNoOtherCalls();
         repoMock.VerifyAll();
         repoMock.VerifyNoOtherCalls();
-        Assert.IsInstanceOfType<WorkshopPlanning>(result);
+        result.ShouldBeOfType<WorkshopPlanning>();
     }
 }

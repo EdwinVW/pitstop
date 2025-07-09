@@ -103,6 +103,6 @@ public class FinishMaintenanceJobCommandHandlerTests
         messagePublisherMock.VerifyNoOtherCalls();
         repoMock.VerifyAll();
         repoMock.VerifyNoOtherCalls();
-        Assert.IsNull(result);
+        result.ShouldBeNull();
     }
 }

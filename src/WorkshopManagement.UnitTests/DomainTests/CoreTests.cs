@@ -30,8 +30,8 @@ public class CoreTests
         bool explicitEqual = value1.Equals(value2);
 
         // assert
-        Assert.IsTrue(implicitEqual);
-        Assert.IsTrue(explicitEqual);
+        implicitEqual.ShouldBeTrue();
+        explicitEqual.ShouldBeTrue();
     }
 
     [TestMethod]
@@ -46,7 +46,7 @@ public class CoreTests
         bool explicitEqual = !value1.Equals(value2);
 
         // assert
-        Assert.IsTrue(implicitEqual);
-        Assert.IsTrue(explicitEqual);
+        implicitEqual.ShouldBeTrue();
+        explicitEqual.ShouldBeTrue();
     }
 }

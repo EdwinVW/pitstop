@@ -12,3 +12,4 @@ global using Pitstop.Infrastructure.Messaging;
 global using Pitstop.TestUtils;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
 global using Moq;
+global using Shouldly;

@@ -11,11 +11,10 @@ public class ValueObjectsTest
 
         // act
         var thrownException =
-            Assert.ThrowsException<InvalidValueException>(() => LicenseNumber.Create(licenseNumber));
+            Should.Throw<InvalidValueException>(() => LicenseNumber.Create(licenseNumber));
 
         // assert
-        Assert.AreEqual($"The specified license-number '{licenseNumber}' is not in the correct format.",
-            thrownException.Message);
+        thrownException.Message.ShouldBe($"The specified license-number '{licenseNumber}' is not in the correct format.");
     }
 
     [TestMethod]
@@ -27,10 +26,9 @@ public class ValueObjectsTest
 
         // act
         var thrownException =
-            Assert.ThrowsException<InvalidValueException>(() => Timeslot.Create(startTime, endTime));
+            Should.Throw<InvalidValueException>(() => Timeslot.Create(startTime, endTime));
 
         // assert
-        Assert.AreEqual("The specified start-time may not be after the specified end-time.",
-            thrownException.Message);
+        thrownException.Message.ShouldBe("The specified start-time may not be after the specified end-time.");
     }
 }
