@@ -1,6 +1,8 @@
 #!/bin/bash
 
-ISTIO_VERSION="1.23"
+ISTIO_VERSION=$(<istio-version.txt)
+
+echo "Uninstalling Istio $ISTIO_VERSION"
 
 kubectl delete -f https://raw.githubusercontent.com/istio/istio/release-$ISTIO_VERSION/samples/addons/prometheus.yaml
 kubectl delete -f https://raw.githubusercontent.com/istio/istio/release-$ISTIO_VERSION/samples/addons/grafana.yaml

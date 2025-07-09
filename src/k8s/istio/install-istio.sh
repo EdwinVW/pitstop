@@ -1,6 +1,8 @@
 #!/bin/bash
 
-ISTIO_VERSION="1.26"
+ISTIO_VERSION=$(<istio-version.txt)
+
+echo "Installing Istio $ISTIO_VERSION"
 
 kubectl create namespace istio-system
 istioctl install --set profile=demo -y
