@@ -9,9 +9,6 @@ RUN apt-get -y update \
     && apt-get install -y nodejs \
     && apt-get clean
 
-# Install gulp
-RUN npm install --global gulp-cli
-
 # Copy necessary files and restore as distinct layer
 COPY *.csproj ./
 RUN dotnet restore
@@ -19,7 +16,7 @@ RUN dotnet restore
 # Copy everything else and build
 COPY . ./
 RUN npm install
-RUN gulp default
+RUN npm run build
 RUN dotnet publish -c Release -o out
 
 # Build runtime image

@@ -13,7 +13,7 @@ services:
       - RABBITMQ_CONFIG_FILE=/etc/pitstop/rabbitmq.conf
 
   sqlserver:
-    image: mcr.microsoft.com/azure-sql-edge
+    image: mcr.microsoft.com/azure-sql-edge:latest
     container_name: sqlserver
     volumes:
       - sqlserverdata:/var/opt/mssql
@@ -137,6 +137,4 @@ services:
 
 volumes:
   sqlserverdata:
-    external: true
   rabbitmqdata:
-    external: true

@@ -2,11 +2,13 @@
   "version": "1.0.0",
   "name": "asp.net",
   "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
   "devDependencies": {
-    "gulp": "5.0.0",
-    "gulp-concat": "2.6.1",
-    "gulp-cssmin": "0.2.0",
-    "gulp-uglify": "3.0.2",
-    "rimraf": "3.0.0"
+    "vite": "^5.4.11"
   }
 }
