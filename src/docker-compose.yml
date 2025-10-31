@@ -4,7 +4,7 @@ services:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
     volumes:
-      - rabbitmqdata:/var/lib/rabbitmq
+      - rabbitmq:/var/lib/rabbitmq
       - "./rabbitmq:/etc/pitstop/"
     ports:
       - "15672:15672"
@@ -16,7 +16,7 @@ services:
     image: mcr.microsoft.com/azure-sql-edge:latest
     container_name: sqlserver
     volumes:
-      - sqlserverdata:/var/opt/mssql
+      - sqlserver:/var/opt/mssql
     ports:
       - "1434:1433"
     environment:
@@ -137,5 +137,5 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
 
 volumes:
-  sqlserverdata:
-  rabbitmqdata:
+  sqlserver:
+  rabbitmq:
