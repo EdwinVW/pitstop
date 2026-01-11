@@ -13,8 +13,9 @@ services:
       - RABBITMQ_CONFIG_FILE=/etc/pitstop/rabbitmq.conf
 
   sqlserver:
-    image: mcr.microsoft.com/azure-sql-edge:latest
+    image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
+    restart: unless-stopped
     volumes:
       - sqlserver:/var/opt/mssql
     ports:
@@ -43,6 +44,7 @@ services:
   vehiclemanagementapi:
     image: pitstop/vehiclemanagementapi:1.0
     build: VehicleManagementAPI
+    restart: unless-stopped
     depends_on:
       - rabbitmq
       - sqlserver
@@ -54,6 +56,7 @@ services:
   customermanagementapi:
     image: pitstop/customermanagementapi:1.0
     build: CustomerManagementAPI
+    restart: unless-stopped
     depends_on:
       - rabbitmq
       - sqlserver
@@ -86,6 +89,7 @@ services:
     image: pitstop/invoiceservice:1.0
     build: InvoiceService
     container_name: invoiceservice
+    restart: unless-stopped
     depends_on:
       - rabbitmq
       - sqlserver
@@ -97,6 +101,7 @@ services:
     image: pitstop/notificationservice:1.0
     build: NotificationService
     container_name: notificationservice
+    restart: unless-stopped
     depends_on:
       - rabbitmq
       - sqlserver
@@ -117,6 +122,7 @@ services:
     image: pitstop/workshopmanagementeventhandler:1.0
     build: WorkshopManagementEventHandler
     container_name: workshopmanagementeventhandler
+    restart: unless-stopped
     depends_on:
       - rabbitmq
       - sqlserver
