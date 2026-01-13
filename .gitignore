@@ -264,3 +264,6 @@ nuget/
 **/.playwright/
 **/playwright.ps1
 dotnet-install.sh
+
+# Docker
+.containerdata
