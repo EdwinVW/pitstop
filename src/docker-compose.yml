@@ -4,8 +4,8 @@ services:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
     volumes:
-      - rabbitmq:/var/lib/rabbitmq
-      - "./rabbitmq:/etc/pitstop/"
+      - ./.containerdata/rabbitmq/var/lib/rabbitmq:/var/lib/rabbitmq
+      - ./rabbitmq:/etc/pitstop
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -17,7 +17,11 @@ services:
     container_name: sqlserver
     restart: unless-stopped
     volumes:
-      - sqlserver:/var/opt/mssql
+      - ./.containerdata/sqlserver/mssql:/var/opt/mssql
+      - ./.containerdata/sqlserver/data:/var/opt/mssql/data
+      - ./.containerdata/sqlserver/log:/var/opt/mssql/log
+      - ./.containerdata/sqlserver/secrets:/var/opt/mssql/secrets
+      - ./.containerdata/sqlserver/backups:/var/opt/mssql/backups 
     ports:
       - "1434:1433"
     environment:
@@ -141,7 +145,3 @@ services:
       - "7005:7005"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-
-volumes:
-  sqlserver:
-  rabbitmq:
