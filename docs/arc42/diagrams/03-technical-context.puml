@@ -1,0 +1,64 @@
+@startuml 03-technical-context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Technical Context — Pitstop System
+
+Person(user, "User", "Garage employee")
+
+System_Boundary(pitstop, "Pitstop System") {
+
+    Container(webapp, "WebApp", "ASP.NET Core MVC", "Frontend. Port 7005")
+
+    Container(customerapi, "Customer Mgmt API", "ASP.NET Core Web API", "Manages customers (CRUD). Port 5100")
+    Container(vehicleapi, "Vehicle Mgmt API", "ASP.NET Core Web API", "Manages vehicles (CRUD). Port 5000")
+    Container(workshopapi, "Workshop Mgmt API", "ASP.NET Core Web API", "Manages maintenance jobs (DDD + ES). Port 5200")
+
+    ContainerQueue(rabbitmq, "RabbitMQ", "RabbitMQ 3", "Message broker. Port 5672")
+    ContainerDb(sqlserver, "SQL Server", "SQL Server 2022", "Per-service databases. Port 1434")
+    Container(seq, "Seq", "Log Server", "Centralized structured logging. Port 5341")
+    System_Ext(maildev, "MailDev", "Test SMTP/POP3 server. Ports 25/4000")
+
+    Container(timeservice, "Time Service", ".NET Worker", "Publishes DayHasPassed events")
+    Container(workshopeh, "Workshop Mgmt Event Handler", ".NET Worker", "Builds read-model from events")
+    Container(notification, "Notification Service", ".NET Worker", "Sends daily maintenance reminders")
+    Container(invoice, "Invoice Service", ".NET Worker", "Generates and emails invoices")
+    Container(auditlog, "Auditlog Service", ".NET Worker", "Persists all events for audit")
+}
+
+' User -> WebApp -> APIs
+Rel(user, webapp, "Uses", "HTTP")
+Rel(webapp, customerapi, "Calls", "HTTP / Refit")
+Rel(webapp, vehicleapi, "Calls", "HTTP / Refit")
+Rel(webapp, workshopapi, "Calls", "HTTP / Refit")
+
+' API layer -> RabbitMQ
+Rel(customerapi, rabbitmq, "Publishes events", "AMQP")
+Rel(vehicleapi, rabbitmq, "Publishes events", "AMQP")
+Rel(workshopapi, rabbitmq, "Publishes events", "AMQP")
+
+' API layer -> SQL Server
+Rel(customerapi, sqlserver, "Reads/Writes", "TCP/TDS")
+Rel(vehicleapi, sqlserver, "Reads/Writes", "TCP/TDS")
+Rel(workshopapi, sqlserver, "Reads/Writes", "TCP/TDS")
+
+' RabbitMQ -> workers
+Rel(rabbitmq, workshopeh, "Delivers events", "AMQP")
+Rel(rabbitmq, notification, "Delivers events", "AMQP")
+Rel(rabbitmq, invoice, "Delivers events", "AMQP")
+Rel(rabbitmq, auditlog, "Delivers events", "AMQP")
+
+' Workers -> SQL Server
+Rel(workshopeh, sqlserver, "Reads/Writes", "TCP/TDS")
+Rel(notification, sqlserver, "Reads/Writes", "TCP/TDS")
+Rel(invoice, sqlserver, "Reads/Writes", "TCP/TDS")
+Rel(auditlog, sqlserver, "Reads/Writes", "TCP/TDS")
+
+' TimeService -> RabbitMQ
+Rel(timeservice, rabbitmq, "Publishes events", "AMQP")
+
+' Emails out
+Rel(notification, maildev, "Sends emails", "SMTP")
+Rel(invoice, maildev, "Sends emails", "SMTP")
+
+LAYOUT_WITH_LEGEND()
+@enduml

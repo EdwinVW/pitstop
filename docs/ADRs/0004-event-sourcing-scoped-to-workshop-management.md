@@ -1,4 +1,4 @@
-# ADR-0003: Event Sourcing Scoped to Workshop Management
+# ADR-0004: Event Sourcing Scoped to Workshop Management
 
 ## Status
 Accepted

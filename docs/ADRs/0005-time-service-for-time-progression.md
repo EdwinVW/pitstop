@@ -1,4 +1,4 @@
-# ADR-0004: Dedicated Time Service for Time Progression
+# ADR-0005: Dedicated Time Service for Time Progression
 
 ## Status
 Accepted

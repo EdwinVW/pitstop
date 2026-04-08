@@ -1,0 +1,66 @@
+@startuml 05-building-blocks-L1
+skinparam componentStyle rectangle
+skinparam defaultTextAlignment center
+skinparam linetype ortho
+
+skinparam package {
+    BackgroundColor #F8F8F8
+    BorderColor #999999
+}
+
+skinparam nodesep 60
+skinparam ranksep 180
+
+package "Frontend" {
+    [WebApp\n(ASP.NET Core MVC)] as WebApp
+}
+
+package "Web APIs" {
+    [Customer\nMgmt API\n(CRUD)] as CustomerAPI
+    [Vehicle\nMgmt API\n(CRUD)] as VehicleAPI
+    [Workshop\nMgmt API\n(DDD + ES)] as WorkshopAPI
+}
+
+package "Infrastructure" {
+    database "RabbitMQ" as RabbitMQ
+    database "SQL Server" as SQLServer
+}
+
+package "Background Services" {
+    [Time\nService] as TimeService
+    [Workshop Mgmt\nEvent Handler] as WorkshopEH
+    [Notification\nService] as Notification
+    [Invoice\nService] as Invoice
+    [Auditlog\nService] as Auditlog
+}
+
+package "Tools" {
+    [MailDev\n(SMTP)] as MailDev
+    [Seq\n(Logging)] as Seq
+}
+
+WebApp --> CustomerAPI : HTTP/Refit
+WebApp --> VehicleAPI : HTTP/Refit
+WebApp --> WorkshopAPI : HTTP/Refit
+
+CustomerAPI --> RabbitMQ
+VehicleAPI --> RabbitMQ
+WorkshopAPI --> RabbitMQ
+TimeService --> RabbitMQ
+
+RabbitMQ --> WorkshopEH
+RabbitMQ --> Notification
+RabbitMQ --> Invoice
+RabbitMQ --> Auditlog
+
+CustomerAPI --> SQLServer
+VehicleAPI --> SQLServer
+WorkshopAPI --> SQLServer
+WorkshopEH --> SQLServer
+Notification --> SQLServer
+Invoice --> SQLServer
+Auditlog --> SQLServer
+
+Notification --> MailDev
+Invoice --> MailDev
+@enduml

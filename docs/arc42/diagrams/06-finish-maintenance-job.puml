@@ -1,0 +1,26 @@
+@startuml 06-finish-maintenance-job
+actor "Garage Employee" as Employee
+participant WebApp
+participant "Workshop Mgmt API" as API
+database "Event Store\n(SQL Server)" as ES
+queue "RabbitMQ" as MQ
+
+Employee -> WebApp : Mark job as finished
+WebApp -> API : FinishMaintenanceJob (HTTP POST)
+
+API -> ES : Load events for WorkshopPlanning aggregate
+ES --> API : Event list
+
+note over API : Replay events to\nreconstruct aggregate state
+
+API -> API : Execute command on aggregate
+note over API : Produces MaintenanceJobFinished event
+
+API -> ES : Store new events
+ES --> API : OK
+API -> MQ : Publish MaintenanceJobFinished
+API --> WebApp : 200 OK
+WebApp --> Employee : Updated planning page
+
+note over MQ : Consumed by Notification Service,\nInvoice Service, Event Handler,\nand Auditlog Service
+@enduml

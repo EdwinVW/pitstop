@@ -1,0 +1,23 @@
+@startuml 06-register-customer
+actor "Garage Employee" as Employee
+participant WebApp
+participant "Customer Mgmt API" as API
+database "SQL Server" as DB
+queue "RabbitMQ" as MQ
+participant "Workshop Mgmt\nEvent Handler" as EH
+participant "Notification\nService" as NS
+
+Employee -> WebApp : Submit customer form
+WebApp -> API : RegisterCustomer (HTTP POST)
+API -> DB : Persist customer
+DB --> API : OK
+API -> MQ : Publish CustomerRegistered
+API --> WebApp : 200 OK
+WebApp --> Employee : Confirmation page
+
+MQ ->> EH : Deliver CustomerRegistered
+EH -> EH : Cache customer data in read-model
+
+MQ ->> NS : Deliver CustomerRegistered
+NS -> NS : Cache customer data locally
+@enduml

@@ -1,0 +1,14 @@
+@startuml 10-quality-tree
+@startmindmap
+* Quality
+** Learnability
+*** Clarity of code
+*** Demo-friendly
+** Operability
+*** Easy setup
+*** Easy deploy
+** Reliability
+*** Resilience
+*** Service autonomy
+@endmindmap
+@enduml

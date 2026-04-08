@@ -1,0 +1,28 @@
+@startuml 06-plan-maintenance-job
+actor "Garage Employee" as Employee
+participant WebApp
+participant "Workshop Mgmt API" as API
+database "Event Store\n(SQL Server)" as ES
+queue "RabbitMQ" as MQ
+participant "Workshop Mgmt\nEvent Handler" as EH
+
+Employee -> WebApp : Select date & vehicle, plan job
+WebApp -> API : PlanMaintenanceJob (HTTP POST)
+
+API -> ES : Load events for WorkshopPlanning aggregate
+ES --> API : Event list
+
+note over API : Replay events to\nreconstruct aggregate state
+
+API -> API : Execute command on aggregate
+note over API : Produces WorkshopPlanningCreated\nand/or MaintenanceJobPlanned events
+
+API -> ES : Store new events
+ES --> API : OK
+API -> MQ : Publish MaintenanceJobPlanned
+API --> WebApp : 200 OK
+WebApp --> Employee : Updated planning page
+
+MQ ->> EH : Deliver MaintenanceJobPlanned
+EH -> EH : Update read-model
+@enduml

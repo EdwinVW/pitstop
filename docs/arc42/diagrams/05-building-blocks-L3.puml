@@ -1,0 +1,32 @@
+@startuml 05-building-blocks-L3
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Workshop Management API — Internal Structure (Level 3)
+
+Container_Boundary(api, "Workshop Management API") {
+    Component(controllers, "Controllers", "ASP.NET Core", "HTTP endpoints for planning and finishing jobs")
+    Component(cmdhandlers, "Command Handlers", "C#", "PlanMaintenanceJob, FinishMaintenanceJob")
+    Component(aggregate, "WorkshopPlanning Aggregate", "DDD Aggregate Root", "Encapsulates business rules, handles commands by producing events")
+    Component(esrepo, "Event Source Repository", "Dapper / SQL Server", "Reads/writes events from WorkshopManagementEventStore")
+    Component(refdata, "Ref Data Repository", "Dapper / SQL Server", "Reads cached Customer and Vehicle data")
+    Component(publisher, "Message Publisher", "RabbitMQ", "Publishes domain events to the message broker")
+}
+
+Container_Boundary(infra, "Infrastructure") {
+    ContainerDb(eventstore, "Event Store", "SQL Server", "WorkshopManagementEventStore DB")
+    ContainerDb(readmodel, "Read-Model DB", "SQL Server", "WorkshopManagement DB")
+    ContainerQueue(rabbitmq, "RabbitMQ", "Message Broker", "Fanout exchanges")
+}
+
+Rel(controllers, cmdhandlers, "Delegates commands")
+Rel(cmdhandlers, aggregate, "Loads and executes on aggregate")
+Rel(cmdhandlers, esrepo, "Load/store events")
+Rel(cmdhandlers, refdata, "Read reference data")
+Rel(cmdhandlers, publisher, "Publish new events")
+
+Rel(esrepo, eventstore, "Reads/Writes", "TCP/TDS")
+Rel(refdata, readmodel, "Reads", "TCP/TDS")
+Rel(publisher, rabbitmq, "Publishes", "AMQP")
+
+LAYOUT_WITH_LEGEND()
+@enduml

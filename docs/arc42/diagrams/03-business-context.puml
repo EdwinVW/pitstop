@@ -1,0 +1,18 @@
+@startuml 03-business-context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title Business Context — Pitstop Garage Management System
+
+Person(employee, "Garage Employee", "Uses the web application to manage customers, vehicles, and workshop planning")
+
+System(pitstop, "Pitstop System", "Garage Management System for managing customers, vehicles, maintenance jobs, notifications, and invoices")
+
+System_Ext(maildev, "MailDev", "Simulated SMTP/POP3 test mail server that captures all outbound emails")
+System_Ext(prestoprint, "PrestoPrint", "Fictitious external printing company — invoices emailed as HTML")
+
+Rel(employee, pitstop, "Uses", "Browser / HTTP")
+Rel(pitstop, maildev, "Sends notifications", "SMTP")
+Rel(pitstop, prestoprint, "Sends invoices", "SMTP via MailDev")
+
+LAYOUT_WITH_LEGEND()
+@enduml

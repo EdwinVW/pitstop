@@ -1,0 +1,21 @@
+@startuml 06-day-passes
+participant "Time Service" as TS
+queue "RabbitMQ" as MQ
+participant "Notification Service" as NS
+participant "Invoice Service" as IS
+database "SQL Server" as DB
+participant "MailDev (SMTP)" as Mail
+
+TS -> MQ : Publish DayHasPassed
+
+MQ ->> NS : Deliver DayHasPassed
+NS -> DB : Query jobs planned for today
+DB --> NS : Job list with customer data
+NS -> Mail : Send notification emails
+
+MQ ->> IS : Deliver DayHasPassed
+IS -> DB : Query finished uninvoiced jobs
+DB --> IS : Job list with customer data
+IS -> IS : Generate HTML invoices
+IS -> Mail : Send invoice emails to PrestoPrint
+@enduml

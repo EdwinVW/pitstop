@@ -1,4 +1,4 @@
-# ADR-0005: No API Gateway
+# ADR-0006: No API Gateway
 
 ## Status
 Accepted

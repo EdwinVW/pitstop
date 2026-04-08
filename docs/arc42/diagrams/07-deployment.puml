@@ -1,0 +1,41 @@
+@startuml 07-deployment
+skinparam componentStyle rectangle
+skinparam defaultTextAlignment center
+skinparam linetype ortho
+
+skinparam package {
+    BackgroundColor<<infra>> #E8F4F8
+    BorderColor<<infra>> #2196F3
+    BackgroundColor<<api>> #E8F8E8
+    BorderColor<<api>> #4CAF50
+    BackgroundColor<<bg>> #FFF8E1
+    BorderColor<<bg>> #FF9800
+    BackgroundColor<<fe>> #FCE4EC
+    BorderColor<<fe>> #E91E63
+}
+
+package "Infrastructure" <<infra>> {
+    [RabbitMQ\n:15672 :5672] as RabbitMQ
+    [SQL Server\n:1434] as SQLServer
+    [MailDev\n:25 :4000] as MailDev
+    [Seq\n:5341] as Seq
+}
+
+package "API Services" <<api>> {
+    [Customer Mgmt API\n:5100] as CustAPI
+    [Vehicle Mgmt API\n:5000] as VehAPI
+    [Workshop Mgmt API\n:5200] as WsAPI
+}
+
+package "Background Services" <<bg>> {
+    [Auditlog\nService] as Auditlog
+    [Invoice\nService] as InvoiceSvc
+    [Notification\nService] as NotifSvc
+    [Time\nService] as TimeSvc
+    [Workshop\nMgmt EH] as WsMgmtEH
+}
+
+package "Frontend" <<fe>> {
+    [WebApp\n:7005] as WebApp
+}
+@enduml

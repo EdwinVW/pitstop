@@ -1,4 +1,4 @@
-# ADR-0007: Seq for Centralized Logging
+# ADR-0008: Seq for Centralized Logging
 
 ## Status
 Accepted

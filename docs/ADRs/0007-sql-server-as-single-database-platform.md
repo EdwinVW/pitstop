@@ -1,4 +1,4 @@
-# ADR-0006: SQL Server as the Single Database Platform
+# ADR-0007: SQL Server as the Single Database Platform
 
 ## Status
 Accepted

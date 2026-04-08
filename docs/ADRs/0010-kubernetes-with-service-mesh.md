@@ -1,4 +1,4 @@
-# ADR-0009: Kubernetes Deployment with Istio and Linkerd Service Mesh Support
+# ADR-0010: Kubernetes Deployment with Istio and Linkerd Service Mesh Support
 
 ## Status
 Accepted
