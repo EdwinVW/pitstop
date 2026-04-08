@@ -16,7 +16,9 @@ how to use container-technologies like:
 
 and how to implement automated UI tests.
 
-See [the Wiki for this repository](https://github.com/EdwinVW/pitstop/wiki "Pitstop Wiki") for more information about the solution and instructions on how to build, run and test the application using Docker-compose and Kubernetes.
+See [the Wiki for this repository](https://github.com/EdwinVW/pitstop/wiki "Pitstop Wiki") for more information about the solution and instructions on how to build, run and test the application using Docker-compose and Kubernetes. 
+
+Also see the [Arc42 architecture documentation](docs/arc42/arc42.md) in the `docs` folder for more information on the application's architecture.
 
 ![](pitstop-garage.png)
 
