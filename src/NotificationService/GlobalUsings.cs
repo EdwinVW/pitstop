@@ -13,6 +13,6 @@ global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Dapper;
 global using Polly;
-global using System.Data.SqlClient;
+global using Microsoft.Data.SqlClient;
 global using System.Net;
 global using System.Net.Mail; 

@@ -8,6 +8,12 @@ This library contains helper-classes for working with messaging within the Pitst
 
 ## Release notes
 
+### Version 5.4.0
+- Upgrade all NuGet references to the latest version.
+
+### Version 5.3.0
+- Target .NET 10.
+
 ### Version 5.2.0
 - Target .NET 9.
 - Fix breaking changes in RabbitMQ Client 7.x (thanks to eNeRGy164 (Michaël Hompus)).

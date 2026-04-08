@@ -80,7 +80,7 @@ public class WorkshopPlanningTests
 
         // act
         var thrownException =
-            Assert.ThrowsException<BusinessRuleViolationException>(() => sut.PlanMaintenanceJob(command));
+            Assert.Throws<BusinessRuleViolationException>(() => sut.PlanMaintenanceJob(command));
 
         // assert
         Assert.AreEqual("Start-time and end-time of a Maintenance Job must be within a 1 day.",
@@ -113,7 +113,7 @@ public class WorkshopPlanningTests
         sut.PlanMaintenanceJob(command1);
         sut.PlanMaintenanceJob(command2);
         sut.PlanMaintenanceJob(command3);
-        var thrownException = Assert.ThrowsException<BusinessRuleViolationException>(() =>
+        var thrownException = Assert.Throws<BusinessRuleViolationException>(() =>
         {
             sut.PlanMaintenanceJob(command4); // 4th parallel job
         });
@@ -137,7 +137,7 @@ public class WorkshopPlanningTests
 
         // act
         sut.PlanMaintenanceJob(command);
-        var thrownException = Assert.ThrowsException<BusinessRuleViolationException>(() =>
+        var thrownException = Assert.Throws<BusinessRuleViolationException>(() =>
         {
             sut.PlanMaintenanceJob(command); // parallel job for same vehicle
         });
@@ -233,7 +233,7 @@ public class WorkshopPlanningTests
 
         // act
         var thrownException =
-            Assert.ThrowsException<BusinessRuleViolationException>(() =>
+            Assert.Throws<BusinessRuleViolationException>(() =>
                 sut.FinishMaintenanceJob(command));
 
         // assert

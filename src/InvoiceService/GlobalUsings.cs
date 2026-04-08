@@ -16,4 +16,4 @@ global using System.Net.Mime;
 global using System.Text;
 global using Dapper;
 global using Polly;
-global using System.Data.SqlClient;
+global using Microsoft.Data.SqlClient;

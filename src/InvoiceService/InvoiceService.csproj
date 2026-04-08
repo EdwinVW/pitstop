@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>    
+    <TargetFramework>net10.0</TargetFramework>    
     <AssemblyName>Pitstop.InvoiceService</AssemblyName>
     <RootNamespace>Pitstop.InvoiceService</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" />
-    <PackageReference Include="System.Data.SqlClient" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Microsoft.Extensions.Configuration" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
