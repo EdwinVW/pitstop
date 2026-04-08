@@ -58,3 +58,6 @@ All services use multi-stage Docker builds:
    - Background services use the runtime-only base image.
 
 Each Dockerfile includes a `HEALTHCHECK` statement that periodically calls the service's `/hc` endpoint.
+
+---
+[← Back to arc42 index](arc42.md)

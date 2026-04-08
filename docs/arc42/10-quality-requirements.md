@@ -32,3 +32,6 @@
 | R2 | RabbitMQ is temporarily unavailable. | Services retry message broker connections with exponential backoff. Published messages are retried up to 9 times. |
 | R3 | The Customer Management API is offline when a maintenance job is being planned. | The Workshop Management bounded context operates autonomously using its local read-model (cached customer and vehicle data). |
 | R4 | The WebApp cannot reach a backend API after multiple retries. | Polly circuit-breaker triggers and the WebApp falls back to an offline page rather than showing an error to the user. |
+
+---
+[← Back to arc42 index](arc42.md)

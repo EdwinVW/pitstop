@@ -118,3 +118,6 @@ The Workshop Management API is the most architecturally interesting component, u
 - **Event Source Repository** reads/writes events from/to the `WorkshopManagementEventStore` database.
 - **Ref Data Repository** reads cached Customer and Vehicle data from the `WorkshopManagement` database (populated by the Event Handler).
 - **Message Publisher** publishes domain events to RabbitMQ after successful persistence.
+
+---
+[← Back to arc42 index](arc42.md)

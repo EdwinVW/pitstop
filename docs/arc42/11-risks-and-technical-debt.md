@@ -20,3 +20,6 @@
 | TD4 | **Limited test coverage** | Unit tests exist only for WorkshopManagementAPI (core domain). No integration tests for event propagation. UI tests exist but cover basic flows only. | Medium |
 | TD5 | **Seq licensing** | Seq free tier is limited. Production use requires a commercial licence. The community might need an alternative (e.g., OpenTelemetry + Grafana). | Low |
 | TD6 | **Dual service mesh maintenance** | Supporting both Istio and Linkerd configurations increases maintenance burden (34+ YAML files). See [ADR-0010](../ADRs/0010-kubernetes-with-service-mesh.md). | Low |
+
+---
+[← Back to arc42 index](arc42.md)

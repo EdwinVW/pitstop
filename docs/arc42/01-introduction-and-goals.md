@@ -30,3 +30,6 @@ Pitstop is a sample application based on a **Garage Management System** for a fi
 | **Workshop participants**    | Be able to run the system locally, walk through the code, and experiment with changes. |
 | **.NET developers**          | Learn best-practice patterns for building event-driven microservice systems with .NET and ASP.NET Core. |
 | **DevOps engineers**         | Understand containerisation with Docker, orchestration with Kubernetes, and service-mesh capabilities (Istio, Linkerd). |
+
+---
+[← Back to arc42 index](arc42.md)

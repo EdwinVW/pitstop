@@ -24,3 +24,6 @@
 | **Per-service database** | Each service owns its data and accesses it through its own database schema. No shared databases between services (logical separation on a single SQL Server instance). |
 | **Asynchronous communication** | Services communicate exclusively through events via RabbitMQ. There are no synchronous service-to-service calls (only the WebApp calls APIs synchronously). |
 | **Infrastructure.Messaging abstraction** | All message-broker interaction goes through the `IMessagePublisher` / `IMessageHandler` interfaces. No service directly depends on `RabbitMQ.Client`. See [ADR-0009](../ADRs/0009-infrastructure-messaging-abstraction.md). |
+
+---
+[← Back to arc42 index](arc42.md)

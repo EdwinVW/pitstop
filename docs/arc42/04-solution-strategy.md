@@ -32,3 +32,6 @@
 4. **Centralized logging with Seq** — All services use Serilog for structured logging and send log events to a central Seq server. This provides a single pane of glass for observability. See [ADR-0008](../ADRs/0008-seq-for-centralized-logging.md).
 
 5. **Read-model in Workshop Management** — The WorkshopManagementEventHandler builds a read-model with cached Customer and Vehicle data. This ensures Workshop Management can operate autonomously even when other services are offline.
+
+---
+[← Back to arc42 index](arc42.md)

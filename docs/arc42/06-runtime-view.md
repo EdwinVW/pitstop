@@ -44,3 +44,6 @@ A garage employee registers a new customer through the web application.
 *Diagram source: [diagrams/06-finish-maintenance-job.puml](diagrams/06-finish-maintenance-job.puml)*
 
 The flow is identical to planning a job: load aggregate from event store, replay, execute command, persist new events, publish `MaintenanceJobFinished`. Downstream services (Notification, Invoice, EventHandler) consume this event.
+
+---
+[← Back to arc42 index](arc42.md)

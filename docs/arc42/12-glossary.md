@@ -17,3 +17,6 @@
 | **Refit** | A .NET library that generates typed REST API clients from interface definitions. Used by the WebApp to call backend services. |
 | **Service Mesh** | An infrastructure layer (Istio or Linkerd) that handles service-to-service communication, providing traffic management, observability, and security features without changing application code. |
 | **Workshop Planning** | The aggregate root in the Workshop Management bounded context. Represents the maintenance job schedule for a single day. |
+
+---
+[← Back to arc42 index](arc42.md)

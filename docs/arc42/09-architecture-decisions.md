@@ -14,3 +14,6 @@ Architecture decisions are recorded as Architecture Decision Records (ADRs) in t
 | [0008](../ADRs/0008-seq-for-centralized-logging.md) | Seq for Centralized Logging | Accepted | Seq as centralized log aggregation server with Serilog structured logging. Single-container deployment; first-class .NET/Serilog support; demo-friendly web UI. |
 | [0009](../ADRs/0009-infrastructure-messaging-abstraction.md) | Infrastructure Messaging Abstraction | Accepted | All messaging through `IMessagePublisher`/`IMessageHandler` interfaces. No direct RabbitMQ.Client dependency in services. Enables broker portability and testability. |
 | [0010](../ADRs/0010-kubernetes-with-service-mesh.md) | Kubernetes with Service Mesh Support | Accepted | Kubernetes manifests for plain deployment and optional Istio/Linkerd service mesh. Supports conference talks about service meshes. |
+
+---
+[← Back to arc42 index](arc42.md)

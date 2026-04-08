@@ -28,3 +28,6 @@ Pitstop is used by employees of the fictitious "PitStop" garage. There are no ex
 | **TCP (TDS)** | APIs / Services → SQL Server | Each service uses its own logical database on a shared SQL Server instance. |
 | **SMTP** | Notification/Invoice Service → MailDev | Emails are sent via SMTP to the MailDev test server. |
 | **HTTP** | All services → Seq | Structured log events are sent to the Seq log server (Serilog sink). |
+
+---
+[← Back to arc42 index](arc42.md)

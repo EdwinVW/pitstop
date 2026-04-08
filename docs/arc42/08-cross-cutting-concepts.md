@@ -90,3 +90,6 @@ This is a demo application and does **not** implement:
 - Secret management (connection strings are in configuration files)
 
 In a production environment, these would be essential additions.
+
+---
+[← Back to arc42 index](arc42.md)
