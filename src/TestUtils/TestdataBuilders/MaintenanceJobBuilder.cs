@@ -1,4 +1,4 @@
-namespace Pitstop.WorkshopManagement.UnitTests.TestdataBuilders;
+namespace Pitstop.TestUtils;
 
 public class MaintenanceJobBuilder
 {

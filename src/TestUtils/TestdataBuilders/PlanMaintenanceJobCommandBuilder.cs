@@ -1,35 +1,29 @@
-namespace Pitstop.WorkshopManagement.UnitTests.TestdataBuilders;
+namespace Pitstop.TestUtils;
 
-public class MaintenanceJobPlannedEventBuilder
+public class PlanMaintenanceJobCommandBuilder
 {
     public MaintenanceJobBuilder MaintenanceJobBuilder { get; private set; }
     public CustomerBuilder CustomerBuilder { get; private set; }
     public VehicleBuilder VehicleBuilder { get; private set; }
 
-    public MaintenanceJobPlannedEventBuilder()
+    public PlanMaintenanceJobCommandBuilder()
     {
         SetDefaults();
     }
 
-    public MaintenanceJobPlannedEventBuilder WithJobId(Guid jobId)
+    public PlanMaintenanceJobCommandBuilder WithMaintenanceJobBuilder(MaintenanceJobBuilder maintenanceJobBuilder)
     {
-        MaintenanceJobBuilder.WithJobId(jobId);
+        MaintenanceJobBuilder = maintenanceJobBuilder;
         return this;
     }
 
-    public MaintenanceJobPlannedEventBuilder WithStartTime(DateTime startTime)
+    public PlanMaintenanceJobCommandBuilder WithVehicleBuilder(VehicleBuilder vehicleBuilder)
     {
-        MaintenanceJobBuilder.WithStartTime(startTime);
+        VehicleBuilder = vehicleBuilder;
         return this;
     }
 
-    public MaintenanceJobPlannedEventBuilder WithEndTime(DateTime endTime)
-    {
-        MaintenanceJobBuilder.WithEndTime(endTime);
-        return this;
-    }
-
-    public MaintenanceJobPlanned Build()
+    public PlanMaintenanceJob Build()
     {
         var customer = CustomerBuilder
            .Build();
@@ -43,14 +37,14 @@ public class MaintenanceJobPlannedEventBuilder
             .WithVehicle(vehicle)
             .Build();
 
-        MaintenanceJobPlanned e = new MaintenanceJobPlanned(
+        PlanMaintenanceJob command = new PlanMaintenanceJob(
             Guid.NewGuid(), job.Id, job.PlannedTimeslot.StartTime, job.PlannedTimeslot.EndTime,
             (customer.Id, customer.Name, customer.TelephoneNumber),
             (vehicle.Id, vehicle.Brand, vehicle.Type),
             job.Description
         );
 
-        return e;
+        return command;
     }
 
     private void SetDefaults()

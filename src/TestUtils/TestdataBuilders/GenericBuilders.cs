@@ -1,6 +1,6 @@
 ﻿namespace Pitstop.TestUtils;
 
-public static class TestDataGenerators
+public static class GenericBuilders
 {
     private static Random _rnd = new Random();
     private static string _validLicenseNumberChars = "DFGHJKLNPRSTXYZ";

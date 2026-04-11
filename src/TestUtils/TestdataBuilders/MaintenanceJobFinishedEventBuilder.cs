@@ -1,4 +1,4 @@
-namespace Pitstop.WorkshopManagement.UnitTests.TestdataBuilders;
+namespace Pitstop.TestUtils;
 
 public class MaintenanceJobFinishedEventBuilder
 {
@@ -31,7 +31,7 @@ public class MaintenanceJobFinishedEventBuilder
 
     public MaintenanceJobFinishedEventBuilder WithNotes(string notes)
     {
-        Notes = Notes;
+        Notes = notes;
         return this;
     }
 

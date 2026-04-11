@@ -11,7 +11,7 @@ public class ScenarioTests
     public async Task Initialize()
     {
         _testrunId = Guid.NewGuid().ToString("N");
-        _licenseNumber = TestDataGenerators.GenerateRandomLicenseNumber();
+        _licenseNumber = GenericBuilders.GenerateRandomLicenseNumber();
         _pitstopApp = await PitstopApp.CreateAsync(_testrunId, TestConstants.PitstopStartUrl);
         await _pitstopApp.StartAsync();
     }
