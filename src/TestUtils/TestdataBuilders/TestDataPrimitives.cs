@@ -113,10 +113,3 @@ public static class TestDataPrimitives
         return new string(chars);
     }
 }
-
-// Backward-compatible alias so existing code referencing GenericBuilders still compiles.
-// UITest/ScenarioTests.cs uses GenericBuilders.GenerateRandomLicenseNumber() directly.
-public static class GenericBuilders
-{
-    public static string GenerateRandomLicenseNumber() => TestDataPrimitives.GenerateRandomLicenseNumber();
-}
