@@ -1,4 +1,4 @@
-namespace Pitstop.TestUtils;
+namespace Pitstop.WorkshopManagement.UnitTests.TestdataBuilders;
 
 public class WorkshopPlanningCreatedEventBuilder
 {

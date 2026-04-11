@@ -1,4 +1,6 @@
-namespace Pitstop.TestUtils;
+using Pitstop.TestUtils;
+
+namespace Pitstop.WorkshopManagement.UnitTests.TestdataBuilders;
 
 public class VehicleBuilder
 {
@@ -20,7 +22,7 @@ public class VehicleBuilder
 
     public VehicleBuilder WithRandomLicenseNumber()
     {
-        LicenseNumber = LicenseNumber.Create(GenericBuilders.GenerateRandomLicenseNumber());
+        LicenseNumber = LicenseNumber.Create(TestDataPrimitives.GenerateRandomLicenseNumber());
         return this;
     }
 
@@ -53,8 +55,8 @@ public class VehicleBuilder
 
     private void SetDefaults()
     {
-        LicenseNumber = LicenseNumber.Create(GenericBuilders.GenerateRandomLicenseNumber());
-        Brand = "Volkswagen";
-        Type = "Tiguan";
+        LicenseNumber = LicenseNumber.Create(TestDataPrimitives.GenerateRandomLicenseNumber());
+        Brand = TestDataPrimitives.RandomCarBrand();
+        Type = TestDataPrimitives.RandomCarType();
     }
 }

@@ -1,0 +1,11 @@
+global using Pitstop.InvoiceService;
+global using Pitstop.InvoiceService.Events;
+global using Pitstop.InvoiceService.Model;
+global using Pitstop.InvoiceService.CommunicationChannels;
+global using Pitstop.InvoiceService.Repositories;
+global using Pitstop.Infrastructure.Messaging;
+global using Pitstop.InvoiceService.UnitTests.TestdataBuilders;
+global using Microsoft.VisualStudio.TestTools.UnitTesting;
+global using Moq;
+global using Newtonsoft.Json;
+global using System.Net.Mail;

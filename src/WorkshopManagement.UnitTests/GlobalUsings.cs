@@ -8,6 +8,6 @@ global using Pitstop.WorkshopManagementAPI.Commands;
 global using Pitstop.WorkshopManagementAPI.Repositories;
 global using Pitstop.WorkshopManagementAPI.CommandHandlers;
 global using Pitstop.Infrastructure.Messaging;
-global using Pitstop.TestUtils;
+global using Pitstop.WorkshopManagement.UnitTests.TestdataBuilders;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
 global using Moq;

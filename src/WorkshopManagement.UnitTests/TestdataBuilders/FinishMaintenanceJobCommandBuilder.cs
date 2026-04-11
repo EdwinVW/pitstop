@@ -1,4 +1,6 @@
-namespace Pitstop.TestUtils;
+using Pitstop.TestUtils;
+
+namespace Pitstop.WorkshopManagement.UnitTests.TestdataBuilders;
 
 public class FinishMaintenanceJobCommandBuilder
 {
@@ -46,8 +48,9 @@ public class FinishMaintenanceJobCommandBuilder
     private void SetDefaults()
     {
         JobId = Guid.NewGuid();
-        ActualStartTime = DateTime.Today.AddHours(8);
-        ActualEndTime = DateTime.Today.AddHours(11);
-        Notes = $"Notes";
+        var timeslot = TestDataPrimitives.RandomTimeslot();
+        ActualStartTime = timeslot.Start;
+        ActualEndTime = timeslot.End;
+        Notes = TestDataPrimitives.RandomDescription();
     }
 }

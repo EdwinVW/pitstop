@@ -1,4 +1,6 @@
-namespace Pitstop.TestUtils;
+using Pitstop.TestUtils;
+
+namespace Pitstop.WorkshopManagement.UnitTests.TestdataBuilders;
 
 public class MaintenanceJobBuilder
 {
@@ -86,9 +88,10 @@ public class MaintenanceJobBuilder
     private void SetDefaults()
     {
         JobId = Guid.NewGuid();
-        StartTime = DateTime.Today.AddHours(8);
-        EndTime = DateTime.Today.AddHours(11);
-        Description = $"Job {JobId}";
+        var timeslot = TestDataPrimitives.RandomTimeslot();
+        StartTime = timeslot.Start;
+        EndTime = timeslot.End;
+        Description = TestDataPrimitives.RandomDescription();
         CustomerBuilder = new CustomerBuilder();
         VehicleBuilder = new VehicleBuilder();
         VehicleBuilder.WithOwnerId(CustomerBuilder.Id);

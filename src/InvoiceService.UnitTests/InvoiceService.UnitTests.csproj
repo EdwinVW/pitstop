@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MSTest" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+    <PackageReference Include="Moq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TestUtils\TestUtils.csproj" />
+    <ProjectReference Include="..\InvoiceService\InvoiceService.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The DayHasPassed handler constructs a MailMessage with an inline banner attachment.
+         Link the banner from InvoiceService so the file exists when tests run. -->
+    <Content Include="..\InvoiceService\Assets\banner.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>Assets\banner.jpg</Link>
+    </Content>
+  </ItemGroup>
+
+</Project>

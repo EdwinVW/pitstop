@@ -1,0 +1,10 @@
+global using Pitstop.NotificationService;
+global using Pitstop.NotificationService.Events;
+global using Pitstop.NotificationService.Model;
+global using Pitstop.NotificationService.NotificationChannels;
+global using Pitstop.NotificationService.Repositories;
+global using Pitstop.Infrastructure.Messaging;
+global using Pitstop.NotificationService.UnitTests.TestdataBuilders;
+global using Microsoft.VisualStudio.TestTools.UnitTesting;
+global using Moq;
+global using Newtonsoft.Json;

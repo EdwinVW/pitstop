@@ -1,4 +1,6 @@
-namespace Pitstop.TestUtils;
+using Pitstop.TestUtils;
+
+namespace Pitstop.WorkshopManagement.UnitTests.TestdataBuilders;
 
 public class CustomerBuilder
 {
@@ -36,8 +38,8 @@ public class CustomerBuilder
 
     private void SetDefaults()
     {
-        Id = Guid.NewGuid().ToString();
-        Name = "John Doe";
-        TelephoneNumber = "+31612345678";
+        Id = TestDataPrimitives.RandomGuid();
+        Name = TestDataPrimitives.RandomName();
+        TelephoneNumber = TestDataPrimitives.RandomPhoneNumber();
     }
 }
