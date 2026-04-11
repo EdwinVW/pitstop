@@ -58,13 +58,7 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
 
     private async Task HandleAsync(CustomerRegistered cr)
     {
-        Customer customer = new Customer
-        {
-            CustomerId = cr.CustomerId,
-            Name = cr.Name,
-            TelephoneNumber = cr.TelephoneNumber,
-            EmailAddress = cr.EmailAddress
-        };
+        Customer customer = Customer.CreateFrom(cr);
 
         Log.Information("Register customer: {Id}, {Name}, {TelephoneNumber}, {Email}",
             customer.CustomerId, customer.Name, customer.TelephoneNumber, customer.EmailAddress);
@@ -74,14 +68,7 @@ public class NotificationWorker : IHostedService, IMessageHandlerCallback
 
     private async Task HandleAsync(MaintenanceJobPlanned mjp)
     {
-        MaintenanceJob job = new MaintenanceJob
-        {
-            JobId = mjp.JobId.ToString(),
-            CustomerId = mjp.CustomerInfo.Id,
-            LicenseNumber = mjp.VehicleInfo.LicenseNumber,
-            StartTime = mjp.StartTime,
-            Description = mjp.Description
-        };
+        MaintenanceJob job = MaintenanceJob.CreateFrom(mjp);
 
         Log.Information("Register Maintenance Job: {Id}, {CustomerId}, {VehicleLicenseNumber}, {StartTime}, {Description}",
             job.JobId, job.CustomerId, job.LicenseNumber, job.StartTime, job.Description);

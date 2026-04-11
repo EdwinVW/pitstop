@@ -71,8 +71,9 @@ All databases are automatically created on first startup. The event-store databa
 
 ## 8.6 Mapping
 
-- **Library**: [AutoMapper](https://automapper.org/) — used where it adds value to map between POCOs (commands → events, events → models).
-- Not used universally; only where mapping complexity warrants it.
+- **Approach**: Static `CreateFrom(<source>)` factory methods on target types — used to map between POCOs (events → models).
+- Each target type owns its own construction logic from a given source type (e.g. `Customer.CreateFrom(customerRegistered)`).
+- No external mapping library is used; mapping code lives in the codebase and is covered by the regular test suite.
 
 ## 8.7 API Documentation
 

@@ -5,7 +5,7 @@
 | Decision | Rationale |
 |----------|-----------|
 | **Microservices architecture** | Demonstrates decomposition, independent deployability, per-service data ownership, and eventual consistency. See [ADR-0001](../ADRs/0001-microservices-architecture.md). |
-| **.NET 9 / ASP.NET Core** | Author's expertise; single-stack keeps the solution accessible to .NET developers. See [ADR-0002](../ADRs/0002-dotnet-as-implementation-platform.md). |
+| **.NET / ASP.NET Core** | Author's expertise; single-stack keeps the solution accessible to .NET developers. See [ADR-0002](../ADRs/0002-dotnet-as-implementation-platform.md). |
 | **RabbitMQ** | Push-based event notification with queue semantics; simpler than Kafka for the educational scope. See [ADR-0003](../ADRs/0003-rabbitmq-as-message-broker.md). |
 | **SQL Server** | Single database platform avoids polyglot-persistence complexity. See [ADR-0007](../ADRs/0007-sql-server-as-single-database-platform.md). |
 | **Docker / Kubernetes** | Containerisation is the standard deployment model. Kubernetes manifests enable orchestration demos. See [ADR-0010](../ADRs/0010-kubernetes-with-service-mesh.md). |

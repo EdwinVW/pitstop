@@ -60,14 +60,7 @@ public class InvoiceWorker : IHostedService, IMessageHandlerCallback
         Log.Information("Register customer: {Id}, {Name}, {Address}, {PostalCode}, {City}",
             cr.CustomerId, cr.Name, cr.Address, cr.PostalCode, cr.City);
 
-        Customer customer = new Customer
-        {
-            CustomerId = cr.CustomerId,
-            Name = cr.Name,
-            Address = cr.Address,
-            PostalCode = cr.PostalCode,
-            City = cr.City
-        };
+        Customer customer = Customer.CreateFrom(cr);
 
         await _repo.RegisterCustomerAsync(customer);
     }
@@ -77,13 +70,7 @@ public class InvoiceWorker : IHostedService, IMessageHandlerCallback
         Log.Information("Register Maintenance Job: {Id}, {Description}, {CustomerId}, {VehicleLicenseNumber}",
             mjp.JobId, mjp.Description, mjp.CustomerInfo.Id, mjp.VehicleInfo.LicenseNumber);
 
-        MaintenanceJob job = new MaintenanceJob
-        {
-            JobId = mjp.JobId.ToString(),
-            CustomerId = mjp.CustomerInfo.Id,
-            LicenseNumber = mjp.VehicleInfo.LicenseNumber,
-            Description = mjp.Description
-        };
+        MaintenanceJob job = MaintenanceJob.CreateFrom(mjp);
 
         await _repo.RegisterMaintenanceJobAsync(job);
     }

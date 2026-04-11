@@ -10,4 +10,12 @@ public class MaintenanceJob
     public DateTime? EndTime { get; set; }
     public bool Finished { get; set; }
     public bool InvoiceSent { get; set; }
+
+    public static MaintenanceJob CreateFrom(MaintenanceJobPlanned source) => new MaintenanceJob
+    {
+        JobId = source.JobId,
+        CustomerId = source.CustomerInfo.Id,
+        LicenseNumber = source.VehicleInfo.LicenseNumber,
+        Description = source.Description
+    };
 }
