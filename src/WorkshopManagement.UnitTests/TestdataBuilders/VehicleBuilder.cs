@@ -56,7 +56,8 @@ public class VehicleBuilder
     private void SetDefaults()
     {
         LicenseNumber = LicenseNumber.Create(TestDataPrimitives.GenerateRandomLicenseNumber());
-        Brand = TestDataPrimitives.RandomCarBrand();
-        Type = TestDataPrimitives.RandomCarType();
+        var car = TestDataPrimitives.RandomCar();
+        Brand = car.Brand;
+        Type = car.Model;
     }
 }

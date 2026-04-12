@@ -17,10 +17,18 @@ public static class TestDataPrimitives
         ["Kerkstraat", "Dorpsstraat", "Hoofdstraat", "Molenweg", "Schoolstraat", "Stationsweg", "Nieuwstraat", "Parallelweg"];
     private static readonly string[] _cities =
         ["Amsterdam", "Rotterdam", "Utrecht", "Den Haag", "Eindhoven", "Groningen", "Tilburg", "Almere"];
-    private static readonly string[] _carBrands =
-        ["Volkswagen", "Toyota", "BMW", "Mercedes", "Peugeot", "Renault", "Ford", "Opel"];
-    private static readonly string[] _carTypes =
-        ["Tiguan", "Corolla", "3 Serie", "A-Klasse", "308", "Clio", "Focus", "Astra"];
+    // Brand and model are paired so generated vehicles are always realistic combinations.
+    private static readonly CarType[] _carTypes =
+    [
+        new("Volkswagen", "Tiguan"),
+        new("Toyota", "Corolla"),
+        new("BMW", "3 Serie"),
+        new("Mercedes", "A-Klasse"),
+        new("Peugeot", "308"),
+        new("Renault", "Clio"),
+        new("Ford", "Focus"),
+        new("Opel", "Astra"),
+    ];
 
     public static string RandomName() =>
         $"{Pick(_firstNames)} {Pick(_lastNames)}";
@@ -45,9 +53,7 @@ public static class TestDataPrimitives
 
     public static string RandomGuid() => Guid.NewGuid().ToString();
 
-    public static string RandomCarBrand() => Pick(_carBrands);
-
-    public static string RandomCarType() => Pick(_carTypes);
+    public static CarType RandomCar() => _carTypes[_rnd.Next(_carTypes.Length)];
 
     public static string RandomDescription() =>
         $"Maintenance job {_rnd.Next(1000, 9999)}";
@@ -113,3 +119,8 @@ public static class TestDataPrimitives
         return new string(chars);
     }
 }
+
+/// <summary>
+/// Pairs a vehicle brand with a model so generated test data is always realistic.
+/// </summary>
+public record CarType(string Brand, string Model);

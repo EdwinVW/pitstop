@@ -26,6 +26,26 @@ public class RegisterMaintenanceJobPage : PitstopPage
         return new WorkshopManagementPage(Pitstop);
     }
 
+    /// <summary>
+    /// Submit the form expecting a business rule violation. The page re-renders with an error message.
+    /// </summary>
+    public async Task<RegisterMaintenanceJobPage> SubmitExpectingErrorAsync()
+    {
+        await Page.ClickAsync("#SubmitButton");
+        return this;
+    }
+
+    /// <summary>
+    /// Returns the business rule violation error message, or null if no error is shown.
+    /// The error is displayed in a div.alert-danger on the New view.
+    /// </summary>
+    public async Task<string> GetErrorMessageAsync()
+    {
+        var errorElement = await Page.QuerySelectorAsync(".alert-danger label");
+        if (errorElement == null) return null;
+        return await errorElement.TextContentAsync();
+    }
+
     public async Task<WorkshopManagementPage> CancelAsync()
     {
         await Page.ClickAsync("#CancelButton");

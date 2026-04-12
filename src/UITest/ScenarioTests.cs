@@ -13,12 +13,14 @@ public class ScenarioTests
     string _phoneNumber;
     string _email;
     string _vehicleBrand;
-    string _vehicleType;
+    string _vehicleModel;
     string _jobDescription;
 
     [TestInitialize]
     public async Task Initialize()
     {
+        await DatabaseCleaner.ClearAllAsync();
+
         _testrunId = Guid.NewGuid().ToString("N");
         _licenseNumber = TestDataPrimitives.GenerateRandomLicenseNumber();
         _customerName = $"{TestDataPrimitives.RandomName()} {_testrunId}";
@@ -27,15 +29,17 @@ public class ScenarioTests
         _postalCode = TestDataPrimitives.RandomPostalCode();
         _phoneNumber = TestDataPrimitives.RandomPhoneNumber();
         _email = TestDataPrimitives.RandomEmailAddress();
-        _vehicleBrand = TestDataPrimitives.RandomCarBrand();
-        _vehicleType = TestDataPrimitives.RandomCarType();
+        var carType = TestDataPrimitives.RandomCar();
+        _vehicleBrand = carType.Brand;
+        _vehicleModel = carType.Model;
         _jobDescription = $"{TestDataPrimitives.RandomDescription()} {_testrunId}";
+
         _pitstopApp = await PitstopApp.CreateAsync(_testrunId, TestConstants.PitstopStartUrl);
         await _pitstopApp.StartAsync();
     }
 
     [TestMethod]
-    public async Task RegisterCustomer()
+    public async Task Full_MaintenanceJob_Process()
     {
         try
         {
@@ -55,7 +59,7 @@ public class ScenarioTests
             var registerVehiclePage = await vehicleManagementPage.RegisterVehicleAsync();
             var cancelledVehiclePage = await registerVehiclePage.CancelAsync();
             var registerVehiclePage2 = await cancelledVehiclePage.RegisterVehicleAsync();
-            var filledVehiclePage = await registerVehiclePage2.FillVehicleDetailsAsync(_licenseNumber, _vehicleBrand, _vehicleType, _customerName);
+            var filledVehiclePage = await registerVehiclePage2.FillVehicleDetailsAsync(_licenseNumber, _vehicleBrand, _vehicleModel, _customerName);
             var submittedVehiclePage = await filledVehiclePage.SubmitAsync();
             var vehicleDetailsPage = await submittedVehiclePage.SelectVehicleAsync(_licenseNumber);
             await vehicleDetailsPage.BackAsync();

@@ -84,8 +84,9 @@ public class MaintenanceJobPlannedEventBuilder
         CustomerName = TestDataPrimitives.RandomName();
         CustomerTelephoneNumber = TestDataPrimitives.RandomPhoneNumber();
         LicenseNumber = TestDataPrimitives.GenerateRandomLicenseNumber();
-        VehicleBrand = TestDataPrimitives.RandomCarBrand();
-        VehicleType = TestDataPrimitives.RandomCarType();
+        var car = TestDataPrimitives.RandomCar();
+        VehicleBrand = car.Brand;
+        VehicleType = car.Model;
         Description = TestDataPrimitives.RandomDescription();
     }
 }

@@ -40,8 +40,7 @@ public class Timeslot : ValueObject
 
     public bool OverlapsWith(Timeslot other)
     {
-        return (StartTime > other.StartTime && StartTime <= other.EndTime ||
-                EndTime >= other.StartTime && EndTime <= other.EndTime);
+        return StartTime < other.EndTime && EndTime > other.StartTime;
     }
 
     private static void ValidateInput(DateTime startTime, DateTime endTime)
