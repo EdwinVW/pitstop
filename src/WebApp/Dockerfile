@@ -1,13 +1,15 @@
 FROM pitstop-dotnet-sdk-base:1.0 AS build-env
 WORKDIR /app
 
-# Install node
-ENV NODE_VERSION=20.x
+# Install node and pnpm
+ENV NODE_VERSION=22.x
+ENV PNPM_VERSION=10
 RUN apt-get -y update \
     && apt-get install -y curl \
-    && curl -sL https://deb.nodesource.com/setup_${NODE_VERSION} | sh - \ 
+    && curl -sL https://deb.nodesource.com/setup_${NODE_VERSION} | sh - \
     && apt-get install -y nodejs \
-    && apt-get clean
+    && apt-get clean \
+    && npm install -g pnpm@${PNPM_VERSION}
 
 # Copy necessary files and restore as distinct layer
 COPY *.csproj ./
@@ -15,8 +17,8 @@ RUN dotnet restore
 
 # Copy everything else and build
 COPY . ./
-RUN npm install
-RUN npm run build
+RUN pnpm install
+RUN pnpm run build
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
