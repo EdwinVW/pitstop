@@ -8,6 +8,9 @@ This library contains helper-classes for working with messaging within the Pitst
 
 ## Release notes
 
+### Version 5.5.0
+- Upgrade all NuGet references to the latest version.
+
 ### Version 5.4.0
 - Upgrade all NuGet references to the latest version.
 
