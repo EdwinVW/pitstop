@@ -2,8 +2,8 @@ FROM pitstop-dotnet-sdk-base:1.0 AS build-env
 WORKDIR /app
 
 # Install node and pnpm
-ENV NODE_VERSION=22.x
-ENV PNPM_VERSION=10
+ENV NODE_VERSION=24.x
+ENV PNPM_VERSION=12
 RUN apt-get -y update \
     && apt-get install -y curl \
     && curl -sL https://deb.nodesource.com/setup_${NODE_VERSION} | sh - \
