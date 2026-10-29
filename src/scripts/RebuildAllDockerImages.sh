@@ -11,9 +11,6 @@ then
     echo "Building images without cache."
 fi
 
-docker volume create --name=sqlserverdata
-docker volume create --name=rabbitmqdata
-
 cd ..
 
 # Build the .NET SDK base image that contains the Directory.Packages.props file so it is used when restoring the NuGet packages
